@@ -4,7 +4,10 @@
 
 		<nav class="navbar navbar-expand-lg">
 			<div class="container">
-				<a class="navbar-brand" href="${pageContext.request.contextPath}/">나무</a>
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/">
+					<img alt="logo" src="${pageContext.request.contextPath}/resources/images/namuLogo.png" width="30" height="24" class="d-inline-block align-text-top">
+					나무
+				</a>
 				<button class="navbar-toggler" type="button"
 					data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
 					aria-controls="navbarTogglerDemo02" aria-expanded="false"
@@ -13,7 +16,6 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="nav-item"><a class="nav-link" aria-current="page" href="#">Home</a></li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">중고/경매</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">

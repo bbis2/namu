@@ -37,7 +37,7 @@ textarea:focus, input:focus { outline: none; }
 
 .navbar .nav-item .nav-link:hover,
 .navbar .nav-item .nav-link.active {
-	color: #0092ff;
+	color: #61ac2d;
 	text-decoration: none;
 }
 
@@ -57,9 +57,11 @@ textarea:focus, input:focus { outline: none; }
 
 .navbar .dropdown-item:hover {
 	background-color: #fcfafb;
-	color: #0092ff;
+	color: #61ac2d;
 	text-decoration: none;
 }
+
+.navbar-brand:hover { text-decoration: none;}
 
 /* body */
 .body-container {
