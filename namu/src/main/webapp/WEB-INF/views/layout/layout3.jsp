@@ -41,6 +41,13 @@
 	
 	body { font-size: 14px; font-family: "LINESeedKR-Bd", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif; }
 	header { font-weight: 700;}
+	
+	.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+	}
+	
+	.navbar-brand {font-size: 23px;}
 
 	</style>
 	
