@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-	<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<nav class="navbar navbar-expand-lg">
 			<div class="container">
 				<a class="navbar-brand" href="${pageContext.request.contextPath}/">나무</a>
 				<button class="navbar-toggler" type="button"
@@ -59,7 +59,7 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">마이페이지</a>
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">공지사항</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="#">방명록</a></li>
 								<li><a class="dropdown-item" href="#">게시판</a></li>
@@ -70,11 +70,7 @@
 							</ul>
 						</li>
 					</ul>
-					<form class="d-flex" role="search">
-						<input class="form-control me-2" type="search" placeholder="Search"
-							aria-label="Search">
-						<button class="btn btn-outline-success" type="submit">Search</button>
-					</form>
+					
 					<div class="d-flex float-end">
 						<c:choose>
 							<c:when test="${empty sessionScope.member}">
@@ -88,7 +84,10 @@
 							<c:otherwise>
 								<div class="p-2">
 									<a href="${pageContext.request.contextPath}/member/logout" title="로그아웃"><i class="bi bi-unlock"></i></a>
-								</div>					
+								</div>	
+								<div class="p-2">
+									<a href="#" title="마이페이지"><i class="bi bi-person-circle"></i></a>
+								</div>				
 								<div class="p-2">
 									<a href="#" title="알림"><i class="bi bi-bell"></i></a>
 								</div>
