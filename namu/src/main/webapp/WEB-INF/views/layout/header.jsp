@@ -18,7 +18,7 @@
 				<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">중고/경매</a>
+							<a class="nav-link dropdown-toggle" href="#">중고/경매</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="#">방명록</a></li>
 								<li><a class="dropdown-item" href="#">게시판</a></li>
@@ -29,7 +29,7 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">빌려드림</a>
+							<a class="nav-link dropdown-toggle" href="#">빌려드림</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="#">방명록</a></li>
 								<li><a class="dropdown-item" href="#">게시판</a></li>
@@ -40,7 +40,7 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">재능마켓</a>
+							<a class="nav-link dropdown-toggle" href="#">재능마켓</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="#">방명록</a></li>
 								<li><a class="dropdown-item" href="#">게시판</a></li>
@@ -51,7 +51,7 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">나무모임</a>
+							<a class="nav-link dropdown-toggle" href="#">나무모임</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="#">방명록</a></li>
 								<li><a class="dropdown-item" href="#">게시판</a></li>
@@ -62,7 +62,7 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">공지사항</a>
+							<a class="nav-link dropdown-toggle" href="#">공지사항</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="#">방명록</a></li>
 								<li><a class="dropdown-item" href="#">게시판</a></li>
