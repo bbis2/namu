@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+
 		<nav class="navbar navbar-expand-lg">
 			<div class="container">
 				<a class="navbar-brand" href="${pageContext.request.contextPath}/">
