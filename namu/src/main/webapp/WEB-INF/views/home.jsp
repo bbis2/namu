@@ -5,20 +5,20 @@
 <div class="container body-container">
   <div class="inner-page-container">
     <div class="inner-page">
-      <img class="inner-page" src="${pageContext.request.contextPath}/resources/images/namu2.png" alt="Namu Image">
+      <img class="img1" src="${pageContext.request.contextPath}/resources/images/namu_used.png" alt="Namu Image">
     </div>
     <div class="inner-page2">
 
       <div id="carouselExample" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img class="inner-page2" src="${pageContext.request.contextPath}/resources/images/slide1.png" class="d-block w-100">
+            <img class="img2" src="${pageContext.request.contextPath}/resources/images/slide1.png" class="d-block w-100">
           </div>
           <div class="carousel-item">
-            <img class="inner-page2" src="${pageContext.request.contextPath}/resources/images/slide2.png" class="d-block w-100">
+            <img class="img2" src="${pageContext.request.contextPath}/resources/images/slide2.png" class="d-block w-100">
           </div>
           <div class="carousel-item">
-            <img class="inner-page2" src="${pageContext.request.contextPath}/resources/images/slide3.png" class="d-block w-100">
+            <img class="img2" src="${pageContext.request.contextPath}/resources/images/slide3.png" class="d-block w-100">
           </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -37,18 +37,6 @@
 </div>
 
 <style>
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.body-container {
-  clear: both;
-  margin: 0 auto 10px;
-  min-height: 500px;
-  margin-top: 53px;
-}
 
 .inner-page-container {
   display: flex;
@@ -58,11 +46,8 @@
 }
 
 .inner-page {
-  width: 790px;
   height: 500px;
   flex: 1;
-  min-width: calc(73% - 20px);
-  border-radius: 20px;
 }
 
 .inner-page img.inner-page {
@@ -73,9 +58,22 @@
 .inner-page2 {
   height: 500px;
   flex: 1;
-  min-width: calc(25% - 20px); 
-  border-radius: 20px;
 }
+
+.img1 {
+  width: 1000px;
+  height: 500px;
+  flex: 1;
+  border-radius: 5px;
+}
+
+.img2 {
+  width: 276px;
+  height: 500px;
+  flex: 1;
+  border-radius: 5px;
+}
+
 
 @media screen and (max-width: 768px) {
   .inner-page, .inner-page2 {
