@@ -17,4 +17,9 @@ public class TalentMarketController {
 	public String list() {
 		return ".talentMarket.list";
 	}
+	
+	@GetMapping("profile")
+	public String profile() {
+		return ".talentMarket.profile";
+	}
 }
