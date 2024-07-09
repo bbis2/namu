@@ -21,6 +21,10 @@ h1 {
     font-weight: bold;
     unicode-bidi: isolate;
 }
+.htext{
+	padding-top: 100px;
+	padding-left : 100px;
+}
 .cover-content {
 	padding: 50px;
     position: relative;
@@ -44,13 +48,13 @@ h1 {
 <div class="container">
 
 <section class="fleamarket-cover">
-    <div class="cover-content">
-      <h1 class="cover-title">믿을만한<br>나무 거래</h1>
-      <span class="cover-description">나: 나누고 싶은 마음을 담아<br>무: 무한한 가능성을 거래합니다.</span>
+      <h1 class="cover-title htext">믿을만한<br>나무 거래</h1>
+      <span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>	
+      <span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
       <div class="cover-image">
       </div>
-    </div>
   </section>
+  
 	<div class="body-container">
 		<div class="body-title">
 			<h3><i class="bi bi-app"></i> 제목 </h3>
