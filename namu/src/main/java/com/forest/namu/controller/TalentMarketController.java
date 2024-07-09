@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TalentMarketController {
 	
 	@GetMapping("article")
-	public String list() {
+	public String article() {
 		return ".talentMarket.article";
+	}
+	
+	@GetMapping("list")
+	public String list() {
+		return ".talentMarket.list";
 	}
 }

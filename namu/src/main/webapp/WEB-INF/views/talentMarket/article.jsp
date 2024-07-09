@@ -51,42 +51,20 @@ body {
     padding-top: 10px;
 }
 
+.main-image-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 </style>
 </head>
 <body>
-       <header class="bg-light border-bottom">
-        <nav class="navbar navbar-expand-lg navbar-light container">
-            <a class="navbar-brand" href="#">재능마켓</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">중고거래</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">경매</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">빌려드림</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">재능마켓</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">경품</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">아이페이징</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    <main class="container my-5">
+       <main class="container my-5">
         <div class="row">
             <div class="col-lg-8">
                 <div class="card mb-4">
-                    <div class="card-body">
-                        <img src="main-image.png" class="card-img-top mb-3" alt="메인 이미지">
-                        <h5 class="card-title">그림그려드려요!</h5>
-                        <p class="card-text">
-                            <span class="badge badge-warning">★ 4.9 (3122)</span><br>
-                            8,000원<br>
-                            그림그려주는 사람<br>
-                            소요시간: 6H<br>
-                            그림 그려드려요! 예쁘게 잘 그려드립니당<br>
-                            상세설명 참조
-                        </p>
-                        <button class="btn btn-primary btn-block">구매하기</button>
-                    </div>
+                    <img src="${pageContext.request.contextPath}/resources/images/bg.png" class="card-img-top mb-3 main-image" alt="메인 이미지">
                 </div>
                 <div class="row mb-4">
                     <div class="col-4">
@@ -133,19 +111,16 @@ body {
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">그림그려주는 사람</h5>
-                        <p class="card-text">
-                            <span class="badge badge-light">연락 가능한 시간: 9:00-23:00</span><br>
-                            <span class="badge badge-light">평균 응답 시간: 30분 이내</span>
-                        </p>
-                        <p class="card-text">
-                            <span class="badge badge-success">4,300건 거래 수</span><br>
-                            <span class="badge badge-success">99% 만족도</span><br>
-                            <span class="badge badge-success">일반회원</span>
-                        </p>
-                        <button class="btn btn-outline-primary btn-block">1:1 채팅</button>
+                <div class="card mb-4 main-image-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">그림그려드려요!</h5>
+                        <span class="badge badge-warning">★ 4.9 (3122)</span><br>
+                        <p>8,000원<br>
+                        그림그려주는 사람<br>
+                        소요시간: 6H<br>
+                        그림 그려드려요! 예쁘게 잘 그려드립니당<br>
+                        상세설명 참조</p>
+                        <button class="btn btn-primary btn-block">구매하기</button>
                     </div>
                 </div>
                 <div class="card mb-4">
@@ -154,7 +129,7 @@ body {
                         <img src="profile.png" class="rounded-circle mb-2" alt="프로필" width="50">
                         <p class="card-text">연락 가능한 시간: 9:00-23:00</p>
                         <p class="card-text">평균 응답 시간: 30분 이내</p>
-                        <button class="btn btn-outline-primary btn-block">문의하기</button>
+                        <button class="btn btn-outline-primary btn-block">1:1 채팅</button>
                     </div>
                 </div>
             </div>
@@ -163,7 +138,17 @@ body {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</body>
+    <script>
+        $(document).ready(function() {
+            function adjustHeight() {
+                var mainImageHeight = $('.main-image').height();
+                $('.main-image-card').height(mainImageHeight);
+            }
+            adjustHeight();
+            $(window).resize(function() {
+                adjustHeight();
+            });
+        });
+    </script>
 </body>
 </html>
