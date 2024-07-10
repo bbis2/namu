@@ -18,3 +18,9 @@
         <li class="nav-item"><span>&nbsp;&nbsp;© SPRING Corp.</span></li>
     </ul>
 </div>
+
+<style>
+.container-fluid {
+height: 150px;
+}
+</style>
