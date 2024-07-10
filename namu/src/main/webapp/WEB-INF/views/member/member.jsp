@@ -5,10 +5,11 @@
 <style type="text/css">
 .body-container {
 	max-width: 800px;
+    padding-top: 20px;
 }
 .btn {
-	background: #3F2C15;
-	color: white;
+	background: #EEF2E3;
+	color: black;
 }
 
 </style>
@@ -201,7 +202,7 @@ function nickNameCheck() {
 			<h3><i class="bi bi-person-square"></i> ${mode=="member"?"회원가입":"정보수정"} </h3>
 		</div>
 		
-	    <div class="alert" role="alert" style="background-color: #B7C890;">
+	    <div class="alert" role="alert" style="background-color: #EEF2E3;">
 	        <i class="bi bi-person-check-fill"></i> 나무의 회원이 되시면 회원님만의 유익한 정보를 만날수 있습니다.
 	    </div>
 		    		
@@ -240,7 +241,7 @@ function nickNameCheck() {
 							</div>
 							<div class="col-3 ps-1">
 								<c:if test="${mode=='member'}">
-									<button type="button" class="btn onclick="nickNameCheck();">닉네임중복검사</button>
+									<button type="button" class="btn" onclick="nickNameCheck();">닉네임중복검사</button>
 								</c:if>
 							</div>
 						</div>
@@ -286,6 +287,13 @@ function nickNameCheck() {
 			    <div class="row mb-3">
 			        <label class="col-sm-2 col-form-label" for="selectEmail">이메일</label>
 			        <div class="col-sm-10 row">
+			        
+			        	<div class="col input-group">
+							<input type="text" name="email1" class="form-control" maxlength="30" value="${dto.email1}" >
+						    <span class="input-group-text p-1" style="border: none; background: none;">@</span>
+							<input type="text" name="email2" class="form-control" maxlength="30" value="${dto.email2}" readonly>
+						</div>	
+			        
 						<div class="col-3 pe-0">
 							<select name="selectEmail" id="selectEmail" class="form-select" onchange="changeEmail();">
 								<option value="">선 택</option>
@@ -296,11 +304,7 @@ function nickNameCheck() {
 							</select>
 						</div>
 						
-						<div class="col input-group">
-							<input type="text" name="email1" class="form-control" maxlength="30" value="${dto.email1}" >
-						    <span class="input-group-text p-1" style="border: none; background: none;">@</span>
-							<input type="text" name="email2" class="form-control" maxlength="30" value="${dto.email2}" readonly>
-						</div>		
+	
 	
 			        </div>
 			    </div>
@@ -379,8 +383,8 @@ function nickNameCheck() {
 			     
 			    <div class="row mb-3">
 			        <div class="text-center">
-			            <button type="button" name="sendButton" class="btn" onclick="memberOk();"> ${mode=="member"?"회원가입":"정보수정"} <i class="bi bi-check2"></i></button>
-			            <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/';"> ${mode=="member"?"가입취소":"수정취소"} <i class="bi bi-x"></i></button>
+			            <button type="button" style="background: #D4DDC1;" name="sendButton" class="btn" onclick="memberOk();"> ${mode=="member"?"회원가입":"정보수정"} <i class="bi bi-check2"></i></button>
+			            <button type="button" style="background: #EFEFEF;" class="btn" onclick="location.href='${pageContext.request.contextPath}/';"> ${mode=="member"?"가입취소":"수정취소"} <i class="bi bi-x"></i></button>
 						<input type="hidden" name="userIdValid" id="userIdValid" value="false">
 			        </div>
 			    </div>
