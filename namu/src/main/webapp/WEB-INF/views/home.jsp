@@ -449,6 +449,7 @@
 }
 
 .img1 {
+  margin-top: 25px;
   width: 1000px;
   height: 500px;
   flex: 1;
@@ -456,6 +457,7 @@
 }
 
 .img2 {
+  margin-top: 25px;
   width: 276px;
   height: 500px;
   flex: 1;
