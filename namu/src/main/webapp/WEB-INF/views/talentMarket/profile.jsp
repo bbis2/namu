@@ -29,8 +29,8 @@ h1 {
 }
 
 .htext{
-	padding-top: 100px;
-	padding-left : 100px;
+	padding-top: 30px;
+	padding-left : 50px;
 }
 .cover-content {
 
@@ -43,21 +43,12 @@ h1 {
 
 @media (min-width: 768px) {
     .fleamarket-cover {
-        height: 315px;
+        height: 180px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
     }
    
     
-}
-
-.navbar {
-    background-color: #f8f8f8;
-    padding: 1rem;
-}
-
-.navbar-brand img {
-    margin-right: 10px;
 }
 
 .bg-light {
@@ -77,13 +68,6 @@ h1 {
     object-fit: cover;
 }
 
-footer {
-    background-color: #f8f8f8;
-    padding: 1rem;
-    text-align: center;
-    font-size: 0.875rem;
-    color: #666;
-}
 
 .profile-header {
     background-color: #d4c5f9;
