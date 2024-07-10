@@ -20,7 +20,7 @@ textarea:focus, input:focus { outline: none; }
 	background-color: white;
 	font-weight: 500;
 	font-size: 0.875rem;
-	line-height: 0.2rem;
+	line-height: 1rem;
 }
 
 .navbar .navbar-nav {

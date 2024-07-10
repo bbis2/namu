@@ -42,6 +42,13 @@
 	top: 0;
 	transition: top 0.2s ease-in-out;
 	width: 100%;
+	z-index: 1;
+	box-shadow: 0px 5px 15px #D1D2D2;
+	
+	background-color: white;
+	font-weight: 700;
+	font-size: 0.875rem;
+	line-height: 1rem;
 }
 
 .nav-up {
@@ -75,6 +82,21 @@ header {
 .navbar-brand {
 	font-size: 23px;
 }
+
+#live-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  border: none;
+  border-radius: 16px;
+  background: #61ac2d;
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  box-shadow: 0px 5px 15px gray;
+  cursor: pointer;
+}
 </style>
 
 </head>
@@ -99,6 +121,8 @@ header {
 		style="display: none; position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 9000; background: #eee;">
 		<div class="loader"></div>
 	</div>
+	
+	<button id="live-chat">채팅 💬</button>
 
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/vendor/bootstrap5/js/bootstrap.bundle.min.js"></script>
