@@ -91,3 +91,9 @@ footer .d-flex img {
         </div>
 	</div>
 </div>
+
+<style>
+.container-fluid {
+height: 150px;
+}
+</style>

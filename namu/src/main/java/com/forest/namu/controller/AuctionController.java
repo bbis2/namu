@@ -5,22 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/daily/*")
-public class DailyController {
+@RequestMapping("/auction/*")
+public class AuctionController {
 	
 	@GetMapping("list")
 	public String list() {
-		return ".daily.list";
+		return ".auction.list";
 	}
-	
-	
-	@GetMapping("write")
-	public String write() {
-		return ".daily.write";
-	}
-	
-	@GetMapping("article")
-	public String article() {
-		return ".daily.article";
-	}
+
 }

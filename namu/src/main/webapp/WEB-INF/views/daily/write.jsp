@@ -45,7 +45,6 @@ h1 {
     
 }
 .container {
-    background-color: #ffffff;
     padding: 20px;
     margin: 20px auto;
 }
@@ -107,15 +106,14 @@ h2 {
 </style>
 </head>
 <body>
-    <div class="container">
-		<section class="fleamarket-cover">
-		    <div class="cover-content">
-		      <h1 class="cover-title">동네 일상 이야기</h1>
-		      <span class="cover-description">함께 소통하는 <br>우리 동네 생활</span>
-		      <div class="cover-image">
-		      </div>
-		    </div>
-		  </section>
+<div class="container">
+	<section class="fleamarket-cover">
+	      <h1 class="cover-title htext">믿을만한<br>나무 거래</h1>
+	      <span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>	
+	      <span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
+	      <div class="cover-image">
+	      </div>
+	  </section>
 		  
 		<div class="body-title">
 			<h2> 글쓰기</h2>

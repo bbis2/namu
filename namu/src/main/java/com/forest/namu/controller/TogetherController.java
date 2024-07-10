@@ -18,4 +18,10 @@ public class TogetherController {
 	public String write() {
 		return ".together.write";
 	}
+	
+	
+	@GetMapping("article")
+	public String article() {
+		return ".together.article";
+	}
 }
