@@ -21,7 +21,7 @@
 							<a class="nav-link dropdown-toggle" href="#">중고/경매</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="#">방명록</a></li>
-								<li><a class="dropdown-item" href="#">게시판</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/used/list">게시판</a></li>
 								<li><a class="dropdown-item" href="#">답변형 게시판</a></li>
 								<li><a class="dropdown-item" href="#">포토갤러리</a></li>
 								<li><hr class="dropdown-divider"></li>
