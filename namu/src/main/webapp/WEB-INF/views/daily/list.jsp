@@ -7,7 +7,42 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
 <style type="text/css">
+.body-container {
+	max-width: 800px;
+}
+
+.fleamarket-cover {
+    background-color: #E3F1C5;
+}
+
+h1 {
+    display: block;
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+.cover-content {
+	padding: 50px;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    margin-left: 100px;
+}
+
+@media (min-width: 768px) {
+    .fleamarket-cover {
+        height: 315px;
+        padding: 0 16px 0 16px;
+        margin-top: 60px;
+    }
+
+}
 body {
     font-family: 'Metro Sans', sans-serif;
 }
@@ -51,27 +86,19 @@ footer {
 </style>
 </head>
 <body>
- <header class="bg-light border-bottom">
-        <nav class="navbar navbar-expand-lg navbar-light container">
-            <a class="navbar-brand" href="#"><img src="logo.png" alt="로고" height="30"> 나무</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">중고거래</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">경매</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">빌려드림</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">재능마켓</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">경품</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">아이페이징</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+<div class="container">
+	<section class="fleamarket-cover">
+	    <div class="cover-content">
+	      <h1 class="cover-title">믿을만한<br>나무 거래</h1>
+	      <span class="cover-description">나: 나누고 싶은 마음을 담아<br>무: 무한한 가능성을 거래합니다.</span>
+	      <div class="cover-image">
+	      </div>
+	    </div>
+	  </section>
+</div>
+
     <main class="container my-5">
         <div class="row">
-            <div class="col-12">
-                <h2 class="bg-light p-3">일상이야기</h2>
-            </div>
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body">
@@ -128,8 +155,6 @@ footer {
     <footer class="bg-light text-center py-3">
         회사 주소, 이메일 등 푸터 정보
     </footer>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

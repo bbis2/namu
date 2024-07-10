@@ -12,4 +12,10 @@ public class DailyController {
 	public String list() {
 		return ".daily.list";
 	}
+	
+	
+	@GetMapping("write")
+	public String write() {
+		return ".daily.write";
+	}
 }
