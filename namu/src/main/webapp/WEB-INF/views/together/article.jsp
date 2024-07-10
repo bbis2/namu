@@ -15,7 +15,7 @@
 }
 
 .fleamarket-cover {
-    background-color: #E3F1C5;
+    background-color: #E3F1C5; /* 이부분이 초록상자*/
 }
 
 h1 {
@@ -34,7 +34,6 @@ h1 {
 	padding-left : 100px;
 }
 
-
 .cover-content {
 	padding: 50px;
     position: relative;
@@ -48,24 +47,12 @@ h1 {
         height: 315px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
-    }   
+    } 
 }
-/* 여기까지 초록상자*/
+/* 여기까지 리스트 */
 
 main {
     font-family: 'Metro Sans', sans-serif;
-}
-
-.fleamarket-cover {
-    background-color: #e3f1c5;
-    padding: 20px;
-    text-align: center;
-}
-
-.fleamarket-cover .cover-title {
-    font-size: 2em;
-    font-weight: bold;
-    margin: 0;
 }
 
 .container {
@@ -82,11 +69,6 @@ main {
 .col-md-3 {
     flex: 0 0 20%;
     max-width: 20%;
-}
-
-.col-md-9 {
-    flex: 0 0 80%;
-    max-width: 80%;
 }
 
 .card {
@@ -114,67 +96,120 @@ main {
     margin-bottom: 10px;
 }
 
-.categories {
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #e3f1c5;
+    padding: 20px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.header-image img {
+    width: 100px;
+    height: auto;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile-container {
+    width: 25%;
+}
+
+.profile-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-container .form-control {
+    width: 100%;
     padding: 10px;
-    background-color: #f9f9f9;
+    border: 1px solid #ddd;
     border-radius: 4px;
+    background-color: #f2f2f2;
+    margin-bottom: 10px;
+}
+
+.content-container {
+    width: 70%;
+}
+
+.content-header {
+    display: flex;
+    align-items: center;
     margin-bottom: 20px;
 }
 
-.categories span {
-    font-weight: bold;
+.image-placeholder {
+    width: 150px;
+    height: 150px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-right: 20px;
 }
 
-.filter-container {
-    text-align: right;
+.content-details h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.5em;
+}
+
+.content-description {
     margin-bottom: 20px;
 }
 
-.filter-container select {
+.content-description .form-control {
+    width: 100%;
+    height: 150px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #f2f2f2;
 }
 
-.filter-container .search-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    background-color: #f2f2f2;
-    margin-right: 10px;
+.actions {
+    display: flex;
+    justify-content: space-between;
 }
 
-.filter-container .search-button {
+.actions .btn {
     background-color: #5d4734;
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 20px;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-.filter-container .search-button:hover {
+.actions .btn:hover {
     background-color: #4c3b2b;
 }
 
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-}
-
-.grid-item {
-    background-color: #f2f2f2;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    height: 150px;
-}
 </style>
-
 </head>
 <body>
 <div class="container">
@@ -187,12 +222,13 @@ main {
 	</section>
    
 </div>
+
     <main class="container">
     	<div class="body-title">
 			<h2>전체모임</h2>
 		</div>
-        <div class="row">
-        
+		
+        <div class="row">        
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body">
@@ -216,32 +252,27 @@ main {
                 </div>
             </div>
             
-              <div class="col-md-9">
-                <div class="filter-container">
-                    <input type="text" class="search-input" placeholder="검색어를 입력하세요">
-                    <button class="search-button">검색</button>
-                </div>
-                <div class="categories">
-                    <span>동네친구</span>
-                    <span>문화/예술</span>
-                </div>
-                <div class="filter-container">
-                    <button class="search-button">모임등록</button>
-                </div>
-                <div class="grid-container">
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
+              <div>
+            <div class="content-header">
+                <div class="image-placeholder"></div>
+                <div class="content-details">
+                    <h2>모임이름</h2>
+                    <p>태그</p>
+                    <p>모임장</p>
+                    <p>멤버수</p>
+                    <p>등록일</p>
                 </div>
             </div>
+            <div class="content-description">
+                <textarea class="form-control" placeholder="모임소개" readonly></textarea>
+            </div>
+            
+            <div class="actions">
+                <button class="btn">참가신청</button>
+                <button class="btn">리스트</button>
+            </div>
         </div>
+    </div>
     </main>
 
 </body>

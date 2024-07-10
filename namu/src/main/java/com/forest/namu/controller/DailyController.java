@@ -18,4 +18,9 @@ public class DailyController {
 	public String write() {
 		return ".daily.write";
 	}
+	
+	@GetMapping("article")
+	public String article() {
+		return ".daily.article";
+	}
 }

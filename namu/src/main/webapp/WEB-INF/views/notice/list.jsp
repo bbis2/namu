@@ -38,9 +38,7 @@ h1 {
         height: 315px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
-    }
-   
-    
+    } 
 }
 
 </style>
