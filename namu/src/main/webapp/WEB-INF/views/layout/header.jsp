@@ -5,18 +5,24 @@
 
 		<nav class="navbar navbar-expand-lg">
 			<div class="container">
-				<a class="navbar-brand" href="${pageContext.request.contextPath}/">
-					<img alt="logo" src="${pageContext.request.contextPath}/resources/images/namuLogo.png" width="30" height="24" class="d-inline-block align-text-top">
-					나무
-				</a>
+
 				<button class="navbar-toggler" type="button"
 					data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
 					aria-controls="navbarTogglerDemo02" aria-expanded="false"
 					aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
+
 				<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					
+						<li class="nav-item dropdown">
+							<a class="navbar-brand" href="${pageContext.request.contextPath}/">
+								<img alt="logo" src="${pageContext.request.contextPath}/resources/images/namuLogo.png" width="30" height="24" class="d-inline-block align-text-top">
+								나무
+							</a>
+						</li>
+
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#">중고/경매</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -42,7 +48,7 @@
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#">재능마켓</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="#">방명록</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/notice/list">방명록</a></li>
 								<li><a class="dropdown-item" href="#">게시판</a></li>
 								<li><a class="dropdown-item" href="#">답변형 게시판</a></li>
 								<li><a class="dropdown-item" href="#">포토갤러리</a></li>

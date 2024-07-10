@@ -15,10 +15,6 @@
 	href="${pageContext.request.contextPath}/resources/vendor/bootstrap5/icon/bootstrap-icons.css"
 	type="text/css">
 
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/core.css"
-	type="text/css">
-
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/vendor/jquery/js/jquery.min.js"></script>
 
@@ -34,70 +30,13 @@
 	href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.css" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css2/footer.css">
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/core.css"
+	type="text/css">
 	
 	
-<style type="text/css">
-.navbar {
-	position: fixed;
-	top: 0;
-	transition: top 0.2s ease-in-out;
-	width: 100%;
-	z-index: 1;
-	box-shadow: 0px 5px 15px #D1D2D2;
-	
-	background-color: white;
-	font-weight: 700;
-	font-size: 0.875rem;
-	line-height: 1rem;
-}
 
-.nav-up {
-	top: -70px;
-}
-
-@font-face {
-	font-family: 'LINESeedKR-Bd';
-	src:
-		url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2')
-		format('woff2');
-	font-weight: 400;
-	font-style: normal;
-}
-
-body {
-	font-size: 14px;
-	font-family: "LINESeedKR-Bd", "Malgun Gothic", "맑은 고딕", NanumGothic,
-		나눔고딕, 돋움, sans-serif;
-}
-
-header {
-	font-weight: 700;
-}
-
-.dropdown:hover .dropdown-menu {
-	display: block;
-	margin-top: 0;
-}
-
-.navbar-brand {
-	font-size: 23px;
-}
-
-#live-chat {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-
-  border: none;
-  border-radius: 16px;
-  background: #61ac2d;
-  color: white;
-  padding: 12px;
-  font-weight: bold;
-  box-shadow: 0px 5px 15px gray;
-  cursor: pointer;
-}
-</style>
 
 </head>
 

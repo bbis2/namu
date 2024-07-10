@@ -3,7 +3,36 @@
 * { padding: 0; margin: 0; }
 *, *::after, *::before { box-sizing: border-box; }
 
-body { font-size: 14px; font-family: "LINESeedKR-Bd", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif; }
+@font-face {
+    font-family: 'LINESeedKR';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Th.woff2') format('woff2');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LINESeedKR';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LINESeedKR';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+body {
+	font-size: 14px;
+	font-family: 'LINESeedKR', "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
+	font-weight: 400;
+}
+
+header { font-family: 'LINESeedKR'; font-weight: 700; }
+.bd {font-family: 'LINESeedKR'; font-weight: 700; }
 
 a { text-decoration: none; color: #333; }
 a:hover, a:active{ text-decoration: underline; cursor: pointer; color: #F28011; }
@@ -15,12 +44,38 @@ textarea:focus, input:focus { outline: none; }
 .border-bottom1 { border-bottom: 1px solid #212529; }
 .border-bottom2 { border-bottom: 2px solid #212529; }
 
+#live-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  border: none;
+  border-radius: 16px;
+  background: #61ac2d;
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  box-shadow: 0px 5px 15px gray;
+  cursor: pointer;
+}
+
 /* Navigation */
 .navbar {
+	position: fixed;
+	top: 0;
+	transition: top 0.2s ease-in-out;
+	width: 100%;
+	z-index: 1;
+	box-shadow: 0px 5px 15px #D1D2D2;
+	
 	background-color: white;
-	font-weight: 500;
+	font-weight: 700;
 	font-size: 0.875rem;
 	line-height: 1rem;
+}
+
+.nav-up {
+	top: -70px;
 }
 
 .navbar .navbar-nav {
@@ -61,7 +116,15 @@ textarea:focus, input:focus { outline: none; }
 	text-decoration: none;
 }
 
+.navbar-brand {
+	font-size: 23px;
+}
 .navbar-brand:hover { text-decoration: none;}
+
+.dropdown:hover .dropdown-menu {
+	display: block;
+	margin-top: 0;
+}
 
 /* body */
 .body-container {
