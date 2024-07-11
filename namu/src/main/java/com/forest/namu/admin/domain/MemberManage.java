@@ -1,6 +1,6 @@
-package com.forest.namu.domain;
+package com.forest.namu.admin.domain;
 
-public class Member {
+public class MemberManage {
 	// member 테이블 (회원)
 	private long memberIdx;
 	private String userId;
@@ -41,65 +41,7 @@ public class Member {
 	private int stateCode;
 	private long reportNum; // 신고 번호
 	
-	// tmProfile 테이블 (재능마켓프로필)
-	private int tmMemberType;
-	private String contactTime;
-	private String intro;
-	private String expertise;
-	private String certifications;
-	private String skills;
-	private String experience;
-	private String educationMajor;
 	
-	
-	public int getTmMemberType() {
-		return tmMemberType;
-	}
-	public void setTmMemberType(int tmMemberType) {
-		this.tmMemberType = tmMemberType;
-	}
-	public String getContactTime() {
-		return contactTime;
-	}
-	public void setContactTime(String contactTime) {
-		this.contactTime = contactTime;
-	}
-	public String getIntro() {
-		return intro;
-	}
-	public void setIntro(String intro) {
-		this.intro = intro;
-	}
-	public String getExpertise() {
-		return expertise;
-	}
-	public void setExpertise(String expertise) {
-		this.expertise = expertise;
-	}
-	public String getCertifications() {
-		return certifications;
-	}
-	public void setCertifications(String certifications) {
-		this.certifications = certifications;
-	}
-	public String getSkills() {
-		return skills;
-	}
-	public void setSkills(String skills) {
-		this.skills = skills;
-	}
-	public String getExperience() {
-		return experience;
-	}
-	public void setExperience(String experience) {
-		this.experience = experience;
-	}
-	public String getEducationMajor() {
-		return educationMajor;
-	}
-	public void setEducationMajor(String educationMajor) {
-		this.educationMajor = educationMajor;
-	}
 	public long getMemberIdx() {
 		return memberIdx;
 	}

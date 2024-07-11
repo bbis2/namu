@@ -28,4 +28,13 @@ public interface MemberMapper {
 	
 	public void deleteMember1(Map<String, Object> map) throws SQLException;
 	public void deleteMember2(Map<String, Object> map) throws SQLException;
+	
+	// 패스워드 실패 횟수 / 멤버 상태
+	public int checkFailureCount(String userId);
+	public void updateFailureCountReset(String userId) throws SQLException;
+	public void updateFailureCount(String userId) throws SQLException;
+	public void insertMemberState(Member dto) throws SQLException;
+	
+	public void insertAuthority(Member dto) throws SQLException;
+	public void updateAuthority(Member dto) throws SQLException;
 }
