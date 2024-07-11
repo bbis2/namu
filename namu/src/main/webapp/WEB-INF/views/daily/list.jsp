@@ -38,7 +38,6 @@
 text-align: center;
 }
 
-
 .categories {
     display: flex;
     justify-content: space-around;
@@ -78,6 +77,10 @@ text-align: center;
 .filter-container .search-button:hover {
     background-color: #4c3b2b;
 }
+
+h2 {
+	font-weight: bold;
+}
 </style>
 
 <script type="text/javascript">
@@ -88,13 +91,12 @@ function searchList() {
 </script>
 
 <div class="container">
-
-	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">믿을만한<br>나무 거래</h1>
-		<span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>
-		<span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
+ 	<section class="fleamarket-cover">
+		<h1 class="cover-title htext bd">함께하는<br>일상생활</h1>
+		<span class="cover-description htext"></span><br>
+		<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
 		<div class="cover-image"></div>
-	</section>
+  	</section>
 
    	<div class="body-title">
 		<h2>전체 게시글</h2>
@@ -104,8 +106,8 @@ function searchList() {
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">정유진</h5>
-                        <p class="card-text">puedo_j<br>서울특별시 마포구</p>
+                        <h5 class="card-title">${dtp.nickName}</h5>
+                        <p class="card-text">서울특별시 마포구</p>
                     </div>
                 </div>
               
