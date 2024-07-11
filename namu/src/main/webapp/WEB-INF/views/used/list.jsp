@@ -15,7 +15,7 @@
 <div style="margin-top: 10px; margin-bottom: 10px">총 0 개
 <div class="search-container">
             <input type="text" class="search-input" placeholder="검색어 입력">
-            <button class="clear-button">&times;</button>
+            <button class="search-btn">검색</button>
         <button class="submit-button">
             <span>+</span>
             글쓰기
@@ -76,11 +76,11 @@
 
 <style>
 .main1 {
-background: #C3FF9A;
-height: 300px;
-width: 1296.02px;
-margin-top: 90px;
-border-radius: 5px;
+    background: #C3FF9A;
+    height: 300px;
+    width: 100%;
+    margin-top: 80px;
+    border-radius: 5px;
 }
 
 .main-best-board-container {
@@ -120,20 +120,18 @@ border-radius: 5px;
     height: 30px;
 }
 
-.search-input::placeholder {
-    color: #999;
+.search-btn{
+ border: 1px solid #ccc;
+ border-radius: 25px;
+ font-size: 12px;
+ outline: none;
+ width: 60px; 
+ height: 30px;
+ text-align: center;
 }
 
-.clear-button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 14px;
+.search-input::placeholder {
     color: #999;
-    justify-content: center;
 }
 
 .submit-button {
