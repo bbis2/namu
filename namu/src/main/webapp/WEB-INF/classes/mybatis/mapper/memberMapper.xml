@@ -21,8 +21,8 @@
 		INSERT INTO member(memberIdx, membership) VALUES (#{memberIdx}, 1) 
     </insert>
 
-    <insert id="insertMember1" parameterType="com.forest.namu.domain.Member">
-		INSERT INTO member1(memberIdx, userId, userName, userPwd, enabled, regDate, modifyDate, loginFail)
+    <insert id="insertmember" parameterType="com.forest.namu.domain.Member">
+		INSERT INTO member(memberIdx, userId, userName, userPwd, enabled, regDate, modifyDate, loginFail)
 		VALUES (#{memberIdx}, #{userId}, #{userName}, #{userPwd}, 1, SYSDATE, SYSDATE, 0) 
     </insert>
 
@@ -33,39 +33,33 @@
 			#{addr2, jdbcType=VARCHAR})
     </insert>
 	
-    <update id="insertMember12" parameterType="com.forest.namu.domain.Member">
+    <update id="insertmember2" parameterType="com.forest.namu.domain.Member">
 		INSERT ALL
 		INTO member (memberIdx, userId, nickName, userPwd, regDate, modifyDate, loginFail,
 			post, town1, addr, town2, enabled, membership) 
 		VALUES (#{memberIdx}, #{userId}, #{nickName}, #{userPwd}, SYSDATE, SYSDATE, 0,
 			#{post}, #{town1}, #{addr}, #{town2}, 1, 10)
 		
-		INTO memberDetail (userId, birth, email, tel, zip, addr1, addr2)
-		VALUES (#{userId}, #{birth}, #{email}, #{tel}, 
-			#{zip, jdbcType=VARCHAR}, #{addr1, jdbcType=VARCHAR}, 
-			#{addr2, jdbcType=VARCHAR})
+		INTO memberDetail (userId, userName, birth, email, ment, userManner, tel)
+		VALUES (#{userId}, #{userName}, #{birth}, #{email}, #{ment}, 200, #{tel})
 		SELECT * FROM dual     
     </update>
 	
 	<select id="findById" parameterType="String" resultType="com.forest.namu.domain.Member">
-		SELECT m.memberIdx, membership, m1.userId, userName, userPwd, enabled,
-			regDate, modifyDate, last_login,
-			TO_CHAR(birth, 'YYYY-MM-DD') birth, email, tel, 
-			zip, addr1, addr2
-		FROM member m 
-		JOIN member1 m1 ON m.memberIdx = m1.memberIdx 
-		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
-		WHERE m1.userId = #{userId}
+		SELECT memberIdx, membership, userId, userPwd, enabled,
+			regDate, modifyDate, lastLogin, post, town1, addr, town2
+		FROM member
+		WHERE userId = #{userId}
 	</select>
 
 	<select id="findByMemberIdx" parameterType="Long" resultType="com.forest.namu.domain.Member">
 		SELECT m.memberIdx, membership, enabled, 
 			NVL(m1.userId, 'guest') userId, NVL(userName, '손님') userName, userPwd, 
-			regDate, modifyDate, last_login,
+			regDate, modifyDate, lastLogin,
 			TO_CHAR(birth, 'YYYY-MM-DD') birth, email, tel,
 			zip, addr1, addr2
 		FROM member m
-		LEFT OUTER JOIN member1 m1 ON m.memberIdx = m1.memberIdx
+		LEFT OUTER JOIN member m1 ON m.memberIdx = m1.memberIdx
 		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
 		WHERE m.memberIdx = #{memberIdx}
 	</select>
@@ -77,11 +71,11 @@
     </update>
 
     <update id="updateMemberEnabled" parameterType="map">
-		UPDATE member1 SET enabled=#{enabled} WHERE userId=#{userId}
+		UPDATE member SET enabled=#{enabled} WHERE userId=#{userId}
     </update>
     
-    <update id="updateMember1" parameterType="com.forest.namu.domain.Member">
-		UPDATE member1 SET userPwd=#{userPwd}, modifyDate=SYSDATE
+    <update id="updatemember" parameterType="com.forest.namu.domain.Member">
+		UPDATE member SET userPwd=#{userPwd}, modifyDate=SYSDATE
 		WHERE userId=#{userId}
     </update>
 	
@@ -94,8 +88,8 @@
     </update>
 
     <!-- member 테이블 정보 삭제  -->    
-    <delete id="deleteMember1" parameterType="map">
-		DELETE FROM member1 WHERE userId=#{userId}
+    <delete id="deletemember" parameterType="map">
+		DELETE FROM member WHERE userId=#{userId}
     </delete>
     
     <delete id="deleteMember2" parameterType="map">
@@ -105,17 +99,17 @@
 	<!-- 패스워드 실패 / 회원 상태 -->
 	<select id="checkFailureCount" parameterType="String" resultType="Integer">
 		SELECT NVL(loginFail, 0) loginFail
-		FROM member1
+		FROM member
 		WHERE userId = #{userId}
 	</select>
 	
 	<update id="updateFailureCountReset" parameterType="String">
-		UPDATE member1 SET loginFail = 0
+		UPDATE member SET loginFail = 0
 		WHERE userId = #{userId}
 	</update>
 	
 	<update id="updateFailureCount" parameterType="String">
-		UPDATE member1 SET loginFail = loginFail + 1
+		UPDATE member SET loginFail = loginFail + 1
 		WHERE userId = #{userId}
 	</update>
 
@@ -126,8 +120,8 @@
 	
 	<!-- 권한 테이블 -->
 	<insert id="insertAuthority" parameterType="com.forest.namu.domain.Member">
-		INSERT INTO memberAuthority(userId, authority)
-		VALUES (#{userId}, #{authority})
+		INSERT INTO memberAuthority(authority, userId)
+		VALUES (#{authority}, #{userId})
 	</insert>
 
 	<update id="updateAuthority" parameterType="com.forest.namu.domain.Member">

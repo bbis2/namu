@@ -46,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
 
 			// mapper.insertMember1(dto);
 			// mapper.insertMember2(dto);
-			mapper.insertMember12(dto); // member1, member2 테이블 동시에
+			mapper.insertMember12(dto); // member, memberDetail 테이블 동시에
 			
 			// 권한 저장
 			dto.setAuthority("USER");
