@@ -18,6 +18,7 @@ public class MailController {
 	@GetMapping("send")
 	public String sendForm(Model model) throws Exception {
 
+	
 		return ".mail.send";
 	}
 
