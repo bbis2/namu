@@ -104,7 +104,7 @@ function searchList() {
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">${dto.}</h5>
+                        <h5 class="card-title">정유진</h5>
                         <p class="card-text">puedo_j<br>서울특별시 마포구</p>
                     </div>
                 </div>

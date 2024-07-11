@@ -9,6 +9,7 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
+
 .body-container {
 	max-width: 800px;
 	padding-top: 20px;
