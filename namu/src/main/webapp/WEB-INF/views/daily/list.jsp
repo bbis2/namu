@@ -1,31 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
-.body-container {
-	max-width: 800px;
-}
 
 .fleamarket-cover {
     background-color: #E3F1C5;
 }
 
-h1 {
-    display: block;
-    font-size: 2em;
-    margin-block-start: 0.67em;
-    margin-block-end: 0.67em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
-    unicode-bidi: isolate;
+.htext{
+	padding-top: 100px;
+	padding-left : 100px;
 }
 .cover-content {
 	padding: 50px;
@@ -40,78 +25,98 @@ h1 {
         height: 315px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
-    }
-
+        margin-bottom: 60px;
 }
-body {
-    font-family: 'Metro Sans', sans-serif;
-}
+/*여기까지 초록 박스*/
 
-.navbar {
-    background-color: #f8f8f8;
-    padding: 1rem;
+
+.body-left {
+	padding-bottom: 20px;
 }
 
-.navbar-brand img {
+.table {
+text-align: center;
+}
+
+
+.categories {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #EEF2E3;
+    border-radius: 10px;
+    margin-bottom: 50px;
+}
+.categories span {
+    font-weight: bold;
+}
+
+.filter-container {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+
+.filter-container .search-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background-color: #FFFFFF;
     margin-right: 10px;
 }
 
-.bg-light {
-    background-color: #f8f8f8 !important;
+.filter-container .search-button {
+    background-color: #74634F;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
-.header-title {
-    font-size: 1.5rem;
-    font-weight: bold;
+.filter-container .search-button:hover {
+    background-color: #4c3b2b;
 }
-
-.card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-}
-
-.table th, .table td {
-    text-align: center;
-    vertical-align: middle;
-}
-
-footer {
-    background-color: #f8f8f8;
-    padding: 1rem;
-    text-align: center;
-    font-size: 0.875rem;
-    color: #666;
-}
-
 </style>
-</head>
-<body>
-<div class="container">
-	<section class="fleamarket-cover">
-	    <div class="cover-content">
-	      <h1 class="cover-title">믿을만한<br>나무 거래</h1>
-	      <span class="cover-description">나: 나누고 싶은 마음을 담아<br>무: 무한한 가능성을 거래합니다.</span>
-	      <div class="cover-image">
-	      </div>
-	    </div>
-	  </section>
-</div>
 
+<script type="text/javascript">
+function searchList() {
+	var f = document.searchForm;
+	f.submit();
+}
+</script>
+
+<div class="container">
+
+	<section class="fleamarket-cover">
+		<h1 class="cover-title htext bd">믿을만한<br>나무 거래</h1>
+		<span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>
+		<span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
+		<div class="cover-image"></div>
+	</section>
+
+   	<div class="body-title">
+		<h2>전체 게시글</h2>
+	</div>
     <main class="container my-5">
         <div class="row">
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">정유진</h5>
+                        <h5 class="card-title">${dto.}</h5>
                         <p class="card-text">puedo_j<br>서울특별시 마포구</p>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <input type="text" class="form-control mb-2" placeholder="Title">
-                    <select class="form-control">
-                        <option>Title</option>
-                    </select>
-                </div>
+              
+		<div class="body-left">
+				<ul class="list-group">
+					<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100001">모임</li>
+					<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100002">일상</li>
+					<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100003">챌린지</li>
+				</ul>
+			</div>
+			
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">BEST TOP 10</h5>
@@ -120,41 +125,72 @@ footer {
                 </div>
             </div>
             <div class="col-md-9">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">전체게시글</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>게시글번호</th>
-                                    <th>태그</th>
-                                    <th>제목</th>
-                                    <th>닉네임</th>
-                                    <th>등록일</th>
-                                    <th>조회수</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>#여행</td>
-                                    <td>제주도 맛집 추천해주세요~</td>
-                                    <td>짱짱짱</td>
-                                    <td>2024-07-06</td>
-                                    <td>100</td>
-                                </tr>
-                                <!-- 더 많은 행 추가 가능 -->
-                            </tbody>
-                        </table>
-                        <button class="btn btn-primary">글올리기</button>
-                    </div>
+              <div class="filter-container">
+                  <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+                  <button type="button" class="search-button" onclick="searchList()" title="검색" >검색</button>
+                  <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/daily/write';">글올리기</button>
+              </div>
+              <div class="categories">
+                    <span>태그</span>
+                   	<span>태그</span>
+                    <span>태그</span>
+                    <span>태그</span>
+                    <span>태그</span>             
                 </div>
+                
+            <!-- 페이지 출력 -->
+            <div class="row board-list-header">
+	            <div class="col-auto me-auto">
+	            	${dataCount}개(${current_page}/${total_page} 페이지)
+	            </div>
+	            <div class="col-auto">&nbsp;</div>
+	        </div>	
+                
+            <!-- 테이블 만들기 -->
+            <table class="table table-hover board-list">
+                <thead class="table-light">
+                    <tr>
+                        <th>게시글번호</th>
+                        <th>태그</th>
+                        <th>제목</th>
+                        <th>닉네임</th>
+                        <th>등록일</th>
+                        <th>조회수</th>
+                    </tr>
+                </thead>
+                
+                
+                <tbody>
+                	<c:forEach var="dto" items="${list}" varStatus="status">
+                    <tr>
+                    	<td>${dataCount -(page-1) * size - status.index}</td>
+                    	<td class="left">
+                    		<a href="${articleUrl}&num=${dto.num}" class="text-rest">${dto.subject}</a>
+                    	</td>
+                        <td>1</td>
+                        <td>#여행</td>
+                        <td>제주도 맛집 추천해주세요~</td>
+                        <td>짱짱짱</td>
+                        <td>2024-07-06</td>
+                        <td>100</td>
+                        <td>
+                        	<c:if test="${not empty dto.saveFilename}">
+                        		<a href="${pageContext.request.contextPath}/daily/download?num=${dto.numm}"><i class="bi bi-file-arrow-down"></i></a>
+                        	</c:if>
+                        </td>
+                    </tr>
+                    <!-- 더 많은 행 추가 가능 -->
+                    </c:forEach>
+                </tbody>
+            </table>
+            
+            <div class="page-navigation">
+            	${dataCount==0? "등록된 게시글이 없습니다." : paging }
+            </div>
+            
             </div>
         </div>
     </main>
-    <footer class="bg-light text-center py-3">
-        회사 주소, 이메일 등 푸터 정보
-    </footer>
-
+</div>
 </body>
 </html>
