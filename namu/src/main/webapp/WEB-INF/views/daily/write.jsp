@@ -9,24 +9,16 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
-.body-container {
-	max-width: 800px;
-}
 
 .fleamarket-cover {
     background-color: #E3F1C5;
 }
 
-h1 {
-    display: block;
-    font-size: 2em;
-    margin-block-start: 0.67em;
-    margin-block-end: 0.67em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
-    unicode-bidi: isolate;
+.htext{
+	padding-top: 100px;
+	padding-left : 100px;
 }
+
 .cover-content {
 	padding: 50px;
     position: relative;
@@ -41,12 +33,12 @@ h1 {
         padding: 0 16px 0 16px;
         margin-top: 60px;
     }
-   
-    
 }
-.container {
-    padding: 20px;
-    margin: 20px auto;
+/*여기까지 초록 박스*/
+
+.filter-container {
+    text-align: right;
+    margin-bottom: 20px;
 }
 
 h2 {
@@ -56,7 +48,6 @@ h2 {
     font-size: 1.5em;
 }
 
-
 .form-group {
     margin-bottom: 15px;
     display: flex;
@@ -64,7 +55,7 @@ h2 {
 }
 
 .form-group label {
-    width: 100px;
+    width: 200px;
     font-weight: bold;
 }
 
@@ -79,7 +70,7 @@ h2 {
 }
 
 .form-group textarea {
-    height: 150px;
+    height: 100px;
     resize: vertical;
 }
 
@@ -103,23 +94,49 @@ h2 {
     background-color: #4c3b2b;
 }
 
+h2 {
+	font-weight: bold;
+}
 </style>
+
+<script type="text/javascript">
+function check() {
+    const f = document.DailyForm;
+	let str;
+	
+    str = f.subject.value.trim();
+    if(!str) {
+        alert("제목을 입력하세요.");
+        f.subject.focus();
+        return false;
+    }
+
+    str = f.content.value.trim();
+    if(! str || str === "<p><br></p>") {
+        alert("내용을 입력하세요. ");
+        f.content.focus();
+        return false;
+    }
+
+    f.action = "${pageContext.request.contextPath}/daily/${mode}";
+    return true;
+}
+</script>
+
 </head>
 <body>
 <div class="container">
-	<section class="fleamarket-cover">
-	      <h1 class="cover-title htext">믿을만한<br>나무 거래</h1>
-	      <span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>	
-	      <span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
-	      <div class="cover-image">
-	      </div>
+	 <section class="fleamarket-cover">
+			<h1 class="cover-title htext bd">함께하는<br>일상생활</h1>
+			<span class="cover-description htext"></span><br>
+			<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
+			<div class="cover-image"></div>
 	  </section>
 		  
 		<div class="body-title">
-			<h2> 글쓰기</h2>
+			<h2>글쓰기</h2>
 		</div>
 		  
-		          
         <form>
             <div class="form-group">
                 <label for="tag">태그</label>
@@ -137,7 +154,7 @@ h2 {
             </div>
             <div class="form-group">
                 <label for="content">내용</label>
-                <textarea id="content" name="content"></textarea>
+					<textarea name="content" id="ir1" class="form-control" style="width: 95%; height: 270px;">${dto.content}</textarea>
             </div>
             <div class="form-buttons">
                 <button type="submit">글등록</button>
@@ -145,7 +162,36 @@ h2 {
                 <button type="button" onclick="window.location.href='/'">취소하기</button>
             </div>
         </form>
-	</div>
+</div>
+	
+<!-- 스마트에디터 -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+<script type="text/javascript">
+var oEditors = [];
+nhn.husky.EZCreator.createInIFrame({
+	oAppRef: oEditors,
+	elPlaceHolder: "ir1",
+	sSkinURI: "${pageContext.request.contextPath}/resources/vendor/se2/SmartEditor2Skin.html",
+	fCreator: "createSEditor2"
+});
 
+function submitContents(elClickedObj) {
+	 oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
+	 try {
+		if(! check()) {
+			return;
+		}
+		elClickedObj.submit();
+	} catch(e) {
+	}
+}
+
+function setDefaultFont() {
+	var sDefaultFont = '돋움';
+	var nFontSize = 12;
+	oEditors.getById["ir1"].setDefaultFont(sDefaultFont, nFontSize);
+}
+</script>
+	
 </body>
 </html>
