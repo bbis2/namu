@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sp.app.mapper.MemberMapper">
-	<select id="loginMember" parameterType="String" resultType="com.sp.app.domain.Member">
+<mapper namespace="com.forest.namu.mapper.MemberMapper">
+	<select id="loginMember" parameterType="String" resultType="com.forest.namu.domain.Member">
 		SELECT memberIdx, membership, userId, nickName, userPwd, regDate, modifyDate, lastLogin
 		FROM member
 		WHERE userId = #{userId} AND enabled != 0
@@ -21,33 +21,33 @@
 		INSERT INTO member(memberIdx, membership) VALUES (#{memberIdx}, 1) 
     </insert>
 
-    <insert id="insertMember1" parameterType="com.sp.app.domain.Member">
+    <insert id="insertMember1" parameterType="com.forest.namu.domain.Member">
 		INSERT INTO member1(memberIdx, userId, userName, userPwd, enabled, regDate, modifyDate, loginFail)
 		VALUES (#{memberIdx}, #{userId}, #{userName}, #{userPwd}, 1, SYSDATE, SYSDATE, 0) 
     </insert>
 
-    <insert id="insertMember2" parameterType="com.sp.app.domain.Member">
+    <insert id="insertMember2" parameterType="com.forest.namu.domain.Member">
 		INSERT INTO member2(userId, birth, email, tel, zip, addr1, addr2)
 		VALUES (#{userId}, #{birth}, #{email}, #{tel}, 
 			#{zip, jdbcType=VARCHAR}, #{addr1, jdbcType=VARCHAR}, 
 			#{addr2, jdbcType=VARCHAR})
     </insert>
 	
-    <update id="insertMember12" parameterType="com.sp.app.domain.Member">
+    <update id="insertMember12" parameterType="com.forest.namu.domain.Member">
 		INSERT ALL
-		INTO member(memberIdx, userId, nickName, userPwd, regDate, modifyDate, loginFail,
+		INTO member (memberIdx, userId, nickName, userPwd, regDate, modifyDate, loginFail,
 			post, town1, addr, town2, enabled, membership) 
 		VALUES (#{memberIdx}, #{userId}, #{nickName}, #{userPwd}, SYSDATE, SYSDATE, 0,
 			#{post}, #{town1}, #{addr}, #{town2}, 1, 10)
 		
-		INTO member2(userId, birth, email, tel, zip, addr1, addr2)
+		INTO memberDetail (userId, birth, email, tel, zip, addr1, addr2)
 		VALUES (#{userId}, #{birth}, #{email}, #{tel}, 
 			#{zip, jdbcType=VARCHAR}, #{addr1, jdbcType=VARCHAR}, 
 			#{addr2, jdbcType=VARCHAR})
 		SELECT * FROM dual     
     </update>
 	
-	<select id="findById" parameterType="String" resultType="com.sp.app.domain.Member">
+	<select id="findById" parameterType="String" resultType="com.forest.namu.domain.Member">
 		SELECT m.memberIdx, membership, m1.userId, userName, userPwd, enabled,
 			regDate, modifyDate, last_login,
 			TO_CHAR(birth, 'YYYY-MM-DD') birth, email, tel, 
@@ -58,7 +58,7 @@
 		WHERE m1.userId = #{userId}
 	</select>
 
-	<select id="findByMemberIdx" parameterType="Long" resultType="com.sp.app.domain.Member">
+	<select id="findByMemberIdx" parameterType="Long" resultType="com.forest.namu.domain.Member">
 		SELECT m.memberIdx, membership, enabled, 
 			NVL(m1.userId, 'guest') userId, NVL(userName, '손님') userName, userPwd, 
 			regDate, modifyDate, last_login,
@@ -80,12 +80,12 @@
 		UPDATE member1 SET enabled=#{enabled} WHERE userId=#{userId}
     </update>
     
-    <update id="updateMember1" parameterType="com.sp.app.domain.Member">
+    <update id="updateMember1" parameterType="com.forest.namu.domain.Member">
 		UPDATE member1 SET userPwd=#{userPwd}, modifyDate=SYSDATE
 		WHERE userId=#{userId}
     </update>
 	
-    <update id="updateMember2" parameterType="com.sp.app.domain.Member">
+    <update id="updateMember2" parameterType="com.forest.namu.domain.Member">
 		UPDATE member2 SET email=#{email, jdbcType=VARCHAR}, 
 			tel=#{tel, jdbcType=VARCHAR}, birth=#{birth, jdbcType=VARCHAR},
 			zip=#{zip, jdbcType=VARCHAR},
@@ -119,18 +119,18 @@
 		WHERE userId = #{userId}
 	</update>
 
-	<insert id="insertMemberState" parameterType="com.sp.app.domain.Member">
+	<insert id="insertMemberState" parameterType="com.forest.namu.domain.Member">
 		INSERT INTO memberState(num, userId, stateCode, memo, registerId, reg_date)
 		VALUES (memberState_seq.NEXTVAL, #{userId}, #{stateCode}, #{memo}, #{registerId}, SYSDATE)
 	</insert>
 	
 	<!-- 권한 테이블 -->
-	<insert id="insertAuthority" parameterType="com.sp.app.domain.Member">
+	<insert id="insertAuthority" parameterType="com.forest.namu.domain.Member">
 		INSERT INTO memberAuthority(userId, authority)
 		VALUES (#{userId}, #{authority})
 	</insert>
 
-	<update id="updateAuthority" parameterType="com.sp.app.domain.Member">
+	<update id="updateAuthority" parameterType="com.forest.namu.domain.Member">
 		UPDATE memberAuthority SET authority = #{authority} WHERE userId = #{userId}
 	</update>	
 </mapper>
