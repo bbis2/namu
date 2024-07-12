@@ -1,7 +1,7 @@
 package com.forest.namu.domain;
 
 public class Used {
-	private int num;
+	private long num;
 	private String subject;
 	private String content;
 	private long price;
@@ -9,8 +9,9 @@ public class Used {
 	private long hitCount;
 	private int state;
 	private String nickName;
+	private String userId;
 	
-	public int getNum() {
+	public long getNum() {
 		return num;
 	}
 	public void setNum(int num) {
@@ -57,6 +58,12 @@ public class Used {
 	}
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 }

@@ -16,7 +16,7 @@
 <div class="search-container">
             <input type="text" class="search-input" placeholder="검색어 입력">
             <button class="search-btn">검색</button>
-        <button class="submit-button">
+        <button class="submit-button" onclick="location.href='${pageContext.request.contextPath}/used/write';">
             <span>+</span>
             글쓰기
         </button>
