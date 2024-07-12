@@ -22,4 +22,8 @@
 	SELECT point_seq.NEXTVAL FROM dual
 </select>
 
+<select id="selectCharge" parameterType="String" resultType="com.forest.namu.domain.Point">
+select pointnum,userId,regDate,lastMoney,pointVar from point where description = '전자 결제' and userId  = #{userId} order by regDate desc
+</select>
+
 </mapper>

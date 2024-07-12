@@ -1,6 +1,8 @@
 package com.forest.namu.service;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +54,19 @@ public class PointServiceImpl implements PointService{
 			throw e;
 		}
 		return sequence;
+	}
+
+	@Override
+	public List<Point> selectCharge(String userId) throws Exception {
+		List<Point> list = null;
+		
+		try {
+			list = mapper.selectCharge(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 
 }

@@ -9,6 +9,11 @@
 <title>Box Layout Example</title>
 
 <style>
+
+.modal-dialog {
+    max-width: 800px; /* 원하는 너비로 조정 */
+}
+
 .namuLevel {
 	height: 50px;
 	width: 50px;
@@ -336,11 +341,10 @@ h1 {
 				</div>
 				<div style="flex-grow: 1; text-align: left; font-size: 19px;">
 					<!-- 오른쪽 영역 -->
-					<p>
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_refund.png">
+					<a onclick="refundOk();"> <img class="icons"
+						src="${pageContext.request.contextPath}/resources/images/icon_refund.png">
 						&nbsp;환불하기
-					</p>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -425,8 +429,77 @@ h1 {
 		</div>
 	</div>
 </div>
+<div id="refundModal" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-lg"> <!-- modal-lg 추가 -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">환불 목록</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="refundTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>결제번호</th>
+                            <th>결제아이디</th>
+                            <th>결제시간</th>
+                            <th>결제액수</th>
+                            <th>결제유형 : 전자 결제</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 데이터가 동적으로 추가됩니다 -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
+
+
+function refundOk() {
+    let url = "${pageContext.request.contextPath}/mypage/selectCharge";
+    let query = "";
+
+    const fn = function(data) {
+        let state = data.state;
+        if (state === "true") {
+            // console.log(data.list);
+            let htmlContent = '';
+			
+            for (let it of data.list) {
+                htmlContent += '<tr>' +
+                    '<td>' + it.pointNum + '</td>' +
+                    '<td>' + it.userId + '</td>' +
+                    '<td>' + it.regDate + '</td>' +
+                    '<td>' + it.pointVar + '</td>' +
+                    '<td><button type="button" onclick="refundGo(this);" data-num="' + it.pointNum + '">환불하기</button></td>' +
+                '</tr>';
+            }
+
+            $('#refundTable tbody').html(htmlContent);
+            $('#refundModal').modal('show');
+        } else {
+            alert("실패");
+        }
+    };
+
+    ajaxFun(url, "get", query, "json", fn);
+}
+
+function refundGo(button) {
+    const num = button.getAttribute('data-num');
+    cancelPay(num);
+}
+
+
+
+
 function sendOk() {
     var money = document.getElementById("money").value;
     if (money < 100) {
@@ -507,7 +580,7 @@ function sendOk() {
 	        let state = data.state;
 	        if (state === "true") {
 	            alert("저장 성공");
-	            href = "${pageContext.request.contextPath}/mypage/list";
+	            location.href = "${pageContext.request.contextPath}/mypage/list";
 	        } else {
 	            alert("저장 실패");
 	        }
@@ -545,4 +618,6 @@ function sendOk() {
 			}
 		});
 	}
+
 </script>
+

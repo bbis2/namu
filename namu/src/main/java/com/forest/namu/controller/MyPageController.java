@@ -1,6 +1,7 @@
 package com.forest.namu.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -20,30 +21,30 @@ import com.forest.namu.service.PointService;
 @Controller
 @RequestMapping("/mypage/*")
 public class MyPageController {
-	
+
 	@Autowired
 	private PointService service;
-	
+
 	@GetMapping("list")
 	public String list(HttpSession session, Model model) throws Exception {
-		
+
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		long point = service.selectPoint(info.getUserId());
-		
-		model.addAttribute("userId",info.getUserId());
-		model.addAttribute("point",point);
-		
+
+		model.addAttribute("userId", info.getUserId());
+		model.addAttribute("point", point);
+
 		return ".mypage.list";
 	}
-	
+
 	@PostMapping("pointCharge")
 	@ResponseBody
-	public Map<String,Object> insertPoint(Point dto,HttpSession session)throws Exception{
-		
+	public Map<String, Object> insertPoint(Point dto, HttpSession session) throws Exception {
+
 		String state = "true";
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
+
 		try {
 			dto.setUserId(info.getUserId());
 			service.insertPoint(dto);
@@ -54,24 +55,45 @@ public class MyPageController {
 		model.put("state", state);
 		return model;
 	}
-	
+
 	@PostMapping("selectSeq")
 	@ResponseBody
-	public Map<String,Object> selectSequence()throws Exception{
-		
+	public Map<String, Object> selectSequence() throws Exception {
+
 		String state = "true";
 		long sequence = 0;
-		
+
 		try {
 			sequence = service.selectSeq();
-			
+
 		} catch (Exception e) {
 			state = "false";
 		}
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("state", state);
 		model.put("sequence", sequence);
+
+		return model;
+	}
+
+	@GetMapping("selectCharge")
+	@ResponseBody
+	public Map<String, Object> selectCharge(HttpSession session) throws Exception {
+
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		List<Point> list = service.selectCharge(info.getUserId());
+
+		if(list.isEmpty()) {
+			state = "false";
+		}
 		
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("list", list);
+
 		return model;
 	}
 }
