@@ -26,57 +26,35 @@
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#">중고/경매</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="#">방명록</a></li>
-								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/used/list">게시판</a></li>
-								<li><a class="dropdown-item" href="#">답변형 게시판</a></li>
-								<li><a class="dropdown-item" href="#">포토갤러리</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item" href="#">채팅</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/used/list">중고거래</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/auction/list">중고경매</a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#">빌려드림</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="#">방명록</a></li>
-								<li><a class="dropdown-item" href="#">게시판</a></li>
-								<li><a class="dropdown-item" href="#">답변형 게시판</a></li>
-								<li><a class="dropdown-item" href="#">포토갤러리</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item" href="#">채팅</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/borrow/list">빌려줘요</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/rent/list">빌려드림</a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#">재능마켓</a>
-							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/notice/list">방명록</a></li>
-								<li><a class="dropdown-item" href="#">게시판</a></li>
-								<li><a class="dropdown-item" href="#">답변형 게시판</a></li>
-								<li><a class="dropdown-item" href="#">포토갤러리</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item" href="#">채팅</a></li>
-							</ul>
+							<a class="nav-link" href="${pageContext.request.contextPath}/talentmarket/list">재능마켓</a>
 						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#">나무모임</a>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="#">방명록</a></li>
-								<li><a class="dropdown-item" href="#">게시판</a></li>
-								<li><a class="dropdown-item" href="#">답변형 게시판</a></li>
-								<li><a class="dropdown-item" href="#">포토갤러리</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/daily/list">나무일상</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/together/list">나무모임</a></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/challenge/list">챌린지</a></li>
 								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item" href="#">채팅</a></li>
+								<li><a class="dropdown-item" href="#">내집근처</a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#">공지사항</a>
-							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="#">방명록</a></li>
-								<li><a class="dropdown-item" href="#">게시판</a></li>
-								<li><a class="dropdown-item" href="#">답변형 게시판</a></li>
-								<li><a class="dropdown-item" href="#">포토갤러리</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item" href="#">채팅</a></li>
-							</ul>
+							<a class="nav-link" href="${pageContext.request.contextPath}/delivery/list">배달해요</a>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link" href="${pageContext.request.contextPath}/notice/list">공지사항</a>
 						</li>
 					</ul>
 					
