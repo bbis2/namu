@@ -3,7 +3,7 @@ package com.forest.namu.domain;
 public class Daily {
 	private long num;
 	private String userId;
-	private int tagId;
+	private int tagName;
 	private String subject;
 	private String content;
 	private String regDate;
@@ -24,11 +24,11 @@ public class Daily {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public int getTagId() {
-		return tagId;
+	public int gettagName() {
+		return tagName;
 	}
-	public void setTagId(int tagId) {
-		this.tagId = tagId;
+	public void settagName(int tagName) {
+		this.tagName = tagName;
 	}
 	public String getSubject() {
 		return subject;

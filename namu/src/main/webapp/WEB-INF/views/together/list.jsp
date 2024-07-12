@@ -185,9 +185,9 @@ main {
 	      <span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
 	      <div class="cover-image">
 	      </div>
-	</section>
-   
+	</section>   
 </div>
+
     <main class="container">
     	<div class="body-title">
 			<h2>전체모임</h2>

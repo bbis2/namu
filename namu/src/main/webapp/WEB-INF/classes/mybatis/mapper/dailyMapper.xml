@@ -4,8 +4,17 @@
 <mapper namespace="com.forest.namu.mapper.DailyMapper">
 
 	<insert id="insertDaily" parameterType="com.forest.namu.domain.Daily">
-		INSERT INTO daily (num, userId, tagId, subject, content, regDate, hitCount, notice, nickName)
-		VALUES (daily_seq.NEXTVAL, #{userId}, #{tagId}, #{subject}, #{content},#{regDate}, #{notice}, #{nickName})
+		INSERT INTO daily (num, userId, tagId, subject, content, regDate, hitCount, notice)
+		VALUES (daily_seq.NEXTVAL, #{userId}, #{tagId}, #{subject}, #{content},#{regDate}, #{notice})
 	</insert>
+	
+	<sql id="where-list">
+		<choose>
+		<when test="schType == 'all' ">
+			(INSTR(subject, #{kwd}) &gt; 0
+			OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
+		</when>
+		</choose>
+	</sql>
 
 </mapper>

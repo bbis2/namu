@@ -100,14 +100,23 @@ function searchList() {
 
    	<div class="body-title">
 		<h2>전체 게시글</h2>
+             <div class="filter-container">
+                 <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+                 <button type="button" class="search-button" onclick="searchList()" title="검색" >검색</button>
+                 <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/daily/write';">글올리기</button>
+             </div>		
+		
 	</div>
+	
     <main class="container my-5">
         <div class="row">
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">${dtp.nickName}</h5>
-                        <p class="card-text">서울특별시 마포구</p>
+                        <h5 class="card-title">정유진</h5>
+                           <p>puedo_j</p>
+            			   <p>서울특별시 마포구</p>
+          				   <p>쪽지 | 스크랩 | 알림</p>
                     </div>
                 </div>
               
@@ -127,17 +136,11 @@ function searchList() {
                 </div>
             </div>
             <div class="col-md-9">
-              <div class="filter-container">
-                  <input type="text" class="search-input" placeholder="검색어를 입력하세요">
-                  <button type="button" class="search-button" onclick="searchList()" title="검색" >검색</button>
-                  <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/daily/write';">글올리기</button>
-              </div>
               <div class="categories">
-                    <span>태그</span>
-                   	<span>태그</span>
-                    <span>태그</span>
-                    <span>태그</span>
-                    <span>태그</span>             
+                    <span><a href="">태그</a></span>         
+                    <span><a href="">태그</a></span>         
+                    <span><a href="">태그</a></span>         
+                    <span><a href="">태그</a></span>         
                 </div>
                 
             <!-- 페이지 출력 -->
@@ -166,15 +169,13 @@ function searchList() {
                 	<c:forEach var="dto" items="${list}" varStatus="status">
                     <tr>
                     	<td>${dataCount -(page-1) * size - status.index}</td>
+                    	<td>${dto.tagName}</td>
                     	<td class="left">
                     		<a href="${articleUrl}&num=${dto.num}" class="text-rest">${dto.subject}</a>
                     	</td>
-                        <td>1</td>
-                        <td>#여행</td>
-                        <td>제주도 맛집 추천해주세요~</td>
-                        <td>짱짱짱</td>
-                        <td>2024-07-06</td>
-                        <td>100</td>
+                        <td>${dto.nickName}</td>
+                        <td>${dto.regDate}</td>
+                        <td>${dto.hitCount}</td>
                         <td>
                         	<c:if test="${not empty dto.saveFilename}">
                         		<a href="${pageContext.request.contextPath}/daily/download?num=${dto.numm}"><i class="bi bi-file-arrow-down"></i></a>
