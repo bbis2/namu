@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.PointMapper">
+
+<insert id="insertPoint" parameterType="com.forest.namu.domain.Point">
+	INSERT INTO point (pointNum,userId,description,regDate,currentPoint,pointVar,pointCate,lastMoney)
+	VALUES (#{pointNum},#{userId},#{description},SYSDATE,#{currentPoint},#{pointVar},#{pointCate},#{lastMoney})
+</insert>
+
+<select id="selectPoint" parameterType="String" resultType="Integer">
+	SELECT COALESCE(
+    (SELECT NVL(lastMoney, 0)
+     FROM point
+     WHERE userId = #{userId}
+     ORDER BY regDate DESC
+     FETCH FIRST 1 ROWS ONLY), 0) AS lastMoney
+	FROM dual
+</select>
+
+<select id="selectSeq" resultType="Long">
+	SELECT point_seq.NEXTVAL FROM dual
+</select>
+
+</mapper>
