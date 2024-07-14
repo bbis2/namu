@@ -10,6 +10,22 @@ public class Point {
 	private String userId;
 	private long lastMoney;
 	
+	public long getPoint() {
+		return point;
+	}
+	public void setPoint(long point) {
+		this.point = point;
+	}
+	// 환불테이블 용도
+	private long point;
+	private long merchant_id;
+	
+	public long getMerchant_id() {
+		return merchant_id;
+	}
+	public void setMerchant_id(long merchant_id) {
+		this.merchant_id = merchant_id;
+	}
 	public long getLastMoney() {
 		return lastMoney;
 	}

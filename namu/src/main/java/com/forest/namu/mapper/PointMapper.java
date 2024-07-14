@@ -12,4 +12,5 @@ public interface PointMapper {
 	public int selectPoint(String userId)throws Exception;
 	public long selectSeq()throws Exception;
 	public List<Point> selectCharge(String userId)throws Exception;
+	public void insertRefund(Point dto)throws Exception;
 }

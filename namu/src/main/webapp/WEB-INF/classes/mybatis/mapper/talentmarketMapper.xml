@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.TalentMarketMapper">
+	<select id="talentSeq">
+		SELECT talentmarket_seq.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertTalent" parameterType="com.forest.namu.domain.TalentMarket">
+		INSERT INTO talentmarket(tboardNum,subject,content,price,guidelines,regDate,userId,typeNum,categoryNum,thumbnail) VALUES
+		(#{tboardNum},#{subject},#{content},#{price},#{guidelines},SYSDATE,#{userId},#{typeNum},#{categoryNum},#{thumbnail})
+	</insert>
+	
+	<insert id="insertTalentFile" parameterType="com.forest.namu.domain.TalentMarket">
+		INSERT INTO tmFile(fileNum,saveFileName,tboardNum) VALUES (tmFile_seq.NEXTVAL,#{saveFileName},#{tboardNum})
+	</insert>
+	
+	<select id="optionSeq" resultType="Long">
+		SELECT talentOption_seq.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertTalentOption" parameterType="com.sp.app.admin.domain.TalentMarket">
+		INSERT INTO talentOption(optionNum, optionName, tboardNum, parentOption)
+			VALUES(#{optionNum}, #{optionName}, #{productNum}, #{parentOption, jdbcType=INTEGER})
+	</insert>
+	
+	<select id="detailSeq" resultType="Long">
+		SELECT optionDetail_seq.NEXTVAL FROM dual
+	</select>
+
+	<insert id="insertOptionDetail" parameterType="com.sp.app.admin.domain.TalentMarket">
+		INSERT INTO tmOptionDetail(detailNum, optionNum, optionValue)
+			VALUES(#{detailNum}, #{optionNum}, #{optionValue})
+	</insert>
+	
+	<select id="findByCategory" parameterType="Long" resultType="com.sp.app.admin.domain.TalentMarket">
+		SELECT categoryNum, categoryName,use
+		FROM talentCategory
+		WHERE categoryNum = #{categoryNum}
+	</select>
+	
+	<select id="listCategory">
+		SELECT categoryNum, categoryName, use
+		FROM talentCategory
+		WHERE use = 1
+		ORDER BY categoryNum
+	</select>
+	
+	<select id="listType">
+		SELECT typeNum, type
+		FROM tmPurchaseType
+	</select>
+	
+	<select id="findByType" parameterType="Long" resultType="com.sp.app.admin.domain.TalentMarket">
+		SELECT typeNum,type
+		FROM tmPurchaseType
+		WHERE typeNum = #{typeNum}
+	</select>
+	
+	<update id="updateTalent" parameterType="com.forest.namu.domain.TalentMarket">
+		UPDATE talentmarket SET typeNum=#{typeNum} , subject = #{subject} ,content = #{content}, price = #{price} , 
+			guidelines= #{guidelines})
+	</update>
+	
+	<update id="updateTalentOption" parameterType="com.forest.namu.domain.TalentMarket">
+		UPDATE talentOption SET optionName = #{optionName}
+		WHERE optionNum = #{optionNum}
+	</update>
+	
+	<update id="updateOptionDetail" parameterType="com.forest.namu.domain.TalentMarket">
+		UPDATE tmOptionDetail SET optionValue = #{optionValue}
+		WHERE detailNum = #{detailNum}
+	</update>
+	
+	<delete id="deleteTalent" parameterType="long">
+		DELECT FROM WHERE tboardNum=#{tboardNum}
+	</delete>
+	
+	<delete id="deleteTalentFile" parameterType="long">
+		DELETE FROM tmFile WHERE fileNum = #{fileNum}
+	</delete>
+	
+	<delete id="deleteTalentOption">
+		DELETE FROM talentOption WHERE optionNum = #{optionNum}
+	</delete>
+	
+	<delete id="deleteOptionDetail">
+		DELETE FROM tmOptionDetail WHERE detailNum = #{detailNum}
+	</delete>
+	
+	<delete id="deleteOptionDetail2">
+		DELETE FROM optionDetail WHERE optionNum = #{optionNum}
+	</delete>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all' ">
+				( INSTR(subject, #{kwd}) &gt; 0
+				    OR  DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
+			</when>
+			<when test="schType == 'regDate' ">
+				( TO_CHAR(reg_date, 'YYYYMMDD') = #{kwd} 
+					OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<when test="schType == 'content' ">
+				DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 
+			</when>
+			<otherwise>
+				INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0) 
+		FROM talentMarket t
+		<where>
+			<if test="tmPurchaseType!=null">
+				t.typeNum = #{typeNum}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<select id="listTalentMarket" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
+		SELECT tboardNum,subject,content,price,guidelines,regDate,userId,typeNum
+		FROM talentMarket
+		<where>
+			<if test="tmPurchaseType!=null">
+				t.typeNum = #{typeNum}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+		ORDER BY tboardNum DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!--상세정보-->
+	<select id="findById" parameterType="long" resultType="com.forest.namu.domain.TalentMarket">
+		SELECT tboardNum,subject,content,price,guidelines,regDate,userId,typeNum
+		FROM talentMarket t
+		JOIN tmPurchaseType p ON t.typeNum = p.typeNum
+		WHERE t.tboardNum = #{productNum}
+	</select>
+	
+	<select id="listTalentMarketFile" parameterType="long" resultType="com.forest.namu.domain.TalentMarket">
+		SELECT fileNum , tboardNum, saveFileName
+		FROM tmFile
+		WHERE tboardNum = #{tboardNum}
+	</select>
+	
+	<select id="listTalentOption" parameterType="long" resultType="com.forest.namu.domain.TalentMarket">
+		SELECT optionNum, optionName, parentOption, tboardNum
+		FROM talentOption
+		WHERE tboardNum = #{tboardNum}
+		ORDER BY parentOption NULLS FIRST, parentOption
+	</select>
+	
+	<select id="listOptionDetail" parameterType=" long" resultType="com.forest.namu.domain.TalentMarket">
+		SELECT detailNum, optionNum, optionValue
+		FROM tmOptionDetail
+		WHERE optionNum = #{optionNum}
+		ORDER BY detailNum
+	</select>
+	
+	
+</mapper>

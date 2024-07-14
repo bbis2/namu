@@ -69,4 +69,16 @@ public class PointServiceImpl implements PointService{
 		return list;
 	}
 
+	@Override
+	public void insertRefund(Point dto) throws Exception {
+		
+		try {
+			mapper.insertRefund(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 }
