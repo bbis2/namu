@@ -26,4 +26,9 @@
 select pointnum,userId,regDate,lastMoney,pointVar from point where description = '전자 결제' and userId  = #{userId} order by regDate desc
 </select>
 
+<insert id = "insertRefund" parameterType="com.forest.namu.domain.Point">
+	INSERT INTO refund (refundNum,point,description,regDate,userId) VALUES
+	(refund_seq.nextval,#{point},#{description},SYSDATE,#{userId})
+</insert>
+
 </mapper>

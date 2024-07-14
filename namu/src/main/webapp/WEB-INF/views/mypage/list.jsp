@@ -9,9 +9,8 @@
 <title>Box Layout Example</title>
 
 <style>
-
 .modal-dialog {
-    max-width: 800px; /* 원하는 너비로 조정 */
+	max-width: 800px; /* 원하는 너비로 조정 */
 }
 
 .namuLevel {
@@ -430,33 +429,37 @@ h1 {
 	</div>
 </div>
 <div id="refundModal" class="modal" tabindex="-1">
-    <div class="modal-dialog modal-lg"> <!-- modal-lg 추가 -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">환불 목록</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table id="refundTable" class="table">
-                    <thead>
-                        <tr>
-                            <th>결제번호</th>
-                            <th>결제아이디</th>
-                            <th>결제시간</th>
-                            <th>결제액수</th>
-                            <th>결제유형 : 전자 결제</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 데이터가 동적으로 추가됩니다 -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-lg">
+		<!-- modal-lg 추가 -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">환불 목록</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table id="refundTable" class="table">
+					<thead>
+						<tr>
+							<th>결제번호</th>
+							<th>결제아이디</th>
+							<th>결제시간</th>
+							<th>결제액수</th>
+							<th>환불 사유</th>
+							<th>결제유형 : 전자 결제</th>	
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 데이터가 동적으로 추가됩니다 -->
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -478,7 +481,8 @@ function refundOk() {
                     '<td>' + it.userId + '</td>' +
                     '<td>' + it.regDate + '</td>' +
                     '<td>' + it.pointVar + '</td>' +
-                    '<td><button type="button" onclick="refundGo(this);" data-num="' + it.pointNum + '">환불하기</button></td>' +
+                    '<td><input type="text" id="description-' + it.pointNum + '" placeholder="환불 사유" /></td>' +
+                    '<td><button type="button" onclick="refundGo(this);" data-num="' + it.pointNum + '" data-pointVar="' + it.pointVar + '">환불하기</button></td>' +
                 '</tr>';
             }
 
@@ -494,10 +498,86 @@ function refundOk() {
 
 function refundGo(button) {
     const num = button.getAttribute('data-num');
-    cancelPay(num);
+    let point = button.getAttribute('data-pointVar');
+    getToken(num,point);
 }
 
+function getToken(num,point) {
+    let url = "${pageContext.request.contextPath}/payments/token";
+	let query = "";
+	
+    const fn = function(data) {
+        let state = data.state;
+        if (state === "true") {
+            alert("불러오기 성공");
+            console.log(data.access_token);
+            let access_token = data.access_token;
+            cancel(num,access_token,point);
+        } else {
+            alert("불러오기 실패");
+        }
+    };
+    ajaxFun(url, "post", query, "json", fn);
+}
 
+function cancel(num, access_token,point) {
+    let url = "${pageContext.request.contextPath}/payments/cancel";
+    let description = document.getElementById('description-' + num).value;
+    
+    let formData = {
+        merchant_uid: num,
+        reason: description,
+        access_token: access_token // 액세스 토큰 추가
+    };
+
+    const fn = function(data) {
+        let state = data.state;
+        if (state === "true") {
+            alert("환불 성공");
+            insertRefund(num,point);
+        } else {
+            alert("환불 실패");
+            console.log(data.message);
+        }
+    };
+    
+    // ajaxFun 함수 예시
+    function ajaxFun(url, type, data, dataType, successFn) {
+        $.ajax({
+            url: url,
+            type: type,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            dataType: dataType,
+            success: successFn,
+            error: function(xhr, status, error) {
+                alert("전송 실패: " + xhr.responseText);
+            }
+        });
+    }
+
+    ajaxFun(url, "post", formData, "json", fn);
+}
+
+function insertRefund(num,point){
+	let url = "${pageContext.request.contextPath}/mypage/insertRefund";
+	
+	let description = document.getElementById('description-' + num).value;
+	
+    let formData = {point:point,description:description};
+	console.log(formData);
+	
+    const fn = function(data) {
+        let state = data.state;
+        if (state === "true") {
+            alert("저장 성공");
+            location.href = "${pageContext.request.contextPath}/mypage/list";
+        } else {
+            alert("저장 실패");
+        }
+    };
+    ajaxFun(url, "post", formData, "json", fn);
+}
 
 
 function sendOk() {
@@ -587,6 +667,7 @@ function sendOk() {
 	    };
 	    ajaxFun(url, "post", formData, "json", fn);
 	}
+
 </script>
 
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
@@ -620,4 +701,3 @@ function sendOk() {
 	}
 
 </script>
-

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,6 +95,24 @@ public class MyPageController {
 		model.put("state", state);
 		model.put("list", list);
 
+		return model;
+	}
+	
+	@PostMapping("insertRefund")
+	@ResponseBody
+	public Map<String, Object> insertRefund(Point dto, HttpSession session) throws Exception {
+
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		try {
+			dto.setUserId(info.getUserId());
+			service.insertRefund(dto);
+		} catch (Exception e) {
+			state = "false";
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
 		return model;
 	}
 }
