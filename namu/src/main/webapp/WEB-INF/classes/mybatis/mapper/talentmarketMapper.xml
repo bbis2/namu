@@ -45,18 +45,31 @@
 		WHERE use = 1
 		ORDER BY categoryNum
 	</select>
+	
+	<select id="listType">
+		SELECT typeNum, type
+		FROM tmPurchaseType
+	</select>
+	
 	<select id="findByType" parameterType="Long" resultType="com.sp.app.admin.domain.TalentMarket">
 		SELECT typeNum,type
 		FROM tmPurchaseType
 		WHERE typeNum = #{typeNum}
 	</select>
-	<select id="listType">
-		SELECT typeNum, type
-		FROM tmPurchaseType
-	</select>
+	
 	<update id="updateTalent" parameterType="com.forest.namu.domain.TalentMarket">
 		UPDATE talentmarket SET typeNum=#{typeNum} , subject = #{subject} ,content = #{content}, price = #{price} , 
 			guidelines= #{guidelines})
+	</update>
+	
+	<update id="updateTalentOption" parameterType="com.forest.namu.domain.TalentMarket">
+		UPDATE talentOption SET optionName = #{optionName}
+		WHERE optionNum = #{optionNum}
+	</update>
+	
+	<update id="updateOptionDetail" parameterType="com.forest.namu.domain.TalentMarket">
+		UPDATE tmOptionDetail SET optionValue = #{optionValue}
+		WHERE detailNum = #{detailNum}
 	</update>
 	
 	<delete id="deleteTalent" parameterType="long">
@@ -65,6 +78,18 @@
 	
 	<delete id="deleteTalentFile" parameterType="long">
 		DELETE FROM tmFile WHERE fileNum = #{fileNum}
+	</delete>
+	
+	<delete id="deleteTalentOption">
+		DELETE FROM talentOption WHERE optionNum = #{optionNum}
+	</delete>
+	
+	<delete id="deleteOptionDetail">
+		DELETE FROM tmOptionDetail WHERE detailNum = #{detailNum}
+	</delete>
+	
+	<delete id="deleteOptionDetail2">
+		DELETE FROM optionDetail WHERE optionNum = #{optionNum}
 	</delete>
 	
 	<sql id="where-list">
@@ -122,10 +147,24 @@
 		WHERE t.tboardNum = #{productNum}
 	</select>
 	
-	<select id="listTalentMarketFile">
+	<select id="listTalentMarketFile" parameterType="long" resultType="com.forest.namu.domain.TalentMarket">
 		SELECT fileNum , tboardNum, saveFileName
 		FROM tmFile
 		WHERE tboardNum = #{tboardNum}
+	</select>
+	
+	<select id="listTalentOption" parameterType="long" resultType="com.forest.namu.domain.TalentMarket">
+		SELECT optionNum, optionName, parentOption, tboardNum
+		FROM talentOption
+		WHERE tboardNum = #{tboardNum}
+		ORDER BY parentOption NULLS FIRST, parentOption
+	</select>
+	
+	<select id="listOptionDetail" parameterType=" long" resultType="com.forest.namu.domain.TalentMarket">
+		SELECT detailNum, optionNum, optionValue
+		FROM tmOptionDetail
+		WHERE optionNum = #{optionNum}
+		ORDER BY detailNum
 	</select>
 	
 	

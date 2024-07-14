@@ -42,7 +42,23 @@ public class TalentMarket {
 	private String filename;
 	private List<MultipartFile> addFiles;
 	
+	//수정전 옵션
+	private long prevOptionNum;
+	private long prevOptionNum2;
 	
+	
+	public long getPrevOptionNum() {
+		return prevOptionNum;
+	}
+	public void setPrevOptionNum(long prevOptionNum) {
+		this.prevOptionNum = prevOptionNum;
+	}
+	public long getPrevOptionNum2() {
+		return prevOptionNum2;
+	}
+	public void setPrevOptionNum2(long prevOptionNum2) {
+		this.prevOptionNum2 = prevOptionNum2;
+	}
 	public long getTboardNum() {
 		return tboardNum;
 	}

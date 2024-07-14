@@ -8,10 +8,11 @@ import com.forest.namu.domain.TalentMarket;
 public interface TalentMarketService {
 	
 	public void insertTalent(TalentMarket dto,String pathname) throws Exception;
-	public void insertTalentFile(TalentMarket dto) throws Exception;
+	public void insertTalentOption(TalentMarket dto) throws Exception;
 	
-	public void updateTalent(TalentMarket dto) throws Exception;
-	public void deleteTalent(long tboardNum) throws Exception;
+	public void updateTalent(TalentMarket dto, String pathname) throws Exception;
+	public void updateTalentOption(TalentMarket dto) throws Exception;
+	public void deleteTalent(long tboardNum, String pathname) throws Exception;
 	public void deleteTalentFile(long fileNum) throws Exception;
 	
 	public int dataCount(Map<String,Object> map);

@@ -26,6 +26,7 @@ public interface TalentMarketMapper {
 	public TalentMarket findByCategory(long categoryNum);
 	public List<TalentMarket> listCategory();
 	public List<TalentMarket> listType();
+	public TalentMarket findByType(long typeNum);
 	
 	public void updateTalent(TalentMarket dto) throws SQLException;
 	public void updateTalentOption(TalentMarket dto) throws SQLException;
