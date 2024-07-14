@@ -159,4 +159,29 @@ public abstract class MyUtil {
 						email.trim());
 		return b;
 	}
+	
+	/**
+	* split을 한 기본주소 저장하는 메소드
+	* 
+	* @param town1		town1
+	* @return			split한 주소
+	*/
+	public String splitTown1(String town1) {
+
+	    if (town1 == null || town1.isEmpty()) {
+	        return "";
+	    }
+
+	    String[] addressParts = town1.split(" ");
+	    String town1Value = "";
+
+	    if (addressParts[0].equals("세종특별자치시")) {
+	        town1Value = addressParts[0];
+	    } else if (addressParts.length >= 2) {
+	        town1Value = addressParts[0] + " " + addressParts[1];
+	    } else {
+	        town1Value = town1;
+	    }
+	    return town1Value;
+	}
 }

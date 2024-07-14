@@ -12,6 +12,7 @@ public interface MemberService {
 	public void updateMember(Member dto) throws Exception;
 	
 	public Member findById(String userId);
+	public Member findByNickName(String nickName);
 	public Member findById(long memberIdx);
 	
 	public void deleteMember(Map<String, Object> map) throws Exception;

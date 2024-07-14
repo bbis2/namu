@@ -73,8 +73,8 @@ function sendLogin() {
                    <br>
                     <div class="col-12">
                         <p class="text-center mb-0">
-                        	<a href="#" style="color: #3F2C15;" class="text-decoration-none me-2">아이디 찾기</a>
-                        	<a href="#" style="color: #3F2C15;" class="text-decoration-none me-2">패스워드 찾기</a>
+                        	<a href="${pageContext.request.contextPath}/member/member" style="color: #3F2C15;" class="text-decoration-none me-2">아이디 찾기</a>
+                        	<a href="${pageContext.request.contextPath}/member/pwdFind" style="color: #3F2C15;" class="text-decoration-none me-2">패스워드 찾기</a>
                         	<a href="${pageContext.request.contextPath}/member/member" style="color: #3F2C15;" class="text-decoration-none">회원가입</a>
                         </p>
                     </div>

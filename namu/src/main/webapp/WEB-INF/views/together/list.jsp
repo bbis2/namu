@@ -1,40 +1,18 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>모임</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
-
-.body-container {
-	max-width: 800px;
-	padding-top: 20px;
-}
 
 .fleamarket-cover {
     background-color: #E3F1C5;
 }
 
-h1 {
-    display: block;
-    font-size: 2em;
-    margin-block-start: 0.67em;
-    margin-block-end: 0.67em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
-    unicode-bidi: isolate;
-}
 
 .htext{
 	padding-top: 100px;
 	padding-left : 100px;
 }
-
 
 .cover-content {
 	padding: 50px;
@@ -49,13 +27,9 @@ h1 {
         height: 315px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
-    }   
+  }   
 }
-/* 여기까지 초록상자*/
-
-main {
-    font-family: 'Metro Sans', sans-serif;
-}
+/*여기까지 초록 박스*/
 
 .fleamarket-cover {
     background-color: #e3f1c5;
@@ -127,6 +101,9 @@ main {
 .categories span {
     font-weight: bold;
 }
+.body-left {
+	padding-bottom: 40px;
+}
 
 .filter-container {
     text-align: right;
@@ -192,8 +169,8 @@ main {
     	<div class="body-title">
 			<h2>전체모임</h2>
 		</div>
+		
         <div class="row">
-        
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body">
@@ -203,12 +180,13 @@ main {
           				   <p>쪽지 | 스크랩 | 알림</p>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <input type="text" class="form-control mb-2" placeholder="나무일상">
-                    <select class="form-control">
-                        <option>나무모임</option>
-                    </select>
-                </div>
+			   <div class="body-left">
+					<ul class="list-group">
+						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100001">모임</li>
+						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100002">일상</li>
+						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100003">챌린지</li>
+					</ul>
+				</div>
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">BEST TOP 10</h5>

@@ -3,14 +3,16 @@ package com.forest.namu.domain;
 public class Daily {
 	private long num;
 	private String userId;
-	private int tagName;
 	private String subject;
 	private String content;
 	private String regDate;
 	private int hitCount;
 	private int notice;
 	private String nickName;
+	private String town1;
 	
+	private long categoryNum;
+	private String categoryName;
 	
 	public long getNum() {
 		return num;
@@ -23,12 +25,6 @@ public class Daily {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-	public int gettagName() {
-		return tagName;
-	}
-	public void settagName(int tagName) {
-		this.tagName = tagName;
 	}
 	public String getSubject() {
 		return subject;
@@ -66,6 +62,30 @@ public class Daily {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
+	public String getTown1() {
+		return town1;
+	}
+	public void setTown1(String town1) {
+		this.town1 = town1;
+	}
+	public long getCategoryNum() {
+		return categoryNum;
+	}
+	public void setCategoryNum(long categoryNum) {
+		this.categoryNum = categoryNum;
+	}
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+	
 
+	
+
+
+	
+	
 	
 }

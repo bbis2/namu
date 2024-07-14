@@ -6,11 +6,16 @@ import java.util.Map;
 import com.forest.namu.domain.Daily;
 
 public interface DailyService {
-	public void insertDaily(Daily dto, String pathname) throws Exception;
-	public void updateDaily(Daily dto, String pathname) throws Exception;
-	public void deleteBorad(long num, String userId, int membership) throws Exception; // 수정할 수 있음
 	
-	public int dataCount(Map<String, Object>map);
+	public void insertDaily(Daily dto, String pathname);
 	public List<Daily> listDaily(Map<String, Object> map);
+	
+	public int dataCount(Map<String, Object> map);
+	public Daily findById(long num);
+	public void updateHitCount(long num) throws Exception;
+	public Daily findByPrev(Map<String, Object> map);
+	public Daily findByNext(Map<String, Object> map);
+	
+	public List<Daily> listDailyCategory(long categoryNum);
 	
 }

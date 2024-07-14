@@ -1,12 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
 
@@ -18,7 +12,6 @@
 	padding-top: 100px;
 	padding-left : 100px;
 }
-
 .cover-content {
 	padding: 50px;
     position: relative;
@@ -32,76 +25,78 @@
         height: 315px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
-    }
+        margin-bottom: 60px;
 }
 /*여기까지 초록 박스*/
 
-.filter-container {
-    text-align: right;
-    margin-bottom: 20px;
+
+.body-title {
+    margin: 40px 0;
+    text-align: left;
 }
 
-h2 {
-	padding-top:30px;
-    display: flex;
-    align-items: center;
-    font-size: 1.5em;
-}
-
-.form-group {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-}
-
-.form-group label {
-    width: 200px;
+.body-title h2 {
+    font-size: 28px;
     font-weight: bold;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
-    flex: 1;
+.write-form {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.write-form td {
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f2f2f2;
 }
 
-.form-group textarea {
-    height: 100px;
-    resize: vertical;
+.write-form .bg-light {
+    background-color: #f9f9f9;
 }
 
-.form-buttons {
-    display: flex;
-    justify-content: center; /* 가운데 정렬 */
-    gap: 10px; /* 버튼 사이 간격 */
-    margin-top: 20px; /* 위에 여백 추가 */
+.form-control {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
 }
 
-.form-buttons button {
-    background-color: #5d4734;
-    color: white;
+.form-control-plaintext {
+	height: 40px;
+    padding: 8px;
+}
+
+.table-borderless td {
     border: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.btn {
     padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
 }
 
-.form-buttons button:hover {
-    background-color: #4c3b2b;
+.btn-dark {
+    background-color: #333;
+    color: #fff;
+    border: none;
 }
 
-h2 {
-	font-weight: bold;
+.btn-light {
+    background-color: #f9f9f9;
+    color: #333;
+    border: 1px solid #ddd;
 }
+
+
 </style>
 
 <script type="text/javascript">
 function check() {
-    const f = document.DailyForm;
+    const f = document.dailyForm;
 	let str;
 	
     str = f.subject.value.trim();
@@ -119,6 +114,7 @@ function check() {
     }
 
     f.action = "${pageContext.request.contextPath}/daily/${mode}";
+    
     return true;
 }
 </script>
@@ -126,42 +122,70 @@ function check() {
 </head>
 <body>
 <div class="container">
-	 <section class="fleamarket-cover">
-			<h1 class="cover-title htext bd">함께하는<br>일상생활</h1>
-			<span class="cover-description htext"></span><br>
-			<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
-			<div class="cover-image"></div>
-	  </section>
+	<section class="fleamarket-cover">
+		<h1 class="cover-title htext bd">함께하는<br>일상생활</h1>
+		<span class="cover-description htext"></span><br>
+		<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
+	</section>
 		  
-		<div class="body-title">
-			<h2>글쓰기</h2>
-		</div>
+	<div class="body-title">
+		<h2>글 등록</h2>
+	</div>
 		  
-        <form>
-            <div class="form-group">
-                <label for="tag">태그</label>
-                <select id="tag" name="tag">
-                    <option value="" selected>태그 선택</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="title">제목</label>
-                <input type="text" id="title" name="title">
-            </div>
-            <div class="form-group">
-                <label for="nickname">닉네임</label>
-                <input type="text" id="nickname" name="nickname">
-            </div>
-            <div class="form-group">
-                <label for="content">내용</label>
-					<textarea name="content" id="ir1" class="form-control" style="width: 95%; height: 270px;">${dto.content}</textarea>
-            </div>
-            <div class="form-buttons">
-                <button type="submit">글등록</button>
-                <button type="reset">다시입력</button>
-                <button type="button" onclick="window.location.href='/'">취소하기</button>
-            </div>
-        </form>
+	<form name="dailyForm" method="post" enctype="multipart/form-data">
+		<table class="table mt-5 write-form">
+			<tr>
+				<td class="bg-light col-sm-2" scope="row">카테고리</td>
+				<td>
+					<div class="row">
+						<div class="col-6 pe-1">
+							<select id="categoryNum" name="categoryNum" class="form-control">
+								<option value="" selected>카테고리 선택</option>
+								<c:forEach var="vo" items="${listDailyCategory}">
+									<option value="${vo.categoryNum}" ${categoryNum == vo.categoryNum?"selected" : ""}>${vo.categoryName}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="bg-light col-sm-2" scope="row"> 닉네임 </td>
+				<td>
+					<p class="form-control-plaintext">${sessionScope.member.nickName}</p>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="bg-light col-sm-2" scope="row">제목</td>
+				<td>
+					<input type="text" name="subject" class="form-control">
+				</td>
+			</tr>
+
+			<tr>
+				<td class="bg-light col-sm-2" scope="row"> 내용 </td>
+				<td>
+					<textarea name="content" id="ir1" class="form-control" style="height: 300px;">${dto.content}</textarea>
+				</td>
+			</tr>
+		</table>
+		
+		<table class="table table-borderless">
+			<tr>
+				<td class="text-center">
+					<button type="button" class="btn btn-dark" onclick="submitContents(this.form);">${mode=='update'?'수정완료':'등록하기'}&nbsp;<i class="bi bi-check2"></i></button>
+					<button type="reset" class="btn btn-light">다시입력</button>
+					<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/daily/list';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
+					<c:if test="${mode=='update'}">
+						<input type="hidden" name="num" value="${dto.num}">
+						<input type="hidden" name="page" value="${page}">
+					</c:if>
+				</td>
+			</tr>
+		</table>        	
+	</form>
 </div>
 	
 <!-- 스마트에디터 -->
@@ -176,12 +200,12 @@ nhn.husky.EZCreator.createInIFrame({
 });
 
 function submitContents(elClickedObj) {
-	 oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
-	 try {
+	oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
+	try {
 		if(! check()) {
 			return;
 		}
-		elClickedObj.submit();
+		elClickedObj.form.submit();
 	} catch(e) {
 	}
 }

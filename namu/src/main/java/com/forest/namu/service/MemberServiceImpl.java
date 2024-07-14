@@ -41,10 +41,9 @@ public class MemberServiceImpl implements MemberService {
 			long memberSeq = mapper.memberSeq();
 			dto.setMemberIdx(memberSeq);
 
-			// 회원정보 저장
-			mapper.insertMember(memberSeq);
+			// 회원정보 저장 (#)
 
-			// mapper.insertMember1(dto);
+			// mapper.insertMember1(dto);		
 			// mapper.insertMember2(dto);
 			mapper.insertMember12(dto); // member, memberDetail 테이블 동시에
 			
@@ -91,14 +90,14 @@ public class MemberServiceImpl implements MemberService {
 
 			boolean bPwdUpdate = ! isPasswordCheck(dto.getUserId(), dto.getUserPwd());
 			if( bPwdUpdate ) {
-				// 패스워드가 변경된 경우에만 member1 테이블에 패스워드변경
+				// 패스워드가 변경된 경우에만 member 테이블에 패스워드변경
 				String encPwd = bcryptEncoder.encode(dto.getUserPwd());
 				dto.setUserPwd(encPwd);
 				
-				mapper.updateMember1(dto);
+				mapper.updateMember(dto);
 			}
+			mapper.updateMemberDetail(dto);
 			
-			mapper.updateMember2(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -133,9 +132,38 @@ public class MemberServiceImpl implements MemberService {
 
 		return dto;
 	}
-
+	
 	@Override
-	public Member findById(long memberIdx) {
+	public Member findByNickName(String nickName) {
+		Member dto = null;
+
+		try {
+			dto = mapper.findByNickName(nickName);
+
+			if (dto != null) {
+				if (dto.getEmail() != null) {
+					String[] s = dto.getEmail().split("@");
+					dto.setEmail1(s[0]);
+					dto.setEmail2(s[1]);
+				}
+
+				if (dto.getTel() != null) {
+					String[] s = dto.getTel().split("-");
+					dto.setTel1(s[0]);
+					dto.setTel2(s[1]);
+					dto.setTel3(s[2]);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return dto;
+	}	
+	
+	@Override
+	public Member findById(long memberIdx) { // #
 		Member dto = null;
 
 		try {
@@ -161,6 +189,8 @@ public class MemberServiceImpl implements MemberService {
 
 		return dto;
 	}
+	
+	
 
 	@Override
 	public void deleteMember(Map<String, Object> map) throws Exception {
@@ -168,8 +198,8 @@ public class MemberServiceImpl implements MemberService {
 			map.put("membership", 0);
 			updateMembership(map);
 
-			mapper.deleteMember2(map);
-			mapper.deleteMember1(map);
+			mapper.deleteMemberDetail(map);  
+			mapper.deleteMember(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -206,7 +236,9 @@ public class MemberServiceImpl implements MemberService {
 		if (b) {
 			dto.setUserPwd(sb.toString());
 			
-			updatePwd(dto);
+			// updatePwd(dto);
+			
+			mapper.updateMember(dto);
 			
 		} else {
 			throw new Exception("이메일 전송중 오류가 발생했습니다.");
@@ -237,7 +269,7 @@ public class MemberServiceImpl implements MemberService {
 			String encPwd = bcryptEncoder.encode(dto.getUserPwd());
 			dto.setUserPwd(encPwd);
 			
-			mapper.updateMember1(dto);
+			mapper.updateMember(dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -294,5 +326,7 @@ public class MemberServiceImpl implements MemberService {
 			throw e;
 		}
 		
-	}	
+	}
+
+
 }

@@ -20,6 +20,7 @@ import org.springframework.security.core.AuthenticationException;
     try~catch 문이 있는 영역을 실행한다.
   - AJAX에서 스프링 시큐리티에 의해 예외가 발생하면 catch문에서 응답에러를 사용자 측에 보낸다.
 */
+
 public class AjaxSessionTimeoutFilter implements Filter {
 	private String ajaxHeader;
 	

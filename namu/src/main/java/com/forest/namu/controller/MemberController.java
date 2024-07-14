@@ -117,6 +117,23 @@ public class MemberController {
 		return model;
 	}
 	
+	@PostMapping("nickNameCheck")
+	@ResponseBody
+	public Map<String, Object> nickNameCheck(@RequestParam String nickName) throws Exception {
+	    // 닉네임 중복 검사
+	    String p = "true";
+	    Member dto = service.findByNickName(nickName);
+	    
+	    if (dto != null) {
+	        p = "false";
+	    }
+
+	    Map<String, Object> model = new HashMap<>();
+	    model.put("passed", p);
+	    return model;
+	}
+	
+
 	@GetMapping("pwd")
 	public String pwdForm(String dropout, Model model) {
 

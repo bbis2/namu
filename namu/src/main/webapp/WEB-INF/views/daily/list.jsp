@@ -81,6 +81,22 @@ text-align: center;
 h2 {
 	font-weight: bold;
 }
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
 </style>
 
 <script type="text/javascript">
@@ -92,23 +108,23 @@ function searchList() {
 
 <div class="container">
  	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">함께하는<br>일상생활</h1>
+		<h1 class="cover-title htext bd">소통하는<br>일상 생활</h1>
 		<span class="cover-description htext"></span><br>
 		<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
 		<div class="cover-image"></div>
   	</section>
 
+
+  <main class="container">
    	<div class="body-title">
 		<h2>전체 게시글</h2>
-             <div class="filter-container">
-                 <input type="text" class="search-input" placeholder="검색어를 입력하세요">
-                 <button type="button" class="search-button" onclick="searchList()" title="검색" >검색</button>
-                 <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/daily/write';">글올리기</button>
-             </div>		
-		
+            <div class="filter-container">
+                <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+                <button type="button" class="search-button" onclick="searchList()" title="검색" >검색</button>
+                <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/daily/write';">글올리기</button>
+            </div>		
 	</div>
 	
-    <main class="container my-5">
         <div class="row">
             <div class="col-md-3">
                 <div class="card mb-4">
@@ -120,13 +136,13 @@ function searchList() {
                     </div>
                 </div>
               
-		<div class="body-left">
-				<ul class="list-group">
-					<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100001">모임</li>
-					<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100002">일상</li>
-					<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100003">챌린지</li>
-				</ul>
-			</div>
+			   <div class="card">
+					<ul class="list-group">
+						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100001">모임</li>
+						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100002">일상</li>
+						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100003">챌린지</li>
+					</ul>
+				</div>
 			
                 <div class="card">
                     <div class="card-body">

@@ -2,31 +2,31 @@ package com.forest.namu.domain;
 
 public class Member {
 	// member 테이블 (회원)
-	private long memberIdx;
-	private String userId;
-	private String nickName;
-	private String userPwd;
-	private String regDate;
-	private String modifyDate;
-	private String secessionDate;
-	private int loginFail;
-	private String lastLogin;
-	private int post;
-	private String town1;
-	private String addr;
-	private String town2;
-	private int enabled;
-	private int membership;
+	private long memberIdx; 		// 회원번호
+	private String userId;			// 회원아이디
+	private String nickName;		// 닉네임
+	private String userPwd;			// 비밀번호
+	private String regDate;			// 가입일
+	private String modifyDate;		// 수정일
+	private String secessionDate;	// 탈퇴일
+	private int loginFail;			// 로그인실패횟수
+	private String lastLogin;		// 최종로그인일자
+	private int post;				// 우편번호
+	private String town1;			// 기본주소
+	private String addr;			// 상세주소
+	private String town2;			// 추가동네
+	private int enabled;			// 아이디로 로그인 가능여부
+	private int membership;			// 회원권한 
 	
 	// memberDetail 테이블 (회원 상세)
-	private String userName;
-	private String birth;
-	private String email;
+	private String userName;		// 아이디
+	private String birth;			// 생일
+	private String email;			// 이메일
 	private String email1;
 	private String email2;
-	private String ment;
-	private int userManner;
-	private String tel;
+	private String ment;			// 소개
+	private int userManner;			// 매너점수
+	private String tel;				// 전화번호
 	private String tel1;
 	private String tel2;
 	private String tel3;

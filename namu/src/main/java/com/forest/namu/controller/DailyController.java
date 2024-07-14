@@ -33,10 +33,10 @@ public class DailyController {
 	@Autowired
 	private MyUtil myUtil;
 	
-	
 	@RequestMapping("list")
 	public String list(
 			@RequestParam(value="page", defaultValue = "1") int current_page, 
+			@RequestParam(value = "long", defaultValue = "0") long categoryNum,
 			@RequestParam(defaultValue = "all") String schType,
 			@RequestParam(defaultValue = "") String kwd,
 			HttpServletRequest req,
@@ -67,6 +67,8 @@ public class DailyController {
 		if(offset <0) offset = 0;
 		map.put("offset", offset);
 		map.put("size", size);
+		
+		//List<Daily>  listDailyCategory = service.listDailyCategory(map);
 		
 		List<Daily> list = service.listDaily(map);
 		
@@ -103,13 +105,19 @@ public class DailyController {
 	
 	
 	@GetMapping("write")
-	public String write(Model model) throws Exception {
+	public String writeForm(Model model) throws Exception {
+		// 카테고리를 가져와서 던진다. 
+
+		// Long listDailyCategory = service.listDailyCategory(categoryNum);
+		
+		// model.addAttribute("listDailyCategory", listDailyCategory);
+	
 		model.addAttribute("mode", "write");
 		return ".daily.write";
 	}
 	
 	@PostMapping("write")
-	public String writeForm( Daily dto, HttpSession session) throws Exception {
+	public String writesubmit( Daily dto, HttpSession session) throws Exception {
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		

@@ -33,23 +33,20 @@ function memberOk() {
 		f.userId.focus();
 		return;
 	}
-	const f = document.memberForm;
-	let str;
-
-	str = f.nickName.value;
-	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(str) ) { 
-		alert("닉네임을 다시 입력 하세요. ");
-		f.nickName.focus();
-		return;
-	}
-
-	let mode = "${mode}";
-	if(mode === "member" && f.nickNameValid.value === "false") {
-		str = "아이디 중복 검사가 실행되지 않았습니다.";
-		$("#nickName").parent().find(".help-block").html(str);
-		f.nickName.focus();
-		return;
-	}
+	
+    str = f.nickName.value;
+    if(!/^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/i.test(str)) { 
+        alert("닉네임을 다시 입력 하세요. ");
+        f.nickName.focus();
+        return;
+    }
+    
+    if(mode === "member" && f.nickNameValid.value === "false") {
+        str = "닉네임 중복 검사가 실행되지 않았습니다.";
+        $("#nickName").parent().find(".help-block").html(str);
+        f.nickName.focus();
+        return;
+    }
 	
 	str = f.userPwd.value;
 	if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str) ) { 
@@ -136,7 +133,7 @@ function changeEmail() {
 function userIdCheck() {
 	// 아이디 중복 검사
 	let userId = $('#userId').val();
-
+	// alert('ok');
 	if(!/^[a-z][a-z0-9_]{4,9}$/i.test(userId)) { 
 		let str = '아이디는 5~10자 이내이며, 첫글자는 영문자로 시작해야 합니다.';
 		$('#userId').focus();
@@ -166,10 +163,10 @@ function userIdCheck() {
 
 function nickNameCheck() {
 	// 닉네임 중복 검사
-	let userId = $('#nickName').val();
-
-	if(!/^[a-z][a-z0-9_]{4,9}$/i.test(userId)) { 
-		let str = '닉네임은 5~10자 이내이며, 첫글자는 영문자로 시작해야 합니다.';
+	let nickName = $('#nickName').val();
+	
+    if(!/^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/i.test(nickName)) { 
+		let str = '닉네임은 2자 이상 16자 이하, 영어 또는 숫자 또는 한글을 사용해야 합니다.';
 		$('#nickName').focus();
 		$('.nickName-box').find('.help-block').html(str);
 		return;
@@ -178,15 +175,17 @@ function nickNameCheck() {
 	let url = '${pageContext.request.contextPath}/member/nickNameCheck';
 
 	// AJAX:POST-JSON
-	$.post(url, {userId:userId}, function(data){
+	$.post(url, {nickName:nickName}, function(data){
+		//console.log(data);
+		
 		let passed = data.passed;
 
 		if(passed === 'true') {
-			let str = '<span style="color:blue; font-weight: bold;">' + userId + '</span> 닉네임은 사용가능 합니다.';
+			let str = '<span style="color:blue; font-weight: bold;">' + nickName + '</span> 닉네임은 사용가능 합니다.';
 			$('.nickName-box').find('.help-block').html(str);
 			$('#nickNameValid').val('true');
 		} else {
-			let str = '<span style="color:red; font-weight: bold;">' + userId + '</span> 닉네임을 사용할수 없습니다.';
+			let str = '<span style="color:red; font-weight: bold;">' + nickName + '</span> 닉네임을 사용할수 없습니다.';
 			$('.nickName-box').find('.help-block').html(str);
 			$('#nickName').val('');
 			$('#nickNameValid').val('false');
@@ -246,7 +245,7 @@ function nickNameCheck() {
 							</div>
 						</div>
 						<c:if test="${mode=='member'}">
-							<small class="form-control-plaintext help-block">닉네임은 5~10자 이내이며, 첫글자는 영문자로 시작해야 합니다.</small>
+							<small class="form-control-plaintext help-block">닉네임은 2자 이상 16자 이하, 영어 또는 숫자 또는 한글을 사용해야 합니다.</small>
 						</c:if>
 					</div>
 				</div>
@@ -303,9 +302,6 @@ function nickNameCheck() {
 								<option value="direct">직접입력</option>
 							</select>
 						</div>
-						
-	
-	
 			        </div>
 			    </div>
 			    
@@ -331,10 +327,10 @@ function nickNameCheck() {
 			    </div>
 			
 			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="zip">우편번호</label>
+			        <label class="col-sm-2 col-form-label" for="post">우편번호</label>
 			        <div class="col-sm-5">
 			       		<div class="input-group">
-			           		<input type="text" name="zip" id="zip" class="form-control" placeholder="우편번호" value="${dto.zip}" readonly>
+			           		<input type="text" name="post" id="post" class="form-control" placeholder="우편번호" value="${dto.post}" readonly>
 		           			<button class="btn" type="button" style="margin-left: 3px;" onclick="daumPostcode();">우편번호 검색</button>
 			           	</div>
 					</div>
@@ -353,14 +349,14 @@ function nickNameCheck() {
 			    </div>
 			    
 			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="zip">* 주소 추가</label>
+			        <label class="col-sm-2 col-form-label" for="post">* 주소 추가</label>
 			        <div class="col-sm-5">
 			       		<div class="input-group">
 			           		<input type="text" name="town2" id="town2" class="form-control" placeholder="추가 주소" value="${dto.town2}" readonly>
 		           			<button class="btn" type="button" style="margin-left: 3px;" onclick="town2code();">추가주소 검색</button>
 			           	</div>
 			           	<c:if test="${mode=='member'}">
-							<small class="form-control-plaintext help-block"> * 추가 주소는 선태사항입니다. </small>
+							<small class="form-control-plaintext help-block"> * 추가 주소는 선택사항입니다. </small>
 						</c:if>
 					</div>
 			    </div>
@@ -386,6 +382,7 @@ function nickNameCheck() {
 			            <button type="button" style="background: #D4DDC1;" name="sendButton" class="btn" onclick="memberOk();"> ${mode=="member"?"회원가입":"정보수정"} <i class="bi bi-check2"></i></button>
 			            <button type="button" style="background: #EFEFEF;" class="btn" onclick="location.href='${pageContext.request.contextPath}/';"> ${mode=="member"?"가입취소":"수정취소"} <i class="bi bi-x"></i></button>
 						<input type="hidden" name="userIdValid" id="userIdValid" value="false">
+						<input type="hidden" name="nickNameValid" id="nickNameValid" value="false">
 			        </div>
 			    </div>
 			
@@ -425,8 +422,7 @@ function daumPostcode() {
                 fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
             }
 
-            document.getElementById('zip').value = data.zonecode;
-
+            document.getElementById('post').value = data.zonecode;
             document.getElementById('town1').value = fullAddr;
 
             document.getElementById('addr').focus();
@@ -460,7 +456,7 @@ function town2code() {
                 fullAddr += (extraAddr !== '' ? ' (' + extraAddr + ')' : '');
             }
 
-            document.getElementById('zip').value = data.zonecode;
+            document.getElementById('post').value = data.zonecode;
            
             var addressParts = fullAddr.split(' ');
             var town2Value = '';
