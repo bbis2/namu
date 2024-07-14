@@ -9,23 +9,13 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
-.body-container {
-	max-width: 800px;
-}
-
 .fleamarket-cover {
     background-color: #E3F1C5;
 }
 
-h1 {
-    display: block;
-    font-size: 2em;
-    margin-block-start: 0.67em;
-    margin-block-end: 0.67em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
-    unicode-bidi: isolate;
+.htext{
+	padding-top: 100px;
+	padding-left : 100px;
 }
 .cover-content {
 	padding: 50px;
@@ -34,12 +24,13 @@ h1 {
     box-sizing: border-box;
     margin-left: 100px;
 }
+
 @media (min-width: 768px) {
     .fleamarket-cover {
         height: 315px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
-    }   
+        margin-bottom: 60px;
 }
 
 .fleamarket-cover {
@@ -52,12 +43,6 @@ h1 {
     font-size: 2em;
     font-weight: bold;
     margin: 0;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
 }
 
  .profile-card {
@@ -85,7 +70,7 @@ h1 {
             border: 2px solid #d4c5f9;
             position: absolute;
             top: 10px; /* 이미지가 경계에 걸치도록 설정 */
-            left: 60px; /* 왼쪽 정렬 */
+            left: 75px; /* 왼쪽 정렬 */
         }
         .profile-body {
             margin-top: 30px;
@@ -297,7 +282,7 @@ h1 {
             <img src="${pageContext.request.contextPath}/resources/images/bg.png" alt="프로필 이미지" class="profile-img">
         </div>
 	        <div class="profile-body">
-	            <h5>그림그려주는 사람</h5>
+	            <h5>${member.nickName}</h5>
 	            <p>회원 등급 : 일반</p>
 	            <p>평균 평점 : <strong>4.9</strong></p>
 	            <p>평균 만족도 : <strong>95%</strong></p>
@@ -324,7 +309,7 @@ h1 {
                     <button class="search-button">검색</button>
                 </div>
                 <div class="filter-container">
-                    <button class="search-button">글 등록</button>
+                    <button class="search-button" onclick="location.href='${pageContext.request.contextPath}/talent/write';">글 등록</button>
                 </div>
                 </div>
                 <div class="grid-container">
