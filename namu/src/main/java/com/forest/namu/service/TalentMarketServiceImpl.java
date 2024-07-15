@@ -1,5 +1,6 @@
 package com.forest.namu.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -254,61 +255,148 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 
 	@Override
 	public void deleteTalent(long tboardNum, String pathname) throws Exception {
-		
+					TalentMarket talent = mapper.findById(tboardNum);
+					
 					// 파일 삭제(thumbnail)
-
+					if(talent !=null && talent.getThumbnail() != null) {
+						File file = new File(pathname,talent.getThumbnail());
+						if(file.exists()) {
+							file.delete();
+						}
+					}
 					// 추가 파일 삭제
 					
-					// 재고 삭제
+					  List<TalentMarket> files = mapper.listTalentMarketFile(tboardNum);
+				        for (TalentMarket file : files) {
+				            String filePath = pathname + File.separator + file.getFileName();
+				            deleteTalentFile(file.getFileNum(), filePath);
+				        }
 
-					// 옵션2 삭제
-					
-					// 옵션1 삭제
-					
+				        List<TalentMarket> options = mapper.listTalentOption(tboardNum);
+				        for (TalentMarket option : options) {
+				            // 옵션2 삭제
+				            List<TalentMarket> optionDetails = mapper.listOptionDetail(option.getOptionNum());
+				            for (TalentMarket detail : optionDetails) {
+				                deleteOptionDetail(detail.getDetailNum());
+				            }
+				            // 옵션1 삭제
+				            mapper.deleteTalentOption(option.getOptionNum());
+				        }
+				        
+				        
 					// 상품 삭제
 					mapper.deleteTalent(tboardNum);
 		
 	}
 
 	@Override
-	public void deleteTalentFile(long fileNum) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void deleteTalentFile(long fileNum, String pathname) throws Exception {
+		try {
+			if (pathname != null) {
+				fileManager.doFileDelete(pathname);
+			}
+
+			mapper.deleteTalentFile(fileNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@Override
+	public void deleteOptionDetail(long detailNum) throws Exception {
+		try {
+			mapper.deleteOptionDetail(detailNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
 	public int dataCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.dataCount(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	@Override
 	public List<TalentMarket> listTalentMarket(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listTalentMarket(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 
 	@Override
 	public TalentMarket findById(long tboardNum) {
-		// TODO Auto-generated method stub
-		return null;
+		TalentMarket dto = null;
+		
+		try {
+			dto = mapper.findById(tboardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
 	}
 
 	@Override
 	public List<TalentMarket> listTalentMarketFile(long tboardNum) {
-		// TODO Auto-generated method stub
-		return null;
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listTalentMarketFile(tboardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public List<TalentMarket> listCategory() {
-		// TODO Auto-generated method stub
-		return null;
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listCategory();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
-	
+	@Override
+	public List<TalentMarket> listTalentOption(long productNum) {
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listTalentOption(productNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
+	@Override
+	public List<TalentMarket> listOptionDetail(long optionNum) {
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listOptionDetail(optionNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
-	
-	
 }

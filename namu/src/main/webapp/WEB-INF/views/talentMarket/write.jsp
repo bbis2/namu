@@ -408,9 +408,9 @@ $(function(){
 								<div class="col-6">
 									<select name="parentNum" class="form-select">
 										<option value="">:: 카테고리 선택 ::</option>
-										
-											<option value="" >카테고리 이름</option>
-										
+											<c:forEach var="vo" items="${listCategory}">
+											<option value="${vo.categoryNum}" ${parentNum==vo.categoryNum?"selected":""}>${vo.categoryName}</option>
+										</c:forEach>
 									</select>
 								</div>
 							</div>

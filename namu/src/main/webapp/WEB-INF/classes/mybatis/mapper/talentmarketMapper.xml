@@ -7,12 +7,12 @@
 	</select>
 	
 	<insert id="insertTalent" parameterType="com.forest.namu.domain.TalentMarket">
-		INSERT INTO talentmarket(tboardNum,subject,content,price,guidelines,regDate,userId,typeNum,categoryNum,thumbnail) VALUES
-		(#{tboardNum},#{subject},#{content},#{price},#{guidelines},SYSDATE,#{userId},#{typeNum},#{categoryNum},#{thumbnail})
+		INSERT INTO talentmarket(tboardNum,subject,content,price,guidelines,regDate,userId,typeNum,categoryNum,thumbnail,optionCount) VALUES
+		(#{tboardNum},#{subject},#{content},#{price},#{guidelines},SYSDATE,#{userId},#{typeNum},#{categoryNum},#{thumbnail},#{optionCount})
 	</insert>
 	
 	<insert id="insertTalentFile" parameterType="com.forest.namu.domain.TalentMarket">
-		INSERT INTO tmFile(fileNum,saveFileName,tboardNum) VALUES (tmFile_seq.NEXTVAL,#{saveFileName},#{tboardNum})
+		INSERT INTO tmFile(fileNum,fileName,tboardNum) VALUES (tmFile_seq.NEXTVAL,#{fileName},#{tboardNum})
 	</insert>
 	
 	<select id="optionSeq" resultType="Long">
@@ -58,8 +58,9 @@
 	</select>
 	
 	<update id="updateTalent" parameterType="com.forest.namu.domain.TalentMarket">
-		UPDATE talentmarket SET typeNum=#{typeNum} , subject = #{subject} ,content = #{content}, price = #{price} , 
-			guidelines= #{guidelines})
+		UPDATE talentmarket SET categoryNum = #{categoryNum},typeNum=#{typeNum} ,
+		 subject = #{subject} ,content = #{content}, price = #{price} , optionCount = #{optionCount},
+			guidelines= #{guidelines},talentShow = #{talentShow},)
 	</update>
 	
 	<update id="updateTalentOption" parameterType="com.forest.namu.domain.TalentMarket">
@@ -115,8 +116,11 @@
 		SELECT NVL(COUNT(*),0) 
 		FROM talentMarket t
 		<where>
+			<if test="categoryNum != 0">
+				t.categoryNum = #{categoryNum}
+			</if>
 			<if test="tmPurchaseType!=null">
-				t.typeNum = #{typeNum}
+				AND t.typeNum = #{typeNum}
 			</if>
 			<if test="kwd != null and kwd != '' ">
 				AND <include refid="where-list"/>
@@ -125,7 +129,7 @@
 	</select>
 	
 	<select id="listTalentMarket" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
-		SELECT tboardNum,subject,content,price,guidelines,regDate,userId,typeNum
+		SELECT tboardNum,subject,content,price,guidelines,regDate,userId,talentShow,optionCount,hitCount,typeNum,categoryNum,thumbnail
 		FROM talentMarket
 		<where>
 			<if test="tmPurchaseType!=null">
@@ -141,14 +145,15 @@
 	
 	<!--상세정보-->
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.TalentMarket">
-		SELECT tboardNum,subject,content,price,guidelines,regDate,userId,typeNum
+		SELECT tboardNum,subject,content,price,guidelines,regDate,userId,typeNum,talentShow,c.categoryName,optionCount,thumbnail,hitCount
 		FROM talentMarket t
+		JOIN talentCategory c ON t.categoryNum = c.categoryNum
 		JOIN tmPurchaseType p ON t.typeNum = p.typeNum
 		WHERE t.tboardNum = #{productNum}
 	</select>
 	
 	<select id="listTalentMarketFile" parameterType="Long" resultType="com.forest.namu.domain.TalentMarket">
-		SELECT fileNum , tboardNum, saveFileName
+		SELECT fileNum , tboardNum, fileName
 		FROM tmFile
 		WHERE tboardNum = #{tboardNum}
 	</select>

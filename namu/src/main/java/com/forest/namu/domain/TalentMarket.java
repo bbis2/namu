@@ -16,6 +16,9 @@ public class TalentMarket {
 	private int typeNum;
 	private long type;
 	private int optionCount;
+	private String categoryNum;
+	private String categoryName;
+	
 	
 	private Long optionNum;
 	private String optionName;
@@ -39,7 +42,7 @@ public class TalentMarket {
 	private MultipartFile thumbnailFile;
 	
 	private long fileNum;
-	private String filename;
+	private String fileName;
 	private List<MultipartFile> addFiles;
 	
 	//수정전 옵션
@@ -132,11 +135,11 @@ public class TalentMarket {
 	public void setFileNum(long fileNum) {
 		this.fileNum = fileNum;
 	}
-	public String getFilename() {
-		return filename;
+	public String getFileName() {
+		return fileName;
 	}
 	public void setFilename(String filename) {
-		this.filename = filename;
+		this.fileName = filename;
 	}
 	public List<MultipartFile> getAddFiles() {
 		return addFiles;
@@ -234,6 +237,22 @@ public class TalentMarket {
 	}
 	public void setOptionValues2(List<String> optionValues2) {
 		this.optionValues2 = optionValues2;
+	}
+	
+	public String getCategoryNum() {
+		return categoryNum;
+	}
+	public void setCategoryNum(String categoryNum) {
+		this.categoryNum = categoryNum;
+	}
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	
 	
