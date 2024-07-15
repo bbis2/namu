@@ -35,11 +35,10 @@
 	href="${pageContext.request.contextPath}/resources/css/core.css"
 	type="text/css">
 	
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>
 	
 
-
 </head>
-
 
 
 <body>
@@ -61,7 +60,7 @@
 		<div class="loader"></div>
 	</div>
 	
-	<button id="live-chat">채팅 💬</button>
+	<button class="chat">채팅 💬</button>
 
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/vendor/bootstrap5/js/bootstrap.bundle.min.js"></script>
@@ -148,7 +147,12 @@
 		   } 
 		});
 		 */
+		 
+		 $('.btn_like').click(function () {
+				$(this).toggleClass("on")
+			});
 	</script>
+	
 	<div class="modal fade" id="loginModal" tabindex="-1"
 		data-bs-backdrop="static" data-bs-keyboard="false"
 		aria-labelledby="loginModalLabel" aria-hidden="true">

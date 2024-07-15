@@ -44,19 +44,37 @@ textarea:focus, input:focus { outline: none; }
 .border-bottom1 { border-bottom: 1px solid #212529; }
 .border-bottom2 { border-bottom: 2px solid #212529; }
 
-#live-chat {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+.btn {
 
-  border: none;
-  border-radius: 16px;
-  background: #61ac2d;
+  background-color: #61ac2d;
   color: white;
-  padding: 12px;
-  font-weight: bold;
-  box-shadow: 0px 5px 15px gray;
-  cursor: pointer;
+
+}
+
+.btn:hover {
+	background-color: #006a0f;
+	color: white;
+}
+
+.chat {
+	background-color: #61ac2d;
+	color: white;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	
+	border: none;
+	border-radius: 16px;
+	padding: 12px;
+	font-weight: bold;
+	box-shadow: 0px 5px 15px gray;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.chat:hover {
+	background-color: #006a0f;
+	color: white;
 }
 
 /* Navigation */
@@ -152,6 +170,27 @@ textarea:focus, input:focus { outline: none; }
     border-bottom: 3px solid #424951;
 }
 
+/* bootstrap */
+@media (min-width: 576px) {
+	.col-sm-6 {
+	flex: 0 0 auto;
+	width: 50%;
+	}
+}
+@media (min-width: 768px) {
+	.col-md-3 {
+	flex: 0 0 auto;
+	width: 25%;
+	}
+}
+@media (min-width: 992px) {
+	.col-lg-20 {
+	flex: 0 0 auto;
+	width: 20%;
+	}
+}
+
+
 /* 페이징 */
 .page-navigation {
 	clear: both;
@@ -181,4 +220,150 @@ textarea:focus, input:focus { outline: none; }
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* list */
+.main1 {
+    background: #C3FF9A;
+    height: 300px;
+    width: 100%;
+    margin-top: 80px;
+    border-radius: 5px;
+}
+
+.main-best-board-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+	height: 237px;
+}
+
+.main-best-board-container div {
+    overflow: hidden;
+    position: relative;
+}
+
+ .main-best-board-container img {
+    transition: 0.2s;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+}
+
+.search-input-container {
+    text-align: center;
+    align-content: center;
+}
+
+.search-input {
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 12px;
+    outline: none;
+    width: 120px; 
+    height: 30px;
+}
+
+.search-btn{
+ border: 1px solid #ccc;
+ border-radius: 25px;
+ font-size: 12px;
+ outline: none;
+ width: 60px; 
+ height: 30px;
+ text-align: center;
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.submit-button {
+    background-color: #61ac2d;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 14px;
+    margin-left: 10px;
+    cursor: pointer;
+    align-items: center;
+    height: 30px;
+    text-align: center;
+    justify-content: center;
+}
+
+.submit-button span {
+    margin-left: 5px;
+}
+
+/* template3 */
+.fleamarket-cover {
+    background-color: #E3F1C5;
+}
+
+.htext{
+	padding-top: 100px;
+	padding-left : 100px;
+}
+.cover-content {
+	padding: 50px;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    margin-left: 100px;
+}
+
+@media (min-width: 768px) {
+    .fleamarket-cover {
+        height: 315px;
+        padding: 0 16px 0 16px;
+        margin-top: 60px;
+        margin-bottom: 15px;
+}
+
+/* rent/borrow */
+.list {position: relative;}
+
+.list img{
+	transition: all 0.2s linear;
+}
+.list:hover img{
+	transform: scale(1.11);
+}
+.list:hover a { text-decoration: none;}
+.list:hover .listTitle { text-decoration: none; color: #61ac2d;}
+
+.list h5 {
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.btn_like {
+	position: absolute;
+	top: 85%;
+	left: 83%;    
+	width: 30px; height: 30px;
+	background: url(https://umings.github.io/images/i_like_off.png) no-repeat center / 30px;
+	cursor: pointer; 
+	border:0; 
+	font-size:0; 
+	display:block;
+}
+.btn_like:hover { 	background: url(https://umings.github.io/images/i_like_on.png) no-repeat center / 30px; }
+.btn_like.on {
+	background: url(https://umings.github.io/images/i_like_on.png) no-repeat center / 30px;
+	animation: beating .5s 1 alternate;
+}
+@keyframes beating {
+    0% {transform: scale(1);}
+    40% {transform: scale(1.25);}
+    70% {transform: scale(0.9);}
+    100% {transform: scale(1);}
 }

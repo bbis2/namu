@@ -2,34 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<style type="text/css">
-
-.fleamarket-cover {
-    background-color: #E3F1C5;
-}
-
-.htext{
-	padding-top: 100px;
-	padding-left : 100px;
-}
-.cover-content {
-	padding: 50px;
-    position: relative;
-    height: 100%;
-    box-sizing: border-box;
-    margin-left: 100px;
-}
-
-@media (min-width: 768px) {
-    .fleamarket-cover {
-        height: 315px;
-        padding: 0 16px 0 16px;
-        margin-top: 60px;
-        margin-bottom: 60px;
-}
-
-</style>
-
 <div class="container">
 
 	<section class="fleamarket-cover">
