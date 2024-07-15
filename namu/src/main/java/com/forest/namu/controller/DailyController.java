@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Daily;
+import com.forest.namu.domain.Member;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.service.DailyService;
 
@@ -105,13 +106,15 @@ public class DailyController {
 	
 	
 	@GetMapping("write")
-	public String writeForm(Model model) throws Exception {
+	public String writeForm(Member member, HttpSession session, Model model) throws Exception {
 		// 카테고리를 가져와서 던진다. 
-
 		// Long listDailyCategory = service.listDailyCategory(categoryNum);
-		
 		// model.addAttribute("listDailyCategory", listDailyCategory);
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		member.setNickName(info.getNickName());
 	
+		model.addAttribute("member", member);
 		model.addAttribute("mode", "write");
 		return ".daily.write";
 	}
