@@ -33,7 +33,6 @@ public class TalentMarketController {
 	public String list(Member member,TalentMarket dto, HttpSession session, Model model) {
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		member.setNickName(info.getNickName());
 		
 		model.addAttribute("member",member);
 		
@@ -48,9 +47,11 @@ public class TalentMarketController {
 		model.addAttribute("member",member);
 		
 		List<TalentMarket> listCategory = service.listCategory();
+		List<TalentMarket> listType = service.listType();
 		
 		
 		model.addAttribute("listCategory",listCategory);
+		model.addAttribute("listType",listType);
 		
 		return ".talentMarket.write";
 	}

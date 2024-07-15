@@ -407,9 +407,9 @@ $(function(){
 							<div class="row">
 								<div class="col-6">
 									<select name="parentNum" class="form-select">
-										<option value="">:: 카테고리 선택 ::</option>
+										<option value="">카테고리</option>
 											<c:forEach var="vo" items="${listCategory}">
-											<option value="${vo.categoryNum}" ${parentNum==vo.categoryNum?"selected":""}>${vo.categoryName}</option>
+											<option value="${vo.categoryNum}" ${mode=='update'?"selected":""}>${vo.categoryName}</option>
 										</c:forEach>
 									</select>
 								</div>
@@ -419,7 +419,7 @@ $(function(){
 					<tr>
 						<td class="table-light col-sm-2">상품명</td>
 						<td>
-							<input type="text" name="productName" class="form-control" value="상품명">
+							<input type="text" name="productName" class="form-control" value="${dto.subject}">
 						</td>
 					</tr>
 					<tr>
@@ -428,8 +428,9 @@ $(function(){
 							<div class="row">
 								<div class="col-6">
 									<select name="classify" class="form-select">
-										<option value="100" >커미션</option>
-										<option value="200" >강의</option>
+										<c:forEach var="vo" items="${listType}">
+											<option value="${vo.typeNum}" ${mode=='update'?"selected":""}>${vo.type}</option>
+										</c:forEach>
 									</select>
 								</div>
 							</div>

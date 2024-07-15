@@ -62,14 +62,14 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			long optionNum = 0, optionNum2 = 0;
 			long detailNum;
 			
-			// 옵션1 추가 -----
+			//옵션1
 			if(dto.getOptionCount() > 0) {
 				optionNum = mapper.optionSeq();
 				dto.setOptionNum(optionNum);
 				dto.setParentOption(null);
 				mapper.insertTalentOption(dto);
 				
-				// 옵션1 값 추가
+				// 옵션1 값
 				dto.setDetailNums(new ArrayList<Long>());
 				for(String optionValue : dto.getOptionValues()) {
 					detailNum = mapper.detailSeq(); 
@@ -82,7 +82,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				}
 			}
 			
-			// 옵션2 추가 -----
+			// 옵션2
 			if(dto.getOptionCount() > 1) {
 				optionNum2 = mapper.optionSeq();
 				dto.setOptionNum(optionNum2);
@@ -90,7 +90,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				dto.setParentOption(optionNum);
 				mapper.insertTalentOption(dto);
 				
-				// 옵션 2 값 추가
+				// 옵션 2 값
 				dto.setDetailNums2(new ArrayList<Long>());
 				for(String optionValue2 : dto.getOptionValues2()) {
 					detailNum = mapper.detailSeq(); 
@@ -134,7 +134,6 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				}
 			}
 			
-			//윱션 수정
 			
 			updateTalentOption(dto);
 		} catch (Exception e) {
@@ -170,8 +169,6 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		
 		long detailNum, parentNum;
 		
-		// 옵션1 -----
-		// 옵션1이 없는 상태에서 옵션1을 추가한 경우
 		if(dto.getOptionNum() == 0) {
 			insertTalentOption(dto);
 			return;
@@ -198,7 +195,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			dto.getDetailNums().add(detailNum);
 		}
 
-		// 옵션2 -----
+		// 옵션2
 		if(dto.getOptionCount() > 1) {
 			//  옵션2가 없는 상태에서 옵션2를 추가한 경우
 			parentNum = dto.getOptionNum(); // 옵션1 옵션번호 
@@ -374,6 +371,18 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		}
 		return list;
 	}
+	
+	@Override
+	public List<TalentMarket> listType() {
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listType();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 	@Override
 	public List<TalentMarket> listTalentOption(long productNum) {
@@ -398,5 +407,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		}
 		return list;
 	}
+
+	
 
 }

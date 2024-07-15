@@ -13,8 +13,8 @@ public class TalentMarket {
 	private String guidelines;
 	private String regDate;
 	private int hitCount;
-	private int typeNum;
-	private long type;
+	private long typeNum;
+	private String type;
 	private int optionCount;
 	private String categoryNum;
 	private String categoryName;
@@ -109,18 +109,6 @@ public class TalentMarket {
 	}
 	public void setHitCount(int hitCount) {
 		this.hitCount = hitCount;
-	}
-	public int getTypeNum() {
-		return typeNum;
-	}
-	public void setTypeNum(int typeNum) {
-		this.typeNum = typeNum;
-	}
-	public long getType() {
-		return type;
-	}
-	public void setType(long type) {
-		this.type = type;
 	}
 	
 	public MultipartFile getThumbnailFile() {
@@ -255,5 +243,19 @@ public class TalentMarket {
 		this.fileName = fileName;
 	}
 	
+
+	public long getTypeNum() {
+		return typeNum;
+	}
+	public void setTypeNum(long typeNum) {
+		this.typeNum = typeNum;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		
+		this.type = type;
+	}
 	
 }

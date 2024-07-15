@@ -20,6 +20,7 @@ public interface TalentMarketService {
 	public List<TalentMarket> listTalentMarket(Map<String, Object>map);
 	public List<TalentMarket> listTalentOption(long productNum);
 	public List<TalentMarket> listOptionDetail(long optionNum);
+	public List<TalentMarket> listType();
 	
 	
 	public TalentMarket findById(long tboardNum);

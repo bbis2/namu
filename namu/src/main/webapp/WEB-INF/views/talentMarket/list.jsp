@@ -282,7 +282,7 @@
             <img src="${pageContext.request.contextPath}/resources/images/bg.png" alt="프로필 이미지" class="profile-img">
         </div>
 	        <div class="profile-body">
-	            <h5>${member.nickName}</h5>
+	            <h5>${sessionScope.member.nickName}</h5>
 	            <p>회원 등급 : 일반</p>
 	            <p>평균 평점 : <strong>4.9</strong></p>
 	            <p>평균 만족도 : <strong>95%</strong></p>
