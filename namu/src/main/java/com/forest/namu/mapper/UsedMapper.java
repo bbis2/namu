@@ -12,10 +12,15 @@ import com.forest.namu.domain.Used;
 public interface UsedMapper {
 	public void insertUsed(Used dto) throws SQLException;
 	public void updateUsed(Used dto) throws SQLException;
-	public void deleteUsed(Used dto) throws SQLException;
-	public List<Used> listUsed();
+	public void deleteUsed(long num) throws SQLException;
+	public List<Used> listUsed(Map<String, Object> map);
 
 	public int dataCount(Map<String, Object> map);
-	public void updateHitCount(long num) throws Exception;
+	public void updateHitCount(long num) throws SQLException;
 	public Used findById(long num);
+	
+	public int likeCount(long num);
+	public void insertUsedLike(Map<String, Object> map) throws SQLException;
+	public void deleteUsedLike(Map<String, Object> map) throws SQLException;
+	
 }

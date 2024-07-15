@@ -201,7 +201,7 @@
     </div>
     
     <div class="inner-page2">
-      <div id="carouselExample" class="carousel slide" data-ride="carousel">
+      <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="1000">
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img class="img2" src="${pageContext.request.contextPath}/resources/images/sub1.png" class="d-block w-100">
@@ -229,8 +229,8 @@
 			<div class="flex-row" style="justify-content: space-between; align-items: center">
 				<div class="main-label">✨인기✨ 중고거래</div>
 
-				<%-- 클릭시 인기 집들이 탭으로 이동 --%>
-				<div class="more-view-btn">더보기</div>
+	        <%-- 클릭시 인기 집들이 탭으로 이동 --%>
+			<div class="more-view-btn" onclick="navigateToList('${pageContext.request.contextPath}/used/list')">더보기</div>
 			</div>
 
 			<div class="main-best-board-container">
@@ -272,12 +272,10 @@
 			</div>
 		</div>
 
-		<%-- 유용한 살림 팁 --%>
 		<div style="margin-top: 50px">
 			<div class="flex-row" style="justify-content: space-between; align-items: center">
 				<div class="main-label">🎶빌려드림</div>
 
-				<%-- 클릭시 인기 집들이 탭으로 이동 --%>
 				<div class="more-view-btn">더보기</div>
 			</div>
 
@@ -321,13 +319,11 @@
 		</div>
 
 
-		<%-- 새로운 집들이 --%>
 		<div style="margin-top: 50px">
 			<div class="flex-row" style="justify-content: space-between; align-items: center">
-				<div class="main-label">이번 주 나온 new 집들이 ✨</div>
+				<div class="main-label">나무일상</div>
 
-				<%-- 클릭시 인기 집들이 탭으로 이동 --%>
-				<div class="more-view-btn">더보기</div>
+				<div class="more-view-btn"onclick="navigateToList('${pageContext.request.contextPath}/daily/list')">더보기</div>
 			</div>
 
 			<div class="main-best-board-container">
@@ -422,7 +418,12 @@
 			</div>
 </div>
 
-	
+<script type="text/javascript">
+function navigateToList(url) {
+    location.href = url;
+}
+
+</script>
 
 <style>
 .inner-page-container {

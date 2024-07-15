@@ -1,20 +1,36 @@
 package com.forest.namu.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Used {
 	private long num;
 	private String subject;
 	private String content;
+	private String imageFile;
 	private long price;
 	private String regDate;
 	private long hitCount;
 	private int state;
-	private String nickName;
 	private String userId;
 	
+	private MultipartFile selectFile;
+	
+	public String getImageFile() {
+		return imageFile;
+	}
+	public void setImageFile(String imageFile) {
+		this.imageFile = imageFile;
+	}
+	public MultipartFile getSelectFile() {
+		return selectFile;
+	}
+	public void setSelectFile(MultipartFile selectFile) {
+		this.selectFile = selectFile;
+	}
 	public long getNum() {
 		return num;
 	}
-	public void setNum(int num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 	public String getSubject() {
@@ -52,12 +68,6 @@ public class Used {
 	}
 	public void setState(int state) {
 		this.state = state;
-	}
-	public String getNickName() {
-		return nickName;
-	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
 	}
 	public String getUserId() {
 		return userId;

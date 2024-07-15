@@ -2,46 +2,28 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-
-
 <div class="container body-container">
 <div class="used">
-<c:choose>
-	<c:when test="${dto.imageFile != null && !dto.imageFile.isEmpty()}">
-  <img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFile}" class="thumb">
-	</c:when>
-<c:otherwise>
-  <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="thumb">
-</c:otherwise>
- </c:choose>
-<div class="used-info">
- <div class="user">
-	<img src="회원 프로필!!">
-	   <div class="user-name">${sessionScope.nickName}</div>
-	   <div class="seller-location">주소1</div>
-</div>
-  <hr>
+  <img src="썸네일 가져와야 함!!!" class="thumb">
+  <div class="used-info">
+     <div class="user">
+    	 <img src="회원 프로필!!">
+         <div class="user-name">${dto.nickName}</div>
+         <div class="seller-location">${기본주소}</div>
+     </div>
+     
 <div class="used-header">
   <div class="title">${dto.subject}</div>
     <button class="chat">채팅하기</button>
 </div>
-<div class="price"><fmt:formatNumber value="${dto.price}"/> 원</div>
-<div class="state">
-	<c:if test="${dto.state == 1}" >
-		<span style="color: #D24F04; font-weight: bold;">예약중</span>
-	</c:if>	
-	<c:if test="${dto.state == 2}">
-		<span style="color: #2E8B1F; font-weight: bold;">판매완료</span>
-	</c:if>	
-	<c:if test="${dto.state == 0}">
-	</c:if>		
-</div>
-  <div class="content1">${dto.content}</div>
+<div class="price">${dto.price} 원</div>
+<div class="state">${dto.state}</div>
+  <div class="content">${dto.content}</div>
+
 <div class="sale-meta">
-  <div class="views">찜 ${likeCount} &nbsp;|&nbsp; 조회수 ${dto.hitCount} &nbsp;|&nbsp; ${dto.regDate}</div>
-<div class="btn">신고하기</div>
+  <div class="views">찜 ${dto.usedLike dto에 있나..?} | 조회수 ${dto.hitCount} | ${dto.regDate}</div>
  	 <div class="buttons">
-      <button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/used/update?num=${dto.num}';">수정</button>
+      <button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/used/update?num=${dto.num}&page=${page}';">수정</button>
           <button class="delete-btn" onclick="usedDelete()">삭제</button>
           
           </div>
@@ -53,31 +35,34 @@
 <script type="text/javascript">
 function usedDelete() {
 	if(confirm('게시글을 삭제 하시겠습니까?')){
-		let query = 'num=${dto.num}&imageFile=${dto.imageFile}';
+		let query = 'num=${dto.num}&${query}';
 	    let url = '${pageContext.request.contextPath}/used/delete?' + query;
-		location.href = url;
+    	location.href = url;
 	}
 }
 
 </script>
 
+
+
 <style>
   .used {
     display: flex;
+    border: 1px solid #ccc;
+    border-radius: 10px;
     overflow: hidden;
-    margin-top: 100px;
-    height: 500px;
+    background-color: white;
+    width: 700px;
 }
 
 .thumb {
-    width: 640px;
+    width: 250px;
     height: auto;
     display: block;
-	padding: 40px 50px;
 }
 
 .used-info {
-    padding: 40px 40px 20px 20px;
+    padding: 20px;
     flex-grow: 1;
 }
 
@@ -114,26 +99,26 @@ function usedDelete() {
 .used-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .title {
-	margin: 10px 0;
     font-size: 20px;
+    margin: 10px 0;
     flex-grow: 1;
 }
 
 .chat {
-    border-radius: 16px;
-    background: #61ac2d;
+    background-color: #4caf50;
     color: white;
     padding: 10px 20px;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
-    margin-left: 20px;
-    height: 80%
+    margin-left: 20px; /* 오른쪽 여백 추가 */
 }
 
-.content1 {
+.content {
     font-size: 14px;
     color: gray;
     margin-bottom: 20px;
@@ -150,22 +135,11 @@ function usedDelete() {
     color: gray;
 }
 
-.update-btn {
-	border-radius: 16px;
-    background-color: #ffd615;
+.buttons btn {
+    background-color: #f0f0f0;
     border: none;
     padding: 5px 10px;
     margin-left: 10px;
     cursor: pointer;
-    color: white;
-}
-
-.delete-btn {
-	border-radius: 16px;
-    background-color: #ff9500;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    color: white;
 }
 </style>
