@@ -38,7 +38,7 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link" href="${pageContext.request.contextPath}/talentmarket/list">재능마켓</a>
+							<a class="nav-link" href="${pageContext.request.contextPath}/talent/list">재능마켓</a>
 						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#">나무모임</a>
