@@ -186,7 +186,6 @@ function check() {
 	</form>
 </div>
 
-
 	
 <!-- 스마트에디터 -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>

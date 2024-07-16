@@ -165,7 +165,7 @@ public class DailyController {
 		map.put("kwd", kwd);
 		map.put("num", num);
 		
-		Daily prevDto = service.findByNext(map);
+		Daily prevDto = service.findByPrev(map);
 		Daily nextDto = service.findByNext(map);
 		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -183,4 +183,46 @@ public class DailyController {
 		
 		return ".daily.article";
 	}
+	
+	
+	@GetMapping("update")
+	public String updateForm(@RequestParam long num,
+			@RequestParam String page,
+			HttpSession session,
+			Model model,
+			@RequestParam(value = "long", defaultValue = "0") int categoryNum) throws Exception{
+
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		List<Daily> listDailyCategory = service.listDailyCategory();
+		
+		Daily dto = service.findById(num);
+		if(dto == null || ! info.getUserId().equals(dto.getUserId())) {
+			return "redirect:/daily/list?page=" + page;
+		}
+		
+		model.addAttribute("dto",dto);
+		model.addAttribute("mode","update");
+		model.addAttribute("page",page);
+		model.addAttribute("categoryNum", categoryNum);
+		model.addAttribute("listDailyCategory", listDailyCategory);
+		return ".daily.write";
+		
+	}
+	
+	@PostMapping("update")
+	public String updateSubmit(Daily dto, 
+			@RequestParam String page,
+			HttpSession session) throws Exception {	
+		
+		try {
+			service.updateDaily(dto);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/daily/list?page="+page;
+	}
+	
+
+	
 }

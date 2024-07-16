@@ -53,7 +53,7 @@
 	</select>
 	
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Daily">
-		SELECT d.num, m.nickName, subject, d.categoryNum, categoryName , content, hitCount, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
+		SELECT d.num, d.userId, m.nickName, subject, d.categoryNum, categoryName , content, hitCount, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
 		 NVL(dailyLikeCount, 0) dailyLikeCount
 		FROM daily d
 		JOIN member m On d.userId = m.userId
@@ -74,15 +74,14 @@
 	<select id="findByPrev" parameterType="map" resultType="com.forest.namu.domain.Daily">
 		SELECT num, subject
 		FROM daily d
-		JOIN member  m ON  d.userId = m.userId
+		JOIN member m ON  d.userId = m.userId
+		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
 		<where>
 			<if test="kwd != null and kwd != '' ">
 				<include refid="where-list"/>
 			</if>
 			AND (num &gt; #{num})
-			<if test="categoryNum != 0">
-				AND  categoryNum = #{categoryNum}
-			</if>			
+		
 			ORDER BY num  ASC
 			FETCH FIRST 1 ROWS ONLY
 		</where>
@@ -93,19 +92,28 @@
 		SELECT num, subject
 		FROM daily d
 		JOIN member m ON d.userId=m.userId
+		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
 		<where>
 			<if test="kwd != null and kwd != '' ">
 				<include refid="where-list"/>
 			</if>
 			AND (num &lt; #{num})
-			<if test="categoryNum != 0">
-				AND  categoryNum = #{categoryNum}
-			</if>			
+	
 		ORDER BY num DESC
 		FETCH FIRST 1 ROWS ONLY
 		</where>
 	</select>
 	
+	<!-- 수정 -->
+	<update id="updateDaily" parameterType="com.forest.namu.domain.Daily">
+		UPDATE daily SET categoryNum=#{categoryNum}, subject=#{subject}, content=#{content}
+		WHERE num =#{num}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteDaily" parameterType="Long">
+		DELETE FROM daily WHERE num = #{num}
+	</delete>
 	
 	<!-- 카테고리 -->
 	<insert id="insertCategory" parameterType="com.forest.namu.domain.Daily">
@@ -125,6 +133,8 @@
 		WHERE categoryNum = #{categoryNum}
 	</select>	
 	
+	
+
 	
 
 </mapper>
