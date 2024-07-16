@@ -182,8 +182,9 @@ function searchList() {
                 <tbody>
                 	<c:forEach var="dto" items="${list}" varStatus="status">
                     <tr>
-                    	<td>${dto.categoryName}</td>
+                    	
 	                  	<td>${dataCount -(page-1) * size - status.index}</td>
+	                  	<td>${dto.categoryName}</td>
 	                    	<td class="left">
 	                    		<c:url var="url" value="/daily/article">
 	                    			<c:param name="num" value="${dto.num}"/>

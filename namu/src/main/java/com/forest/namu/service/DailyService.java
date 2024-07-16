@@ -15,7 +15,7 @@ public interface DailyService {
     public Daily findByPrev(Map<String, Object> map);
     public Daily findByNext(Map<String, Object> map);
     public void updateDaily(Daily dto) throws Exception;
-    public void deleteDaily(Map<String, Object> map) throws Exception;
+    public void deleteDaily(long num, String userId, int membership) throws Exception;
     
     public void insertDailyLike(Map<String, Object>map) throws Exception;
     public void deleteDailyLike(Map<String, Object>map) throws Exception;

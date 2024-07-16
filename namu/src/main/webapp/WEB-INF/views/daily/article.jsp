@@ -3,24 +3,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
-.body-container {
-	max-width: 800px;
-}
 
 .fleamarket-cover {
     background-color: #E3F1C5;
 }
 
-h1 {
-    display: block;
-    font-size: 2em;
-    margin-block-start: 0.67em;
-    margin-block-end: 0.67em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
-    unicode-bidi: isolate;
-}
 .htext{
 	padding-top: 100px;
 	padding-left : 100px;
@@ -38,17 +25,10 @@ h1 {
         height: 315px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
+        margin-bottom: 60px;	
     }
 
-.container {
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 8px;
-}
 
-.content {
-    padding: 20px;
-}
 
 .form-group {
     margin-bottom: 15px;
@@ -131,7 +111,7 @@ textarea.form-control {
 	 </section>
 	 	
 	<div class="body-title">
-		<h2>일상 게시글</h2>
+		<h2>${dto.categoryName}</h2>
 	</div>	 
  
 	 <table class="table mt-5 mb-0 board-article">
