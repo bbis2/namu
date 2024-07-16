@@ -13,7 +13,7 @@ public interface DailyMapper {
     
     public void insertDaily(Daily dto) throws SQLException; // 등록
     public void updateDaily(Daily dto) throws SQLException; // 수정
-    public void deleteDaily(Map<String, Object> map) throws SQLException; // 삭제
+    public void deleteDaily(long num) throws SQLException; // 삭제
     
     public int dataCount(Map<String, Object> map);            // 갯수 
     public List<Daily> listDaily(Map<String, Object>map);    // daily 게시판 리스트

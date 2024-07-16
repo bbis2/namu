@@ -223,6 +223,24 @@ public class DailyController {
 		return "redirect:/daily/list?page="+page;
 	}
 	
+	@GetMapping("delete")
+	public String delete (@RequestParam long num, 
+			@RequestParam String page,
+			@RequestParam (defaultValue = "all") String schType,
+			@RequestParam (defaultValue = "") String kwd,
+			HttpSession session) throws Exception {
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		String query = "page=" + page;
+		if(kwd.length() != 0) {
+			query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd,"UTF-8");
+		}
+		
+		service.deleteDaily(num, info.getUserId(), info.getMembership());
+		
+		return "redirect:/daily/list?" +query;
+	}
+	
 
 	
 }

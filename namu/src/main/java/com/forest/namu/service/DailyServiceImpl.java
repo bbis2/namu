@@ -113,14 +113,17 @@ public class DailyServiceImpl implements DailyService {
 	}
 
 	@Override
-	public void deleteDaily(Map<String, Object> map) throws Exception {
+	public void deleteDaily(long num, String userId, int membership) throws Exception {
 		try {
-			mapper.deleteDaily(map);
+			Daily dto = findById(num);
+			if(dto == null || (membership < 99 && ! dto.getUserId().equals(userId))) {
+				return;
+			}
+			mapper.deleteDaily(num);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		
 	}
 
 
