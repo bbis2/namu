@@ -1,5 +1,6 @@
 package com.forest.namu.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,14 +62,14 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			long optionNum = 0, optionNum2 = 0;
 			long detailNum;
 			
-			// 옵션1 추가 -----
+			//옵션1
 			if(dto.getOptionCount() > 0) {
 				optionNum = mapper.optionSeq();
 				dto.setOptionNum(optionNum);
 				dto.setParentOption(null);
 				mapper.insertTalentOption(dto);
 				
-				// 옵션1 값 추가
+				// 옵션1 값
 				dto.setDetailNums(new ArrayList<Long>());
 				for(String optionValue : dto.getOptionValues()) {
 					detailNum = mapper.detailSeq(); 
@@ -81,7 +82,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				}
 			}
 			
-			// 옵션2 추가 -----
+			// 옵션2
 			if(dto.getOptionCount() > 1) {
 				optionNum2 = mapper.optionSeq();
 				dto.setOptionNum(optionNum2);
@@ -89,7 +90,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				dto.setParentOption(optionNum);
 				mapper.insertTalentOption(dto);
 				
-				// 옵션 2 값 추가
+				// 옵션 2 값
 				dto.setDetailNums2(new ArrayList<Long>());
 				for(String optionValue2 : dto.getOptionValues2()) {
 					detailNum = mapper.detailSeq(); 
@@ -133,7 +134,6 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				}
 			}
 			
-			//윱션 수정
 			
 			updateTalentOption(dto);
 		} catch (Exception e) {
@@ -169,8 +169,6 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		
 		long detailNum, parentNum;
 		
-		// 옵션1 -----
-		// 옵션1이 없는 상태에서 옵션1을 추가한 경우
 		if(dto.getOptionNum() == 0) {
 			insertTalentOption(dto);
 			return;
@@ -197,7 +195,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			dto.getDetailNums().add(detailNum);
 		}
 
-		// 옵션2 -----
+		// 옵션2
 		if(dto.getOptionCount() > 1) {
 			//  옵션2가 없는 상태에서 옵션2를 추가한 경우
 			parentNum = dto.getOptionNum(); // 옵션1 옵션번호 
@@ -254,61 +252,162 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 
 	@Override
 	public void deleteTalent(long tboardNum, String pathname) throws Exception {
-		
+					TalentMarket talent = mapper.findById(tboardNum);
+					
 					// 파일 삭제(thumbnail)
-
+					if(talent !=null && talent.getThumbnail() != null) {
+						File file = new File(pathname,talent.getThumbnail());
+						if(file.exists()) {
+							file.delete();
+						}
+					}
 					// 추가 파일 삭제
 					
-					// 재고 삭제
+					  List<TalentMarket> files = mapper.listTalentMarketFile(tboardNum);
+				        for (TalentMarket file : files) {
+				            String filePath = pathname + File.separator + file.getFileName();
+				            deleteTalentFile(file.getFileNum(), filePath);
+				        }
 
-					// 옵션2 삭제
-					
-					// 옵션1 삭제
-					
+				        List<TalentMarket> options = mapper.listTalentOption(tboardNum);
+				        for (TalentMarket option : options) {
+				            // 옵션2 삭제
+				            List<TalentMarket> optionDetails = mapper.listOptionDetail(option.getOptionNum());
+				            for (TalentMarket detail : optionDetails) {
+				                deleteOptionDetail(detail.getDetailNum());
+				            }
+				            // 옵션1 삭제
+				            mapper.deleteTalentOption(option.getOptionNum());
+				        }
+				        
+				        
 					// 상품 삭제
 					mapper.deleteTalent(tboardNum);
 		
 	}
 
 	@Override
-	public void deleteTalentFile(long fileNum) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void deleteTalentFile(long fileNum, String pathname) throws Exception {
+		try {
+			if (pathname != null) {
+				fileManager.doFileDelete(pathname);
+			}
+
+			mapper.deleteTalentFile(fileNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@Override
+	public void deleteOptionDetail(long detailNum) throws Exception {
+		try {
+			mapper.deleteOptionDetail(detailNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
 	public int dataCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.dataCount(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	@Override
 	public List<TalentMarket> listTalentMarket(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listTalentMarket(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 
 	@Override
 	public TalentMarket findById(long tboardNum) {
-		// TODO Auto-generated method stub
-		return null;
+		TalentMarket dto = null;
+		
+		try {
+			dto = mapper.findById(tboardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
 	}
 
 	@Override
 	public List<TalentMarket> listTalentMarketFile(long tboardNum) {
-		// TODO Auto-generated method stub
-		return null;
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listTalentMarketFile(tboardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public List<TalentMarket> listCategory() {
-		// TODO Auto-generated method stub
-		return null;
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listCategory();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	@Override
+	public List<TalentMarket> listType() {
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listType();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<TalentMarket> listTalentOption(long productNum) {
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listTalentOption(productNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<TalentMarket> listOptionDetail(long optionNum) {
+		List<TalentMarket> list = null;
+		
+		try {
+			list = mapper.listOptionDetail(optionNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	
 
-
-	
-	
 }

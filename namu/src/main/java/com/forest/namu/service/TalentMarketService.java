@@ -13,10 +13,15 @@ public interface TalentMarketService {
 	public void updateTalent(TalentMarket dto, String pathname) throws Exception;
 	public void updateTalentOption(TalentMarket dto) throws Exception;
 	public void deleteTalent(long tboardNum, String pathname) throws Exception;
-	public void deleteTalentFile(long fileNum) throws Exception;
+	public void deleteTalentFile(long fileNum, String pathname) throws Exception;
+	public void deleteOptionDetail(long detailNum) throws Exception;
 	
 	public int dataCount(Map<String,Object> map);
 	public List<TalentMarket> listTalentMarket(Map<String, Object>map);
+	public List<TalentMarket> listTalentOption(long productNum);
+	public List<TalentMarket> listOptionDetail(long optionNum);
+	public List<TalentMarket> listType();
+	
 	
 	public TalentMarket findById(long tboardNum);
 	public List<TalentMarket> listTalentMarketFile(long tboardNum);
