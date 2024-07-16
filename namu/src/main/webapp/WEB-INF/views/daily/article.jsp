@@ -39,13 +39,6 @@ h1 {
         padding: 0 16px 0 16px;
         margin-top: 60px;
     }
-    
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
-}
 
 .container {
     margin: 0 auto;
@@ -115,57 +108,131 @@ textarea.form-control {
     margin-bottom: 10px;
 }
  
-    
-}
-
 </style>
 
-<div class="container">
+<c:if test="${sessionScope.member.userId==dto.userId||sessionScope.member.membership>99}">
+	<script type="text/javascript">
+		function deleteBoard() {
+		    if(confirm('게시글을 삭제 하시 겠습니까 ? ')) {
+			    let query = 'num=${dto.num}&${query}';
+			    let url = '${pageContext.request.contextPath}/daily/delete?' + query;
+		    	location.href = url;
+		    }
+		}
+	</script>
+</c:if>
 
-<section class="fleamarket-cover">
-      <h1 class="cover-title htext">믿을만한<br>나무 거래</h1>
-      <span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>	
-      <span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
-      <div class="cover-image">
-      </div>
-  </section>
-  
-	    <div class="container">
-        <div class="content">
-            <div class="form-group">
-                <label for="tag">태그</label>
-                <input type="text" id="tag" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="title">제목</label>
-                <input type="text" id="title" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="nickname">닉네임</label>
-                <input type="text" id="nickname" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="content">내용</label>
-                <textarea id="content" class="form-control"></textarea>
-            </div>
-            <div class="content-meta">
-                <span>등록일</span>
-                <span>조회</span>
-            </div>
-            <div class="navigation">
-                <button class="btn">이전글</button>
-                <button class="btn">다음글</button>
-            </div>
-            <div class="actions">
-                <button class="btn">수정</button>
-                <button class="btn">삭제</button>
-                <button class="btn">리스트</button>
-            </div>
-            <div class="comments">
-                <input type="text" class="form-control" placeholder="닉네임">
-                <input type="text" class="form-control" placeholder="댓글을 입력하세요">
-                <button class="btn">댓글 등록</button>
-            </div>
-        </div>
-    </div>
+<div class="container">
+	<section class="fleamarket-cover">
+		<h1 class="cover-title htext bd">소통하는<br>일상 생활</h1>
+		<span class="cover-description htext"></span><br>
+		<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
+		<div class="cover-image"></div>
+	 </section>
+	 	
+	<div class="body-title">
+		<h2>일상 게시글</h2>
+	</div>	 
+ 
+	 <table class="table mt-5 mb-0 board-article">
+	 	<thead>
+	 		<tr>
+	 			<td colspan="2" align="center">
+	 				${dto.subject}
+	 			</td>
+	 		</tr>
+	 	</thead>
+	 	
+	 	<tbody>
+	 		<tr>
+	 			<td width="50%">
+	 				닉네임 : ${dto.nickName}
+	 			</td>
+	 			<td align="right">
+	 				${dto.regDate} | 조회 ${dto.hitCount}
+	 			</td>
+	 		</tr>
+	 		
+	 		<tr>
+	 			<td colspan="2" valign="top" height="200" style="border-bottom: none;">
+	 				${dto.content}
+	 			</td>
+	 		</tr>
+	 		
+	 		<tr>
+	 			<td colspan="2" class="text-center p-3" style="border-bottom: none;">
+	 				<button type="button" class="btn btn-outline-secondary btnSendBoardLike" title="좋아요"><i class="bi ${userBoardLiked ? 'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up' }"></i>&nbsp;&nbsp;<span id="boardLikeCount">${dto.dailyLikeCount}</span></button>
+	 			</td>
+	 		</tr>
+	 		
+	 		<tr>
+	 			<td colspan="2">
+	 				이전글 :
+	 				<c:if test="${not empty prevDto}">
+	 					<a href="${pageContext.request.contextPath}/daily/article?${query}&num=${prevDto.num}">${prevDto.subject}</a>
+	 				</c:if>
+	 			</td>
+	 		</tr>
+
+			<tr>
+				<td colspan="2">
+					다음글 :
+					<c:if test="${not empty nextDto}">
+						<a href="${pageContext.request.contextPath}/daily/article?${query}&num=${nextDto.num}">${nextDto.subject}</a>
+					</c:if>
+				</td>
+			</tr>	 		
+	 	</tbody>
+	 </table>
+	 
+	 <table class="table table-borderless mb-2">
+		<tr>
+			<td width="50%">
+				<c:choose>
+					<c:when test="${sessionScope.member.userId==dto.userId}">
+						<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/daily/update?num=${dto.num}&page=${page}';">수정</button>
+					</c:when>
+					<c:otherwise>
+						<button type="button" class="btn btn-light" disabled>수정</button>
+					</c:otherwise>
+				</c:choose>
+		    	
+				<c:choose>
+		    		<c:when test="${sessionScope.member.userId==dto.userId}">
+		    			<button type="button" class="btn btn-light" onclick="deleteBoard();">삭제</button>
+		    		</c:when>
+		    		<c:otherwise>
+		    			<button type="button" class="btn btn-light" disabled>삭제</button>
+		    		</c:otherwise>
+		    	</c:choose>
+			</td>
+			<td class="text-end">
+				<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/daily/list?${query}';">리스트</button>
+			</td>
+		</tr>
+	 </table>
+	 
+	<div class="reply">
+		<form name="replyForm" method="post">
+			<div class='form-header'>
+				<span class="bold">댓글</span><span> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가해 주세요.</span>
+			</div>
+			
+			<table class="table table-borderless reply-form">
+				<tr>
+					<td>
+						<textarea class='form-control' name="content"></textarea>
+					</td>
+				</tr>
+				<tr>
+				   <td align='right'>
+				        <button type='button' class='btn btn-light btnSendReply'>댓글 등록</button>
+				    </td>
+				 </tr>
+			</table>
+		</form>
+		
+		<div id="listReply"></div>
+	</div>
 </div>
+

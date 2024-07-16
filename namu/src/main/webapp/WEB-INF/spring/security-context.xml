@@ -68,6 +68,10 @@
 			<concurrency-control max-sessions="1"
 				expired-url="/member/expired"/>
 		</session-management>
+
+	      <!-- AJAX 로그인 검사 필터 -->
+	      <custom-filter ref="ajaxSessionTimeoutFilter" after="EXCEPTION_TRANSLATION_FILTER"/>		
+		
 		
 	</http>
 	
@@ -92,7 +96,11 @@
 			<password-encoder ref="bcryptEncoder"/>
 		</authentication-provider>
 	</authentication-manager>
-
+	
+   <!-- AJAX 작업에서 로그인이 안된 경우 실행할 필터 -->
+  <beans:bean id="ajaxSessionTimeoutFilter" class="com.forest.namu.security.AjaxSessionTimeoutFilter">
+  		<beans:property name="ajaxHeader" value="AJAX"/>
+  </beans:bean>
 
 </beans:beans>
 

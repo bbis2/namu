@@ -10,9 +10,13 @@ public class Daily {
 	private int notice;
 	private String nickName;
 	private String town1;
-	
+
 	private long categoryNum;
 	private String categoryName;
+	
+	private int replyCount;
+	private int dailyLikeCount;
+	
 	
 	public long getNum() {
 		return num;
@@ -80,11 +84,21 @@ public class Daily {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+	public int getReplyCount() {
+		return replyCount;
+	}
+	public void setReplyCount(int replyCount) {
+		this.replyCount = replyCount;
+	}
+	public int getDailyLikeCount() {
+		return dailyLikeCount;
+	}
+	public void setDailyLikeCount(int dailyLikeCount) {
+		this.dailyLikeCount = dailyLikeCount;
+	}
 	
-
 	
-
-
+	
 	
 	
 	

@@ -90,8 +90,6 @@
     color: #333;
     border: 1px solid #ddd;
 }
-
-
 </style>
 
 <script type="text/javascript">
@@ -187,6 +185,8 @@ function check() {
 		</table>        	
 	</form>
 </div>
+
+
 	
 <!-- 스마트에디터 -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
@@ -205,7 +205,9 @@ function submitContents(elClickedObj) {
 		if(! check()) {
 			return;
 		}
-		elClickedObj.form.submit();
+
+		elClickedObj.submit();
+		
 	} catch(e) {
 	}
 }

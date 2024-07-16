@@ -4,50 +4,34 @@
 <mapper namespace="com.forest.namu.mapper.DailyMapper">
 
 	<insert id="insertDaily" parameterType="com.forest.namu.domain.Daily">
-		INSERT INTO daily (num, userId,nickName, categoryNum, subject, content, regDate, hitCount, notice)
-		VALUES (daily_seq.NEXTVAL, #{userId},#{nickName},#{categoryNum}, #{subject}, #{content}, SYSDATE, 0, 0)
+		INSERT INTO daily (num, userId, categoryNum, subject, content, regDate, hitCount, notice)
+		VALUES (daily_seq.NEXTVAL, #{userId},#{categoryNum}, #{subject}, #{content}, SYSDATE, 0, 0)
 	</insert>
 	
 	<sql id="where-list">
-		<choose>
-		<when test="schType == 'all' ">
-			(INSTR(subject, #{kwd}) &gt; 0
-			OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
-		</when>
-		</choose>
+		(INSTR(subject, #{kwd}) &gt; 0
+		OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
 	</sql>
-	
-	<!--카테고리 -->
-	<select id="findByCategory" parameterType="Long" resultType="com.forest.namu.domain.Daily">
-		SELECT categoryNum, categoryName
-		FROM dailyCategory 
-		WHERE categoryNum = #{categoryNum}
-	</select>
-	
-	<!-- 카테고리 리스트 -->
-	<select id="listDailyCategory" parameterType="Long" resultType="com.forest.namu.domain.Daily">
-		SELECT categoryNum, categoryName
-		FROM dailyCategory
-		WHERE categoryNum = #{categoryNum}
-	</select>
-	
 
 	<!-- 글개수 -->
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*),0)
 		FROM daily d
 		JOIN member  m ON  d.userId = m.userId
-			<where>
-				<if test="kwd !=null and kwd != '' ">
-					<include refid="where-list"/>
-				</if>
-			</where>	
+		<where>
+			<if test="kwd !=null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			<if test="categoryNum != 0">
+			AND  categoryNum = #{categoryNum}
+			</if>
+		</where>	
 	</select>
 	
-	<!-- 글보기 -->
+	<!-- 글리스트 -->
 	<select id="listDaily" parameterType="map" resultType="com.forest.namu.domain.Daily">
-		SELECT d.num, nickName, categoryNum, subject, TO_CHAR(d.regDate, 'YYYY-MM-DD')regDate,
-			hitCount, NVL(replyCount,0) replyCount
+		SELECT d.num, m.nickName, d.categoryNum, categoryName , subject, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
+			hitCount
 		FROM daily d
 		JOIN member m ON d.userId=m.userId
 		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
@@ -60,13 +44,29 @@
 			<if test="kwd != null and kwd != ''">
 				<include refid="where-list"/>
 			</if>
+			<if test="categoryNum != 0">
+				AND  categoryNum = #{categoryNum}
+			</if>			
 		</where>
 		ORDER BY num DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
+	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Daily">
+		SELECT d.num, m.nickName, subject, d.categoryNum, categoryName , content, hitCount, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
+		 NVL(dailyLikeCount, 0) dailyLikeCount
+		FROM daily d
+		JOIN member m On d.userId = m.userId
+		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
+		LEFT OUTER JOIN (
+			SELECT num, COUNT(*) dailyLikeCount FROM dailyLike
+			GROUP BY num
+		) c ON d.num = c.num
+		WHERE d.num = #{num}
+	</select>
+	
 	<!-- 조회수 증가 -->
-	<update id="updateDaily" parameterType="Long">
+	<update id="updateHitCount" parameterType="Long">
 		UPDATE  daily SET hitCount  = hitCount+1 WHERE num = #{num}
 	</update>
 	
@@ -80,6 +80,9 @@
 				<include refid="where-list"/>
 			</if>
 			AND (num &gt; #{num})
+			<if test="categoryNum != 0">
+				AND  categoryNum = #{categoryNum}
+			</if>			
 			ORDER BY num  ASC
 			FETCH FIRST 1 ROWS ONLY
 		</where>
@@ -95,15 +98,32 @@
 				<include refid="where-list"/>
 			</if>
 			AND (num &lt; #{num})
+			<if test="categoryNum != 0">
+				AND  categoryNum = #{categoryNum}
+			</if>			
 		ORDER BY num DESC
 		FETCH FIRST 1 ROWS ONLY
 		</where>
 	</select>
 	
+	
+	<!-- 카테고리 -->
+	<insert id="insertCategory" parameterType="com.forest.namu.domain.Daily">
+		INSERT INTO dailyCategory(categoryNum, categoryName)
+		VAlUES (dailyCategory_seq.NextVAL, #{categoryName})
+	</insert>
 
+	<select id="listDailyCategory" resultType="com.forest.namu.domain.Daily">
+		SELECT categoryNum, categoryName
+		FROM dailyCategory
+		ORDER BY categoryNum
+	</select>	
 	
-	
-	
+	<select id="findByCategory" parameterType="Long" resultType="com.forest.namu.domain.Daily">
+		SELECT categoryNum, categoryName
+		FROM dailyCategory 
+		WHERE categoryNum = #{categoryNum}
+	</select>	
 	
 	
 

@@ -15,6 +15,30 @@ public class DailyServiceImpl implements DailyService {
 	@Autowired
 	private DailyMapper mapper;
 
+	
+	@Override
+	public void insertDaily(Daily dto) throws Exception {
+		try {
+			mapper.insertDaily(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+	
+	@Override
+	public List<Daily> listDaily(Map<String, Object> map) {
+		List<Daily> list = null;
+		
+		try {
+			list = mapper.listDaily(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
 
 	@Override
 	public int dataCount(Map<String, Object> map) {
@@ -41,6 +65,7 @@ public class DailyServiceImpl implements DailyService {
 		return dto;
 	}
 
+	//조회수 증가
 	@Override
 	public void updateHitCount(long num) throws Exception {
 		try {
@@ -78,37 +103,66 @@ public class DailyServiceImpl implements DailyService {
 	}
 
 	@Override
-	public void insertDaily(Daily dto, String pathname) {
+	public void updateDaily(Daily dto) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public List<Daily> listDaily(Map<String, Object> map) {
+	public void deleteDaily(Map<String, Object> map) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		
+	}
+
+
+	@Override
+	public void insertDailyLike(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public List<Daily> listDailyCategory(long categoryNum) {
-		List<Daily> listDailyCategory = null;
+	public void deleteDailyLike(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+	@Override
+	public boolean userDailyLiked(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int DailyLikeCount(long num) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
+	// 카테고리 
+	@Override
+	public void insertCategory(Daily dto) throws Exception {
+		try {
+			mapper.insertCategory(dto);
+		} catch (Exception e) {
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public List<Daily> listDailyCategory() {
+		List<Daily> listCategory =null;
 		
 		try {
-			listDailyCategory = mapper.listDailyCategory(categoryNum);
+			listCategory = mapper.listDailyCategory();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return listDailyCategory;
+		return listCategory;
 	}
-
-
-
-
-
-
-
-
-
-
 }

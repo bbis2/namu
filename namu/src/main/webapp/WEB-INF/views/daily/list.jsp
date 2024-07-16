@@ -129,8 +129,7 @@ function searchList() {
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">정유진</h5>
-                           <p>puedo_j</p>
+                        <h5 class="card-title">${sessionScope.member.nickName}</h5>
             			   <p>서울특별시 마포구</p>
           				   <p>쪽지 | 스크랩 | 알림</p>
                     </div>
@@ -172,7 +171,7 @@ function searchList() {
                 <thead class="table-light">
                     <tr>
                         <th>게시글번호</th>
-                        <th>태그</th>
+                        <th>카테고리</th>
                         <th>제목</th>
                         <th>닉네임</th>
                         <th>등록일</th>
@@ -180,23 +179,26 @@ function searchList() {
                     </tr>
                 </thead>
                 
-                
                 <tbody>
                 	<c:forEach var="dto" items="${list}" varStatus="status">
                     <tr>
-                    	<td>${dataCount -(page-1) * size - status.index}</td>
-                    	<td>${dto.tagName}</td>
-                    	<td class="left">
-                    		<a href="${articleUrl}&num=${dto.num}" class="text-rest">${dto.subject}</a>
-                    	</td>
+                    	<td>${dto.categoryName}</td>
+	                  	<td>${dataCount -(page-1) * size - status.index}</td>
+	                    	<td class="left">
+	                    		<c:url var="url" value="/daily/article">
+	                    			<c:param name="num" value="${dto.num}"/>
+	                    			<c:param name="page" value="${page}"/>
+	                    			<c:if test="${not empty kwd}">
+	                    				<c:param name="schType" value="${schType}"/>
+	                    				<c:param name="kwd" value="${kwd}"/>
+	                    			</c:if>
+	                    		</c:url>
+	                    		<a href="${url}" class="text-rest">${dto.subject}</a>
+	     
+	                    </td>
                         <td>${dto.nickName}</td>
                         <td>${dto.regDate}</td>
                         <td>${dto.hitCount}</td>
-                        <td>
-                        	<c:if test="${not empty dto.saveFilename}">
-                        		<a href="${pageContext.request.contextPath}/daily/download?num=${dto.numm}"><i class="bi bi-file-arrow-down"></i></a>
-                        	</c:if>
-                        </td>
                     </tr>
                     <!-- 더 많은 행 추가 가능 -->
                     </c:forEach>
