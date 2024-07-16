@@ -21,7 +21,7 @@
 	
 	<insert id="insertTalentOption" parameterType="com.forest.namu.domain.TalentMarket">
 		INSERT INTO talentOption(optionNum, optionName, tboardNum, parentOption)
-			VALUES(#{optionNum}, #{optionName}, #{productNum}, #{parentOption, jdbcType=INTEGER})
+			VALUES(#{optionNum}, #{optionName}, #{tboardNum}, #{parentOption, jdbcType=INTEGER})
 	</insert>
 	
 	<select id="detailSeq" resultType="Long">
@@ -119,8 +119,11 @@
 			<if test="categoryNum != 0">
 				t.categoryNum = #{categoryNum}
 			</if>
-			<if test="tmPurchaseType!=null">
+			<if test="typeNum!=null">
 				AND t.typeNum = #{typeNum}
+			</if>
+			<if test="talentShow != 0">
+				AND t.talentShow = #{talentShow}
 			</if>
 			<if test="kwd != null and kwd != '' ">
 				AND <include refid="where-list"/>
@@ -149,7 +152,7 @@
 		FROM talentMarket t
 		JOIN talentCategory c ON t.categoryNum = c.categoryNum
 		JOIN tmPurchaseType p ON t.typeNum = p.typeNum
-		WHERE t.tboardNum = #{productNum}
+		WHERE t.tboardNum = #{tboardNum}
 	</select>
 	
 	<select id="listTalentMarketFile" parameterType="Long" resultType="com.forest.namu.domain.TalentMarket">

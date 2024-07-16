@@ -77,11 +77,7 @@ function check() {
 	let str, b;
 	let mode = "${mode}";
 	
-	if(! f.parentNum.value) {
-		alert("카테고리를 선택하세요.");
-		f.parentNum.focus();
-		return false;
-	}
+
 
 	if(! f.categoryNum.value) {
 		alert("카테고리를 선택하세요.");
@@ -89,7 +85,13 @@ function check() {
 		return false;
 	}
 	
-	if(! f.productName.value.trim()) {
+	if(! f.typeNum.value) {
+		alert("판매유형을 선택하세요.");
+		f.typeNum.focus();
+		return false;
+	}
+	
+	if(! f.subject.value.trim()) {
 		alert("상품명을 입력하세요.");
 		f.productName.focus();
 		return false;
@@ -144,18 +146,16 @@ function check() {
 		}
 	}
 	
-	b = false;
-	for(let ps of f.productShow) {
-		if( ps.checked ) {
-			b = true;
-			break;
-		}
-	}
-	
 	str = f.content.value.trim();
 	if( !str || str === "<p><br></p>" ) {
 		alert("상품 설명을 입력하세요.");
 		f.content.focus();
+		return false;
+	}
+	
+	if(! f.guidelines.value.trim()) {
+		alert("주의사항을 입력하세요.");
+		f.guidelines.focus();
 		return false;
 	}
 
@@ -165,7 +165,7 @@ function check() {
 		return false;
 	}
 	
-	f.action = "${pageContext.request.contextPath}/admin/product/${classify}/${mode}";
+	f.action = "${pageContext.request.contextPath}/talent/${mode}";
 	return true;
 }
 </script>
@@ -208,33 +208,6 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 	
 	$.ajax(url, settings);
 }
-
-$(function(){
-	$("form select[name=parentNum]").change(function(){
-		let parentNum = $(this).val();
-		
-		$("form select[name=categoryNum]").find('option').remove().end()
-			.append("<option value=''>:: 카테고리 선택 ::</option>");	
-		
-		if(! parentNum) {
-			return false;
-		}
-		
-		let url = "${pageContext.request.contextPath}/admin/product/listSubCategory";
-		let query = "parentNum="+parentNum;
-		
-		const fn = function(data) {
-			$.each(data.listSubCategory, function(index, item){
-				let categoryNum = item.categoryNum;
-				let categoryName = item.categoryName;
-				let s = "<option value='"+categoryNum+"'>"+categoryName+"</option>";
-				$("form select[name=categoryNum]").append(s);
-			});
-		};
-		ajaxFun(url, "get", query, "json", fn);
-		
-	});
-});
 </script>
 
 <c:if test="${mode=='update'}">
@@ -406,10 +379,24 @@ $(function(){
 						<td>
 							<div class="row">
 								<div class="col-6">
-									<select name="parentNum" class="form-select">
+									<select name="categoryNum" class="form-select">
 										<option value="">카테고리</option>
 											<c:forEach var="vo" items="${listCategory}">
-											<option value="${vo.categoryNum}" ${mode=='update'?"selected":""}>${vo.categoryName}</option>
+											<option value="${vo.categoryNum}" ${categoryNum == vo.categoryNum?"selected" : ""}>${vo.categoryName}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="table-light col-sm-2">상품구분</td>
+						<td>
+							<div class="row">
+								<div class="col-6">
+									<select name="typeNum" class="form-select">
+										<c:forEach var="vo" items="${listType}">
+											<option value="${vo.typeNum}" ${typeNum == vo.typeNum?"selected" : ""}>${vo.type}</option>
 										</c:forEach>
 									</select>
 								</div>
@@ -419,27 +406,14 @@ $(function(){
 					<tr>
 						<td class="table-light col-sm-2">상품명</td>
 						<td>
-							<input type="text" name="productName" class="form-control" value="${dto.subject}">
+							<input type="text" name="subject" class="form-control" value="${dto.subject}">
 						</td>
 					</tr>
-					<tr>
-						<td class="table-light col-sm-2">상품구분</td>
-						<td>
-							<div class="row">
-								<div class="col-6">
-									<select name="classify" class="form-select">
-										<c:forEach var="vo" items="${listType}">
-											<option value="${vo.typeNum}" ${mode=='update'?"selected":""}>${vo.type}</option>
-										</c:forEach>
-									</select>
-								</div>
-							</div>
-						</td>
-					</tr>
+					
 					<tr>
 						<td class="table-light col-sm-2">상품가격</td>
 						<td>
-							<input type="text" name="price" class="form-control" value="가격">
+							<input type="text" name="price" class="form-control" value="${dto.price}">
 						</td>
 					</tr>
 					<tr>
@@ -448,34 +422,33 @@ $(function(){
 							<div class="row">
 								<div class="col-6">
 									<select name="optionCount" class="form-select">
-										<option value="2" >옵션 둘</option>
-										<option value="1" >옵션 하나</option>
-										<option value="0" >옵션 없음</option>
+										<option value="2" ${dto.optionCount==2?'selected':''}>옵션 둘</option>
+										<option value="1" ${dto.optionCount==1?'selected':''}>옵션 하나</option>
+										<option value="0" ${dto.optionCount==0?'selected':''}>옵션 없음</option>
 									</select>
 								</div>
 							</div>
-							<small class="form-control-plaintext help-block">상품 재고가 존재하면 옵션 변경은 불가능합니다.</small>
 						</td>
 					</tr>
 					<tr class="product-option-1">
 						<td class="table-light col-sm-2">옵션 1</td>
 						<td>
 							<div class="mb-2">
-								<input type="text" name="optionName" class="form-control" style="width: 250px;" placeholder="옵션명" value="">
+								<input type="text" name="optionName" class="form-control" style="width: 250px;" placeholder="옵션명" value="${dto.optionName}">
 								<c:if test="">
-									<input type="hidden" name="optionNum" value="">
+									<input type="hidden" name="optionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
 								</c:if>
 							</div>
 							<div class="row option-area">
 								<div class="col-auto pe-0 d-flex flex-row optionValue-area">
-									<c:forEach var="vo" items="">
+									<c:forEach var="vo" items="${listOptionDetail}">
 										<div class='input-group pe-1'>
 											<input type='text' name='optionValues' class='form-control' style='flex:none; width: 90px;' placeholder='옵션값' value="${vo.optionValue}">
-											<input type="hidden" name="detailNums" value="">
+											<input type="hidden" name="detailNums" value="${vo.detailNum}">
 											<i class='bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus'></i>
 										</div>
 									</c:forEach>
-									<c:if test="">
+									<c:if test="${empty listOptionDetail || listOptionDetail.size() < 1}">
 										<div class='input-group pe-1'>
 											<input type='text' name='optionValues' class='form-control' style='flex:none; width: 90px;' placeholder='옵션값'>
 											<i class='bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus'></i>
@@ -495,19 +468,19 @@ $(function(){
 							<div class="mb-2">
 								<input type="text" name="optionName2" style="width: 250px;" class="form-control" placeholder="옵션명" value="${dto.optionName2}">
 								<c:if test="">
-									<input type="hidden" name="optionNum2" value="">
+									<input type="hidden" name="optionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
 								</c:if>
 							</div>
 							<div class="row option-area2">
 								<div class="col-auto pe-0 d-flex flex-row optionValue-area2">
-									<c:forEach var="vo" items="">
+									<c:forEach var="vo" items="${listOptionDetail2}">
 										<div class='input-group pe-1'>
 											<input type='text' name='optionValues2' class='form-control' style='flex:none; width: 90px;' placeholder='옵션값' value="${vo.optionValue}">
-											<input type="hidden" name="detailNums2" value="">
+											<input type="hidden" name="detailNums2" value="${vo.detailNum}">
 											<i class='bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2'></i>
 										</div>
 									</c:forEach>
-									<c:if test="">
+									<c:if test="${empty listOptionDetail2 || listOptionDetail2.size() < 1}">
 										<div class='input-group pe-1'>
 											<input type='text' name='optionValues2' class='form-control' style='flex:none; width: 90px;' placeholder='옵션값'>
 											<i class='bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2'></i>
@@ -525,7 +498,13 @@ $(function(){
 					<tr>
 						<td class="table-light col-sm-2">상품설명</td>
 						<td>
-							<textarea name="content" id="ir1" class="form-control" style="max-width: 95%; height: 290px;">상품 설명</textarea>
+							<textarea name="content" id="ir1" class="form-control" style="max-width: 95%; height: 290px;">${dto.content}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="table-light col-sm-2">교환/환불 및 주의사항</td>
+						<td>
+							<textarea name="guidelines" class="form-control" style="max-width: 95%; height: 290px;">${dto.guidelines}</textarea>
 						</td>
 					</tr>
 					
@@ -541,12 +520,12 @@ $(function(){
 						<td class="table-light col-sm-2">추가이미지</td>
 						<td>
 							<div class="img-grid">
-								<img class="item img-add" src="">
-								<c:forEach var="vo" items="">
-									<img src=""
+								<img class="item img-add" src="${pageContext.request.contextPath}/resources/images/add_photo.png">
+								<c:forEach var="vo" items="${listFile}">
+									<img src="${pageContext.request.contextPath}/uploads/product/${vo.filename}"
 										class="item delete-img"
-										data-fileNum=""
-										data-filename="">
+										data-fileNum="${vo.fileNum}"
+										data-filename="${vo.filename}">
 								</c:forEach>
 							</div>
 							<input type="file" name="addFiles" accept="image/*" multiple class="form-control" style="display: none;">
@@ -558,21 +537,21 @@ $(function(){
 				<table class="table table-borderless">
 					<tr>
 						<td class="text-center">
-							<c:url var="url" value="/admin/product//main">
-								<c:if test="">
-									<c:param name="page" value=""/>
+							<c:url var="url" value="/talent/list">
+								<c:if test="${not empty page}">
+									<c:param name="page" value="${page}"/>
 								</c:if>
 							</c:url>
-							<button type="button" class="btn btn-dark" onclick="submitContents(this.form);"></button>
+							<button type="button" class="btn btn-dark" onclick="submitContents(this.form);">${mode=="update"?"수정완료":"등록완료"}</button>
 							<button type="reset" class="btn btn-light">다시입력</button>
-							<button type="button" class="btn btn-light" onclick="location.href='${url}';"></button>
+							<button type="button" class="btn btn-light" onclick="location.href='${url}';">${mode=="update"?"수정취소":"등록취소"}</button>
 							<c:if test="${mode=='update'}">
-								<input type="hidden" name="productNum" value="">
-								<input type="hidden" name="thumbnail" value="">
-								<input type="hidden" name="page" value="">
+								<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
+								<input type="hidden" name="thumbnail" value="${dto.thumbnail}">
+								<input type="hidden" name="page" value="${page}">
 								
-								<input type="hidden" name="prevOptionNum" value="">
-								<input type="hidden" name="prevOptionNum2" value="">
+								<input type="hidden" name="prevOptionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
+								<input type="hidden" name="prevOptionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
 							</c:if>
 						</td>
 					</tr>
@@ -588,7 +567,7 @@ $(function(){
 $(function(){
 	var img = "${dto.thumbnail}";
 	if( img ) {
-		img = "${pageContext.request.contextPath}/uploads/product/"+img;
+		img = "${pageContext.request.contextPath}/uploads/talent/"+img;
 		$(".table-form .thumbnail-viewer").empty();
 		$(".table-form .thumbnail-viewer").css("background-image", "url("+img+")");
 	}
@@ -604,7 +583,7 @@ $(function(){
 			$(".table-form .thumbnail-viewer").empty();
 			
 			if( img ) {
-				img = "${pageContext.request.contextPath}/uploads/product/"+img;
+				img = "${pageContext.request.contextPath}/uploads/talent/"+img;
 			} else {
 				img = "${pageContext.request.contextPath}/resources/images/add_photo.png";
 			}
@@ -729,8 +708,9 @@ function submitContents(elClickedObj) {
 		elClickedObj.submit();
 		
 	} catch(e) {
+		  console.error(e);
 	}
-}
+	}
 
 function setDefaultFont() {
 	var sDefaultFont = '돋움';
