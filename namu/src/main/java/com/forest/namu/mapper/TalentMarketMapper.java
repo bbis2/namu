@@ -31,6 +31,7 @@ public interface TalentMarketMapper {
 	public void updateTalent(TalentMarket dto) throws SQLException;
 	public void updateTalentOption(TalentMarket dto) throws SQLException;
 	public void updateOptionDetail(TalentMarket dto) throws SQLException;
+	public void updateHitCount(long num) throws Exception;
 	
 	public void deleteTalent(long tboardNum) throws SQLException;
 	public void deleteTalentFile(long fileNum) throws SQLException;

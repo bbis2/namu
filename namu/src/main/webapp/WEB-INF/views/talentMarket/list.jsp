@@ -70,7 +70,7 @@
             border: 2px solid #d4c5f9;
             position: absolute;
             top: 10px; /* 이미지가 경계에 걸치도록 설정 */
-            left: 75px; /* 왼쪽 정렬 */
+            left: 50px; /* 왼쪽 정렬 */
         }
         .profile-body {
             margin-top: 30px;
@@ -276,7 +276,7 @@
 		</div>
         <div class="row">
         
-            <div class="col-md-3">
+            <div class="col-md-2">
              <div class="profile-card">
         <div class="profile-header">
             <img src="${pageContext.request.contextPath}/resources/images/bg.png" alt="프로필 이미지" class="profile-img">
@@ -295,14 +295,14 @@
                         카테고리
                     </button>
                     <div class="dropdown-menu dropdown-width" aria-labelledby="categoryDropdown">
-                        <a class="dropdown-item" href="#">카테고리1</a>
-                        <a class="dropdown-item" href="#">카테고리2</a>
-                        <a class="dropdown-item" href="#">카테고리3</a>
+                   		<c:forEach var="vo" items="${listCategory}">
+                        <a class="dropdown-item" href="#" >${vo.categoryName}</a>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
             
-              <div class="col-md-9">
+              <div class="col-10">
               	<div class="filter-container-group">
                 <div class="filter-container search">
                     <input type="text" class="search-input" placeholder="검색어를 입력하세요">
@@ -312,19 +312,24 @@
                     <button class="search-button" onclick="location.href='${pageContext.request.contextPath}/talent/write';">글 등록</button>
                 </div>
                 </div>
-                <div class="grid-container">
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                </div>
+               <div class="grid-container ">
+				    <c:forEach var="dto" items="${list}" varStatus="status">
+				        <div class="grid-item" onclick="location.href='${articleUrl}&num=${dto.tboardNum}';">
+				            <div class="card" style="background-color: #fff">
+				                <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" class="card-img-top img-fluid" style="height: 200px;">
+				                <div class="card-body mb-10" style="height: 130px;">
+				                    <h5 class="card-title">${dto.subject}</h5>
+				                    <p>${dto.price}</p>
+				                    <p>${dto.nickName}</p>
+				                </div>
+				            </div>
+				        </div>
+				    </c:forEach>
+				</div>
             </div>
+            <div class="page-navigation mt-5">
+					${dataCount == 0 ? "등록된 상품이 없습니다." : paging}
+				</div>
         </div>
     </main>
 

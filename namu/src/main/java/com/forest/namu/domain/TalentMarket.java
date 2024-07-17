@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class TalentMarket {
 	private long tboardNum;
 	private String userId;
+	private String nickName;
+	
 	private String subject;
 	private String content;
 	private int price;
@@ -37,9 +39,8 @@ public class TalentMarket {
 	private List<Long> detailNums2;
 	private List<String> optionValues2;
 	
-	private String thumbnail;
-	
 	private MultipartFile thumbnailFile;
+	private String thumbnail;
 	
 	private long fileNum;
 	private String fileName;
@@ -49,7 +50,12 @@ public class TalentMarket {
 	private long prevOptionNum;
 	private long prevOptionNum2;
 	
-	
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	public long getPrevOptionNum() {
 		return prevOptionNum;
 	}

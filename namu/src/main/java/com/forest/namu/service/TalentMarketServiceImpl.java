@@ -408,6 +408,17 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		return list;
 	}
 
+	@Override
+	public void updateHitCount(long num) throws Exception {
+		try {
+			mapper.updateHitCount(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 	
 
 }

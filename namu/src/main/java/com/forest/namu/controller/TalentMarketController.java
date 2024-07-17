@@ -36,10 +36,7 @@ public class TalentMarketController {
 	@Autowired
 	private MyUtil myUtil;
 	
-	@GetMapping("article")
-	public String article() {
-		return ".talentMarket.article";
-	}
+	
 	
 	@RequestMapping("list")
 	public String list(Member member,TalentMarket dto, HttpSession session,
@@ -55,8 +52,8 @@ public class TalentMarketController {
 		String cp = req.getContextPath();
 		
 		int size = 10;
-		int total_page;
-		int dataCount;
+		int total_page=0;
+		int dataCount=0;
 		
 		List<TalentMarket> listCategory = service.listCategory(); 
 		
@@ -65,8 +62,6 @@ public class TalentMarketController {
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("categoryNum", categoryNum);
-		map.put("typeNum", categoryNum);
 		map.put("talentShow", talentShow);
 		map.put("schType", schType);
 		map.put("kwd", kwd);
@@ -88,25 +83,25 @@ public class TalentMarketController {
 		String listUrl = cp + "/talent/list";
 		String articleUrl = cp + "/talent/article?page=" + current_page;
 		
-		String query ="categoryNum="+categoryNum;
-		if(talentShow != -1) {
-			query += "&talentShow="+talentShow;
-		}
+		String query ="";
 		if (kwd.length() != 0) {
 			query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
-		}		
-		listUrl += "?" + query;
-		articleUrl += "&" + query;
+		}
 		
-		String paging = myUtil.pagingUrl(current_page, total_page, listUrl);
+		if(query.length()!=0) {
+		listUrl += "?" + query;
+		articleUrl += "&"+query;
+		}
+		
+		String paging = myUtil.paging(current_page, total_page, listUrl);
 		
 		model.addAttribute("listCategory", listCategory);
 		model.addAttribute("list", list);
 		model.addAttribute("dataCount", dataCount);
 		
 		model.addAttribute("productShow", talentShow);
+		model.addAttribute("type", typeNum);
 		model.addAttribute("categoryNum", categoryNum);
-		model.addAttribute("parentNum", typeNum);
 		model.addAttribute("schType", schType);
 		model.addAttribute("kwd", kwd);
 
@@ -141,7 +136,7 @@ public class TalentMarketController {
 	public String talentSubmit(TalentMarket dto,HttpSession session, Model model) {
 		
 		String root = session.getServletContext().getRealPath("/");
-		String path = root + "uploads" + File.separator + "talent";
+		String path = root + "uploads" + File.separator + "photo";
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		try {
@@ -154,6 +149,44 @@ public class TalentMarketController {
 		String url = "redirect:/talent/list";
 		
 		return url;
+	}
+	
+	@GetMapping("article")
+	public String article(@RequestParam long num,
+			@RequestParam String page,
+			@RequestParam(defaultValue = "") String schType,
+			@RequestParam(defaultValue = "") String kwd,
+			HttpSession session,
+			Model model)  throws Exception{
+		
+		kwd = URLDecoder.decode(kwd,"utf-8");
+		
+		String query="page=" + page;
+		if(kwd.length()!=0) {
+			query += "&schType=" + schType +
+					"&kwd=" + URLEncoder.encode(kwd,"utf-8");
+		}
+		
+		
+		
+		TalentMarket dto = service.findById(num);
+		
+		if(dto==null) {
+			return "redirect:/talent/list?"+query;
+		}
+		
+		List<TalentMarket> listFile = service.listTalentMarketFile(num);
+		
+		service.updateHitCount(num);
+		
+		
+		
+		model.addAttribute("dto",dto);
+		model.addAttribute("query",query);
+		model.addAttribute("listFile",listFile);
+		
+		
+		return ".talentMarket.article";
 	}
 	
 	@GetMapping("profile")

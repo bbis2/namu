@@ -64,18 +64,16 @@ body {
         <div class="row">
             <div class="col-lg-8">
                 <div class="card mb-4">
-                    <img src="${pageContext.request.contextPath}/resources/images/bg.png" class="card-img-top mb-3 main-image" alt="메인 이미지">
+                    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" class="card-img-top mb-3 main-image" alt="메인 이미지">
                 </div>
                 <div class="row mb-4">
-                    <div class="col-4">
-                        <img src="thumb1.png" class="img-fluid" alt="썸네일 1">
-                    </div>
-                    <div class="col-4">
-                        <img src="thumb2.png" class="img-fluid" alt="썸네일 2">
-                    </div>
-                    <div class="col-4">
-                        <img src="thumb3.png" class="img-fluid" alt="썸네일 3">
-                    </div>
+                	<c:when test="${dto.filename != null && !dto.filename.isEmpty()}">
+	                	<c:forEach var="vo" items="${listFile}">
+	                    <div class="col-4">
+	                        <img src="${pageContext.request.contextPath}/uploads/photo/${vo.listFile}" class="img-fluid">
+	                    </div>
+	                    </c:forEach>
+                    </c:when>
                 </div>
                 <div class="card mb-4">
                     <div class="card-body">

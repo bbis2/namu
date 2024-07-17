@@ -73,6 +73,11 @@
 		WHERE detailNum = #{detailNum}
 	</update>
 	
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE talentmarket SET hitCount = hitCount +1
+		WHERE tboardNum = #{tboardNum}
+	</update>
+	
 	<delete id="deleteTalent" parameterType="Long">
 		DELECT FROM WHERE tboardNum=#{tboardNum}
 	</delete>
@@ -116,7 +121,7 @@
 		SELECT NVL(COUNT(*),0) 
 		FROM talentMarket t
 		<where>
-			<if test="categoryNum != 0">
+			<if test="categoryNum != null">
 				t.categoryNum = #{categoryNum}
 			</if>
 			<if test="typeNum!=null">
@@ -132,8 +137,9 @@
 	</select>
 	
 	<select id="listTalentMarket" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
-		SELECT tboardNum,subject,content,price,guidelines,regDate,userId,talentShow,optionCount,hitCount,typeNum,categoryNum,thumbnail
-		FROM talentMarket
+		SELECT t.tboardNum,t.subject,t.content,t.price,t.guidelines,t.regDate,t.userId,t.talentShow,t.optionCount,t.hitCount,t.typeNum,t.categoryNum,t.thumbnail,m.nickName
+		FROM talentMarket t
+		JOIN member m ON t.userId = m.userId
 		<where>
 			<if test="tmPurchaseType!=null">
 				t.typeNum = #{typeNum}
