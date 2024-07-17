@@ -327,36 +327,27 @@ function nickNameCheck() {
 			    </div>
 			
 			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="post">우편번호</label>
+			        <label class="col-sm-2 col-form-label" for="town1">기본 주소</label>
 			        <div class="col-sm-5">
 			       		<div class="input-group">
-			           		<input type="text" name="post" id="post" class="form-control" placeholder="우편번호" value="${dto.post}" readonly>
-		           			<button class="btn" type="button" style="margin-left: 3px;" onclick="daumPostcode();">우편번호 검색</button>
+			           		<input type="text" name="town1" id="town1" class="form-control" placeholder="기본주소 설정" value="${dto.town1}" readonly>
+		           			<button class="btn" type="button" style="margin-left: 3px;" onclick="daumPostcode();">기본 주소 검색</button>
+			           	<c:if test="${mode=='member'}">
+							<small class="form-control-plaintext help-block">필수 입력 사항입니다.</small>
+						</c:if>			           	
 			           	</div>
 					</div>
 			    </div>
 		
 			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="town1">주소</label>
-			        <div class="col-sm-10">
-			       		<div>
-			           		<input type="text" name="town1" id="town1" class="form-control" placeholder="기본 주소" value="${dto.town1}" readonly>
-			           	</div>
-			       		<div style="margin-top: 5px;">
-			       			<input type="text" name="addr" id="addr" class="form-control" placeholder="상세 주소" value="${dto.addr}">
-						</div>
-					</div>
-			    </div>
-			    
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="post">* 주소 추가</label>
+			        <label class="col-sm-2 col-form-label" for="town2">추가 주소</label>
 			        <div class="col-sm-5">
 			       		<div class="input-group">
-			           		<input type="text" name="town2" id="town2" class="form-control" placeholder="추가 주소" value="${dto.town2}" readonly>
+			           		<input type="text" name="town2" id="town2" class="form-control" placeholder="*추가 주소" value="${dto.town2}" readonly>
 		           			<button class="btn" type="button" style="margin-left: 3px;" onclick="town2code();">추가주소 검색</button>
 			           	</div>
 			           	<c:if test="${mode=='member'}">
-							<small class="form-control-plaintext help-block"> * 추가 주소는 선택사항입니다. </small>
+							<small class="form-control-plaintext help-block">*선택사항입니다.</small>
 						</c:if>
 					</div>
 			    </div>
@@ -422,10 +413,18 @@ function daumPostcode() {
                 fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
             }
 
-            document.getElementById('post').value = data.zonecode;
-            document.getElementById('town1').value = fullAddr;
+            var addressParts = fullAddr.split(' ');
+            var town1Value = '';
 
-            document.getElementById('addr').focus();
+            if (addressParts[0] === '세종특별자치시') {
+                town1Value = addressParts[0];
+            } else if (addressParts.length >= 3) {
+                town1Value = addressParts[0] + ' ' + addressParts[1];
+            } else {
+                town1Value = fullAddr; 
+            }
+
+            document.getElementById('town1').value = town1Value;
         }
     }).open();
 }
@@ -442,36 +441,31 @@ function town2code() {
                 fullAddr = data.jibunAddress;
             }
 
-
             if (data.userSelectedType === 'R') {
-
                 if (data.bname !== '') {
                     extraAddr += data.bname;
                 }
-
                 if (data.buildingName !== '') {
                     extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
                 }
-
                 fullAddr += (extraAddr !== '' ? ' (' + extraAddr + ')' : '');
             }
 
-            document.getElementById('post').value = data.zonecode;
-           
             var addressParts = fullAddr.split(' ');
             var town2Value = '';
 
             if (addressParts[0] === '세종특별자치시') {
                 town2Value = addressParts[0];
             } else if (addressParts.length >= 3) {
-               
                 town2Value = addressParts[0] + ' ' + addressParts[1];
             } else {
                 town2Value = fullAddr; 
             }
+
             document.getElementById('town2').value = town2Value;
         }
     }).open();
 }
+
 
 </script>
