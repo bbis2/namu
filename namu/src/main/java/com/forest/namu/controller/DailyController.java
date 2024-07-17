@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Daily;
+import com.forest.namu.domain.Reply;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.service.DailyService;
+import com.mongodb.DuplicateKeyException;
 
 @Controller
 @RequestMapping("/daily/*")
@@ -170,7 +173,8 @@ public class DailyController {
 		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		// 게시글 좋아요
-		map.put("nickName", info.getNickName());
+		map.put("userId", info.getUserId());
+		boolean userDailyLiked = service.userDailyLiked(map);
 		
 		model.addAttribute("dto", dto);
 		model.addAttribute("prevDto", prevDto);
@@ -180,6 +184,8 @@ public class DailyController {
 		model.addAttribute("query", query);
 		
 		model.addAttribute("categoryNum", categoryNum);
+		
+		model.addAttribute("userDailyLiked", userDailyLiked);
 		
 		return ".daily.article";
 	}
@@ -239,6 +245,87 @@ public class DailyController {
 		service.deleteDaily(num, info.getUserId(), info.getMembership());
 		
 		return "redirect:/daily/list?" +query;
+	}
+	
+	@PostMapping("insertDailyLike")
+	@ResponseBody
+	public Map<String, Object> insertDailyLike(
+			@RequestParam long num,
+			@RequestParam boolean userLiked,
+			HttpSession session) {
+		
+		String state = "true";
+		int dailyLikeCount = 0;
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("num", num);
+		paramMap.put("userId", info.getUserId());
+		
+		try {
+			if(userLiked) {
+				service.deleteDailyLike(paramMap);
+			}else {
+				service.insertDailyLike(paramMap);
+			}
+		} catch (DuplicateKeyException e) {
+			state = "liked";
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		dailyLikeCount =service.dailyLikeCount(num);
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		model.put("dailyLikeCount", dailyLikeCount);
+		
+		return model;
+	}
+	
+	@GetMapping("listReply")
+	public String listReply(
+			@RequestParam long num,
+			@RequestParam(value="pageNo", defaultValue = "1") int current_page,
+			HttpSession session,
+			Model model) throws Exception {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		int size = 5;
+		int total_page = 0;
+		int dataCount = 0;
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("num", num);
+		
+		map.put("membership", info.getMembership());
+		map.put("userId", info.getUserId());	
+		
+		dataCount = service.replyCount(map);
+		total_page = myUtil.pageCount(dataCount, size);
+		if (current_page > total_page) {
+			current_page = total_page;
+		}
+
+		int offset = (current_page - 1) * size;
+		if(offset < 0) offset = 0;
+
+		map.put("offset", offset);
+		map.put("size", size);
+		
+		List<Reply> listReply = service.listReply(map);
+
+		String paging = myUtil.pagingMethod(current_page, total_page, "listPage");
+		
+		model.addAttribute("listReply", listReply);
+		model.addAttribute("pageNo", current_page);
+		model.addAttribute("replyCount", dataCount);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+		
+		return "daily/listReply";
+		
 	}
 	
 

@@ -6,14 +6,20 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Daily;
+import com.forest.namu.domain.Reply;
 import com.forest.namu.mapper.DailyMapper;
+
 
 @Service
 public class DailyServiceImpl implements DailyService {
 	
 	@Autowired
 	private DailyMapper mapper;
+	
+	@Autowired
+	private MyUtil myUtil;
 
 	
 	@Override
@@ -129,28 +135,52 @@ public class DailyServiceImpl implements DailyService {
 
 	@Override
 	public void insertDailyLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
+		
+		try {
+			mapper.insertDailyLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 		
 	}
 
 	@Override
 	public void deleteDailyLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.deleteDailyLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 	
 
 	@Override
 	public boolean userDailyLiked(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean result = false;
+		try {
+			Daily dto = mapper.userDailyLiked(map);
+			if(dto != null) {
+				result =true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 
 	@Override
-	public int DailyLikeCount(long num) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int dailyLikeCount(long num) {
+		int result =0;
+		
+		try {
+			result = mapper.dailyLikeCount(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	
@@ -176,5 +206,85 @@ public class DailyServiceImpl implements DailyService {
 		}
 		
 		return listCategory;
+	}
+
+	@Override
+	public void insertReply(Reply dto) throws Exception {
+		try {
+			mapper.insertReply(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public List<Reply> listReply(Map<String, Object> map) {
+		List<Reply> list = null;
+		
+		try {
+			list = mapper.listReply(map);
+			for(Reply dto : list) {
+				dto.setContent(myUtil.htmlSymbols(dto.getContent()));
+				// name 생략
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public int replyCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.replyCount(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public void deleteReply(Map<String, Object> map) throws Exception {
+		try {
+			mapper.deleteReply(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public List<Reply> listReplyAnswer(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int replyAnswerCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void insertReplyLike(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Map<String, Object> replyLikeCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateReplyShowHide(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 }

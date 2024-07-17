@@ -111,25 +111,26 @@ textarea.form-control {
 	 </section>
 	 	
 	<div class="body-title">
-		<h2>${dto.categoryName}</h2>
+		<h2 style="font-weight: bold;">${dto.categoryName}</h2>
+		<h4>서울특별시 마포구</h4>
 	</div>	 
  
 	 <table class="table mt-5 mb-0 board-article">
 	 	<thead>
 	 		<tr>
-	 			<td colspan="2" align="center">
+	 			<td colspan="2" align="center" style="font-size: 40px; font-weight: bold;">
 	 				${dto.subject}
 	 			</td>
 	 		</tr>
 	 	</thead>
 	 	
 	 	<tbody>
-	 		<tr>
-	 			<td width="50%">
-	 				닉네임 : ${dto.nickName}
+	 		<tr  style="font-size: 17px;">
+	 			<td width="50%" style="font-weight: bold;">
+	 				 ${dto.nickName}
 	 			</td>
 	 			<td align="right">
-	 				${dto.regDate} | 조회 ${dto.hitCount}
+	 				${dto.regDate} | 조회${dto.hitCount}
 	 			</td>
 	 		</tr>
 	 		
@@ -141,7 +142,7 @@ textarea.form-control {
 	 		
 	 		<tr>
 	 			<td colspan="2" class="text-center p-3" style="border-bottom: none;">
-	 				<button type="button" class="btn btn-outline-secondary btnSendBoardLike" title="좋아요"><i class="bi ${userBoardLiked ? 'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up' }"></i>&nbsp;&nbsp;<span id="boardLikeCount">${dto.dailyLikeCount}</span></button>
+	 				<button type="button" class="btn btn-outline-secondary btnSendDailyLike" title="좋아요"><i class="bi ${userBoardLiked ? 'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up' }"></i>&nbsp;&nbsp;<span id="dailyLikeCount">${dto.dailyLikeCount}</span></button>
 	 			</td>
 	 		</tr>
 	 		
@@ -215,4 +216,170 @@ textarea.form-control {
 		<div id="listReply"></div>
 	</div>
 </div>
+
+<script type="text/javascript">
+function login() {
+	loatoin.href = '${pageContext.request.contextPath}/member/login';
+}
+
+function ajaxFun(url, method, formData, dataType, fn) {
+	
+	const settings = {
+			type: method,
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			}, 
+			complete: function() {
+				
+			},
+			error: function (jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				}else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+				}
+				
+				conseole.log(jqXHR.responseText);
+			}
+	};
+	
+	$.ajax(url, settings);
+}
+
+$(function() {
+	$('.btnSendDailyLike').click(function(){
+		const $i = $(this).find('i');
+		let userLiked = $i.hasCalss('bi-hand-thumbs-up-fill');
+		let msg = userLiked? '게시글 공감을 취소하시겠습니까 ? ' : '게시글에 공감하십니까 ? ';
+		
+		if(! confirm(msg)) {
+			return false;
+		}
+		
+		let url = '${pageContext.request.contextPath}/daily/insertDailyLike';
+		let num = '${dto.num}';
+		let query = 'num=' + num + '&userLiked=' + userLiked;
+		
+		const fn = function(data) {
+			let state = data.state;
+			if(state === 'true') {
+				if(userLiked) {
+					$i.removeClass('bi-hand-thumbs-up-fill').addClass('bi-hand-thumbs-up');
+				} else {
+					$i.removeClass('bi-hand-thumbs-up').addClass('bi-hand-thumbs-up-fill');
+				}
+				let count = data.dailyLikeCount;
+				$('#dailyLikeCount').text(count);
+			}else if (state === 'liked') {
+				alert('게시글 공감은 한번만 가능합니다!')
+			}else if(state === "false") {
+				alert('게시물 공감 여부 처리가 실패했습니다.')
+			}
+			
+		};
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
+
+//페이징 처리
+$(function(){
+	listPage(1);
+});
+
+function listPage(page) {
+	let url = '${pageContext.request.contextPath}/daily/listReply';
+	let query = 'num=${dto.num}&pageNo=' + page;
+	let selector = '#listReply';
+	
+	const fn = function(data){
+		$(selector).html(data);
+	};
+
+	ajaxFun(url, 'get', query, 'text', fn);
+}
+
+$(function(){
+	$('.btnSendReply').click(function(){
+		let num = '${dto.num}';
+		const $tb = $(this).closest('table');
+
+		let content = $tb.find('textarea').val().trim();
+		if(! content) {
+			$tb.find('textarea').focus();
+			return false;
+		}
+		content = encodeURIComponent(content);
+		
+		let url = '${pageContext.request.contextPath}/daily/insertReply';
+		let query = 'num=' + num + '&content=' + content + '&answer=0';
+		
+		const fn = function(data){
+			$tb.find('textarea').val('');
+			
+			let state = data.state;
+			if(state === 'true') {
+				listPage(1);
+			} else if(state === 'false') {
+				alert('댓글을 추가 하지 못했습니다.');
+			}
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
+
+//삭제, 신고 메뉴
+$(function(){
+	$('.reply').on('click', '.reply-dropdown', function(){
+		const $menu = $(this).next('.reply-menu');
+		if($menu.is(':visible')) {
+			$menu.fadeOut(100);
+		} else {
+			$('.reply-menu').hide();
+			$menu.fadeIn(100);
+
+			let pos = $(this).offset(); 
+			$menu.offset( {left:pos.left-70, top:pos.top+20} );
+		}
+	});
+	
+	$('.reply').on('click', function() {
+		if($(event.target.parentNode).hasClass('reply-dropdown')) {
+			return false;
+		}
+		$(".reply-menu").hide();
+	});
+});
+
+//댓글 삭제
+$(function(){
+	$('.reply').on('click', '.deleteReply', function(){
+		if(! confirm('게시물을 삭제하시겠습니까 ? ')) {
+		    return false;
+		}
+		
+		let replyNum = $(this).attr('data-rNum');
+		let page = $(this).attr('data-pageNo');
+		
+		let url = '${pageContext.request.contextPath}/daily/deleteReply';
+		let query = 'rNum=' + rNum + '&mode=reply';
+		
+		const fn = function(data){
+			listPage(page);
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
+	
+}
+
+</script>
 

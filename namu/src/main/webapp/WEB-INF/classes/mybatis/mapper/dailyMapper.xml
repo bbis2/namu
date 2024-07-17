@@ -30,7 +30,7 @@
 	
 	<!-- 글리스트 -->
 	<select id="listDaily" parameterType="map" resultType="com.forest.namu.domain.Daily">
-		SELECT d.num, m.nickName, d.categoryNum, categoryName , subject, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
+		SELECT d.num, d.userId, m.nickName, d.categoryNum, categoryName , subject, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
 			hitCount
 		FROM daily d
 		JOIN member m ON d.userId=m.userId
@@ -133,7 +133,77 @@
 		WHERE categoryNum = #{categoryNum}
 	</select>	
 	
+	<!-- 게시글 좋아요 등록 -->
+	<insert id="insertDailyLike" parameterType="map">
+		INSERT INTO dailyLike(num, userId) VALUES (#{num}, #{userId})
+	</insert>
 	
+	<!-- 게시글 좋아요 삭제 -->
+	<delete id="deleteDailyLike" parameterType="map">
+		DELETE FROM dailyLike WHERE num = #{num} AND userId = #{userId}
+	</delete>
+	
+	<!-- 게시글 좋아요 개수 -->
+	<select id="dilyLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*) FROM dailyLike WHERE num =#{num}
+	</select>
+	
+	<!-- 게시글 좋아요 여부 -->
+	<select id="userDailyLiked" parameterType="map" resultType="com.forest.namu.domain.Daily">
+		SELECT num, userId FROM dailyLike WHERE num = #{num} AND userId = #{userId}
+	</select>
+	
+	<!--댓글-->
+	<insert id="insertReply" parameterType="com.forest.namu.domain.Reply">
+		INSERT INTO dailyReply(rNum, num, userId, content, answer, showReply, regDate)
+		VALUES (dailyReply_seq.NEXTVAL, #{num}, #{userId}, #{content}, #{answer}, 1, SYSDATE)
+	</insert>
+	
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0)
+		FROM dailyReply
+		WHERE num =#{num} AND answer =0
+		<if test="membership lt 10 ">
+			AND(showReply =1 OR (showReply =0 AND userId =#{userId}))
+		</if>
+	</select>
+	
+	<select id="listReply" parameterType="map" resultType="com.forest.namu.domain.Reply">
+		SELECT r.rNum, r.userId, nickName, num, content, r.regDate, NVL(showReply, 1) showReply,
+			NVL(answerCount,0) answerCount,
+			NVL(likeCount, 0) likeCount
+		FROM dailyReply r 
+		JOIN member m ON r.userId = m.userId
+		LEFT OUTER JOIN (
+			SELECT answer, COUNT(*) answerCount
+			FROM dailyReply
+			WHERE answer != 0
+			<if test="membership lt 10">
+				AND ( showReply=1 OR ( showReply=0 AND userId=#{userId} ) )
+			</if>
+			GROUP BY answer
+		) a ON r.rNum  = a.answer
+		LEFT OUTER JOIN (
+			SELECT rNum, COUNT(DECODE(replyLike, 1, 1)) likeCount
+			FROM dailyReplyLike
+			GROUP BY rNum
+		) c ON r.rNum = c.rNum
+		WHERE num=#{num} AND r.answer = 0
+		<if test="membership lt 10">
+			AND ( showReply=1 OR ( showReply=0 AND r.userId=#{userId} ) )
+		</if>
+		ORDER BY r.rNum DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY		
+	</select>
+
+		
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM dailyReply
+		WHERE rNum=#{rNum}
+		<if test="mode=='reply'">
+			OR answer=#{rNum}
+		</if>
+	</delete>	
 
 	
 

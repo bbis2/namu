@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.forest.namu.domain.Daily;
+import com.forest.namu.domain.Reply;
 
 @Mapper
 public interface DailyMapper {
@@ -26,7 +27,7 @@ public interface DailyMapper {
     
     public void insertDailyLike(Map<String, Object> map) throws SQLException;
     public void deleteDailyLike(Map<String, Object> map) throws SQLException;
-    public int    dailyLikeCount(long num);
+    public int dailyLikeCount(long num);
     public Daily userDailyLiked(Map<String, Object> map);
     
     public Daily findByCategory(long categoryNum);
@@ -34,5 +35,21 @@ public interface DailyMapper {
     public List<Daily> listDailyCategory();
     public void updateCategory(Daily dto) throws SQLException;
     public void deleteCategory(long num) throws SQLException;
+    
+    //댓글 
+    public void insertReply(Reply dto) throws Exception;
+    public int replyCount(Map<String,Object> map);
+    public List<Reply> listReply (Map<String, Object> map);
+    public void deleteReply(Map<String, Object> map) throws SQLException;
+    
+    public List<Reply> listReplyAnswer(Map<String, Object>map);
+    public int replyAnswerCount(Map<String, Object> map);
+    
+    public void insertReplyLike(Map<String, Object> map) throws SQLException;
+    public Map<String, Object> replyLikeCount(Map<String, Object> map);
+    
+    public void updateReplyShowHide(Map<String, Object>map) throws SQLException;
+    
+    
 
 }
