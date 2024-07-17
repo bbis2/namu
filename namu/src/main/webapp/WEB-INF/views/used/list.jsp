@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+
 <div class="container body-container">
 	<div class="main1">
 	중고거래
@@ -24,7 +25,7 @@
     </div>
 		<div class="flex-row" style="justify-content: space-between; align-items: center">
 		</div>
-
+	
 		<div class="main-best-board-container1">
 		<c:forEach var="dto" items="${list}" varStatus="status">
 			<div class="flex-col banner-card-container">
@@ -43,7 +44,7 @@
 				</a>
 				</div>
 
-				<div style="color: navy; margin-top: 10px">${dto.subject}</div>
+				<div class="list-subject" style="color: navy; margin-top: 10px; font-weight: bold;">${dto.subject}</div>
 				<div>현재 입찰가 : <fmt:formatNumber value="${dto.price}"/>원
 					<div style="float: right;">
 						<c:if test="${dto.state == 1}" >
@@ -61,6 +62,20 @@
 		</c:forEach>
 		</div>
 	</div>
+
+<script type="text/javascript">
+$(function () {
+	$('.search-btn').click(function () {
+		
+		let kwd = $('.searchInput').val().trim();
+		
+		location.href='${pageContext.request.contextPath}/used/list?kwd=' + encodeURIComponent(kwd);
+		
+				
+		
+	});
+});
+</script>
 
 <style>
 .main1 {

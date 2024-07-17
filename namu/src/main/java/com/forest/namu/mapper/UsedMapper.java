@@ -10,6 +10,7 @@ import com.forest.namu.domain.Used;
 
 @Mapper
 public interface UsedMapper {
+	public long used_seq();
 	public void insertUsed(Used dto) throws SQLException;
 	public void updateUsed(Used dto) throws SQLException;
 	public void deleteUsed(long num) throws SQLException;
@@ -22,5 +23,11 @@ public interface UsedMapper {
 	public int likeCount(long num);
 	public void insertUsedLike(Map<String, Object> map) throws SQLException;
 	public void deleteUsedLike(Map<String, Object> map) throws SQLException;
+	
+	// 파일 추가, 삭제만(수정없음)
+	public void insertUsedFile(Used dto) throws SQLException;
+	public void deleteUsedFile(Used dto) throws SQLException;
+	public List<Used> listUsedFile(long num);
+	public Used findByFileId(long num) throws SQLException;
 	
 }

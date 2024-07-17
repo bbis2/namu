@@ -2,28 +2,47 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-
-
 <div class="container body-container">
 <div class="used">
-<c:choose>
-	<c:when test="${dto.imageFile != null && !dto.imageFile.isEmpty()}">
-  <img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFile}" class="thumb">
-	</c:when>
-<c:otherwise>
-  <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="thumb">
-</c:otherwise>
- </c:choose>
+<div class="thumb">
+   <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="1000">
+      <div class="carousel-inner">
+			<c:choose>
+				<c:when test="${dto.imageFile != null && !dto.imageFile.isEmpty()}">
+					<c:forEach var="vo" items="${listFile}" varStatus="status">
+						<div class="carousel-item ${status.index == 0 ? 'active' : ''}">
+							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.uploadFile}" class="d-block w-100">
+						</div>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+				  <div class="carousel-item active">
+					  <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="d-block w-100">
+				  </div>
+				</c:otherwise>
+			</c:choose>
+       </div>
+       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+         <span class="visually-hidden">Previous</span>
+       </button>
+       <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+         <span class="carousel-control-next-icon" aria-hidden="true"></span>
+         <span class="visually-hidden">Next</span>
+       </button>
+	</div>
+</div>
+
 <div class="used-info">
  <div class="user">
 	<img src="회원 프로필!!">
-	   <div class="user-name">${sessionScope.nickName}</div>
+	   <div class="user-name">${dto.nickName}</div>
 	   <div class="seller-location">주소1</div>
 </div>
   <hr>
 <div class="used-header">
   <div class="title">${dto.subject}</div>
-    <button class="chat">채팅하기</button>
+    <button class="chat1">채팅하기</button>
 </div>
 <div class="price"><fmt:formatNumber value="${dto.price}"/> 원</div>
 <div class="state">
@@ -39,12 +58,15 @@
   <div class="content1">${dto.content}</div>
 <div class="sale-meta">
   <div class="views">찜 ${likeCount} &nbsp;|&nbsp; 조회수 ${dto.hitCount} &nbsp;|&nbsp; ${dto.regDate}</div>
-<div class="btn">신고하기</div>
+<div class="report-btn">신고하기</div>
  	 <div class="buttons">
-      <button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/used/update?num=${dto.num}';">수정</button>
-          <button class="delete-btn" onclick="usedDelete()">삭제</button>
-          
-          </div>
+ 	   <c:if test="${sessionScope.member.userId == dto.userId}">
+      	<button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/used/update?num=${dto.num}';">수정</button>
+       </c:if>
+       <c:if test="${sessionScope.member.userId == dto.userId || sessionScope.member.userId == 'admin'}">
+        <button class="delete-btn" onclick="usedDelete()">삭제</button>
+        </c:if>
+     </div>
         </div>
      </div>
   </div>
@@ -58,7 +80,6 @@ function usedDelete() {
 		location.href = url;
 	}
 }
-
 </script>
 
 <style>
@@ -71,9 +92,15 @@ function usedDelete() {
 
 .thumb {
     width: 640px;
-    height: auto;
+    height: 300px;
     display: block;
-	padding: 40px 50px;
+	padding: 40px 10px;
+}
+
+.sub {
+width:100px;
+height: 100px;
+padding: 10px 10px;
 }
 
 .used-info {
@@ -122,7 +149,7 @@ function usedDelete() {
     flex-grow: 1;
 }
 
-.chat {
+.chat1 {
     border-radius: 16px;
     background: #61ac2d;
     color: white;

@@ -39,7 +39,6 @@ public class UsedController {
 		
 		dataCount = service.dataCount(map);
 		
-		
 		List<Used> list = service.listUsed(map);
 		model.addAttribute("list", list);
 		model.addAttribute("kwd", kwd);
@@ -84,27 +83,18 @@ public class UsedController {
 		
 		Used dto = service.findById(num);
 		
-	    /*
-		if (dto == null) {
-	        return "redirect:/used/list";
-	    }
-		*/
+		List<Used> listFile = service.listUsedFile(num);
+		dto.setUploadFile(dto.getImageFile());
+		listFile.add(0, dto);
+
 		service.updateHitCount(num);
 		
 		int likeCount = service.likeCount(num);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("num", num);
-		
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if(info == null) {
-			return "redirect:/member/login";
-		}
-		map.put("userId", info.getUserId());
 
 		model.addAttribute("dto", dto);
 		model.addAttribute("kwd", kwd);
 		model.addAttribute("likeCount", likeCount);
+		model.addAttribute("listFile", listFile);
 
 		return ".used.article";
 	}
@@ -120,6 +110,9 @@ public class UsedController {
 			return "redirect:/used/list";
 		}
 		
+		
+		System.out.println("확인!!!!!"+dto.getSelectFile());
+		
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");
 		
@@ -130,7 +123,7 @@ public class UsedController {
 	public String updateSubmit(HttpSession session, Used dto) throws Exception {
 		
 		String root = session.getServletContext().getRealPath("/");
-		String pathname = root + "uploads" + File.separator + "bbs";
+		String pathname = root + "uploads" + File.separator + "photo";
 		
 		service.updateUsed(dto, pathname);
 		

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.forest.namu.common.FileManager;
 import com.forest.namu.domain.Used;
@@ -23,12 +24,34 @@ public class UsedServiceImpl implements UsedService {
 	public void insertUsed(Used dto, String pathname) throws Exception {
 		
 		try {
-			String saveFile = fileManager.doFileUpload(dto.getSelectFile(), pathname);
+			long seq = mapper.used_seq();
+			
+			dto.setNum(seq);
+			
+			String saveFile = fileManager.doFileUpload(dto.getThumbFile(), pathname);
+
 			if(saveFile != null) {
 				dto.setImageFile(saveFile);
 				
 			} 
+			
 			mapper.insertUsed(dto);
+			
+			// 다중파일
+			if(! dto.getSelectFile().isEmpty()) {
+				for(MultipartFile mf : dto.getSelectFile()) {
+					String saveFile2 = fileManager.doFileUpload(mf, pathname);
+					if(saveFile2 == null) {
+						continue;
+					}
+					
+					dto.setUploadFile(saveFile2);
+					
+					insertUsedFile(dto);
+				}
+			}
+			
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,18 +64,30 @@ public class UsedServiceImpl implements UsedService {
 	public void updateUsed(Used dto, String pathname) throws Exception {
 
 		try {
-			String saveFile = fileManager.doFileUpload(dto.getSelectFile(), pathname);
+			String saveFile = fileManager.doFileUpload(dto.getThumbFile(), pathname);
 			
 			if(saveFile != null) {
 				if(dto.getImageFile().length() != 0) {
 					fileManager.doFileDelete(dto.getImageFile(), pathname);
 				}
 				dto.setImageFile(saveFile);
-			} else {
-				dto.setImageFile(null);
+			} 
+			
+			if(! dto.getSelectFile().isEmpty()) {
+				for(MultipartFile mf : dto.getSelectFile()) {
+					String saveFile2 = fileManager.doFileUpload(mf, pathname);
+					if(saveFile2 == null) {
+						continue;
+					}
+					
+					dto.setUploadFile(saveFile2);
+					
+					insertUsedFile(dto);
+				}
 			}
 			
 			mapper.updateUsed(dto);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -151,4 +186,59 @@ public class UsedServiceImpl implements UsedService {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void insertUsedFile(Used dto) throws Exception {
+
+		try {
+			mapper.insertUsedFile(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteUsedFile(Used dto) throws Exception {
+
+		try {
+			mapper.deleteUsedFile(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public Used findByFileId(long num) throws Exception {
+
+		Used dto = null;
+		
+		try {
+			dto = mapper.findByFileId(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public List<Used> listUsedFile(long num) {
+		
+		List<Used> list = null;
+		
+		try {
+			list = mapper.listUsedFile(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+
+	
 }

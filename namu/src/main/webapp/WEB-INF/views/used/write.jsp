@@ -2,6 +2,33 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+
+<style>
+.write-form .thumbnail-viewer {
+	cursor: pointer;
+	border: 1px solid #c2c2c2;
+	width: 50px; height: 50px; border-radius: 10px;
+	background-image: url("${pageContext.request.contextPath}/resources/images/add_photo.png");
+	position: relative;
+	z-index: 9999;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.write-form .img-grid {
+	display: grid;
+	grid-template-columns:repeat(auto-fill, 54px);
+	grid-gap: 2px;
+}
+
+.write-form .img-grid .item {
+	object-fit:cover;
+	width: 50px; height: 50px; border-radius: 10px;
+	border: 1px solid #c2c2c2;
+	cursor: pointer;
+}
+</style>
+
 <div class="container body-container">
 	<div class="title">
 		<h3>🌳중고거래</h3>
@@ -18,7 +45,7 @@
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">작성자</td>
 				<td>
-					<p class="block">${sessionScope.member.userId}</p>
+					<p class="block">${sessionScope.member.nickName}</p>
 				</td>
 			</tr>
 			<tr>
@@ -31,17 +58,32 @@
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">상태</td>
 				<td>
-				  <input type="radio" name="state" value="0" checked>&nbsp;판매중
+				  <input type="radio" name="state" value="0">&nbsp;판매중
 				  <input type="radio" name="state" value="1">&nbsp;예약중
 				  <input type="radio" name="state" value="2">&nbsp;판매완료
 				</td>
 			</tr>
 			</c:if>
 			<tr>
-				<td class="bg-light col-sm-2" scope="row">사진</td>
+				<td class="bg-light col-sm-2" scope="row">썸네일</td>
 				<td>
-					<div class="img-viewer">🌳<i class="bi bi-exposure"></i></div>
-					<input type="file" name="selectFile" accept="image/*" class="form-control" style="display: none;">
+					<div class="thumbnail-viewer"></div>
+					<input type="file" name="thumbFile" accept="image/*" class="form-control" style="display: none;">
+				</td>
+			</tr>			
+			<tr>
+				<td class="bg-light col-sm-2" scope="row">추가 이미지</td>
+				<td>
+					<div class="img-grid">
+						<img class="item img-add" src="${pageContext.request.contextPath}/resources/images/add_photo.png">
+						<c:forEach var="vo" items="${list}">
+							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.uploadFile}"
+								class="item delete-img"
+								data-fileNum="${vo.num}"
+								data-filename="${vo.uploadFile}">
+						</c:forEach>
+					</div>
+					<input type="file" name="selectFile" accept="image/*" class="form-control" multiple="multiple" style="display: none;">
 				</td>
 			</tr>
 			<tr>
@@ -69,45 +111,129 @@
 </div>
 
 <script type="text/javascript">
-$(function() {
-	let img = "${dto.imageFile}";
-	if( img ) { // 수정인 경우
-		img = "${pageContext.request.contextPath}/uploads/photo/" + img;
-		$(".write-form .img-viewer").css("background-image", "url("+img+")");
+//대표(썸네일) 이미지
+$(function(){
+	var img = "${dto.imageFile}";
+	if( img ) {
+		img = "${pageContext.request.contextPath}/uploads/photo/"+img;
+		$(".write-form .thumbnail-viewer").empty();
+		$(".write-form .thumbnail-viewer").css("background-image", "url("+img+")");
 	}
 	
-	$(".write-form .img-viewer").click(function(){
-		$("form[name=UsedForm] input[name=selectFile]").trigger("click"); 
+	$(".write-form .thumbnail-viewer").click(function(){
+		$("form[name=UsedForm] input[name=thumbFile]").trigger("click");
 	});
 	
-	$("form[name=UsedForm] input[name=selectFile]").change(function(){
+	$("form[name=UsedForm] input[name=thumbFile]").change(function(){
 		let file = this.files[0];
+		
 		if(! file) {
-			$(".write-form .img-viewer").empty();
+			$(".write-form .thumbnail-viewer").empty();
+			
 			if( img ) {
-				img = "${pageContext.request.contextPath}/uploads/photo/" + img;
+				img = "${pageContext.request.contextPath}/uploads/photo/"+img;
 			} else {
-				img = "🌳";
+				img = "${pageContext.request.contextPath}/resources/images/add_photo.png";
 			}
-			$(".write-form .img-viewer").css("background-image", "url("+img+")");
+			$(".write-form .thumbnail-viewer").css("background-image", "url("+img+")");
 			
 			return false;
 		}
 		
-		if(! file.type.match("image.*")) {
+		if( ! file.type.match("image.*") ) {
 			this.focus();
 			return false;
 		}
 		
-		let reader = new FileReader();
-		reader.onload = function(e) {
-			$(".write-form .img-viewer").empty();
-			$(".write-form .img-viewer").css("background-image", "url("+e.target.result+")");
-		}
-		reader.readAsDataURL(file);
+		var reader = new FileReader();
+		reader.onload = function(e) { // 파일의 내용을 다 읽었으면
+			$(".write-form .thumbnail-viewer").empty();
+			$(".write-form .thumbnail-viewer").css("background-image", "url("+e.target.result+")");
+		};
+		reader.readAsDataURL( file );
 	});
 });
 
+// 수정에서 등록된 추가 이미지 삭제
+$(function(){
+	$(".delete-img").click(function(){
+		if(! confirm("이미지를 삭제 하시겠습니까 ?")) {
+			return false;
+		}
+		
+		let $img = $(this);
+		let fileNum = $img.attr("data-fileNum");
+		let filename = $img.attr("data-filename");
+		let url="${pageContext.request.contextPath}/used/deleteFile";
+		$.post(url, {fileNum:fileNum, filename:filename}, function(data){
+			$img.remove();
+		}, "json");
+	});
+});
+
+//추가 이미지
+$(function(){
+	var sel_files = [];
+	
+	$("body").on("click", ".write-form .img-add", function(){
+		$("form[name=UsedForm] input[name=selectFile]").trigger("click");
+	});
+	
+	$("form[name=UsedForm] input[name=selectFile]").change(function(){
+		if(! this.files) {
+			let dt = new DataTransfer();
+			for(let f of sel_files) {
+				dt.items.add(f);
+			}
+			document.UsedForm.selectFile.files = dt.files;
+			
+			return false;
+		}
+		
+     for(let file of this.files) {
+     	sel_files.push(file);
+     	
+         const reader = new FileReader();
+			const $img = $("<img>", {class:"item img-item"});
+			$img.attr("data-filename", file.name);
+	         reader.onload = e => {
+	         	$img.attr("src", e.target.result);
+	         };
+			reader.readAsDataURL(file);
+         
+         $(".img-grid").append($img);
+     }
+		
+		let dt = new DataTransfer();
+		for(let f of sel_files) {
+			dt.items.add(f);
+		}
+		document.UsedForm.selectFile.files = dt.files;
+	});
+	
+	$("body").on("click", ".write-form .img-item", function(){
+		if(! confirm("선택한 파일을 삭제 하시겠습니까 ? ")) {
+			return false;
+		}
+		
+		let filename = $(this).attr("data-selectFile");
+		
+		for(let i=0; i<sel_files.length; i++) {
+			if(filename === sel_files[i].name) {
+				sel_files.splice(i, 1);
+				break;
+			}
+		}
+		
+		let dt = new DataTransfer();
+		for(let f of sel_files) {
+			dt.items.add(f);
+		}
+		document.UsedForm.selectFile.files = dt.files;		
+		
+		$(this).remove();
+	});
+});
 </script>
 
 
