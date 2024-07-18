@@ -10,7 +10,7 @@
 <style type="text/css">
       .product-image img {
             width: 100%;
-            height: 500px;
+            height: auto;
         }
         .rating {
             color: #f4c150;
@@ -121,20 +121,18 @@
             border-radius: 10px;
         }
         
-          .sub-images-container {
+         .sub-images-container {
             display: flex;
             gap: 10px;
         }
         .sub-images-container img {
             width: 180px;
-            height: 140px;
+            height: 140px; 
         }
         @media (max-width: 768px) {
             .sub-images-container img {
                 width: 50px;
         }
-        
-       
     </style>
 </head>
 <body>
@@ -146,20 +144,24 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="md-6">
-                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                    <div id="carouselExample" class="carousel slide">
 							  <div class="carousel-inner">
-							    <c:forEach var="vo" items="${listFile}" varStatus="status">
-							    <div class="carousel-item ${status.index == 0 ? 'active' : ''} product-image">
+							    <div class="carousel-item active">
 							     <c:choose>
-				                	<c:when test="${dto.fileName != null && !dto.fileName.isEmpty()}">
-					                        <img src="${pageContext.request.contextPath}/uploads/photo/${vo.fileName}" class="card-img-top mb-3 main-image" alt="메인 이미지">
+				                		<c:when test="${dto.thumbnail !=null && dto.thumbnail.isEmpty()}">
+						                    <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" class="card-img-top mb-3 main-image" alt="메인 이미지">
 						                    	</c:when>
 						                    	 <c:otherwise>
-						                            <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="card-img-top mb-3 main-image">
+						                            <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px"  src="${pageContext.request.contextPath}/resources/images/noimage.png">
 						                        </c:otherwise>
 				                    </c:choose>
 							    </div>
-							    </c:forEach>
+							    <div class="carousel-item">
+							      <img src="..." class="d-block w-100" alt="...">
+							    </div>
+							    <div class="carousel-item">
+							      <img src="..." class="d-block w-100" alt="...">
+							    </div>
 							  </div>
 							  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
 							    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -170,18 +172,27 @@
 							    <span class="visually-hidden">Next</span>
 							  </button>
 							</div>
-                      
+                        <div class="product-image mb-3">
+                           <c:choose>
+                		<c:when test="${dto.thumbnail !=null && dto.thumbnail.isEmpty()}">
+		                    <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" class="card-img-top mb-3 main-image" alt="메인 이미지">
+		                    	</c:when>
+		                    	 <c:otherwise>
+		                            <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px"  src="${pageContext.request.contextPath}/resources/images/noimage.png">
+		                        </c:otherwise>
+                    </c:choose>
+                        </div>
                     </div>
                   
                 </div>
                 <div class="row my-4">
                 	<c:choose>
-                	<c:when test="${dto.fileName != null && ! dto.fileName.isEmpty()}">
-                	<div class="sub-images-container">
+                	<c:when test="${dto.fileName != null && dto.fileName.isEmpty()}">
 	                	<c:forEach var="vo" items="${listFile}">
-	                        <img src="${pageContext.request.contextPath}/uploads/photo/${vo.fileName}" class="img-thumbnail">
+	                    <div class="sub-images-container">
+	                        <img src="${pageContext.request.contextPath}/uploads/photo/${vo.listFile}" class="img-fluid">
+	                   </div>
 	                    </c:forEach>
-	                    </div>
                     </c:when>
                       <c:otherwise>
                       	<div class="sub-images-container">
@@ -189,6 +200,7 @@
                         </div>
                         </c:otherwise>
                     </c:choose>
+                    
                 </div>
                 <div class="tabs">
                     <button id="detail-btn" class="active">상세 설명</button>
@@ -211,7 +223,7 @@
             </div>
             <div class="col-md-4">
 	            <div class="product-details">
-	                            <h2>${dto.subject}</h2>
+	                            <h2>그림 그려드려요!</h2>
 	                            <div class="rating">
 	                                <span>★ 4.9</span> (3122)
 	                            </div>
@@ -268,19 +280,6 @@
                         $('#' + target).html(response);
                     }
                 });
-            });
-            
-            $('.thumbnail').click(function() {
-                var index = $(this).index();
-                $('#productCarousel').carousel(index);
-                $('.thumbnail').removeClass('active');
-                $(this).addClass('active');
-            });
-
-            $('#productCarousel').on('slide.bs.carousel', function (e) {
-                var index = $(e.relatedTarget).index();
-                $('.thumbnail').removeClass('active');
-                $('.thumbnail').eq(index).addClass('active');
             });
         });
     </script>
