@@ -158,7 +158,7 @@ function check() {
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">제목</td>
 				<td>
-					<input type="text" name="subject" class="form-control">
+					<input type="text" name="subject" class="form-control" value="${dto.subject}">
 				</td>
 			</tr>
 

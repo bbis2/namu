@@ -425,6 +425,7 @@ function daumPostcode() {
             }
 
             document.getElementById('town1').value = town1Value;
+            
         }
     }).open();
 }

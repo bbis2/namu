@@ -24,17 +24,16 @@ public interface DailyMapper {
     public Daily findByPrev(Map<String, Object> map);         // 이전글
     public Daily findByNext(Map<String, Object> map);         // 다음글
          
-    
-    public void insertDailyLike(Map<String, Object> map) throws SQLException;
-    public void deleteDailyLike(Map<String, Object> map) throws SQLException;
-    public int dailyLikeCount(long num);
-    public Daily userDailyLiked(Map<String, Object> map);
-    
     public Daily findByCategory(long categoryNum);
     public void insertCategory(Daily dto) throws SQLException;
     public List<Daily> listDailyCategory();
     public void updateCategory(Daily dto) throws SQLException;
     public void deleteCategory(long num) throws SQLException;
+    
+    public void insertDailyLike(Map<String, Object> map) throws SQLException;
+    public void deleteDailyLike(Map<String, Object> map) throws SQLException;
+    public int dailyLikeCount(long num);
+    public Daily userDailyLiked(Map<String, Object> map);
     
     //댓글 
     public void insertReply(Reply dto) throws Exception;
