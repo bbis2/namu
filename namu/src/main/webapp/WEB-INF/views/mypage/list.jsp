@@ -1,14 +1,22 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Box Layout Example</title>
 
 <style>
+.write-form .img-viewer {
+	cursor: pointer;
+	border: 1px solid #ccc;
+	width: 45px;
+	height: 45px;
+	border-radius: 45px;
+	background-image:
+		url("${pageContext.request.contextPath}/resources/images/person.png");
+	position: relative;
+	z-index: 9999;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
 .modal-dialog {
 	max-width: 800px; /* 원하는 너비로 조정 */
 }
@@ -108,6 +116,8 @@ h1 {
 
 .htext {
 	margin: 0; /* Reset margin */
+	padding-top: 0;
+	padding-left: 0;
 }
 
 .cover-title {
@@ -162,10 +172,41 @@ h1 {
 		height: 300px;
 	}
 }
+
+.form-control {
+	width: 100%;
+	padding: 8px;
+	box-sizing: border-box;
+}
+
+.profileImage {
+	cursor: pointer;
+}
+
+.changeSain {
+	margin-top: 20px;
+}
+
+.link-block {
+	display: block;
+	margin-top: 10px;
+	text-decoration: none; /* 링크 밑줄 제거 */
+	color: inherit; /* 링크 색상 부모 요소와 동일 */
+}
+
+.link-block:hover {
+	text-decoration: none; /* 링크에 마우스를 올렸을 때 밑줄 제거 */
+	color: inherit; /* 링크에 마우스를 올렸을 때 색상 변화 없음 */
+}
+
+.link-block img {
+	vertical-align: middle; /* 이미지와 텍스트를 수직으로 정렬 */
+}
 </style>
 </head>
 
 <div class="container">
+
 	<section class="fleamarket-cover">
 		<div class="cover-title htext" style="margin-left: 100px;">
 			<h1>마이페이지</h1>
@@ -178,219 +219,266 @@ h1 {
 				src="${pageContext.request.contextPath}/resources/images/camp_1.png">
 		</div>
 	</section>
-</div>
-<div class="body-main">
-	<!-- 첫 번째 줄 -->
-	<div class="row">
-		<div class="col-sm-3">
-			<div class="box1"
-				style="height: 400px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
-				<div class="inner-box" style="height: 220px; width: 50%">
-					<img class="profileImage" alt=""
-						src="${pageContext.request.contextPath}/resources/images/person.png">
-				</div>
-				<div class="inner-box" style="height: 30px; width: 50%">
-					<p>조현호</p>
-				</div>
-				<div class="inner-box" style="height: 30px; width: 80%">
-					<p>철산동 백수 / 키움 히어로즈 팬</p>
-				</div>
-				<div class="inner-box"
-					style="background: gray; height: 60px; width: 50%">
-					<img> <img> <img>
-				</div>
-			</div>
-		</div>
 
-		<div class="col-sm-3 d-none d-sm-block ml-5 mt-3">
-			<div class="box" style="height: 100px;">
-				<div
-					style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-					<p style="margin: 0; font-size: 20px; font-weight: 200;">
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_point.png">
-						포인트
-					</p>
-					<p style="margin: 0; font-size: 20px;">${point}P</p>
-				</div>
-
-				<div style="display: flex; justify-content: space-between;">
-					<p style="margin: 0; font-size: 20px; font-weight: 200;">
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_message.png">
-						메세지
-					</p>
-					<p style="margin: 0; font-size: 20px;">3건</p>
+	<div class="body-main">
+		<!-- 첫 번째 줄 -->
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="box1"
+					style="height: 400px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+					<div class="inner-box" style="height: 220px; width: 100%">
+						<c:if test="${empty dto.photo}">
+							<img class="profileImage" alt="" id="profileImage"
+								onclick="Ischange();"
+								src="${pageContext.request.contextPath}/resources/images/person.png">
+						</c:if>
+						<img class="profileImage" id="profileImage" onclick="Ischange();"
+							src="${pageContext.request.contextPath}/uploads/photo/${dto.photo}">
+					</div>
+					<div class="inner-box" style="height: 30px; width: 100%">
+						<p style="font-size: 30px;">${userdto.nickname}</p>
+					</div>
+					<div class="inner-box" style="height: 30px; width: 100%">
+						<p style="font-size: 20px;">${userdto.ment}</p>
+					</div>
+					<div class="inner-box"
+						style="background: gray; height: 60px; width: 50%">
+						<img> <img> <img>
+					</div>
 				</div>
 			</div>
+
+			<div class="col-sm-3 d-none d-sm-block ml-5 mt-3">
+				<div class="box" style="height: 100px;">
+					<div
+						style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+						<p style="margin: 0; font-size: 20px; font-weight: 200;">
+							<img class="icons"
+								src="${pageContext.request.contextPath}/resources/images/icon_point.png">
+							포인트
+						</p>
+						<p style="margin: 0; font-size: 20px;">${point}P</p>
+					</div>
+
+					<div style="display: flex; justify-content: space-between;">
+						<p style="margin: 0; font-size: 20px; font-weight: 200;">
+							<img class="icons"
+								src="${pageContext.request.contextPath}/resources/images/icon_message.png">
+							메세지
+						</p>
+						<p style="margin: 0; font-size: 20px;">3건</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6 d-none d-sm-block mt-3">
+				<div class="box"
+					style="display: flex; align-items: center; height: 100px;">
+					<img class="namuLevel"
+						src="${pageContext.request.contextPath}/resources/images/namuLogo.png"
+						style="margin-right: 10px;">
+					<div class="progress"
+						style="flex-grow: 1; height: 30px; margin: 0 10px;">
+						<div
+							class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+							id="progressBar" role="progressbar" aria-valuenow="0"
+							aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
+					<img class="namuLevel"
+						src="${pageContext.request.contextPath}/resources/images/namuLogo.png"
+						style="margin-left: 10px;">
+				</div>
+			</div>
+
 		</div>
 
-		<div class="col-sm-5 d-none d-sm-block mt-3">
-			<div class="box"
-				style="display: flex; align-items: center; height: 100px;">
-				<img class="namuLevel"
-					src="${pageContext.request.contextPath}/resources/images/namuLogo.png">
-				<hr
-					style="border-top: 3px solid black; flex-grow: 1; margin: 0 10px;">
-				<img class="namuLevel"
-					src="${pageContext.request.contextPath}/resources/images/namuLogo.png">
-			</div>
-		</div>
-	</div>
+		<!-- 두 번째 줄 -->
 
-	<!-- 두 번째 줄 -->
-
-	<div class="row custom-margin-top">
-		<div class="col-sm-8 offset-sm-3">
-			<div class="box"
-				style="text-align: left; height: 70px; justify-content: center;">
-				<p style="font-size: 20px;">
-					🏠 집앞 산책하고 <span class="font-weight-bold text-primary">포인트를</span>
-					얻는 방법
-				</p>
-			</div>
-		</div>
-		<div class="col-sm-8 offset-sm-3">
-			<div class="box"
-				style="text-align: left; height: 70px; justify-content: center;">
-				<p style="font-size: 20px;">
-					🔥 지금 여러 활동에 참가하면 <span class="font-weight-bold text-primary">한정판
-						뱃지</span>를 지급
-				</p>
-			</div>
-		</div>
-	</div>
-
-	<!-- 세 번째 줄 -->
-	<div class="row">
-		<div class="col-sm-3" style="margin-top: 50px;">
-			<div class="box-3 custom-margin-top4" style="height: 100%">
-				<button type="button" class="btn-user">로그아웃</button>
-			</div>
-		</div>
-		<div class="col-sm-8">
-			<div class="box custom-margin-top3" style="background: #BEF4F1">
-				<p style="margin-top: 1rem; font-size: 25px;">나무에서 당신의 가치를
-					나눠보세요!</p>
-			</div>
-		</div>
-	</div>
-
-	<!-- 네 번째 줄 -->
-	<div class="row  mt-5">
-		<div class="col-sm-3">
-			<div class="box">
-				<p>나의 일정</p>
-			</div>
-		</div>
-		<div class="col-sm-8">
-			<h4>나의 활동</h4>
-			<div class="box custom-margin-top4"
-				style="display: flex; border: none;">
-				<div style="flex-grow: 1; text-align: left; font-size: 19px;">
-					<!-- 왼쪽 영역 -->
-					<p>
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_heart.png">
-						&nbsp;관심목록
-					</p>
-					<p>
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_transaction.png">
-						&nbsp;거래내역
+		<div class="row custom-margin-top">
+			<div class="col-sm-9 offset-sm-3">
+				<div class="box"
+					style="text-align: left; height: 70px; justify-content: center;">
+					<p style="font-size: 20px;">
+						🏠 집앞 산책하고 <span class="font-weight-bold text-primary">포인트를</span>
+						얻는 방법
 					</p>
 				</div>
-				<div style="flex-grow: 1; text-align: left; font-size: 19px;">
-					<!-- 오른쪽 영역 -->
-					<p>
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_pencil.png">
-						&nbsp;내가쓴글
-					</p>
-					<p>
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_badge.png">
-						&nbsp;나의뱃지
+			</div>
+			<div class="col-sm-9 offset-sm-3">
+				<div class="box"
+					style="text-align: left; height: 70px; justify-content: center;">
+					<p style="font-size: 20px;">
+						🔥 지금 여러 활동에 참가하면 <span class="font-weight-bold text-primary">한정판
+							뱃지</span>를 지급
 					</p>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- 다섯 번째 줄 -->
-	<div class="row">
-		<div class="col-sm-3">
-			<!-- 빈 열을 추가하여 정렬 보정 -->
+		<!-- 세 번째 줄 -->
+		<div class="row">
+			<div class="col-sm-3" style="margin-top: 50px;">
+				<div class="box-3 custom-margin-top4" style="height: 100%">
+					<button type="button" class="btn-user">로그아웃</button>
+				</div>
+			</div>
+			<div class="col-sm-9">
+				<div class="box custom-margin-top3" style="background: #BEF4F1">
+					<p style="margin-top: 1rem; font-size: 25px;">나무에서 당신의 가치를
+						나눠보세요!</p>
+				</div>
+			</div>
 		</div>
-		<div class="col-sm-8">
-			<h4>포인트</h4>
-			<div class="box custom-margin-top4"
-				style="display: flex; border: none;">
-				<div style="flex-grow: 1; text-align: left; font-size: 19px;">
-					<!-- 왼쪽 영역 -->
-					<p>
-						<img class="icons"
+
+		<!-- 네 번째 줄 -->
+		<div class="row  mt-5">
+			<div class="col-sm-3">
+				<div class="box">
+					<p>나의 일정</p>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<h4>나의 활동</h4>
+				<div class="box custom-margin-top4"
+					style="display: flex; border: none;">
+					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
+						<!-- 왼쪽 영역 -->
+						<p>
+							<img class="icons"
+								src="${pageContext.request.contextPath}/resources/images/icon_heart.png">
+							&nbsp;관심목록
+						</p>
+						<p>
+							<img class="icons"
+								src="${pageContext.request.contextPath}/resources/images/icon_transaction.png">
+							&nbsp;거래내역
+						</p>
+					</div>
+					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
+						<!-- 오른쪽 영역 -->
+						<p>
+							<img class="icons"
+								src="${pageContext.request.contextPath}/resources/images/icon_pencil.png">
+							&nbsp;내가쓴글
+						</p>
+						<p>
+							<img class="icons"
+								src="${pageContext.request.contextPath}/resources/images/icon_badge.png">
+							&nbsp;나의뱃지
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 다섯 번째 줄 -->
+		<div class="row">
+			<div class="col-sm-3">
+				<!-- 빈 열을 추가하여 정렬 보정 -->
+			</div>
+			<div class="col-sm-8">
+				<h4>포인트</h4>
+				<div class="box custom-margin-top4"
+					style="display: flex; border: none;">
+					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
+						<!-- 왼쪽 영역 -->
+						<a class="link-block" onclick="selectAll();"> <img
+							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_account.png">
-						포인트 통장
-					</p>
-					<a onclick="chargeModal();"> <img class="icons"
-						src="${pageContext.request.contextPath}/resources/images/icon_account.png"
-						onclick="requestPay();"> 충전하기
-					</a>
+							포인트 통장
+						</a> <a class="link-block" onclick="chargeModal();"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_account.png"
+							onclick="requestPay();"> 충전하기
+						</a>
+					</div>
+					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
+						<!-- 오른쪽 영역 -->
+						<a onclick="refundOk();"> <img class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_refund.png">
+							&nbsp;환불하기
+						</a>
+					</div>
 				</div>
-				<div style="flex-grow: 1; text-align: left; font-size: 19px;">
-					<!-- 오른쪽 영역 -->
-					<a onclick="refundOk();"> <img class="icons"
-						src="${pageContext.request.contextPath}/resources/images/icon_refund.png">
-						&nbsp;환불하기
-					</a>
+			</div>
+		</div>
+
+		<!-- 여섯 번째 줄 -->
+		<div class="row">
+			<div class="col-sm-3">
+				<!-- 빈 열을 추가하여 정렬 보정 -->
+			</div>
+			<div class="col-sm-8">
+				<h4>정보수정</h4>
+				<div class="box custom-margin-top4"
+					style="display: flex; border: none;">
+					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
+						<!-- 왼쪽 영역 -->
+						<a href="#" class="link-block changeSain" id="changeSain"
+							onclick="changePhoto();"> <img class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
+							&nbsp;프로필 사진 변경
+						</a> <a href="#" class="link-block" onclick="changeNickname();"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
+							&nbsp;닉네임 변경
+						</a>
+					</div>
+					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
+						<!-- 오른쪽 영역 -->
+						<a class="link-block" onclick="changeBasic();"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
+							&nbsp;기본정보 변경
+						</a>
+						<a class="link-block" onclick="changeMent();"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
+							&nbsp;소개글 추가
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- 여섯 번째 줄 -->
-	<div class="row">
-		<div class="col-sm-3">
-			<!-- 빈 열을 추가하여 정렬 보정 -->
-		</div>
-		<div class="col-sm-8">
-			<h4>정보수정</h4>
-			<div class="box custom-margin-top4"
-				style="display: flex; border: none;">
-				<div style="flex-grow: 1; text-align: left; font-size: 19px;">
-					<!-- 왼쪽 영역 -->
-					<p>
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
-						&nbsp;프로필 사진 변경
-					</p>
-					<p>
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
-						&nbsp;주소 변경
-					</p>
-				</div>
-				<div style="flex-grow: 1; text-align: left; font-size: 19px;">
-					<!-- 오른쪽 영역 -->
-					<p>
-						<img class="icons"
-							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
-						&nbsp;비밀번호 변경
-					</p>
-				</div>
+</div>
+
+
+
+<div class="modal fade" id="changePhoto" tabindex="-1"
+	aria-labelledby="changePhotoLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="changePhotoLabel">프로필사진 변경</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form name="photoForm" method="post" enctype="multipart/form-data">
+					<table class="write-form">
+						<td>
+							<div class="img-viewer"></div> <input type="file"
+							name="selectFile" accept="image/*">
+							<button type="button" class="btn btn-primary"
+								onclick="photoInsert();">변경하기</button>
+						</td>
+					</table>
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
 
+<!-- 포인트 충전모달 -->
 <div class="modal fade" id="chargeModal" tabindex="-1"
 	data-bs-backdrop="static" data-bs-keyboard="false"
 	aria-labelledby="chargeModal" aria-hidden="true">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="loginViewerModalLabel">충전하기</h5>
+				<h5 class="modal-title" id="">충전하기</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 					aria-label="Close"></button>
 			</div>
@@ -398,23 +486,24 @@ h1 {
 				<div class="p-3">
 					<form name="modelLoginForm" action="" method="post" class="row g-3">
 						<div class="mt-0">
-							<p class="form-control-plaintext">정보를 다시 확인해 보세요</p>
+							<p class="form-control-plaintext">개인정보 확인을 해주세요</p>
 						</div>
 						<div class="mt-0">
 							<input type="text" name="userId" class="form-control" readonly
-								placeholder="${sessionScope.member.userId} 여기 유저 이름">
+								placeholder="이름 : ${userdto.userName}">
 						</div>
 						<div>
 							<input type="password" name="userEamil" autocomplete="off"
-								readonly class="form-control" placeholder="유저 이메일">
+								readonly class="form-control"
+								placeholder="이메일 : ${userdto.email}">
 						</div>
 						<div>
 							<input type="password" name="userPwd" autocomplete="off" readonly
-								class="form-control" placeholder="유저 주소">
+								class="form-control" placeholder="전화번호 : ${userdto.tel}">
 						</div>
 						<div>
 							<input type="number" name="money" autocomplete="off" id="money"
-								class="form-control" placeholder="금액 : 100원 이상 입력이 가능합니다.">
+								class="form-control" placeholder="금액입력 : 100원 이상 입력이 가능합니다.">
 						</div>
 
 						<div>
@@ -428,6 +517,8 @@ h1 {
 		</div>
 	</div>
 </div>
+
+<!-- 환불창 모달 -->
 <div id="refundModal" class="modal" tabindex="-1">
 	<div class="modal-dialog modal-lg">
 		<!-- modal-lg 추가 -->
@@ -446,7 +537,7 @@ h1 {
 							<th>결제시간</th>
 							<th>결제액수</th>
 							<th>환불 사유</th>
-							<th>결제유형 : 전자 결제</th>	
+							<th>결제유형 : 전자 결제</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -462,7 +553,216 @@ h1 {
 	</div>
 </div>
 
+<!-- 거래내역 모달 -->
+<div id="selectAllModal" class="modal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<!-- modal-lg 추가 -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">통장 내역</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table id="selectAllTable" class="table">
+					<thead>
+						<tr>
+							<th>결제번호</th>
+							<th>결제아이디</th>
+							<th>결제시간</th>
+							<th>결제액수</th>
+							<th>현재액수</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 데이터가 동적으로 추가됩니다 -->
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 기본정보 변경 모달 -->
+<div class="modal fade" id="changeBasic" tabindex="-1"
+	data-bs-backdrop="static" data-bs-keyboard="false"
+	aria-labelledby="chargeModal" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="">기본정보 변경</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body"></div>
+		</div>
+	</div>
+</div>
+
+<!-- 닉네임 변경 -->
+<div class="modal fade" id="nicknameChange" tabindex="-1"
+	data-bs-backdrop="static" data-bs-keyboard="false"
+	aria-labelledby="chargeModal" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="">닉네임 변경</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="p-3">
+					<form name="nickForm" action="" method="post" class="row g-3">
+						<div class="mt-0">
+							<input type="text" name="currentNickname" class="form-control"
+								readonly placeholder="기존 닉네임 : ">
+						</div>
+						<div class="d-flex align-items-center">
+							<input type="text" name="nickName" id="nickName"
+								autocomplete="off" class="form-control me-2"
+								style="width: calc(100% - 140px);" placeholder="변경 닉네임 : ">
+							<button type="button" class="btn btn-secondary"
+								onclick="checkDuplicateNickname();">닉네임 중복검사</button>
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary w-100"
+								onclick="changeGo();">변경하기</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 멘트 추가 -->
+<div class="modal fade" id="chagneMent" tabindex="-1"
+	data-bs-backdrop="static" data-bs-keyboard="false"
+	aria-labelledby="chagneMent" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="">소개글 변경</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="p-3">
+					<form name="mentForm" action="" method="post" class="row g-3">
+						<div class="mt-0">
+							<input type="text" name="ment" class="form-control"
+								 placeholder="소개글을 입력하세요: ">
+						</div>
+						<div>
+							<button type="button" class="btn btn-primary w-100"
+								onclick="goMent();">변경하기</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
+
+window.onload = function() {
+    var mannerTemperature = ${userdto.userManner}; // 서버에서 전달된 매너 온도 점수
+    var progressBar = document.getElementById('progressBar');
+    
+    // 매너 온도 점수를 기준으로 프로그레스 바의 너비를 설정
+    progressBar.style.width = (mannerTemperature)/4 + '%';
+    progressBar.setAttribute('aria-valuenow', mannerTemperature);
+};
+
+
+$(function() {
+	let img = "${dto.imageFilename}";
+	if( img ) { // 수정인 경우
+		img = "${pageContext.request.contextPath}/uploads/photo/" + img;
+		$(".write-form .img-viewer").empty();
+		$(".write-form .img-viewer").css("background-image", "url("+img+")");
+	}
+	
+	$(".write-form .img-viewer").click(function(){
+		$("form[name=photoForm] input[name=selectFile]").trigger("click"); 
+	});
+	
+	$("form[name=photoForm] input[name=selectFile]").change(function(){
+		let file = this.files[0];
+		if(! file) {
+			$(".write-form .img-viewer").empty();
+			if( img ) {
+				img = "${pageContext.request.contextPath}/uploads/photo/" + img;
+			} else {
+				img = "${pageContext.request.contextPath}/resources/images/add_photo.png";
+			}
+			$(".write-form .img-viewer").css("background-image", "url("+img+")");
+			
+			return false;
+		}
+		
+		if(! file.type.match("image.*")) {
+			this.focus();
+			return false;
+		}
+		
+		let reader = new FileReader();
+		reader.onload = function(e) {
+			$(".write-form .img-viewer").empty();
+			$(".write-form .img-viewer").css("background-image", "url("+e.target.result+")");
+		}
+		reader.readAsDataURL(file);
+		console.log(reader);
+	});
+});
+
+function photoInsert(){
+	const f = document.photoForm;
+	
+	
+	    if(!f.selectFile.value ) {
+	        alert("이미지 파일을 추가 하세요. ");
+	        f.selectFile.focus();
+	        return;
+		}    
+
+	    f.action = "${pageContext.request.contextPath}/mypage/insertPhoto";
+	    f.submit();
+	    
+}
+
+function changePhoto(){
+	$('#changePhoto').modal('show');
+}
+
+function changeBasic(){
+	$('#changeBasic .modal-body').load('${pageContext.request.contextPath}/mypage/update');
+	$('#changeBasic').modal('show');
+}
+
+function changeNickname(){
+	$('#nicknameChange').modal('show');
+}
+function changeMent(){
+	$('#chagneMent').modal('show');
+}
+
+function Ischange() {
+    // 포커스를 이동시킬 요소를 가져옵니다.
+    var changeSain = document.getElementById('changeSain');
+
+    // 요소에 포커스를 설정합니다.
+    changeSain.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // 포커스를 설정하여 화면 리더기가 해당 요소를 읽도록 합니다.
+    changeSain.setAttribute('tabindex', '-1');
+    changeSain.focus();
+}
 
 
 function refundOk() {
@@ -489,7 +789,7 @@ function refundOk() {
             $('#refundTable tbody').html(htmlContent);
             $('#refundModal').modal('show');
         } else {
-            alert("실패");
+            alert("결제 정보가 없습니다.");
         }
     };
 
@@ -564,12 +864,13 @@ function insertRefund(num,point){
 	
 	let description = document.getElementById('description-' + num).value;
 	
-    let formData = {point:point,description:description};
+    let formData = {point:point,description:description,pointNum:num};
 	console.log(formData);
 	
     const fn = function(data) {
         let state = data.state;
         if (state === "true") {
+        	refundPoint(point,description);
             alert("저장 성공");
             location.href = "${pageContext.request.contextPath}/mypage/list";
         } else {
@@ -580,6 +881,22 @@ function insertRefund(num,point){
 }
 
 
+function refundPoint(point,description){
+	let url = "${pageContext.request.contextPath}/mypage/refundPoint";
+	let currentPoint = ${point};
+	let formData = {pointVar:point,description:description,currentPoint:currentPoint};
+	
+	 const fn = function(data) {
+	        let state = data.state;
+	        if (state === "true") {
+	            alert("통장저장 성공");
+	        } else {
+	            alert("통장저장 실패");
+	        }
+	    };
+	    ajaxFun(url, "post", formData, "json", fn);
+	}
+	
 function sendOk() {
     var money = document.getElementById("money").value;
     if (money < 100) {
@@ -667,6 +984,117 @@ function sendOk() {
 	    };
 	    ajaxFun(url, "post", formData, "json", fn);
 	}
+	
+	function selectAll() {
+	    let url = "${pageContext.request.contextPath}/mypage/selectAll";
+	    let query = "";
+
+	    const fn = function(data) {
+	        let state = data.state;
+	        if (state === "true") {
+	            // console.log(data.list);
+	            let htmlContent = '';
+				
+	            for (let it of data.listAll) {
+	                htmlContent += '<tr>' +
+	                    '<td>' + it.pointNum + '</td>' +
+	                    '<td>' + it.userId + '</td>' +
+	                    '<td>' + it.regDate + '</td>' +
+	                    '<td>' + it.pointVar + '</td>' +
+	                    '<td>' + it.lastMoney + '</td>' +
+	                '</tr>';
+	            }
+
+	            $('#selectAllTable tbody').html(htmlContent);
+	            $('#selectAllModal').modal('show');
+	        } else {
+	            alert("결제 정보가 없습니다.");
+	        }
+	    };
+
+	    ajaxFun(url, "get", query, "json", fn);
+	}
+
+	
+	//회원정보 업데이트
+	function memberOk() {
+	const f = document.memberForm;
+	let str;
+
+	str = f.userPwd.value;
+	if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str) ) { 
+		alert("패스워드를 다시 입력 하세요. ");
+		f.userPwd.focus();
+		return;
+	}
+
+	if( str !== f.userPwd2.value ) {
+        alert("패스워드가 일치하지 않습니다. ");
+        f.userPwd.focus();
+        return;
+	}
+
+    str = f.birth.value;
+    if( !str ) {
+        alert("생년월일를 입력하세요. ");
+        f.birth.focus();
+        return;
+    }
+    
+    str = f.tel1.value;
+    if( !str ) {
+        alert("전화번호를 입력하세요. ");
+        f.tel1.focus();
+        return;
+    }
+
+    str = f.tel2.value;
+    if( !/^\d{3,4}$/.test(str) ) {
+        alert("숫자만 가능합니다. ");
+        f.tel2.focus();
+        return;
+    }
+
+    str = f.tel3.value;
+    if( !/^\d{4}$/.test(str) ) {
+    	alert("숫자만 가능합니다. ");
+        f.tel3.focus();
+        return;
+    }
+    
+    str = f.email1.value.trim();
+    if( !str ) {
+        alert("이메일을 입력하세요. ");
+        f.email1.focus();
+        return;
+    }
+
+    str = f.email2.value.trim();
+    if( !str ) {
+        alert("이메일을 입력하세요. ");
+        f.email2.focus();
+        return;
+    }
+
+   	f.action = "${pageContext.request.contextPath}/member/update";
+    f.submit();
+}
+
+function changeEmail() {
+    const f = document.memberForm;
+	    
+    let str = f.selectEmail.value;
+    if(str !== "direct") {
+        f.email2.value = str; 
+        f.email2.readOnly = true;
+        f.email1.focus(); 
+    }
+    else {
+        f.email2.value = "";
+        f.email2.readOnly = false;
+        f.email1.focus();
+    }
+}
 
 </script>
 
@@ -699,5 +1127,148 @@ function sendOk() {
 			}
 		});
 	}
+	
+	
+	//닉네임 중복검사
+function checkDuplicateNickname() {
+		// 닉네임 중복 검사
+		let nickName = $('#nickName').val();
+		
+	    if(!/^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/i.test(nickName)) { 
+			let str = '닉네임은 2자 이상 16자 이하, 영어 또는 숫자 또는 한글을 사용해야 합니다.';
+			$('#nickName').focus();
+			$('.nickName-box').find('.help-block').html(str);
+			return;
+		}
+		
+		let url = '${pageContext.request.contextPath}/member/nickNameCheck';
+
+		// AJAX:POST-JSON
+		$.post(url, {nickName:nickName}, function(data){
+			//console.log(data);
+			
+			let passed = data.passed;
+
+			if(passed === 'true') {
+				alert("사용가능한 닉네임입니다.");
+			} else {
+				alert("중복된 닉네임입니다.");
+				$('#nickName').val('');
+				$('#nickNameValid').val('false');
+				$('#nickName').focus();
+			}
+		}, 'json');
+	}
+	
+	//닉네임 변경
+function changeGo(){
+    const f = document.nickForm;
+    
+    // 템플릿 리터럴로 서버에서 주입되는 currentNickname 설정
+    let currentNickname = "${userdto.nickname}";
+    // 닉네임 입력값 가져오기
+    let nickName = f.Nickname;
+    
+    if(currentNickname === nickName){
+        alert('현재 닉네임과 동일합니다.');
+        return; // 닉네임이 동일한 경우 제출을 중단합니다.
+    }
+    
+    // form action 설정
+    f.action = "${pageContext.request.contextPath}/member/nicknameUpdate";
+    f.submit();
+}
+
+function goMent(){
+    const f = document.mentForm;
+    
+    let ment = f.ment;
+   	
+    f.action = "${pageContext.request.contextPath}/member/mentUpdate"
+    f.submit();
+}
+
+</script>
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+function daumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {  
+            var fullAddr = '';  
+            var extraAddr = ''; 
+
+            if (data.userSelectedType === 'R') { 
+                fullAddr = data.roadAddress;
+            } else { 
+                fullAddr = data.jibunAddress;
+            }
+
+            if(data.userSelectedType === 'R'){
+
+                if(data.bname !== ''){
+                    extraAddr += data.bname;
+                }
+
+                if(data.buildingName !== ''){
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+
+                fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+            }
+
+            var addressParts = fullAddr.split(' ');
+            var town1Value = '';
+
+            if (addressParts[0] === '세종특별자치시') {
+                town1Value = addressParts[0];
+            } else if (addressParts.length >= 3) {
+                town1Value = addressParts[0] + ' ' + addressParts[1];
+            } else {
+                town1Value = fullAddr; 
+            }
+
+            document.getElementById('town1').value = town1Value;
+        }
+    }).open();
+}
+
+function town2code() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var fullAddr = '';
+            var extraAddr = '';
+
+            if (data.userSelectedType === 'R') { 
+                fullAddr = data.roadAddress;
+            } else { 
+                fullAddr = data.jibunAddress;
+            }
+
+            if (data.userSelectedType === 'R') {
+                if (data.bname !== '') {
+                    extraAddr += data.bname;
+                }
+                if (data.buildingName !== '') {
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                fullAddr += (extraAddr !== '' ? ' (' + extraAddr + ')' : '');
+            }
+
+            var addressParts = fullAddr.split(' ');
+            var town2Value = '';
+
+            if (addressParts[0] === '세종특별자치시') {
+                town2Value = addressParts[0];
+            } else if (addressParts.length >= 3) {
+                town2Value = addressParts[0] + ' ' + addressParts[1];
+            } else {
+                town2Value = fullAddr; 
+            }
+
+            document.getElementById('town2').value = town2Value;
+        }
+    }).open();
+}
+
 
 </script>

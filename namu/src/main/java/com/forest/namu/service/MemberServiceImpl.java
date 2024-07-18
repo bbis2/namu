@@ -328,5 +328,27 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+	@Override
+	public void changeNickname(Member dto) throws Exception {
+		try {
+			mapper.changeNickname(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void changeMent(Member dto) throws Exception {
+		try {
+			mapper.changeMent(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 
 }

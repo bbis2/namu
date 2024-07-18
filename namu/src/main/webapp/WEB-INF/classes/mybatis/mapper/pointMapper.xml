@@ -3,32 +3,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.forest.namu.mapper.PointMapper">
 
-<insert id="insertPoint" parameterType="com.forest.namu.domain.Point">
-	INSERT INTO point (pointNum,userId,description,regDate,currentPoint,pointVar,pointCate,lastMoney)
-	VALUES (#{pointNum},#{userId},#{description},SYSDATE,#{currentPoint},#{pointVar},#{pointCate},#{lastMoney})
-</insert>
+	<insert id="insertPoint"
+		parameterType="com.forest.namu.domain.Point">
+		INSERT INTO point
+		(pointNum,userId,description,regDate,currentPoint,pointVar,pointCate,lastMoney)
+		VALUES
+		(#{pointNum},#{userId},#{description},SYSDATE,#{currentPoint},#{pointVar},#{pointCate},#{lastMoney})
+	</insert>
 
-<select id="selectPoint" parameterType="String" resultType="Integer">
-	SELECT COALESCE(
-    (SELECT NVL(lastMoney, 0)
-     FROM point
-     WHERE userId = #{userId}
-     ORDER BY regDate DESC
-     FETCH FIRST 1 ROWS ONLY), 0) AS lastMoney
-	FROM dual
-</select>
+	<select id="selectPoint" parameterType="String"
+		resultType="Integer">
+		SELECT COALESCE(
+		(SELECT NVL(lastMoney, 0)
+		FROM point
+		WHERE
+		userId = #{userId}
+		ORDER BY regDate DESC
+		FETCH FIRST 1 ROWS ONLY), 0) AS
+		lastMoney
+		FROM dual
+	</select>
 
-<select id="selectSeq" resultType="Long">
-	SELECT point_seq.NEXTVAL FROM dual
-</select>
+	<select id="selectSeq" resultType="Long">
+		SELECT point_seq.NEXTVAL FROM
+		dual
+	</select>
 
-<select id="selectCharge" parameterType="String" resultType="com.forest.namu.domain.Point">
-select pointnum,userId,regDate,lastMoney,pointVar from point where description = '전자 결제' and userId  = #{userId} order by regDate desc
-</select>
+	<select id="selectCharge" parameterType="String"
+		resultType="com.forest.namu.domain.Point">
+		select pointnum,userId,regDate,lastMoney,pointVar from
+		point where pointCate
+		= 0 and userId = #{userId} order by regDate desc
+	</select>
+	
+	<select id="selectAll" parameterType="String"
+		resultType="com.forest.namu.domain.Point">
+		select pointnum,userId,regDate,lastMoney,pointVar from
+		point where userId = #{userId} order by regDate desc
+	</select>
 
-<insert id = "insertRefund" parameterType="com.forest.namu.domain.Point">
-	INSERT INTO refund (refundNum,point,description,regDate,userId) VALUES
-	(refund_seq.nextval,#{point},#{description},SYSDATE,#{userId})
-</insert>
+	<!-- 환불 테이블에 저장 -->
+	<insert id="insertRefund"
+		parameterType="com.forest.namu.domain.Point">
+		INSERT INTO refund
+		(refundNum,point,description,regDate,userId) VALUES
+		(refund_seq.nextval,#{point},#{description},SYSDATE,#{userId})
+	</insert>
+
+	<update id="updatePoint"
+		parameterType="com.forest.namu.domain.Point">
+		UPDATE point set pointCate = 2 where pointNum =
+		#{pointNum}
+	</update>
+
 
 </mapper>

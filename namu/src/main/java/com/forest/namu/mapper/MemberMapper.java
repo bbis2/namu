@@ -37,4 +37,10 @@ public interface MemberMapper {
 	
 	public void insertAuthority(Member dto) throws SQLException;
 	public void updateAuthority(Member dto) throws SQLException;
+	
+	//update 닉네임
+	public void changeNickname(Member dto)throws Exception;
+	//update ment
+	public void changeMent(Member dto)throws Exception;
+
 }
