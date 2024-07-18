@@ -15,7 +15,7 @@
 </div>
 <div style="margin-top: 10px; margin-bottom: 10px">총 <span style="color: blue; font-weight: bold;">${dataCount}</span> 개
 <div class="search-container">
-            <input type="text" class="searchInput" placeholder="검색어 입력">
+            <input type="text" class="searchInput" placeholder="검색어 입력" value="${kwd}">
             <button class="search-btn">검색</button>
         <button class="submit-button" onclick="location.href='${pageContext.request.contextPath}/used/write';">
             <span>+</span>
@@ -35,10 +35,12 @@
                         <c:when test="${dto.imageFile != null && !dto.imageFile.isEmpty()}">
                             <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" 
                                  src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFile}">
+                        <button class="btn_like">like</button>
                         </c:when>
                         <c:otherwise>
                             <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" 
                                  src="${pageContext.request.contextPath}/resources/images/noimage.png">
+                        <button class="btn_like">like</button>
                         </c:otherwise>
                     </c:choose>
 				</a>
@@ -63,19 +65,21 @@
 		</div>
 	</div>
 
+
 <script type="text/javascript">
 $(function () {
-	$('.search-btn').click(function () {
-		
-		let kwd = $('.searchInput').val().trim();
-		
-		location.href='${pageContext.request.contextPath}/used/list?kwd=' + encodeURIComponent(kwd);
-		
-				
-		
-	});
+    $('.search-btn').click(function () {
+        
+        let kwd = $('.searchInput').val().trim();
+        
+        location.href='${pageContext.request.contextPath}/used/list?kwd=' + encodeURIComponent(kwd);
+        
+    });
+    
+    
 });
 </script>
+
 
 <style>
 .main1 {
@@ -164,7 +168,7 @@ $(function () {
 
 .home-img-container {
    width: 100%;
-   height: 180px;
+   height: 200px;
    border-radius: 5px;
 }
 </style>

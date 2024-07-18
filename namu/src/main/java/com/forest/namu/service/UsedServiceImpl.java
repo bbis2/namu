@@ -164,11 +164,11 @@ public class UsedServiceImpl implements UsedService {
 	}
 
 	@Override
-	public int likeCount(long num) {
+	public int likeCount(Map<String, Object> map) {
 		int result = 0;
 		
 		try {
-			result = mapper.likeCount(num);
+			result = mapper.likeCount(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -177,13 +177,24 @@ public class UsedServiceImpl implements UsedService {
 
 	@Override
 	public void insertUsedLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+
+		try {
+			mapper.insertUsedLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
 	public void deleteUsedLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
+
+		try {
+			mapper.deleteUsedLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 		
 	}
 
@@ -199,16 +210,6 @@ public class UsedServiceImpl implements UsedService {
 		
 	}
 
-	@Override
-	public void deleteUsedFile(Used dto) throws Exception {
-
-		try {
-			mapper.deleteUsedFile(dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
 
 	@Override
 	public Used findByFileId(long num) throws Exception {
@@ -239,6 +240,15 @@ public class UsedServiceImpl implements UsedService {
 		return list;
 	}
 
+	@Override
+	public void deleteUsedFile(long fileNum) throws Exception {
 
+		try {
+			mapper.deleteUsedFile(fileNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 	
 }

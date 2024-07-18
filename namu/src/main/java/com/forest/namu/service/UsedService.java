@@ -15,13 +15,13 @@ public interface UsedService {
 	public void updateHitCount(long num) throws Exception;
 	public Used findById(long num);
 	
-	public int likeCount(long num);
+	public int likeCount(Map<String, Object> map);
 	public void insertUsedLike(Map<String, Object> map) throws Exception;
 	public void deleteUsedLike(Map<String, Object> map) throws Exception;
 	
 	// 파일 추가, 삭제만(수정없음)
 	public void insertUsedFile(Used dto) throws Exception;
-	public void deleteUsedFile(Used dto) throws Exception;
+	public void deleteUsedFile(long fileNum) throws Exception;
 	public List<Used> listUsedFile(long num);
 	public Used findByFileId(long num) throws Exception;
 }
