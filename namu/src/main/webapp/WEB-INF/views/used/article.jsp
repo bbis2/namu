@@ -8,10 +8,10 @@
    <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="1000">
       <div class="carousel-inner">
 			<c:choose>
-				<c:when test="${dto.imageFile != null && !dto.imageFile.isEmpty()}">
+				<c:when test="${dto.imageFile != null}">
 					<c:forEach var="vo" items="${listFile}" varStatus="status">
 						<div class="carousel-item ${status.index == 0 ? 'active' : ''}">
-							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.uploadFile}" class="d-block w-100">
+							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.uploadFile}" class="thumb">
 						</div>
 					</c:forEach>
 				</c:when>
@@ -42,7 +42,9 @@
   <hr>
 <div class="used-header">
   <div class="title">${dto.subject}</div>
+  <c:if test="${dto.state != 2 }">
     <button class="chat1">채팅하기</button>
+    </c:if>
 </div>
 <div class="price"><fmt:formatNumber value="${dto.price}"/> 원</div>
 <div class="state">
@@ -92,15 +94,9 @@ function usedDelete() {
 
 .thumb {
     width: 640px;
-    height: 300px;
+    height: 470px;
     display: block;
 	padding: 40px 10px;
-}
-
-.sub {
-width:100px;
-height: 100px;
-padding: 10px 10px;
 }
 
 .used-info {
@@ -195,4 +191,5 @@ padding: 10px 10px;
     cursor: pointer;
     color: white;
 }
+
 </style>

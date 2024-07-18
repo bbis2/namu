@@ -99,6 +99,33 @@ h2 {
 }
 </style>
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/paginatie-boot.js"> </script>
+
+<c:url var="listUrl" value="/daily/list">
+	<c:if test="${not empty kwd}">
+		<c:param name="schType" value="${schType}"/>
+		<c:param name="kwd" value="${kwd}"/>
+	</c:if>
+</c:url>
+
+<script type="text/javascript">
+window.addEventListener('load', function() {
+	let page = ${page};
+	let pageSize = ${size};
+	let dataCount = ${dataCount};
+	let url = '${listUrl}';
+	
+	let total_page = pageCount(dataCount, pageSize);
+	let paging = pagingUrl(page, total_page, url);
+	
+	document.querySelector('.dataCount').innerHTML = dataCount + '개 ('
+			+ page + '/' + total_page + '페이지)';
+	
+	document.querySelectot('.page-navigation').innerHTML=
+		dataCount === 0 ? '등록된 게시물이 없습니다.' : paging;
+});
+</script>
+
 <script type="text/javascript">
 function searchList() {
 	var f = document.searchForm;
@@ -118,11 +145,13 @@ function searchList() {
   <main class="container">
    	<div class="body-title">
 		<h2>전체 게시글</h2>
+		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/daily/list" method="post">
             <div class="filter-container">
-                <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+                <input type="text" class="search-input" value="${kwd}" placeholder="검색어를 입력하세요">
                 <button type="button" class="search-button" onclick="searchList()" title="검색" >검색</button>
                 <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/daily/write';">글올리기</button>
-            </div>		
+            </div>
+        </form>		
 	</div>
 	
         <div class="row">

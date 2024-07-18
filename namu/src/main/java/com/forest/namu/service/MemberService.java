@@ -25,5 +25,9 @@ public interface MemberService {
 	public void updateFailureCount(String userId) throws Exception;
 	public void updateFailureCountReset(String userId) throws Exception;
 	public void updateMemberEnabled(Map<String, Object> map) throws Exception;
-	public void insertMemberState(Member dto) throws Exception;		
+	public void insertMemberState(Member dto) throws Exception;	
+	
+	public void changeNickname(Member dto)throws Exception;
+	
+	public void changeMent(Member dto)throws Exception;
 }

@@ -26,18 +26,11 @@
 
 <!-- 리스트 -->
 <select id="listUsed" parameterType="map" resultType="com.forest.namu.domain.Used">
-	<!--  찜 기능 만든 후 사용할 수 있는 쿼리
 	select u.num, u.content, u.subject, imageFile, u.state, u.price, u.hitCount, 
-   TO_CHAR(u.regDate, 'YYYY-MM-DD') regDate, m.town1, nvl(replyCount, 0)replyCount
+   TO_CHAR(u.regDate, 'YYYY-MM-DD') regDate, m.town1, nvl(likeCount, 0)likeCount
    from used u
 	join member m on u.userId = m.userId 
-   left outer join (select num, count(*)replyCount from usedLike group by num )ul on u.num = ul.num
-	order by num desc
-	-->
-	
-	select u.num, u.content, u.subject, imageFile, u.state, u.price, u.hitCount, TO_CHAR(u.regDate, 'YYYY-MM-DD') regDate, m.town1
-	from used u
-	join member m on u.userId = m.userId 
+   left outer join (select num, count(*)likeCount from usedLike group by num )ul on u.num = ul.num
 	order by num desc
 	
 </select>
@@ -54,7 +47,6 @@
 </select>
 
 <!-- 글보기 -->
-<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Used">
 	<!-- 프로필 조인 버전
 	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, 
 	to_char(u.regDate,'YYYY-MM-DD') regDate, m.nickName, m.town1, p.photo, m.nickName
@@ -66,7 +58,8 @@
 	join profile p on m.userId = p.userId
 	where u.num = #{num}
 	 -->
-	 
+<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Used">
+ 
 	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, 
 	to_char(u.regDate,'YYYY-MM-DD') regDate, m.nickName, m.town1, u.userId, m.nickName
 	from used u 
@@ -79,10 +72,10 @@
 </select>
 
 <!-- 찜 수 -->
-<select id="likeCount" parameterType="Long" resultType="Integer">
+<select id="likeCount" parameterType="map" resultType="Integer">
 	select count(*)
 	from usedLike
-	where num = ${num}
+	where num = #{num}
 </select>
 
 <!-- 찜 추가 -->
@@ -102,8 +95,8 @@
 </insert>
 
 <!-- 다중 파일 삭제 -->
-<delete id="deleteUsedFile" parameterType="com.forest.namu.domain.Used">
-	delete from usedFile where num = #{num}
+<delete id="deleteUsedFile" parameterType="Long">
+	delete from usedFile where fileNum = #{fileNum}
 </delete>
 
 <!-- 파일 리스트 -->

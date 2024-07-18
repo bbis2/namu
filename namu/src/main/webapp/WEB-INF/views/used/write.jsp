@@ -58,9 +58,12 @@
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">상태</td>
 				<td>
-				  <input type="radio" name="state" value="0">&nbsp;판매중
-				  <input type="radio" name="state" value="1">&nbsp;예약중
-				  <input type="radio" name="state" value="2">&nbsp;판매완료
+				  <input type="radio" name="state" value="0" 
+                <c:if test="${dto.state == 0}">checked</c:if>>&nbsp;판매중
+				  <input type="radio" name="state" value="1" 
+                <c:if test="${dto.state == 1}">checked</c:if>>&nbsp;예약중
+				  <input type="radio" name="state" value="2" 
+                <c:if test="${dto.state == 2}">checked</c:if>>&nbsp;판매완료
 				</td>
 			</tr>
 			</c:if>
@@ -76,10 +79,10 @@
 				<td>
 					<div class="img-grid">
 						<img class="item img-add" src="${pageContext.request.contextPath}/resources/images/add_photo.png">
-						<c:forEach var="vo" items="${list}">
+						<c:forEach var="vo" items="${listFile}">
 							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.uploadFile}"
 								class="item delete-img"
-								data-fileNum="${vo.num}"
+								data-fileNum="${vo.fileNum}"
 								data-filename="${vo.uploadFile}">
 						</c:forEach>
 					</div>
@@ -103,6 +106,7 @@
 							<c:if test="${mode=='update'}">
 								<input type="hidden" name="num" value="${dto.num}">
 								<input type="hidden" name="imageFile" value="${dto.imageFile}">
+								<input type="hidden" name="selectFile" value="${vo.uploadFile}">
 							</c:if>
 						</td>
 					</tr>

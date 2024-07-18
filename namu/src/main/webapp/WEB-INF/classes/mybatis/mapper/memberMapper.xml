@@ -20,7 +20,7 @@
     <insert id="insertmember" parameterType="com.forest.namu.domain.Member">
 		INSERT INTO member(memberIdx, userId, nickName, userPwd, regDate, modifyDate, secessionDate, loginFail, post, town1, addr, town2, enabled, membership)
 		VALUES (member_seq.NEXTVAL, #{userId}, #{nickName}, #{userPwd}, SYSDATE, SYSDATE, SYSDATE, 0,
-			#{post, jdbcType=VARCHAR}, #{town1}, #{addr, jdbcType=VARCHAR}, #{town2, jdbcType=VARCHAR}, 1, 10) 
+			#{post}, #{town1}, #{addr}, #{town2, jdbcType=VARCHAR}, 1, 10) 
     </insert>
 
     <insert id="insertMemberDetail" parameterType="com.forest.namu.domain.Member">
@@ -32,9 +32,10 @@
 		INSERT ALL
 		INTO member(memberIdx, userId, nickName, userPwd, regDate, modifyDate, secessionDate, loginFail, post, town1, addr, town2, enabled, membership)
 		VALUES (member_seq.NEXTVAL, #{userId}, #{nickName}, #{userPwd}, SYSDATE, SYSDATE, SYSDATE, 0, 
-			#{post, jdbcType=VARCHAR}, #{town1}, #{addr, jdbcType=VARCHAR}, #{town2, jdbcType=VARCHAR}, 1, 10)
+			#{post}, #{town1}, #{addr}, #{town2, jdbcType=VARCHAR}, 1, 10)
 		INTO memberDetail(userId, userName, birth, email, ment, userManner, tel)
 		VALUES (#{userId},#{userName}, #{birth}, #{email,  jdbcType=VARCHAR}, #{ment, jdbcType=VARCHAR}, 200, #{tel})
+		INTO profile(userId) VALUES(#{userId})
 		SELECT * FROM dual     
     </update>
 	
@@ -73,7 +74,7 @@
     
     <update id="updateMember" parameterType="com.forest.namu.domain.Member">
 		UPDATE member SET userPwd=#{userPwd}, modifyDate=SYSDATE,
-			post=#{post}, town1=#{town1}, addr=#{addr}, town2=#{town2, jdbcType=VARCHAR}
+			post=#{post,jdbcType=VARCHAR}, town1=#{town1}, addr=#{addr,jdbcType=VARCHAR}, town2=#{town2, jdbcType=VARCHAR}
 		WHERE userId=#{userId}
     </update>
 	
@@ -110,7 +111,7 @@
 		WHERE userId = #{userId}
 	</update>
 
-
+	<!-- 이해 안됨 수정필요# -->
 	<insert id="insertMemberState" parameterType="com.forest.namu.domain.Member">
 		INSERT INTO memberState(stateNum, userId, reportNum, startDate, endDate, reason, stateCode)
 		VALUES (#{stateNum}, #{userId}, #{reportNum, jdbcType=INTEGER}, SYSDATE, SYSDATE, SYSDATE, #{reason}, #{stateCode})
@@ -125,4 +126,15 @@
 	<update id="updateAuthority" parameterType="com.forest.namu.domain.Member">
 		UPDATE memberAuthority SET authority = #{authority} WHERE userId = #{userId}
 	</update>	
+	
+	<!-- 닉네임 변경 -->
+	<update id="changeNickname" parameterType="com.forest.namu.domain.Member">
+		UPDATE member SET nickName = #{nickName} WHERE userId = #{userId}
+	</update>
+	
+	<!--  소개글 업데이트 -->
+	<update id="changeMent" parameterType="com.forest.namu.domain.Member">
+		UPDATE memberdetail SET ment = #{ment} WHERE userId = #{userId}
+	</update>
+
 </mapper>

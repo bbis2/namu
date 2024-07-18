@@ -202,9 +202,11 @@ public class MemberController {
 	@PostMapping("update")
 	public String updateSubmit(Member dto,
 			final RedirectAttributes reAttr,
-			Model model) {
-
+			Model model,
+			HttpSession session) {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		try {
+			dto.setUserId(info.getUserId());
 			service.updateMember(dto);
 		} catch (Exception e) {
 		}
@@ -296,6 +298,38 @@ public class MemberController {
 		}
 		
 		return "redirect:/";
+	}
+	
+	@PostMapping("nicknameUpdate")
+	public String nicknameChange(Member dto,
+			@RequestParam("nickName") String nickName,
+			HttpSession session,
+			Model model) {
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		try {
+			dto.setNickName(nickName);
+			dto.setUserId(info.getUserId());
+			service.changeNickname(dto);
+		} catch (Exception e) {
+		}
+
+		return "redirect:/mypage/list";
+	}
+	
+	@PostMapping("mentUpdate")
+	public String mentUpdate(Member dto,@RequestParam("ment") String ment,HttpSession session) {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		try {
+			dto.setUserId(info.getUserId());
+			dto.setMent(ment);
+			service.changeMent(dto);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/mypage/list";
 	}
 
 }

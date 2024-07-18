@@ -20,13 +20,13 @@ public interface UsedMapper {
 	public void updateHitCount(long num) throws SQLException;
 	public Used findById(long num);
 	
-	public int likeCount(long num);
+	public int likeCount(Map<String, Object> map);
 	public void insertUsedLike(Map<String, Object> map) throws SQLException;
 	public void deleteUsedLike(Map<String, Object> map) throws SQLException;
 	
 	// 파일 추가, 삭제만(수정없음)
 	public void insertUsedFile(Used dto) throws SQLException;
-	public void deleteUsedFile(Used dto) throws SQLException;
+	public void deleteUsedFile(long fileNum) throws SQLException;
 	public List<Used> listUsedFile(long num);
 	public Used findByFileId(long num) throws SQLException;
 	

@@ -73,7 +73,7 @@ public class DailyController {
 		if(offset <0) offset = 0;
 		map.put("offset", offset);
 		map.put("size", size);
-		map.put("size", size);
+		map.put("size", size);  // 왜 두개...? 이유가 궁금합니다! 
 		
 		// 글 리스트 
 		List<Daily> list = service.listDaily(map);
@@ -196,7 +196,7 @@ public class DailyController {
 			@RequestParam String page,
 			HttpSession session,
 			Model model,
-			@RequestParam(value = "long", defaultValue = "0") int categoryNum) throws Exception{
+			@RequestParam(defaultValue = "0") long categoryNum) throws Exception{
 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
@@ -225,7 +225,7 @@ public class DailyController {
 			service.updateDaily(dto);
 		} catch (Exception e) {
 		}
-		
+
 		return "redirect:/daily/list?page="+page;
 	}
 	
@@ -237,6 +237,9 @@ public class DailyController {
 			HttpSession session) throws Exception {
 		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		kwd = URLDecoder.decode(kwd,"utf-8");
+		
 		String query = "page=" + page;
 		if(kwd.length() != 0) {
 			query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd,"UTF-8");
@@ -291,7 +294,7 @@ public class DailyController {
 			Model model) throws Exception {
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
+
 		int size = 5;
 		int total_page = 0;
 		int dataCount = 0;
@@ -328,6 +331,38 @@ public class DailyController {
 		
 	}
 	
+	@PostMapping("insertReply")
+	@ResponseBody
+	public Map<String, Object> insertReply (Reply dto, HttpSession session) {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		String state = "true";
+		
+		try {
+			dto.setUserId(info.getUserId());
+			service.insertReply(dto);
+		} catch (Exception e) {
+			state = "false";
+		}
+		Map<String , Object> model = new HashMap<>();
+		model.put("state", state);
+		return model;
+		
+	}
+	
+	@PostMapping("deleteReply")
+	@ResponseBody
+	public Map<String, Object> deleteReply(@RequestParam Map<String, Object> paramMap) {
+		String state = "true";
+		
+		try {
+			service.deleteReply(paramMap);
+		} catch (Exception e) {
+			state = "false";
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("state", state);
+		return map;
+	}
 
 	
 }

@@ -146,6 +146,19 @@ public class DailyServiceImpl implements DailyService {
 	}
 
 	@Override
+	public int dailyLikeCount(long num) {
+		int result =0;
+		
+		try {
+			result = mapper.dailyLikeCount(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+
+	@Override
 	public void deleteDailyLike(Map<String, Object> map) throws Exception {
 		try {
 			mapper.deleteDailyLike(map);
@@ -170,18 +183,6 @@ public class DailyServiceImpl implements DailyService {
 		return result;
 	}
 
-
-	@Override
-	public int dailyLikeCount(long num) {
-		int result =0;
-		
-		try {
-			result = mapper.dailyLikeCount(num);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
 
 	
 	// 카테고리 

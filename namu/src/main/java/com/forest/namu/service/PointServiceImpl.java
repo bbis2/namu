@@ -1,6 +1,5 @@
 package com.forest.namu.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,25 +9,25 @@ import com.forest.namu.domain.Point;
 import com.forest.namu.mapper.PointMapper;
 
 @Service
-public class PointServiceImpl implements PointService{
-	
+public class PointServiceImpl implements PointService {
+
 	@Autowired
 	private PointMapper mapper;
 
 	@Override
 	public void insertPoint(Point dto) throws Exception {
 		try {
-			long lastMoney = dto.getCurrentPoint()+dto.getPointVar();
+			long lastMoney = dto.getCurrentPoint() + dto.getPointVar();
 			dto.setLastMoney(lastMoney);
 			dto.setDescription("전자 결제");
 			dto.setPointCate(0);
-			
+
 			mapper.insertPoint(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 	}
 
 	@Override
@@ -40,7 +39,7 @@ public class PointServiceImpl implements PointService{
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 		return point;
 	}
 
@@ -59,26 +58,61 @@ public class PointServiceImpl implements PointService{
 	@Override
 	public List<Point> selectCharge(String userId) throws Exception {
 		List<Point> list = null;
-		
+
 		try {
 			list = mapper.selectCharge(userId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return list;
 	}
 
 	@Override
 	public void insertRefund(Point dto) throws Exception {
-		
+
 		try {
+			mapper.updatePoint(dto);
 			mapper.insertRefund(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		
+
+	}
+
+	@Override
+	public void refundPoint(Point dto) throws Exception {
+		try {
+			long lastMoney = dto.getCurrentPoint() - dto.getPointVar();
+
+			if (lastMoney < 0) {
+				return;
+			}
+
+			dto.setLastMoney(lastMoney);
+			dto.setDescription("환불 완료");
+			dto.setPointCate(2);
+
+			mapper.insertPoint(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+
+	}
+
+	@Override
+	public List<Point> selectAll(String userId) throws Exception {
+		List<Point> list = null;
+
+		try {
+			list = mapper.selectAll(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return list;
 	}
 
 }

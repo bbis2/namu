@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.Used;
@@ -53,11 +54,15 @@ public class UsedController {
 		
 		model.addAttribute("mode", "write");
 		
+		System.out.println("제발제발제발");
+		
 		return ".used.write";
 	}
 	
 	@PostMapping("write")
 	public String writeSubmit(Used dto, HttpSession session) throws Exception {
+		
+		System.out.println("ㅇㅇㅇㅇㅇㅇ");
 		
 		String root = session.getServletContext().getRealPath("/");
 		String path = root + "uploads" + File.separator + "photo";
@@ -89,11 +94,11 @@ public class UsedController {
 
 		service.updateHitCount(num);
 		
-		int likeCount = service.likeCount(num);
-
+		
+		System.out.println("-------------------------------------------------");
+		
 		model.addAttribute("dto", dto);
 		model.addAttribute("kwd", kwd);
-		model.addAttribute("likeCount", likeCount);
 		model.addAttribute("listFile", listFile);
 
 		return ".used.article";
@@ -110,11 +115,11 @@ public class UsedController {
 			return "redirect:/used/list";
 		}
 		
-		
-		System.out.println("확인!!!!!"+dto.getSelectFile());
+		List<Used> listFile = service.listUsedFile(num);
 		
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");
+		model.addAttribute("listFile", listFile);
 		
 		return ".used.write";
 	}
@@ -144,4 +149,25 @@ public class UsedController {
 		
 		return "redirect:/used/list";
 	}
+	
+	@PostMapping("deleteFile")
+	@ResponseBody
+	public Map<String, Object> deleteFile(@RequestParam long fileNum, 
+			@RequestParam String filename,
+			HttpSession session) throws Exception {
+
+		String state = "true";
+		try {
+				
+			service.deleteUsedFile(fileNum);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		return model;
+	}
+	
+	
 }

@@ -12,6 +12,8 @@ public class Reply {
 	
 	private int answerCount;
 	private int likeCount;
+	private int disLikeCount;
+	
 	
 	public long getrNum() {
 		return rNum;
@@ -73,6 +75,14 @@ public class Reply {
 	public void setLikeCount(int likeCount) {
 		this.likeCount = likeCount;
 	}
+	public int getDisLikeCount() {
+		return disLikeCount;
+	}
+	public void setDisLikeCount(int disLikeCount) {
+		this.disLikeCount = disLikeCount;
+	}
+	
+	
 	
 	
 

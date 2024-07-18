@@ -9,6 +9,10 @@ public interface PointService {
 	public int selectPoint(String userId)throws Exception;
 	public long selectSeq()throws Exception;
 	public List<Point> selectCharge(String userId)throws Exception;
+	public List<Point> selectAll(String userId)throws Exception;
 	
 	public void insertRefund(Point dto)throws Exception;
+	//환불한 포인트를 통장에 기록
+	public void refundPoint(Point dto)throws Exception;
+	
 }

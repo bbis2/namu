@@ -24,7 +24,6 @@ public interface DailyService {
     public int dailyLikeCount(long num);
     public boolean userDailyLiked(Map<String, Object> map);
     
-    
     public void insertCategory(Daily dto) throws Exception;
     public List<Daily> listDailyCategory ();
     
