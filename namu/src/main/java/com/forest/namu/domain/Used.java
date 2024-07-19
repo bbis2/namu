@@ -22,6 +22,14 @@ public class Used {
 	private String uploadFile;
 	private long fileNum;
 	
+	private int likeCount;
+	
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
 	public long getNum() {
 		return num;
 	}

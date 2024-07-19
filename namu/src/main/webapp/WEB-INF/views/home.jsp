@@ -227,10 +227,10 @@
   </div>
   <div style="margin-top: 50px">
 			<div class="flex-row" style="justify-content: space-between; align-items: center">
-				<div class="main-label">✨인기✨ 중고거래</div>
+				<div class="main-label">✨중고거래✨</div>
 
 	        <%-- 클릭시 인기 집들이 탭으로 이동 --%>
-			<div class="more-view-btn" onclick="navigateToList('${pageContext.request.contextPath}/used/list')">더보기</div>
+			<div class="more-view-btn" onclick="location.href='${pageContext.request.contextPath}/used/list';">더보기</div>
 			</div>
 
 			<div class="main-best-board-container">
@@ -276,7 +276,7 @@
 			<div class="flex-row" style="justify-content: space-between; align-items: center">
 				<div class="main-label">🎶빌려드림</div>
 
-				<div class="more-view-btn">더보기</div>
+				<div class="more-view-btn" onclick="location.href='${pageContext.request.contextPath}/rent/list';">더보기</div>
 			</div>
 
 			<div class="main-best-board-container">
@@ -323,7 +323,7 @@
 			<div class="flex-row" style="justify-content: space-between; align-items: center">
 				<div class="main-label">나무일상</div>
 
-				<div class="more-view-btn"onclick="navigateToList('${pageContext.request.contextPath}/daily/list')">더보기</div>
+				<div class="more-view-btn"onclick="location.href='${pageContext.request.contextPath}/daily/list';">더보기</div>
 			</div>
 
 			<div class="main-best-board-container">
@@ -376,7 +376,7 @@
 				<div class="main-label">홈카페, 세팅부터 관리까지! 💁‍♀️</div>
 
 				<%-- 클릭시 인기 집들이 탭으로 이동 --%>
-				<div class="more-view-btn">더보기</div>
+				<div class="more-view-btn" onclick="location.href='${pageContext.request.contextPath}/used/list';">더보기</div>
 			</div>
 		</div>
 			<div class="main-best-board-container">
@@ -419,9 +419,7 @@
 </div>
 
 <script type="text/javascript">
-function navigateToList(url) {
-    location.href = url;
-}
+
 
 </script>
 
