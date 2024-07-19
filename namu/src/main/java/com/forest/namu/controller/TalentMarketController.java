@@ -154,18 +154,11 @@ public class TalentMarketController {
 	@GetMapping("article")
 	public String article(@RequestParam long num,
 			@RequestParam String page,
-			@RequestParam(defaultValue = "") String schType,
-			@RequestParam(defaultValue = "") String kwd,
 			HttpSession session,
 			Model model)  throws Exception{
 		
-		kwd = URLDecoder.decode(kwd,"utf-8");
 		
 		String query="page=" + page;
-		if(kwd.length()!=0) {
-			query += "&schType=" + schType +
-					"&kwd=" + URLEncoder.encode(kwd,"utf-8");
-		}
 		
 		
 		
@@ -176,10 +169,10 @@ public class TalentMarketController {
 		}
 		
 		List<TalentMarket> listFile = service.listTalentMarketFile(num);
+		dto.setFileName(dto.getThumbnail());
+		listFile.add(0,dto);
 		
 		service.updateHitCount(num);
-		
-		
 		
 		model.addAttribute("dto",dto);
 		model.addAttribute("query",query);

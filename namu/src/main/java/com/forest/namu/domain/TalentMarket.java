@@ -132,8 +132,8 @@ public class TalentMarket {
 	public String getFileName() {
 		return fileName;
 	}
-	public void setFilename(String filename) {
-		this.fileName = filename;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	public List<MultipartFile> getAddFiles() {
 		return addFiles;
@@ -245,9 +245,7 @@ public class TalentMarket {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+	
 	
 
 	public long getTypeNum() {

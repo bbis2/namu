@@ -25,8 +25,8 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 	public void insertTalent(TalentMarket dto,String pathname) throws Exception {
 		try {
 		 
-			String filename = fileManager.doFileUpload(dto.getThumbnailFile(), pathname);
-			dto.setThumbnail(filename);	
+			String fileName = fileManager.doFileUpload(dto.getThumbnailFile(), pathname);
+			dto.setThumbnail(fileName);	
 			
 			long tboardNum= mapper.talentSeq();
 			dto.setTboardNum(tboardNum);
@@ -34,11 +34,11 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			
 			if(! dto.getAddFiles().isEmpty()) {
 				for(MultipartFile mf : dto.getAddFiles()) {
-					filename = fileManager.doFileUpload(mf, pathname);
-					if(filename == null) {
+					fileName = fileManager.doFileUpload(mf, pathname);
+					if(fileName == null) {
 						continue;
 					}
-					dto.setFilename(filename);
+					dto.setFileName(fileName);
 					
 					mapper.insertTalentFile(dto);
 					
@@ -110,25 +110,25 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 	@Override
 	public void updateTalent(TalentMarket dto , String pathname) throws Exception {
 		try {
-			String filename = fileManager.doFileUpload(dto.getThumbnailFile(), pathname);
+			String fileName = fileManager.doFileUpload(dto.getThumbnailFile(), pathname);
 			
-			if(filename != null) {
+			if(fileName != null) {
 				if (dto.getThumbnail().length() != 0) {
 					fileManager.doFileDelete(dto.getThumbnail(), pathname);
 				}
 				
-				dto.setThumbnail(filename);
+				dto.setThumbnail(fileName);
 			}
 			
 			mapper.updateTalent(dto);
 			
 			if(! dto.getAddFiles().isEmpty()) {
 				for(MultipartFile mf : dto.getAddFiles()) {
-					filename = fileManager.doFileUpload(mf, pathname);
-					if(filename == null) {
+					fileName = fileManager.doFileUpload(mf, pathname);
+					if(fileName == null) {
 						continue;
 					}
-					dto.setFilename(filename);
+					dto.setFileName(fileName);
 					
 					mapper.insertTalentFile(dto);
 				}

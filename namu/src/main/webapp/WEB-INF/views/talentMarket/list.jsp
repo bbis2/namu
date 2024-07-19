@@ -194,8 +194,8 @@
 }
 
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    display: flex;
+     flex-wrap: wrap !important;
     gap: 20px;
 }
 
@@ -314,9 +314,16 @@
                 </div>
                <div class="grid-container ">
 				    <c:forEach var="dto" items="${list}" varStatus="status">
-				        <div class="grid-item" onclick="location.href='${articleUrl}&num=${dto.tboardNum}';">
+				        <div class="grid-item col-2" onclick="location.href='${articleUrl}&num=${dto.tboardNum}';">
 				            <div class="card" style="background-color: #fff">
-				                <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" class="card-img-top img-fluid" style="height: 200px;">
+				            	 <c:choose>
+				                	<c:when test="${dto.thumbnail != null && !dto.thumbnail.isEmpty()}">
+				                	<img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" class="card-img-top" style="height: 200px;">
+				                </c:when>
+		                    	 <c:otherwise>
+		                            <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="card-img-top mb-3 main-image">
+		                        </c:otherwise>
+				                    </c:choose>
 				                <div class="card-body mb-10" style="height: 130px;">
 				                    <h5 class="card-title">${dto.subject}</h5>
 				                    <p>${dto.price}</p>
