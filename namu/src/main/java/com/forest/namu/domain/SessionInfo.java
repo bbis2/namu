@@ -7,7 +7,22 @@ public class SessionInfo {
 	private String nickName;
 	private int membership;
 	private int enabled;
+	private String town1;
+	private String town2;
 	
+	
+	public String getTown1() {
+		return town1;
+	}
+	public void setTown1(String town1) {
+		this.town1 = town1;
+	}
+	public String getTown2() {
+		return town2;
+	}
+	public void setTown2(String town2) {
+		this.town2 = town2;
+	}
 	public long getMemberIdx() {
 		return memberIdx;
 	}

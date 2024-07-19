@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.BorrowMapper">
+
+	<select id="borrowSeq" resultType="Long">
+		SELECT borrow_seq.NEXTVAL FROM dual
+	</select>
+
+	<insert id="insertBorrow" parameterType="com.forest.namu.domain.Borrow">
+		INSERT INTO borrow 
+			(borrowNum, userId, subject, price, strDate, endDate, content, regDate, hitCount, location, categoryNum) 
+			values 
+			(#{num}, #{userId}, #{subject}, #{price}, TO_DATE(#{strDate}, 'YYYY-MM-DD HH24:MI'), TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI'), #{content}, SYSDATE, 0, #{location}, #{categoryNum})
+	</insert>
+	
+	<insert id="insertBorrowFile" parameterType="com.forest.namu.domain.Borrow">
+		INSERT INTO rbImage(imageNum, imageFilename, borrowNum, rentNum)
+			values (rbImage_SEQ.NEXTVAL, #{imageFilename}, #{num}, null)
+	</insert>
+	
+	<sql id="where-list">
+		
+	</sql>
+	
+	<select id="listCategory" parameterType="map" resultType="com.forest.namu.domain.Borrow">
+		SELECT * from rbCategory
+	</select>
+
+</mapper>

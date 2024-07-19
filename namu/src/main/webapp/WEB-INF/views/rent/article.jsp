@@ -149,7 +149,7 @@ a:hover {text-decoration: none;}
 				</div>
 				<div class=""><i class="fa-solid fa-location-dot"></i>&nbsp;중산동</div>	
 				
-				<div class="mt-5 pt-4 d-flex">
+				<div class="mt-5 pt-4 d-flex justify-content-between">
 					<div>
 						<h6 class="bd">대여요금</h6>
 						<div class="d-flex my-2">
@@ -169,16 +169,31 @@ a:hover {text-decoration: none;}
 							<h6 class="bd">190,000원</h6>
 						</div>
 					</div>
-					<div>
+					<div class="w-50">
 						<h6 class="bd">시간 선택</h6>
-						<input type="text" id="datePicker" class="form-control">
+						<div class="d-flex">
+							<h6 class="mt-3 me-2">시작</h6>
+							<input type="datetime-local" id="datePicker" class="form-control">
+						</div>
+						<div class="d-flex">
+							<h6 class="mt-3 me-2">종료</h6>
+							<input type="datetime-local" id="datePicker" class="form-control">
+						</div>
+						<div class="d-flex justify-content-between">
+							<h6 class="mt-3 bd">대여 시간</h6>
+							<h6 class="float-end mt-3">~~일 ~~시간 ~~분</h6>
+						</div>
+						<div class="d-flex justify-content-between mt-3" style="color: blue;">
+							<h4 class="mt-3 bd">총 금액</h4>
+							<h4 class="float-end mt-3">100,000원</h4>
+						</div>
 					</div>
 				</div>
 				
-				<div class="mt-5 pt-3">
+				<div class="mt-4">
 					<div class="d-flex justify-content-end gap-3">
 						<button class="btnLike">찜하기</button>
-						<button class="btnChat">채팅하기</button>
+						<button class="btnChat">신청하기</button>
 					</div>
 				</div>
 			</div>		

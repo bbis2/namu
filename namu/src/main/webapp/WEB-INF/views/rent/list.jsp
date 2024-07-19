@@ -2,10 +2,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<style type="text/css">
+.sortMethod { }
+
+.sortSelected { color: tomato;}
+</style>
+
 <script type="text/javascript">
 function searchData() {
 	location.href = "${pageContext.request.contextPath}/";
 }
+
+$(function() {
+	
+	$('.sortMethod').click(function() {
+		$('.sortSelected').removeClass('sortSelected');
+		$(this).addClass('sortSelected');
+	});
+	
+	$('.write').click(function() {
+		location.href = "${pageContext.request.contextPath}/rent/write";
+	});
+	
+});
 </script>
 
 
@@ -53,8 +72,15 @@ function searchData() {
 				</div>
 				<div class="col-2">
 					<h6>&nbsp;</h6>
-					<button class="btn w-100">글올리기</button>
+					<button class="btn w-100 write">글올리기</button>
 				</div>
+			</div>
+			<div class="sortWrap d-flex float-end mt-4 gap-2">
+				<h6><a class="sortMethod sortSelected" href="#">최신순</a></h6>
+				<h6>|</h6>
+				<h6><a class="sortMethod" href="#">오래된순</a></h6>
+				<h6>|</h6>
+				<h6><a class="sortMethod" href="#">인기순</a></h6>
 			</div>
 		</div>
 	</div>

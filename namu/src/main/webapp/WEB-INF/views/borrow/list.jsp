@@ -14,6 +14,10 @@ $(function() {
 		$(this).addClass('sortSelected');
 	});
 	
+	$('.write').click(function() {
+		location.href = "${pageContext.request.contextPath}/borrow/write";
+	});
+	
 });
 
 </script>
@@ -38,53 +42,59 @@ $(function() {
 	</section>
 
 	<div class="row">
-		<div class="col-4">
-			<div class="row">
-				<div class="col">
-					<h6 class="bd">나의 동네</h6>
-					<select class="form-select mb-4 border border-2" aria-label="Default select example">
-						<option value="1">인천 중구</option>
-						<option value="2">서울 마포구</option>
-					</select>
+		<form class="d-flex" id="searchForm" action="${pageContext.request.contextPath}/" method="POST">
+			<div class="col-4">
+				<div class="row">
+					<div class="col">
+						<h6 class="bd">나의 동네</h6>
+						<select class="form-select mb-4 border border-2" aria-label="Default select example">
+							<option value="${sessionScope.member.town1}">${sessionScope.member.town1}</option>
+							<c:if test="${sessionScope.member.town2 != null}">
+								<option value="${sessionScope.member.town2}">${sessionScope.member.town2}</option>
+							</c:if>
+						</select>
+					</div>
+					<div class="col">
+						<h6 class="bd">카테고리</h6>
+						<select class="form-select mb-4 border border-2" aria-label="Default select example" name="schType">
+							<option value="all">전체</option>
+							<c:forEach var="dto" items="${category}">
+								<option value="${dto.category}">${dto.category}</option>
+							</c:forEach>
+						</select>
+					</div>
 				</div>
-				<div class="col">
-					<h6 class="bd">카테고리</h6>
-					<select class="form-select mb-4 border border-2" aria-label="Default select example">
-						<option value="1">전체</option>
-						<option value="2">의류</option>
-					</select>
+				<div class="d-flex">
+					<h5>[인천 중구] 카테고리의 전체 상품</h5>
+					<h5 style="color: #b3b3b3;" class="bd">&nbsp;1,103개</h5>
 				</div>
 			</div>
-			<div class="d-flex">
-				<h5>[인천 중구] 카테고리의 전체 상품</h5>
-				<h5 style="color: #b3b3b3;" class="bd">&nbsp;1,103개</h5>
-			</div>
-		</div>
-		<div class="col-8">
-			<div class="row d-flex justify-content-end">
-				<div class="col-7">
-					<h6>&nbsp;</h6>
-					<form class="d-flex" id="searchForm" action="${pageContext.request.contextPath}/" method="POST">
-						<input class="form-control border border-2" onkeypress="if( event.keyCode == 13 ){searchData();}" type="search" name="searchValue" placeholder="검색어를 입력하세요"/>
+			<div class="col-8">
+				<div class="row d-flex justify-content-end">
+					<div class="col-7">
 						<h6>&nbsp;</h6>
-						<button class="btn" type="submit">
-							<i class="fa-solid fa-magnifying-glass"></i>
-						</button>
-					</form>
+						<div class="d-flex">
+							<input class="form-control border border-2" onkeypress="if( event.keyCode == 13 ){searchData();}" type="search" name="kwd" placeholder="검색어를 입력하세요"/>
+							<h6>&nbsp;</h6>
+							<button class="btn" type="submit">
+								<i class="fa-solid fa-magnifying-glass"></i>
+							</button>
+						</div>
+					</div>
+					<div class="col-2">
+						<h6>&nbsp;</h6>
+						<button type="button" class="write btn w-100">글올리기</button>
+					</div>
 				</div>
-				<div class="col-2">
-					<h6>&nbsp;</h6>
-					<button class="btn w-100">글올리기</button>
+				<div class="sortWrap d-flex float-end mt-4 gap-2">
+					<h6><a class="sortMethod sortSelected" href="#">최신순</a></h6>
+					<h6>|</h6>
+					<h6><a class="sortMethod" href="#">오래된순</a></h6>
+					<h6>|</h6>
+					<h6><a class="sortMethod" href="#">인기순</a></h6>
 				</div>
 			</div>
-			<div class="sortWrap d-flex float-end mt-4 gap-2">
-				<h6><a class="sortMethod sortSelected" href="#">최신순</a></h6>
-				<h6>|</h6>
-				<h6><a class="sortMethod" href="#">오래된순</a></h6>
-				<h6>|</h6>
-				<h6><a class="sortMethod" href="#">인기순</a></h6>
-			</div>
-		</div>
+		</form>
 	</div>
 
 	<!-- 게시글 리스트 시작 -->
