@@ -10,7 +10,7 @@
 <style type="text/css">
       .product-image img {
             width: 100%;
-            height: 500px;
+            height: 600px;
         }
         .rating {
             color: #f4c150;
@@ -123,11 +123,13 @@
         
           .sub-images-container {
             display: flex;
+            justify-content: center;
             gap: 10px;
         }
         .sub-images-container img {
-            width: 180px;
-            height: 140px;
+            width: 70px;
+            height: 70px;
+            
         }
         @media (max-width: 768px) {
             .sub-images-container img {
@@ -136,6 +138,19 @@
         
        
     </style>
+     <script>
+        function changeCarouselImage(index) {
+            var carousel = document.getElementById('carouselExample');
+            var carouselItems = carousel.getElementsByClassName('carousel-item');
+            for (var i = 0; i < carouselItems.length; i++) {
+                if (i === index) {
+                    carouselItems[i].classList.add('active');
+                } else {
+                    carouselItems[i].classList.remove('active');
+                }
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container my-4">
@@ -146,50 +161,50 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="md-6">
-                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-							  <div class="carousel-inner">
-							    <c:forEach var="vo" items="${listFile}" varStatus="status">
-							    <div class="carousel-item ${status.index == 0 ? 'active' : ''} product-image">
-							     <c:choose>
-				                	<c:when test="${dto.fileName != null && !dto.fileName.isEmpty()}">
-					                        <img src="${pageContext.request.contextPath}/uploads/photo/${vo.fileName}" class="card-img-top mb-3 main-image" alt="메인 이미지">
-						                    	</c:when>
-						                    	 <c:otherwise>
+                   			<div id="carouselExample" class="carousel slide">
+						        <div class="carousel-inner">
+						            <c:forEach var="vo" items="${listFile}" varStatus="status">
+						                <div class="carousel-item ${status.index == 0 ? 'active' : ''} product-image">
+						                    <c:choose>
+						                        <c:when test="${vo.fileName != null && !vo.fileName.isEmpty()}">
+						                            <img src="${pageContext.request.contextPath}/uploads/photo/${vo.fileName}" class="card-img-top mb-3 main-image" alt="메인 이미지">
+						                        </c:when>
+						                        <c:otherwise>
 						                            <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="card-img-top mb-3 main-image">
 						                        </c:otherwise>
-				                    </c:choose>
-							    </div>
-							    </c:forEach>
-							  </div>
-							  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-							    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-							    <span class="visually-hidden">Previous</span>
-							  </button>
-							  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-							    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-							    <span class="visually-hidden">Next</span>
-							  </button>
-							</div>
+						                    </c:choose>
+						                </div>
+						            </c:forEach>
+						        </div>
+						        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+						            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						            <span class="visually-hidden">Previous</span>
+						        </button>
+						        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+						            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+						            <span class="visually-hidden">Next</span>
+						        </button>
+						    </div>
                       
                     </div>
                   
                 </div>
-                <div class="row my-4">
-                	<c:choose>
-                	<c:when test="${dto.fileName != null && ! dto.fileName.isEmpty()}">
-                	<div class="sub-images-container">
-	                	<c:forEach var="vo" items="${listFile}">
-	                        <img src="${pageContext.request.contextPath}/uploads/photo/${vo.fileName}" class="img-thumbnail">
-	                    </c:forEach>
-	                    </div>
-                    </c:when>
-                      <c:otherwise>
-                      	<div class="sub-images-container">
-                            <img src="${pageContext.request.contextPath}/resources/images/noimage.png">
-                        </div>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+                  <div class="row my-4">
+				        <c:choose>
+				            <c:when test="${dto.fileName != null && !dto.fileName.isEmpty()}">
+				                <div class="sub-images-container">
+				                    <c:forEach var="vo" items="${listFile}" varStatus="status">
+				                        <img src="${pageContext.request.contextPath}/uploads/photo/${vo.fileName}" class="img-thumbnail" onclick="changeCarouselImage(${status.index})">
+				                    </c:forEach>
+				                </div>
+				            </c:when>
+				            <c:otherwise>
+				                <div class="sub-images-container">
+				                    <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-thumbnail">
+				                </div>
+				            </c:otherwise>
+				        </c:choose>
+				    </div>
                 <div class="tabs">
                     <button id="detail-btn" class="active">상세 설명</button>
                     <button id="review-btn">리뷰 <span class="badge bg-secondary">3170</span></button>

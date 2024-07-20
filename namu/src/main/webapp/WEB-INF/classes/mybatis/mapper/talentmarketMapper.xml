@@ -137,7 +137,8 @@
 	</select>
 	
 	<select id="listTalentMarket" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
-		SELECT t.tboardNum,t.subject,t.content,t.price,t.guidelines,t.regDate,t.userId,t.talentShow,t.optionCount,t.hitCount,t.typeNum,t.categoryNum,t.thumbnail,m.nickName
+		SELECT t.tboardNum,t.subject,t.content,t.price,t.guidelines,t.regDate,t.userId,t.talentShow,t.optionCount,t.hitCount,t.typeNum,t.categoryNum,t.thumbnail,m.nickName,
+		TRUNC(SYSDATE - t.regDate)+1 AS daysDifference
 		FROM talentMarket t
 		JOIN member m ON t.userId = m.userId
 		<where>
@@ -180,6 +181,7 @@
 		WHERE optionNum = #{optionNum}
 		ORDER BY detailNum
 	</select>
+	
 	
 	
 </mapper>

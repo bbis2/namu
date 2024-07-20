@@ -51,7 +51,7 @@ public class TalentMarketController {
 		
 		String cp = req.getContextPath();
 		
-		int size = 10;
+		int size = 40;
 		int total_page=0;
 		int dataCount=0;
 		
@@ -80,12 +80,13 @@ public class TalentMarketController {
 		
 		List<TalentMarket> list = service.listTalentMarket(map);
 		
+		
 		String listUrl = cp + "/talent/list";
 		String articleUrl = cp + "/talent/article?page=" + current_page;
 		
 		String query ="";
 		if (kwd.length() != 0) {
-			query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
+			query += "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
 		}
 		
 		if(query.length()!=0) {
@@ -154,13 +155,19 @@ public class TalentMarketController {
 	@GetMapping("article")
 	public String article(@RequestParam long num,
 			@RequestParam String page,
+			@RequestParam(defaultValue = "all") String schType,
+			@RequestParam(defaultValue = "") String kwd,
 			HttpSession session,
 			Model model)  throws Exception{
 		
 		
-		String query="page=" + page;
+		kwd = URLDecoder.decode(kwd, "utf-8");
 		
-		
+		String query = "page=" + page;
+		if(kwd.length() != 0) {
+			query += "schType=" + schType + 
+					"&kwd=" + URLEncoder.encode(kwd, "utf-8");
+		}
 		
 		TalentMarket dto = service.findById(num);
 		

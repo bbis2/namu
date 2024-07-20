@@ -20,7 +20,10 @@ public class TalentMarket {
 	private int optionCount;
 	private String categoryNum;
 	private String categoryName;
+	private long daysDifference;
 	
+	
+
 	
 	private Long optionNum;
 	private String optionName;
@@ -261,5 +264,13 @@ public class TalentMarket {
 		
 		this.type = type;
 	}
+	public long getDaysDifference() {
+		return daysDifference;
+	}
+	public void setDaysDifference(long daysDifference) {
+		this.daysDifference = daysDifference;
+	}
+	
+	
 	
 }
