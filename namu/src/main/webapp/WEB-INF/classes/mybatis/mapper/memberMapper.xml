@@ -20,7 +20,7 @@
     <insert id="insertmember" parameterType="com.forest.namu.domain.Member">
 		INSERT INTO member(memberIdx, userId, nickName, userPwd, regDate, modifyDate, secessionDate, loginFail, post, town1, addr, town2, enabled, membership)
 		VALUES (member_seq.NEXTVAL, #{userId}, #{nickName}, #{userPwd}, SYSDATE, SYSDATE, SYSDATE, 0,
-			#{post}, #{town1}, #{addr}, #{town2, jdbcType=VARCHAR}, 1, 10) 
+			#{post,jdbcType=INTEGER}, #{town1}, #{addr,jdbcType=VARCHAR}, #{town2, jdbcType=VARCHAR}, 1, 10) 
     </insert>
 
     <insert id="insertMemberDetail" parameterType="com.forest.namu.domain.Member">
@@ -32,7 +32,7 @@
 		INSERT ALL
 		INTO member(memberIdx, userId, nickName, userPwd, regDate, modifyDate, secessionDate, loginFail, post, town1, addr, town2, enabled, membership)
 		VALUES (member_seq.NEXTVAL, #{userId}, #{nickName}, #{userPwd}, SYSDATE, SYSDATE, SYSDATE, 0, 
-			#{post}, #{town1}, #{addr}, #{town2, jdbcType=VARCHAR}, 1, 10)
+			#{post,jdbcType=INTEGER}, #{town1}, #{addr,jdbcType=VARCHAR}, #{town2, jdbcType=VARCHAR}, 1, 10)
 		INTO memberDetail(userId, userName, birth, email, ment, userManner, tel)
 		VALUES (#{userId},#{userName}, #{birth}, #{email,  jdbcType=VARCHAR}, #{ment, jdbcType=VARCHAR}, 200, #{tel})
 		INTO profile(userId) VALUES(#{userId})
@@ -53,10 +53,10 @@
 
 	<select id="findByMemberIdx" parameterType="Long" resultType="com.forest.namu.domain.Member">
 		SELECT m.memberIdx, membership, enabled, 
-			NVL(m.userId, 'guest') userId, NVL(userName, '손님') userName, userPwd, 
+			NVL(m.userId, 'guest') userId, NVL(userName, '회원') userName, nickName, userPwd, 
 			regDate, modifyDate, lastLogin,
 			TO_CHAR(birth, 'YYYY-MM-DD') birth, email, tel,
-			post, town1, addr2, town2
+			post, town1, addr, town2
 		FROM member m
 		LEFT OUTER JOIN memberDetail m2 ON m.userId = m2.userId
 		WHERE m.memberIdx = #{memberIdx}
@@ -74,7 +74,7 @@
     
     <update id="updateMember" parameterType="com.forest.namu.domain.Member">
 		UPDATE member SET userPwd=#{userPwd}, modifyDate=SYSDATE,
-			post=#{post,jdbcType=VARCHAR}, town1=#{town1}, addr=#{addr,jdbcType=VARCHAR}, town2=#{town2, jdbcType=VARCHAR}
+			post=#{post,jdbcType=INTEGER}, town1=#{town1}, addr=#{addr,jdbcType=VARCHAR}, town2=#{town2, jdbcType=VARCHAR}
 		WHERE userId=#{userId}
     </update>
 	
