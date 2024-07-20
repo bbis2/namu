@@ -46,10 +46,18 @@ public class TalentMarketController {
 			@RequestParam(defaultValue = "all") String schType,
 			@RequestParam(defaultValue = "") String kwd,		
 			@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(value = "town", required = false) String town,
 			HttpServletRequest req,
 			Model model) throws Exception{
 		
 		String cp = req.getContextPath();
+		
+		 if (town == null || town.isEmpty()) {
+	            SessionInfo info = (SessionInfo) session.getAttribute("member");
+	            if (info != null) {
+	                town = info.getTown1(); 
+	            }
+	        }
 		
 		int size = 40;
 		int total_page=0;
@@ -65,6 +73,8 @@ public class TalentMarketController {
 		map.put("talentShow", talentShow);
 		map.put("schType", schType);
 		map.put("kwd", kwd);
+		map.put("town", town);
+		map.put("categoryNum", categoryNum);
 		
 		dataCount= service.dataCount(map);
 		total_page = myUtil.pageCount(dataCount, size);
@@ -99,6 +109,8 @@ public class TalentMarketController {
 		model.addAttribute("listCategory", listCategory);
 		model.addAttribute("list", list);
 		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("town", town);
+
 		
 		model.addAttribute("productShow", talentShow);
 		model.addAttribute("type", typeNum);
@@ -107,8 +119,7 @@ public class TalentMarketController {
 		model.addAttribute("kwd", kwd);
 
 		model.addAttribute("articleUrl", articleUrl);
-		
-		model.addAttribute("page", current_page);
+				model.addAttribute("page", current_page);
 		model.addAttribute("size", size);
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("paging", paging);

@@ -8,6 +8,8 @@ public class TalentMarket {
 	private long tboardNum;
 	private String userId;
 	private String nickName;
+	private String town;
+	
 	
 	private String subject;
 	private String content;
@@ -21,6 +23,7 @@ public class TalentMarket {
 	private String categoryNum;
 	private String categoryName;
 	private long daysDifference;
+	
 	
 	
 
@@ -53,6 +56,13 @@ public class TalentMarket {
 	private long prevOptionNum;
 	private long prevOptionNum2;
 	
+	
+	public String getTown() {
+		return town;
+	}
+	public void setTown(String town) {
+		this.town = town;
+	}
 	public String getNickName() {
 		return nickName;
 	}

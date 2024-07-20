@@ -7,8 +7,8 @@
 	</select>
 	
 	<insert id="insertTalent" parameterType="com.forest.namu.domain.TalentMarket">
-		INSERT INTO talentmarket(tboardNum,subject,content,price,guidelines,regDate,userId,typeNum,categoryNum,thumbnail,optionCount) VALUES
-		(#{tboardNum},#{subject},#{content},#{price},#{guidelines},SYSDATE,#{userId},#{typeNum},#{categoryNum},#{thumbnail},#{optionCount})
+		INSERT INTO talentmarket(tboardNum,subject,content,price,guidelines,regDate,userId,typeNum,categoryNum,thumbnail,optionCount,town) VALUES
+		(#{tboardNum},#{subject},#{content},#{price},#{guidelines},SYSDATE,#{userId},#{typeNum},#{categoryNum},#{thumbnail},#{optionCount},#{town})
 	</insert>
 	
 	<insert id="insertTalentFile" parameterType="com.forest.namu.domain.TalentMarket">
@@ -121,11 +121,11 @@
 		SELECT NVL(COUNT(*),0) 
 		FROM talentMarket t
 		<where>
-			<if test="categoryNum != null">
-				t.categoryNum = #{categoryNum}
-			</if>
-			<if test="typeNum!=null">
-				AND t.typeNum = #{typeNum}
+			 <if test="town != null and town != '' "> 
+                t.town = #{town}
+            </if>
+			<if test="categoryNum != 0">
+				AND t.categoryNum = #{categoryNum}
 			</if>
 			<if test="talentShow != 0">
 				AND t.talentShow = #{talentShow}
@@ -138,12 +138,18 @@
 	
 	<select id="listTalentMarket" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
 		SELECT t.tboardNum,t.subject,t.content,t.price,t.guidelines,t.regDate,t.userId,t.talentShow,t.optionCount,t.hitCount,t.typeNum,t.categoryNum,t.thumbnail,m.nickName,
-		TRUNC(SYSDATE - t.regDate)+1 AS daysDifference
+		TRUNC(SYSDATE - t.regDate)+1 AS daysDifference,town
 		FROM talentMarket t
 		JOIN member m ON t.userId = m.userId
 		<where>
-			<if test="tmPurchaseType!=null">
-				t.typeNum = #{typeNum}
+			<if test="town != null and town != '' "> 
+              	t.town = #{town}
+            </if>
+            <if test="categoryNum != 0">
+				AND t.categoryNum = #{categoryNum}
+			</if>
+			<if test="talentShow != 0">
+				AND t.talentShow = #{talentShow}
 			</if>
 			<if test="kwd != null and kwd != '' ">
 				AND <include refid="where-list"/>

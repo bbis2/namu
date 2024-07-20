@@ -404,6 +404,21 @@ $(function(){
 						</td>
 					</tr>
 					<tr>
+						<td class="table-light col-sm-2">동네</td>
+						<td>
+							<div class="row">
+								<div class="col-6">
+									<select name="town" class="form-select">
+										<option value="${sessionScope.member.town1}">${sessionScope.member.town1}</option>
+									<c:if test="${sessionScope.member.town2 != null}">
+										<option value="${sessionScope.member.town2}">${sessionScope.member.town2}</option>
+									</c:if>
+									</select>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
 						<td class="table-light col-sm-2">상품명</td>
 						<td>
 							<input type="text" name="subject" class="form-control" value="${dto.subject}">
