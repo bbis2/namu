@@ -13,6 +13,7 @@
 	width: 50px;
 }
 
+
 .box {
 	background: white;
 	color: black;
