@@ -27,6 +27,7 @@ import com.forest.namu.service.TalentMarketService;
 
 
 
+
 @Controller
 @RequestMapping("/talent/*")
 public class TalentMarketController {
@@ -190,9 +191,24 @@ public class TalentMarketController {
 		dto.setFileName(dto.getThumbnail());
 		listFile.add(0,dto);
 		
+		List<TalentMarket> listOption = service.listTalentOption(num);
+		List<TalentMarket> listOptionDetail =null;
+		if(listOption.size() > 0) {
+			listOptionDetail = service.listOptionDetail(listOption.get(0).getOptionNum());
+		}
+		
+		List<TalentMarket> listOptionDetail2 =null;
+		if(listOption.size() > 0) {
+			listOptionDetail2 = service.listOptionDetail(listOption.get(1).getOptionNum());
+		}
+		
 		service.updateHitCount(num);
 		
 		model.addAttribute("dto",dto);
+		model.addAttribute("page",page);
+		model.addAttribute("listOption", listOption);
+		model.addAttribute("listOptionDetail", listOptionDetail);
+		model.addAttribute("listOptionDetail2", listOptionDetail2);
 		model.addAttribute("query",query);
 		model.addAttribute("listFile",listFile);
 		

@@ -12,6 +12,13 @@ $(function() {
 		$(this).addClass('sortSelected');
 	});
 	
+	 $('input[name="kwd"]').keydown(function(event) {
+	        if (event.keyCode === 13) {
+	            event.preventDefault();
+	            searchList();
+	        }
+	    });
+	
 });
 
 function searchList() {
@@ -39,9 +46,9 @@ function filterByCategory() {
 
 <div class="container">
 
-	<section class="fleamarket-cover">
+	<section class="fleamarket-cover" style="background-color: #f0e5ff;">
 		<h1 class="cover-title htext bd">
-			동네사람들<br>빌려줘요
+			우리 동네 재능마켓<br>함께 나눠요
 		</h1>
 		<span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>
 		<span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
@@ -124,22 +131,23 @@ function filterByCategory() {
 	<div class="row align-items-start mb-3">
 	
 		  <c:forEach var="dto" items="${list}" varStatus="status">
-		<div class="col-lg-20 col-md-3 col-sm-6 list" onclick="location.href='${articleUrl}&num=${dto.tboardNum}';">
+		<div class="col-lg-20 col-md-3 col-sm-6 list">
 			<div>
 				<div class="overflow-hidden border mb-2 ratio ratio-1x1">
 				 <c:choose>
 				    <c:when test="${dto.thumbnail != null && !dto.thumbnail.isEmpty()}">
-						<img class="img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}">
+						<img class="img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" onclick="location.href='${articleUrl}&num=${dto.tboardNum}';">
 					</c:when>
 					<c:otherwise>
-                        <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-fluid object-fit-cover h-100">
+                        <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-fluid object-fit-cover h-100" onclick="location.href='${articleUrl}&num=${dto.tboardNum}';">
                     </c:otherwise>
 		         </c:choose>
 					<button class="btn_like">like</button>
 				</div>
-				<a href="${pageContext.request.contextPath}/${articleUrl}&num=${dto.tboardNum}" class="listTitle"> <h5 class="bd"> ${dto.subject}</h5> </a>
-				<a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
-				<div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>	
+				<a href="${articleUrl}&num=${dto.tboardNum}" class="listTitle"> <h5 class="bd"> ${dto.subject} </h5></a>
+				
+				<a href="${pageContext.request.contextPath}/talent/profile?nickname=${dto.nickName}"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
+				<div class="float-end"><i class="bi bi-clipboard-heart" style="color: red;"></i>&nbsp;${dto.type}</div> 
 				<div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">
 					<p><i class="fa-solid fa-heart"></i>&nbsp;7</p>
 					<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>

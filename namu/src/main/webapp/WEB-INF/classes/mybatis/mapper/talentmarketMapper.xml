@@ -138,9 +138,10 @@
 	
 	<select id="listTalentMarket" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
 		SELECT t.tboardNum,t.subject,t.content,t.price,t.guidelines,t.regDate,t.userId,t.talentShow,t.optionCount,t.hitCount,t.typeNum,t.categoryNum,t.thumbnail,m.nickName,
-		TRUNC(SYSDATE - t.regDate)+1 AS daysDifference,town
+		TRUNC(SYSDATE - t.regDate) AS daysDifference,town,p.type
 		FROM talentMarket t
 		JOIN member m ON t.userId = m.userId
+		JOIN tmpurchaseType p ON t.typeNum = p.typeNum
 		<where>
 			<if test="town != null and town != '' "> 
               	t.town = #{town}
@@ -161,10 +162,12 @@
 	
 	<!--상세정보-->
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.TalentMarket">
-		SELECT tboardNum,subject,content,price,guidelines,regDate,userId,t.typeNum,talentShow,c.categoryName,optionCount,thumbnail,hitCount
+		SELECT tboardNum,t.subject,t.content,price,guidelines,t.regDate,t.userId,t.typeNum,talentShow,c.categoryName,optionCount,t.thumbnail,t.hitCount,t.town,p.type
+		,m.nickName
 		FROM talentMarket t
 		JOIN talentCategory c ON t.categoryNum = c.categoryNum
 		JOIN tmPurchaseType p ON t.typeNum = p.typeNum
+		JOIN member m ON t.userId = m.userId
 		WHERE t.tboardNum = #{tboardNum}
 	</select>
 	

@@ -578,7 +578,7 @@ $(function(){
 </div>
 
 <script type="text/javascript">
-// 대표(썸네일) 이미지
+
 $(function(){
 	var img = "${dto.thumbnail}";
 	if( img ) {
@@ -613,7 +613,7 @@ $(function(){
 		}
 		
 		var reader = new FileReader();
-		reader.onload = function(e) { // 파일의 내용을 다 읽었으면
+		reader.onload = function(e) { 
 			$(".table-form .thumbnail-viewer").empty();
 			$(".table-form .thumbnail-viewer").css("background-image", "url("+e.target.result+")");
 		};
@@ -621,7 +621,7 @@ $(function(){
 	});
 });
 
-// 수정에서 등록된 추가 이미지 삭제
+
 $(function(){
 	$(".delete-img").click(function(){
 		if(! confirm("이미지를 삭제 하시겠습니까 ?")) {
@@ -638,7 +638,7 @@ $(function(){
 	});
 });
 
-// 추가 이미지
+
 $(function(){
 	var sel_files = [];
 	
@@ -713,23 +713,4 @@ nhn.husky.EZCreator.createInIFrame({
 	fCreator: "createSEditor2"
 });
 
-function submitContents(elClickedObj) {
-	 oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
-	 try {
-		if(! check()) {
-			return;
-		}
-		
-		elClickedObj.submit();
-		
-	} catch(e) {
-		  console.error(e);
-	}
-	}
-
-function setDefaultFont() {
-	var sDefaultFont = '돋움';
-	var nFontSize = 12;
-	oEditors.getById["ir1"].setDefaultFont(sDefaultFont, nFontSize);
-}
 </script>
