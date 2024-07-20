@@ -70,6 +70,7 @@
         </c:if>
      </div>
         </div>
+      <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/used/list';">목록</button>
      </div>
   </div>
 </div>
@@ -190,6 +191,13 @@ function usedDelete() {
     padding: 5px 10px;
     cursor: pointer;
     color: white;
+}
+
+.btn-list {
+background-color: white;
+padding: 5px 10px;
+border: none;
+float: right;
 }
 
 </style>

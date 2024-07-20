@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,6 @@ public class UsedController {
 
 		int dataCount = 0;
 		
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("kwd", kwd);
 		
@@ -54,15 +54,11 @@ public class UsedController {
 		
 		model.addAttribute("mode", "write");
 		
-		System.out.println("제발제발제발");
-		
 		return ".used.write";
 	}
 	
 	@PostMapping("write")
 	public String writeSubmit(Used dto, HttpSession session) throws Exception {
-		
-		System.out.println("ㅇㅇㅇㅇㅇㅇ");
 		
 		String root = session.getServletContext().getRealPath("/");
 		String path = root + "uploads" + File.separator + "photo";
@@ -94,8 +90,6 @@ public class UsedController {
 
 		service.updateHitCount(num);
 		
-		
-		System.out.println("-------------------------------------------------");
 		
 		model.addAttribute("dto", dto);
 		model.addAttribute("kwd", kwd);
@@ -169,5 +163,36 @@ public class UsedController {
 		return model;
 	}
 	
+	@PostMapping("usedLike")
+	@ResponseBody
+	public Map<String, Object> usedLike(@RequestParam int num, 
+	                                    @RequestParam boolean userLiked, HttpSession session) {
+
+	    String state = "true";
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("num", num);
+	    map.put("userId", info.getUserId());
+	    
+	    try {
+	        if (userLiked) {
+	            service.deleteUsedLike(map);
+	            System.out.println("삭제");
+	        } else {
+	            service.insertUsedLike(map);
+	            System.out.println("추가");
+	        }
+	    } catch (DuplicateKeyException e) {
+	        state = "liked";
+	    } catch (Exception e) {
+	        state = "false";
+	    }
+
+	    Map<String, Object> model = new HashMap<String, Object>();
+	    model.put("state", state);
+	    
+	    return model;
+	}
 	
 }

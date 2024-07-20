@@ -58,6 +58,7 @@
 	border-radius: 100%;
 }
 
+
 .icons {
 	width: 30px;
 	height: 30px;
