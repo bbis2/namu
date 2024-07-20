@@ -277,7 +277,7 @@ function filterByTown() {
     <input type="hidden" name="town" value="${town}">
 </form>
 
-  <<script>
+  <script>
         $(document).ready(function() {
             var currentCategory = ${categoryNum};
             $('.btn-category[data-value="' + currentCategory + '"]').addClass('active');
