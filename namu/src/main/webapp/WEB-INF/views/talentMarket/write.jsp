@@ -231,8 +231,7 @@ $(function(){
 		let count = parseInt($(this).val());
 		let mode = '${mode}';
 		let savedCount = '${dto.optionCount}';
-		let totalStock = '${dto.totalStock}';
-		if(mode === 'update' && totalStock !== '0') {
+		if(mode === 'update') {
 			alert('옵션 변경이 불가능 합니다.');
 			$(this).val(savedCount);
 			return false;
@@ -288,7 +287,7 @@ $(function(){
 			}
 			
 			let detailNum = $minus.parent(".input-group").find("input[name=detailNums]").val();
-			let url = "${pageContext.request.contextPath}/admin/product/deleteOptionDetail";
+			let url = "${pageContext.request.contextPath}/talent/deleteOptionDetail";
 			$.post(url, {detailNum:detailNum}, function(data){
 				if(data.state === "true") {
 					$minus.closest(".input-group").remove();
@@ -527,7 +526,7 @@ $(function(){
 						<td class="table-light col-sm-2">대표이미지</td>
 						<td>
 							<div class="thumbnail-viewer"></div>
-							<input type="file" name="thumbnailFile" accept="image/*" class="form-control" style="display: none;">
+							<input type="file" name="thumbnailFile" accept="image/*" class="form-control" style="display: none;" value="${dto.thumbnail}">
 						</td>
 					</tr>
 					
@@ -537,10 +536,10 @@ $(function(){
 							<div class="img-grid">
 								<img class="item img-add" src="${pageContext.request.contextPath}/resources/images/add_photo.png">
 								<c:forEach var="vo" items="${listFile}">
-									<img src="${pageContext.request.contextPath}/uploads/product/${vo.filename}"
+									<img src="${pageContext.request.contextPath}/uploads/photo/${vo.fileName}"
 										class="item delete-img"
 										data-fileNum="${vo.fileNum}"
-										data-filename="${vo.filename}">
+										data-filename="${vo.fileName}">
 								</c:forEach>
 							</div>
 							<input type="file" name="addFiles" accept="image/*" multiple class="form-control" style="display: none;">
@@ -582,7 +581,7 @@ $(function(){
 $(function(){
 	var img = "${dto.thumbnail}";
 	if( img ) {
-		img = "${pageContext.request.contextPath}/uploads/talent/"+img;
+		img = "${pageContext.request.contextPath}/uploads/photo/"+img;
 		$(".table-form .thumbnail-viewer").empty();
 		$(".table-form .thumbnail-viewer").css("background-image", "url("+img+")");
 	}
@@ -631,7 +630,7 @@ $(function(){
 		let $img = $(this);
 		let fileNum = $img.attr("data-fileNum");
 		let filename = $img.attr("data-filename");
-		let url="${pageContext.request.contextPath}/admin/product/deleteFile";
+		let url="${pageContext.request.contextPath}/talent/deleteFile";
 		$.post(url, {fileNum:fileNum, filename:filename}, function(data){
 			$img.remove();
 		}, "json");

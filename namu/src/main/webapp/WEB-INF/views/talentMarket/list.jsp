@@ -30,11 +30,8 @@ function filterByTown() {
     document.getElementById("townFilterForm").submit();
 }
 
-function filterByCategory() {
-    document.getElementById("categoryFilterForm").submit();
-}
-
 </script>
+
 
 <style type="text/css">
 
@@ -42,6 +39,76 @@ function filterByCategory() {
 
 .sortSelected { color: tomato;}
 
+ .custom-button {
+      background-color: #d7bfff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+  }
+
+.category-tabs {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.category-content {
+    display: none;
+}
+
+.category-content.active {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-content img {
+    max-width: 50px;
+    max-height: 50px;
+    margin-bottom: 10px;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    padding: 10px;
+}
+
+.category-container {
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.btn-category {
+    background-color: #f8f9fa;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-category.active {
+    background-color: #e0e0e0;
+}
+
+.category-item.active {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}
 </style>
 
 <div class="container">
@@ -70,21 +137,9 @@ function filterByCategory() {
 		
 					 </form>
 				</div>
-				<div class="col">
-					<form id="categoryFilterForm" action="${pageContext.request.contextPath}/talent/list" method="get">
-					<h6 class="bd">카테고리</h6>
-					<select name="categoryNum"class="form-select mb-4 border border-2" aria-label="Default select example" onchange="filterByCategory()">
-							<option value="0" ${catogoryNum==vo.categoryNum?"selected" : ""}>전체보기</option>
-						<c:forEach var="vo" items="${listCategory}">
-							<option value="${vo.categoryNum}" ${categoryNum==vo.categoryNum?"selected" : ""}>${vo.categoryName}</option>
-						</c:forEach>
-					</select>
-					<input type="hidden" name="town" value="${town}">
-					</form>
-				</div>
 			</div>
 			<div class="d-flex">
-				<h5>[${town}] 카테고리의 전체 상품</h5>
+				<h5>[${town}] 동네의 전체 상품</h5>
 				<h5 style="color: #b3b3b3;" class="bd">&nbsp;${dataCount}개</h5>
 			</div>
 		</div>
@@ -107,16 +162,17 @@ function filterByCategory() {
 						<h6>&nbsp;</h6>
 						<input type="hidden" name="town" value="${town}">
 						<input type="hidden" name="categoryNum" value="${categoryNum}">
-						<button class="btn" type="button" onclick="searchList()">
+						<button class="btn custom-button" type="button" onclick="searchList()">
 							<i class="fa-solid fa-magnifying-glass"></i>
 						</button>
 					</form>
 				</div>
 				<div class="col-2">
 					<h6>&nbsp;</h6>
-					<button class="btn w-100" onclick="location.href='${pageContext.request.contextPath}/talent/write';">글올리기</button>
+					<button class="btn custom-button w-100" onclick="location.href='${pageContext.request.contextPath}/talent/write';">글올리기</button>
 				</div>
 			</div>
+			
 			<div class="sortWrap d-flex float-end mt-4 gap-2">
 				<h6><a class="sortMethod sortSelected" href="#">최신순</a></h6>
 				<h6>|</h6>
@@ -126,7 +182,133 @@ function filterByCategory() {
 			</div>
 		</div>
 	</div>
+<div class="category-container">
+    <div class="category-tabs">
+    	 <button class="btn-category" data-category="all" data-value="0">전체보기</button>
+        <button class="btn-category" data-category="business">비즈니스</button>
+        <button class="btn-category" data-category="career">N잡·커리어</button>
+        <button class="btn-category" data-category="life">취미·생활</button>
+        <button class="btn-category" data-category="enterprise">엔터프라이즈</button>
+    </div>
 
+    <div id="business" class="category-content active">
+        <div class="category-item" data-value="1">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_1.png" alt="디자인">
+            <strong>디자인</strong>
+        </div>
+        <div class="category-item" data-value="2">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_6.png" alt="IT·프로그래밍">
+            <strong>IT·프로그래밍</strong>
+        </div>
+        <div class="category-item" data-value="3">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_7.png" alt="영상·사진·음향">
+            <strong>영상·사진·음향</strong>
+        </div>
+        <div class="category-item" data-value="4">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_2.png" alt="마케팅">
+            <strong>마케팅</strong>
+        </div>
+        <div class="category-item" data-value="5">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_3.png" alt="번역·통역">
+            <strong>번역·통역</strong>
+        </div>
+        <div class="category-item" data-value="6">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_4.png" alt="문서·글쓰기">
+            <strong>문서·글쓰기</strong>
+        </div>
+        <div class="category-item" data-value="7">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_8.png" alt="창업·사업">
+            <strong>창업·사업</strong>
+        </div>
+        <div class="category-item" data-value="8">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_11.png" alt="주문제작">
+            <strong>주문제작</strong>
+        </div>
+        <div class="category-item" data-value="9">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_14.png" alt="세무·법무·노무">
+            <strong>세무·법무·노무</strong>
+        </div>
+    </div>
+
+    <div id="career" class="category-content">
+        <div class="category-item" data-value="10">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_12.png" alt="취업·입시">
+            <strong>취업·입시</strong>
+        </div>
+        <div class="category-item" data-value="11">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_13.png" alt="투잡·노하우">
+            <strong>투잡·노하우</strong>
+        </div>
+        <div class="category-item" data-value="12">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_10.png" alt="직무역량 레슨">
+            <strong>직무역량 레슨</strong>
+        </div>
+    </div>
+
+    <div id="life" class="category-content">
+        <div class="category-item" data-value="13">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_9.png" alt="운세">
+            <strong>운세</strong>
+        </div>
+        <div class="category-item" data-value="14">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_17.png" alt="심리상담">
+            <strong>심리상담</strong>
+        </div>
+        <div class="category-item" data-value="15">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_15.png" alt="취미 레슨">
+            <strong>취미 레슨</strong>
+        </div>
+        <div class="category-item" data-value="16">
+            <img src="https://d2v80xjmx68n4w.cloudfront.net/assets/desktop/modules/directories/white/ic_category_16.png" alt="생활서비스">
+            <strong>생활서비스</strong>
+        </div>
+    </div>
+
+    <div id="enterprise" class="category-content">
+        <div class="category-item" data-value="17">
+            <img src="https://static.cdn.kmong.com/assets/enterprise/desktop/building.png" alt="엔터프라이즈">
+            <strong>엔터프라이즈</strong>
+        </div>
+    </div>
+</div>
+
+<form id="categoryFilterForm" action="${pageContext.request.contextPath}/talent/list" method="get" style="display: none;">
+    <input type="hidden" name="categoryNum" id="categoryNum">
+    <input type="hidden" name="town" value="${town}">
+</form>
+
+  <<script>
+        $(document).ready(function() {
+            var currentCategory = ${categoryNum};
+            $('.btn-category[data-value="' + currentCategory + '"]').addClass('active');
+            $('.category-item[data-value="' + currentCategory + '"]').addClass('active');
+
+            $('.btn-category').click(function() {
+                $('.btn-category').removeClass('active');
+                $('.category-content').removeClass('active');
+
+                $(this).addClass('active');
+                $('#' + $(this).data('category')).addClass('active');
+
+                if ($(this).data('value') !== undefined) {
+                    var categoryValue = $(this).data('value');
+                    $('#categoryNum').val(categoryValue);
+                    $('#categoryFilterForm').submit();
+                }
+            });
+
+            $('.category-item').click(function() {
+                $('.category-item').removeClass('active');
+                $(this).addClass('active');
+
+                var categoryValue = $(this).data('value');
+                $('#categoryNum').val(categoryValue);
+                $('#categoryFilterForm').submit();
+            });
+        });
+    </script>
+
+	 
 
 	<div class="row align-items-start mb-3">
 	
@@ -144,8 +326,12 @@ function filterByCategory() {
 		         </c:choose>
 					<button class="btn_like">like</button>
 				</div>
-				<a href="${articleUrl}&num=${dto.tboardNum}" class="listTitle"> <h5 class="bd"> ${dto.subject} </h5></a>
-				
+				<div style="display: flex;">
+				<a href="${articleUrl}&num=${dto.tboardNum}" class="listTitle" style="display: flex;"> <h5 class="bd"> ${dto.subject} </h5></a>
+				<c:if test="${categoryNum == 0}">
+                        <p class="categoryName" style="margin-left: auto; display: flex; align-items: center; color: #d7bfff;"><i class="bi bi-bookmark-star-fill"></i>${dto.categoryName}</p>
+                    </c:if>
+                </div>
 				<a href="${pageContext.request.contextPath}/talent/profile?nickname=${dto.nickName}"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
 				<div class="float-end"><i class="bi bi-clipboard-heart" style="color: red;"></i>&nbsp;${dto.type}</div> 
 				<div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">

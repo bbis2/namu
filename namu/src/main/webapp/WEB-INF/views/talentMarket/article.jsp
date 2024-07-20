@@ -18,8 +18,9 @@
 	margin-bottom: 10px;
 }
 .product-image img {
-      width: 100%;
+      max-width: 100%;
       height: 600px;
+      object-fit: contain;
   }
   .rating {
       color: #f4c150;
@@ -224,11 +225,11 @@
 						            </c:forEach>
 						        </div>
 						        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-						            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						            <i class="bi bi-caret-left-fill" style="color: #8e44ad; font-size: 30px"></i>
 						            <span class="visually-hidden">Previous</span>
 						        </button>
 						        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-						            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+						            <i class="bi bi-caret-right-fill" style="color: #8e44ad; font-size: 30px"></i>
 						            <span class="visually-hidden">Next</span>
 						        </button>
 						    </div>
@@ -322,7 +323,7 @@
 	                        <c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50}">
 	                        	<div class="modifydelete-button">
 	                        	<c:if test="${sessionScope.member.userId==dto.userId}">
-								<button type="button" class="btn custom-button" onclick="location.href='${pageContext.request.contextPath}/talent/update?tboardnum=${dto.tboardNum}&page=${page}';">수정</button><p>&nbsp;</p>
+								<button type="button" class="btn custom-button" onclick="location.href='${pageContext.request.contextPath}/talent/update?tboardNum=${dto.tboardNum}&page=${page}';">수정</button><p>&nbsp;</p>
 								</c:if>
 								<button type="button" class="btn custom-button" onclick="deleteBoard();">삭제</button></div>
 							</c:if>

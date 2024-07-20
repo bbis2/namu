@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.TalentMarket;
 import com.forest.namu.service.TalentMarketService;
+
 
 
 
@@ -111,7 +113,7 @@ public class TalentMarketController {
 		model.addAttribute("list", list);
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("town", town);
-
+		
 		
 		model.addAttribute("productShow", talentShow);
 		model.addAttribute("type", typeNum);
@@ -164,6 +166,52 @@ public class TalentMarketController {
 		return url;
 	}
 	
+	@GetMapping("update")
+	public String updateTalent(Member member, HttpSession session, Model model,
+			@RequestParam String page,
+			@RequestParam long tboardNum
+			) {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		TalentMarket dto=service.findById(tboardNum);
+		
+		if(dto == null || !info.getUserId().equals(dto.getUserId())) {
+			String query = "num=" + tboardNum + "&page=" + page;
+			return "redirect:/talent/article/"+ query;
+		}
+		
+		List<TalentMarket> listCategory = service.listCategory();
+		List<TalentMarket> listType = service.listType();
+		List<TalentMarket> listFile = service.listTalentMarketFile(tboardNum);
+		
+		List<TalentMarket> listOption = service.listTalentOption(tboardNum);
+		
+		List<TalentMarket> listOptionDetail = null;
+		List<TalentMarket> listOptionDetail2 = null;
+		if(listOption.size() > 0) {
+			dto.setOptionNum(listOption.get(0).getOptionNum());
+			dto.setOptionName(listOption.get(0).getOptionName());
+			listOptionDetail = service.listOptionDetail(listOption.get(0).getOptionNum());
+		}
+		if(listOption.size() > 1) {
+			dto.setOptionNum2(listOption.get(1).getOptionNum());
+			dto.setOptionName2(listOption.get(1).getOptionName());
+			listOptionDetail2 = service.listOptionDetail(listOption.get(1).getOptionNum());
+		}
+		
+		model.addAttribute("listFile", listFile);
+		model.addAttribute("listOptionDetail", listOptionDetail);
+		model.addAttribute("listOptionDetail2", listOptionDetail2);
+		model.addAttribute("listType",listType);
+		model.addAttribute("listCategory", listCategory);
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("mode", "update");
+		return ".talentMarket.write";
+	}
+	
+	
+	
 	@GetMapping("article")
 	public String article(@RequestParam long num,
 			@RequestParam String page,
@@ -198,7 +246,7 @@ public class TalentMarketController {
 		}
 		
 		List<TalentMarket> listOptionDetail2 =null;
-		if(listOption.size() > 0) {
+		if(listOption.size() > 1) {
 			listOptionDetail2 = service.listOptionDetail(listOption.get(1).getOptionNum());
 		}
 		
@@ -214,6 +262,43 @@ public class TalentMarketController {
 		
 		
 		return ".talentMarket.article";
+	}
+	
+	@PostMapping("deleteFile")
+	@ResponseBody
+	public Map<String, Object> deleteFile(@RequestParam long fileNum, 
+			@RequestParam String filename,
+			HttpSession session) throws Exception {
+
+		String state = "true";
+		try {
+			String root = session.getServletContext().getRealPath("/");
+			String pathname = root + "uploads" + File.separator + "product" + File.separator + filename;
+
+			service.deleteTalentFile(fileNum, pathname);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		return model;
+	}
+	
+	@PostMapping("deleteOptionDetail")
+	@ResponseBody
+	public Map<String, Object> deleteOptionDetail(@RequestParam long detailNum) throws Exception {
+		
+		String state = "true";
+		try {
+			service.deleteOptionDetail(detailNum);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		return model;
 	}
 	
 	@GetMapping("profile")
