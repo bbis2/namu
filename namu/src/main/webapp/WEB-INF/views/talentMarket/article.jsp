@@ -254,6 +254,15 @@
       width: 70px;
       height: 70px;
   }
+  
+  .badge-custom {
+    background-color: #9147C5; 
+    color: white; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    font-size: 14px; 
+    font-weight: bold; 
+}
   @media (max-width: 768px) {
       .sub-images-container img {
           width: 50px;
@@ -291,7 +300,7 @@
     flex: 1;
     background: #eee;
     margin: 0 1px;
-    height: 10px; /* 그래프 바 높이 */
+    height: 10px;
     border-radius: 5px;
 }
 
@@ -414,7 +423,7 @@ function validateAndSubmit() {
 				    </div>
                 <div class="tabs">
                     <button id="detail-btn" class="active">상세 설명</button>
-                    <button id="review-btn">리뷰 <span class="badge bg-secondary">3170</span></button>
+                    <button id="review-btn">리뷰 <span class="badge badge-custom">${dto.reviewCount}</span></button>
                     <button id="inquiry-btn">상품 문의</button>
                     <button id="exchange-btn">교환/환불</button>
                 </div>
@@ -568,7 +577,7 @@ function validateAndSubmit() {
 	                            <h2>${dto.subject}</h2>
 	                            
 	                            <div class="rating">
-	                                <span>★ 4.9</span> (3122)
+	                                <span>★ ${dto.score}</span> (${dto.reviewCount})
 	                            </div>
 	                            <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>
 	                            <div class="seller"><i class="bi bi-person-circle"></i>${dto.nickName}</div>
