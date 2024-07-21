@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.DeliveryMapper">
+
+	<sql id="where-list">
+		(INSTR(subject, #{kwd}) &gt; 0
+		OR DBMS_LOB.INSTR(content,
+		#{kwd}) &gt; 0 )
+	</sql>
+
+	<insert id="insertDelivery"
+		parameterType="com.forest.namu.domain.Delivery">
+		insert into
+		delievery(num,state,content,subject,point,receive,receive2,saddr,saddr2,userId,regDate)
+		values (delievery_seq.nextval,0,#{content},#{subject},NVL(#{point},
+		0),#{receive},#{receive2},#{saddr},#{saddr2},#{userId},SYSDATE)
+	</insert>
+
+	<select id="listDelivery" parameterType="map"
+		resultType="com.forest.namu.domain.Delivery">
+		SELECT d.num,d.state,d.subject,d.hitCount,d.point,TO_CHAR(d.regDate,
+		'YYYY-MM-DD') regDate,m.nickname,d.content
+		FROM delievery d
+		JOIN member
+		m ON d.userId = m.userId
+		<where>
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list" />
+			</if>
+		</where>
+		ORDER BY num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0)
+		FROM delievery d
+		JOIN member m ON d.userId =
+		m.userId
+		<where>
+			<if test="kwd !=null and kwd != '' ">
+				<include refid="where-list" />
+			</if>
+		</where>
+	</select>
+
+	<select id="selectPoint" parameterType="String"
+		resultType="Long">
+		SELECT NVL(
+		(SELECT lastMoney
+		FROM (SELECT lastMoney,
+		ROW_NUMBER() OVER (ORDER BY regDate DESC) AS rn
+		FROM point
+		WHERE userId
+		= #{userId})
+		WHERE rn = 1),
+		0
+		) AS lastMoney
+		FROM DUAL
+	</select>
+
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE delievery SET
+		hitCount=hitCount+1 WHERE num = #{num}
+	</update>
+
+	<select id="findById" parameterType="Long"
+		resultType="com.forest.namu.domain.Delivery">
+		SELECT d.num, d.userId, m.nickname, d.subject, d.content,
+		d.hitCount, d.regDate, d.receive, d.receive2, d.saddr, d.saddr2, d.point
+		FROM delievery d
+		JOIN member m ON d.userId = m.userId
+		WHERE d.num = #{num}
+	</select>
+
+	<select id="findByPrev" parameterType="map"
+		resultType="com.forest.namu.domain.Delivery">
+		SELECT num, subject
+		FROM delievery b
+		JOIN member m ON b.userId=m.userId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list" />
+			</if>
+			AND (num &gt; #{num})
+		</where>
+		ORDER BY num ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+
+	<!-- 다음글 -->
+	<select id="findByNext" parameterType="map"
+		resultType="com.forest.namu.domain.Delivery">
+		SELECT num, subject
+		FROM delievery b
+		JOIN member m ON b.userId=m.userId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list" />
+			</if>
+			AND (num &lt; #{num})
+		</where>
+		ORDER BY num DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	
+	<insert id="insertRider" parameterType="com.forest.namu.domain.Rider">
+	INSERT INTO rider(num,userId,dstart,num2) VALUES(rider_seq.nextval,#{userId},0,#{num2})
+	</insert>
+	
+	<update id="updateDelivery" parameterType="com.forest.namu.domain.Delivery">
+	UPDATE delievery SET stime = #{stime} ,sdate= #{sdate} WHERE num = #{num}
+	</update>
+	
+	
+
+</mapper>

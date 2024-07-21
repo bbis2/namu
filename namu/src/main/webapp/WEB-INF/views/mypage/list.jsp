@@ -58,7 +58,6 @@
 	border-radius: 100%;
 }
 
-
 .icons {
 	width: 30px;
 	height: 30px;
@@ -332,12 +331,26 @@ h1 {
 		</div>
 
 		<!-- 네 번째 줄 -->
-		<div class="row  mt-5">
+		<div class="row mt-5">
 			<div class="col-sm-3">
-				<div class="box">
-					<p>나의 일정</p>
+				<div class="box"
+					style="display: flex; align-items: center; border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+					<img
+						src="${pageContext.request.contextPath}/resources/images/icons_calendar.gif"
+						style="height: 30%; width: 30%; margin-right: 10px;">
+					<div style="display: flex; flex-direction: column; flex-grow: 1;">
+						<p style="margin: 0; font-size: 16px; font-weight: bold;">나의
+							일정</p>
+						<c:forEach var="vo" items="${list}">
+							<p style="margin: 0; font-size: 16px;">${vo.subject}</p>
+						</c:forEach>
+						<a href="${pageContext.request.contextPath}/schedule/main"
+							style="align-self: flex-end; margin-top: 10px; font-size: 10px;">일정
+							관리하기</a>
+					</div>
 				</div>
 			</div>
+
 			<div class="col-sm-8">
 				<h4>나의 활동</h4>
 				<div class="box custom-margin-top4"
@@ -349,11 +362,11 @@ h1 {
 								src="${pageContext.request.contextPath}/resources/images/icon_heart.png">
 							&nbsp;관심목록
 						</p>
-						<p>
-							<img class="icons"
-								src="${pageContext.request.contextPath}/resources/images/icon_transaction.png">
-							&nbsp;거래내역
-						</p>
+						<a class="link-block" onclick="delivery();"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_transaction.png">
+							&nbsp;배달 관리
+						</a>
 					</div>
 					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
 						<!-- 오른쪽 영역 -->
@@ -371,6 +384,7 @@ h1 {
 				</div>
 			</div>
 		</div>
+
 
 		<!-- 다섯 번째 줄 -->
 		<div class="row">
@@ -431,8 +445,7 @@ h1 {
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;기본정보 변경
-						</a>
-						<a class="link-block" onclick="changeMent();"> <img
+						</a> <a class="link-block" onclick="changeMent();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;소개글 추가
@@ -656,7 +669,7 @@ h1 {
 					<form name="mentForm" action="" method="post" class="row g-3">
 						<div class="mt-0">
 							<input type="text" name="ment" class="form-control"
-								 placeholder="소개글을 입력하세요: ">
+								placeholder="소개글을 입력하세요: ">
 						</div>
 						<div>
 							<button type="button" class="btn btn-primary w-100"
@@ -669,6 +682,42 @@ h1 {
 	</div>
 </div>
 
+
+<div id="delivery" class="modal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<!-- modal-lg 추가 -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">배달 관리</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table id="selectDTable" class="table">
+
+					<thead>
+
+						<tr>
+							<th>나의 글</th>
+							<th>신청한사람</th>
+							<th>출발예정시간</th>
+							<th>신청인 매너점수</th>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 
 window.onload = function() {
@@ -676,9 +725,10 @@ window.onload = function() {
     var progressBar = document.getElementById('progressBar');
     
     // 매너 온도 점수를 기준으로 프로그레스 바의 너비를 설정
-    progressBar.style.width = (mannerTemperature)/4 + '%';
+    progressBar.style.width = (mannerTemperature)/5 + '%';
     progressBar.setAttribute('aria-valuenow', mannerTemperature);
 };
+
 
 
 $(function() {
@@ -752,6 +802,39 @@ function changeNickname(){
 function changeMent(){
 	$('#chagneMent').modal('show');
 }
+function delivery() {
+    let url = "${pageContext.request.contextPath}/mypage/whoRider";
+    let query = ""; // 추가 쿼리가 필요한 경우 이곳에 설정
+    
+    const fn = function(data) {
+        let state = data.state;
+        
+        if (state === "true") {
+        	
+			let htmlContent = '';
+			
+            for (let it of data.Rlist) {
+                htmlContent += '<tr>' +
+                    '<td>' + it.subject + '</td>' +
+                    '<td>' + it.nickname + '</td>' +
+                    '<td>' + it.sdate +','+it.stime +'</td>' +
+                    '<td>' + it.usermanner + '</td>'+
+                '</tr>';
+            }
+
+            $('#selectDTable tbody').html(htmlContent);
+        	
+            $('#delivery').modal('show'); // 모달을 보여줍니다.
+        } else {
+            alert("신청한 라이더가 없습니다."); // 오류 메시지를 표시합니다.
+        }
+    };
+
+    // ajaxFun 호출, query는 필요 없는 경우 빈 문자열로 설정
+    ajaxFun(url, "post", query, "json", fn);
+}
+
+
 
 function Ischange() {
     // 포커스를 이동시킬 요소를 가져옵니다.

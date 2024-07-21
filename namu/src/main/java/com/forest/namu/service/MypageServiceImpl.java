@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.forest.namu.common.FileManager;
+import com.forest.namu.domain.Delivery;
+import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Profile;
 import com.forest.namu.mapper.MypageMapper;
 
@@ -58,6 +60,40 @@ public class MypageServiceImpl implements MypageService{
 			e.printStackTrace();
 		}
 		return dto;
+	}
+
+	@Override
+	public Member getAddress(String userId) throws Exception {
+		Member dto = null;
+		try {
+			dto = mapper.getAddress(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	@Override
+	public List<Member> selectSchedule(String userId) throws Exception {
+		List<Member> list = null;
+		
+		try {
+			list = mapper.selectSchedule(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<Delivery> selectRider(String userId) throws Exception {
+		List<Delivery> list = null;
+		try {
+			list = mapper.selectRider(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 }

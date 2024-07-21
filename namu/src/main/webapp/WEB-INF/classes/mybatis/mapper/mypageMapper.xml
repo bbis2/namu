@@ -8,20 +8,48 @@
 		SELECT m.username, m.ment,
 		p.photo,m1.nickname,m.email,m.tel,m.userManner
 		FROM memberdetail m
-		JOIN profile p ON p.userId = m.userId
+		JOIN
+		profile p ON p.userId = m.userId
 		JOIN member m1 ON m1.userId = m.userId
 		WHERE m.userId = #{userId}
 	</select>
-	
-	<update id="insertPhoto" parameterType="com.forest.namu.domain.Profile">
-	UPDATE profile SET photo = #{photo} WHERE userId = #{userId}
+
+	<update id="insertPhoto"
+		parameterType="com.forest.namu.domain.Profile">
+		UPDATE profile SET photo = #{photo} WHERE userId = #{userId}
 	</update>
-	
-	<select id="selectPhoto" parameterType="String" resultType="com.forest.namu.domain.Profile">
+
+	<select id="selectPhoto" parameterType="String"
+		resultType="com.forest.namu.domain.Profile">
 		SELECT photo
 		FROM profile
 		WHERE userId = #{userId}
 	</select>
 
-	
+	<select id="getAddress" parameterType="String"
+		resultType="com.forest.namu.domain.Member">
+		SELECT addr FROM member WHERE userId=#{userId}
+	</select>
+
+	<select id="selectSchedule" parameterType="String"
+		resultType="com.forest.namu.domain.Schedule">
+		SELECT subject,stime FROM schedule WHERE userId = #{userId} AND sday =
+		to_char(SYSDATE,'YYYY-MM-DD')
+	</select>
+
+	<select id="selectRider" parameterType="String" resultType="com.forest.namu.domain.Delivery">
+		SELECT d.subject, m.nickname, d.sdate, d.stime, md.usermanner
+		FROM delievery d
+		JOIN rider r ON r.num2 = d.num
+		JOIN member m ON m.userId = r.userId
+		JOIN memberdetail md ON md.userId = d.userId
+		WHERE d.userId = #{userId}
+		AND d.subject IN (
+		SELECT subject
+		FROM delievery
+		WHERE userId = #{userId}
+		GROUP BY subject
+		)
+		ORDER BY d.subject
+	</select>
 </mapper>
