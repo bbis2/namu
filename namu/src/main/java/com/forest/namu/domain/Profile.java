@@ -12,6 +12,7 @@ public class Profile {
 	private String userId;
 	private String imageFilename;
 	private long userManner;
+	private String subject;
 	
 	public long getUserManner() {
 		return userManner;

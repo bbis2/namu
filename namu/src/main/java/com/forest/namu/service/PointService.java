@@ -14,5 +14,6 @@ public interface PointService {
 	public void insertRefund(Point dto)throws Exception;
 	//환불한 포인트를 통장에 기록
 	public void refundPoint(Point dto)throws Exception;
+	public void pointMinus(Point dto) throws Exception;
 	
 }

@@ -1,0 +1,126 @@
+package com.forest.namu.domain;
+
+public class Delivery {
+	private long num;
+	private String nickname;
+	private String regDate;
+	
+	public long getNum() {
+		return num;
+	}
+	public void setNum(long num) {
+		this.num = num;
+	}
+	public long getState() {
+		return state;
+	}
+	public void setState(long state) {
+		this.state = state;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public long getPoint() {
+		return point;
+	}
+	public void setPoint(long point) {
+		this.point = point;
+	}
+	public String getSaddr() {
+		return saddr;
+	}
+	public void setSaddr(String saddr) {
+		this.saddr = saddr;
+	}
+	public String getSaddr2() {
+		return saddr2;
+	}
+	public void setSaddr2(String saddr2) {
+		this.saddr2 = saddr2;
+	}
+	public String getReceive() {
+		return receive;
+	}
+	public void setReceive(String receive) {
+		this.receive = receive;
+	}
+	public String getReceive2() {
+		return receive2;
+	}
+	public void setReceive2(String receive2) {
+		this.receive2 = receive2;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public long getHitCount() {
+		return hitCount;
+	}
+	public void setHitCount(long hitCount) {
+		this.hitCount = hitCount;
+	}
+	public String getStime() {
+		return stime;
+	}
+	public void setStime(String stime) {
+		this.stime = stime;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public String getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+	public String getSdate() {
+		return sdate;
+	}
+	public void setSdate(String sdate) {
+		this.sdate = sdate;
+	}
+	public long getUsermanner() {
+		return usermanner;
+	}
+	public void setUsermanner(long usermanner) {
+		this.usermanner = usermanner;
+	}
+	private long state;
+	private String content;
+	private String subject;
+	private long point;
+	private String saddr;
+	private String saddr2;
+	private String receive;
+	private String receive2;
+	private String userId;
+	private long hitCount;
+	private long usermanner;
+	private String sdate;
+	private String stime;
+	private String author;
+	
+	
+}

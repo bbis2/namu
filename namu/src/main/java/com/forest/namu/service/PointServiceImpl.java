@@ -114,5 +114,26 @@ public class PointServiceImpl implements PointService {
 
 		return list;
 	}
+	
+	@Override
+	public void pointMinus(Point dto) throws Exception {
+		try {
+			long lastMoney = dto.getCurrentPoint() - dto.getPointVar();
+
+			if (lastMoney < 0) {
+				return;
+			}
+
+			dto.setLastMoney(lastMoney);
+			dto.setDescription("결제 완료");
+			dto.setPointCate(2);
+
+			mapper.insertPoint(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+
+	}
 
 }
