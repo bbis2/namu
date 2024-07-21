@@ -65,6 +65,7 @@ public class TalentMarketController {
 		int size = 40;
 		int total_page=0;
 		int dataCount=0;
+		TalentMarket category=service.findByCategory(categoryNum);
 		
 		List<TalentMarket> listCategory = service.listCategory(); 
 		
@@ -113,9 +114,9 @@ public class TalentMarketController {
 		model.addAttribute("list", list);
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("town", town);
+		model.addAttribute("category",category);
 		
-		
-		model.addAttribute("productShow", talentShow);
+		model.addAttribute("talentShow", talentShow);
 		model.addAttribute("type", typeNum);
 		model.addAttribute("categoryNum", categoryNum);
 		model.addAttribute("schType", schType);
@@ -198,6 +199,8 @@ public class TalentMarketController {
 			dto.setOptionName2(listOption.get(1).getOptionName());
 			listOptionDetail2 = service.listOptionDetail(listOption.get(1).getOptionNum());
 		}
+		model.addAttribute("dto", dto);
+		model.addAttribute("mode", "update");
 		
 		model.addAttribute("listFile", listFile);
 		model.addAttribute("listOptionDetail", listOptionDetail);
@@ -205,9 +208,26 @@ public class TalentMarketController {
 		model.addAttribute("listType",listType);
 		model.addAttribute("listCategory", listCategory);
 		
-		model.addAttribute("dto", dto);
-		model.addAttribute("mode", "update");
+		model.addAttribute("page",page);
+		
 		return ".talentMarket.write";
+	}
+	
+	@PostMapping("update")
+	public String updateSubmit(TalentMarket dto, HttpSession session, Model model,
+			@RequestParam String page) {
+		
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "uploads" + File.separator + "photo";
+		
+		try {
+			service.updateTalent(dto, path);
+		} catch (Exception e) {
+		}
+		
+		String query = "num=" + dto.getTboardNum() + "&page=" + page;
+		
+		return "redirect:/talent/article?" + query ;
 	}
 	
 	
@@ -263,6 +283,8 @@ public class TalentMarketController {
 		
 		return ".talentMarket.article";
 	}
+	
+	
 	
 	@PostMapping("deleteFile")
 	@ResponseBody

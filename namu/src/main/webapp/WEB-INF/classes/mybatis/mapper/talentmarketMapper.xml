@@ -58,9 +58,17 @@
 	</select>
 	
 	<update id="updateTalent" parameterType="com.forest.namu.domain.TalentMarket">
-		UPDATE talentmarket SET categoryNum = #{categoryNum},typeNum=#{typeNum} ,
-		 subject = #{subject} ,content = #{content}, price = #{price} , optionCount = #{optionCount},
-			guidelines= #{guidelines},talentShow = #{talentShow},)
+		   UPDATE talentmarket 
+			    SET categoryNum = #{categoryNum},
+			        typeNum = #{typeNum},
+			        subject = #{subject},
+			        content = #{content},
+			        price = #{price},
+			        optionCount = #{optionCount},
+			        guidelines = #{guidelines},
+			        thumbnail = #{thumbnail},
+			        updateDate = SYSDATE
+			    WHERE tboardNum = #{tboardNum}
 	</update>
 	
 	<update id="updateTalentOption" parameterType="com.forest.namu.domain.TalentMarket">
@@ -163,7 +171,7 @@
 	
 	<!--상세정보-->
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.TalentMarket">
-		SELECT tboardNum,t.subject,t.content,price,guidelines,t.regDate,t.userId,t.typeNum,talentShow,c.categoryName,optionCount,t.thumbnail,t.hitCount,t.town,p.type
+		SELECT tboardNum,t.subject,t.content,price,guidelines,t.regDate,t.userId,t.typeNum,talentShow,t.categoryNum,c.categoryName,optionCount,t.thumbnail,t.hitCount,t.town,p.type
 		,m.nickName
 		FROM talentMarket t
 		JOIN talentCategory c ON t.categoryNum = c.categoryNum

@@ -109,6 +109,11 @@ function filterByTown() {
     background-color: #e0e0e0;
     border-radius: 10px;
 }
+
+.highlighted-text {
+    color: #8B00FF;
+    font-weight: bold;
+}
 </style>
 
 <div class="container">
@@ -139,7 +144,11 @@ function filterByTown() {
 				</div>
 			</div>
 			<div class="d-flex">
-				<h5>[${town}] 동네의 전체 상품</h5>
+				<h5>
+				    [${town}] 동네의 
+				    <span class="highlighted-text">${categoryNum==0 ? "전체" : category.categoryName}</span> 
+				    상품
+				</h5>
 				<h5 style="color: #b3b3b3;" class="bd">&nbsp;${dataCount}개</h5>
 			</div>
 		</div>
@@ -278,34 +287,45 @@ function filterByTown() {
 </form>
 
   <script>
-        $(document).ready(function() {
-            var currentCategory = ${categoryNum};
-            $('.btn-category[data-value="' + currentCategory + '"]').addClass('active');
-            $('.category-item[data-value="' + currentCategory + '"]').addClass('active');
+  $(document).ready(function() {
+	    var currentCategory = ${categoryNum};
 
-            $('.btn-category').click(function() {
-                $('.btn-category').removeClass('active');
-                $('.category-content').removeClass('active');
+	    function showCategoryContent(category) {
+	        $('.category-content').removeClass('active').hide();
+	        $('#' + category).addClass('active').show();
+	    }
 
-                $(this).addClass('active');
-                $('#' + $(this).data('category')).addClass('active');
+	    // 초기 로딩 시 카테고리 설정
+	    if (currentCategory == 0) {
+	        $('.category-content').hide(); // 전체보기일 때 모든 카테고리 콘텐츠 숨기기
+	    } else {
+	        $('.btn-category[data-value="' + currentCategory + '"]').addClass('active');
+	        showCategoryContent($('.btn-category[data-value="' + currentCategory + '"]').data('category'));
+	    }
 
-                if ($(this).data('value') !== undefined) {
-                    var categoryValue = $(this).data('value');
-                    $('#categoryNum').val(categoryValue);
-                    $('#categoryFilterForm').submit();
-                }
-            });
+	    $('.btn-category').click(function() {
+	        $('.btn-category').removeClass('active');
+	        $(this).addClass('active');
+	        
+	        var category = $(this).data('category');
+	        showCategoryContent(category);
 
-            $('.category-item').click(function() {
-                $('.category-item').removeClass('active');
-                $(this).addClass('active');
+	        if ($(this).data('value') !== undefined) {
+	            var categoryValue = $(this).data('value');
+	            $('#categoryNum').val(categoryValue);
+	            $('#categoryFilterForm').submit();
+	        }
+	    });
 
-                var categoryValue = $(this).data('value');
-                $('#categoryNum').val(categoryValue);
-                $('#categoryFilterForm').submit();
-            });
-        });
+	    $('.category-item').click(function() {
+	        $('.category-item').removeClass('active');
+	        $(this).addClass('active');
+
+	        var categoryValue = $(this).data('value');
+	        $('#categoryNum').val(categoryValue);
+	        $('#categoryFilterForm').submit();
+	    });
+	});
     </script>
 
 	 
@@ -329,7 +349,7 @@ function filterByTown() {
 				<div style="display: flex;">
 				<a href="${articleUrl}&num=${dto.tboardNum}" class="listTitle" style="display: flex;"> <h5 class="bd"> ${dto.subject} </h5></a>
 				<c:if test="${categoryNum == 0}">
-                        <p class="categoryName" style="margin-left: auto; display: flex; align-items: center; color: #d7bfff;"><i class="bi bi-bookmark-star-fill"></i>${dto.categoryName}</p>
+                        <p class="categoryName" style="margin-left: auto; display: flex; align-items: center; color: #8B00FF;"><i class="bi bi-bookmark-star-fill"></i>${dto.categoryName}</p>
                     </c:if>
                 </div>
 				<a href="${pageContext.request.contextPath}/talent/profile?nickname=${dto.nickName}"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>

@@ -26,6 +26,7 @@ public interface TalentMarketService {
 	
 	
 	public TalentMarket findById(long tboardNum);
+	public TalentMarket findByCategory(long categoryNum);
 	public List<TalentMarket> listTalentMarketFile(long tboardNum);
 	
 	public List<TalentMarket> listCategory();

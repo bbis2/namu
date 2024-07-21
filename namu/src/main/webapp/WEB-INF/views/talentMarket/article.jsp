@@ -377,13 +377,6 @@
                 $('.tabs button').removeClass('active');
                 $(this).addClass('active');
 
-                $.ajax({
-                    url: target + '.html',
-                    method: 'GET',
-                    success: function(response) {
-                        $('#' + target).html(response);
-                    }
-                });
             });
             
             $('.thumbnail').click(function() {

@@ -62,23 +62,14 @@
 </style>
 
 <script type="text/javascript">
-$(function(){
-	let mode = "${mode}";
-	if(mode === "write") {
-		let classify = "${classify}";
-		$("select[name=classify]").val(classify);
-		
-		$("#productShow1").prop("checked", true);
-	}
-});
+
 
 function check() {
 	const f = document.productForm;
 	let str, b;
 	let mode = "${mode}";
 	
-
-
+	
 	if(! f.categoryNum.value) {
 		alert("카테고리를 선택하세요.");
 		f.categoryNum.focus();
@@ -381,7 +372,7 @@ $(function(){
 									<select name="categoryNum" class="form-select">
 										<option value="">카테고리</option>
 											<c:forEach var="vo" items="${listCategory}">
-											<option value="${vo.categoryNum}" ${categoryNum == vo.categoryNum?"selected" : ""}>${vo.categoryName}</option>
+											<option value="${vo.categoryNum}" ${dto.categoryNum == vo.categoryNum?"selected" : ""}>${vo.categoryName}</option>
 										</c:forEach>
 									</select>
 								</div>
@@ -395,7 +386,7 @@ $(function(){
 								<div class="col-6">
 									<select name="typeNum" class="form-select">
 										<c:forEach var="vo" items="${listType}">
-											<option value="${vo.typeNum}" ${typeNum == vo.typeNum?"selected" : ""}>${vo.type}</option>
+											<option value="${vo.typeNum}" ${dto.typeNum == vo.typeNum?"selected" : ""}>${vo.type}</option>
 										</c:forEach>
 									</select>
 								</div>
@@ -526,7 +517,7 @@ $(function(){
 						<td class="table-light col-sm-2">대표이미지</td>
 						<td>
 							<div class="thumbnail-viewer"></div>
-							<input type="file" name="thumbnailFile" accept="image/*" class="form-control" style="display: none;" value="${dto.thumbnail}">
+							<input type="file" name="thumbnailFile" accept="image/*" class="form-control" style="display: none;">
 						</td>
 					</tr>
 					
@@ -597,7 +588,7 @@ $(function(){
 			$(".table-form .thumbnail-viewer").empty();
 			
 			if( img ) {
-				img = "${pageContext.request.contextPath}/uploads/talent/"+img;
+				img = "${pageContext.request.contextPath}/uploads/photo/"+img;
 			} else {
 				img = "${pageContext.request.contextPath}/resources/images/add_photo.png";
 			}
@@ -711,5 +702,24 @@ nhn.husky.EZCreator.createInIFrame({
 	sSkinURI: "${pageContext.request.contextPath}/resources/vendor/se2/SmartEditor2Skin.html",
 	fCreator: "createSEditor2"
 });
+
+function submitContents(elClickedObj) {
+	 oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
+	 try {
+		if(! check()) {
+			return;
+		}
+		
+		elClickedObj.submit();
+		
+	} catch(e) {
+	}
+}
+
+function setDefaultFont() {
+	var sDefaultFont = '돋움';
+	var nFontSize = 12;
+	oEditors.getById["ir1"].setDefaultFont(sDefaultFont, nFontSize);
+}
 
 </script>

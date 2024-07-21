@@ -136,6 +136,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			
 			
 			updateTalentOption(dto);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -147,7 +148,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 	public void updateTalentOption(TalentMarket dto) throws Exception {
 		try {
 		if(dto.getOptionCount() == 0) {
-			// 기존 옵션1, 옵션2 삭제
+			
 			if(dto.getPrevOptionNum2() != 0) {
 				mapper.deleteOptionDetail2(dto.getPrevOptionNum2());
 				mapper.deleteTalentOption(dto.getPrevOptionNum2());
@@ -160,7 +161,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			
 			return;
 		} else if(dto.getOptionCount() == 1) {
-			// 기존 옵션 2 삭제
+			
 			if(dto.getPrevOptionNum2() != 0) {
 				mapper.deleteOptionDetail2(dto.getPrevOptionNum2());
 				mapper.deleteTalentOption(dto.getPrevOptionNum2());
@@ -173,10 +174,10 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			insertTalentOption(dto);
 			return;
 		}
-		// 옵션1이 존재하는 경우 옵션1 수정
+		
 		mapper.updateTalentOption(dto);
 		
-		// 기존 옵션1 옵션값 수정
+		
 		int size = dto.getDetailNums().size();
 		for(int i = 0; i < size; i++) {
 			dto.setDetailNum(dto.getDetailNums().get(i));
@@ -184,7 +185,6 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			mapper.updateOptionDetail(dto);
 		}
 
-		// 새로운 옵션1 옵션값 추가
 		dto.setDetailNums(new ArrayList<Long>());
 		for(int i = size; i < dto.getOptionValues().size(); i++) {
 			detailNum = mapper.detailSeq(); 
@@ -195,10 +195,10 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			dto.getDetailNums().add(detailNum);
 		}
 
-		// 옵션2
+		
 		if(dto.getOptionCount() > 1) {
-			//  옵션2가 없는 상태에서 옵션2를 추가한 경우
-			parentNum = dto.getOptionNum(); // 옵션1 옵션번호 
+			
+			parentNum = dto.getOptionNum(); 
 			if(dto.getOptionNum2() == 0) {
 				long optionNum2 = mapper.optionSeq();
 				dto.setOptionNum(optionNum2);
@@ -206,7 +206,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				dto.setParentOption(parentNum);
 				mapper.insertTalentOption(dto);
 				
-				// 옵션 2 값 추가
+				
 				dto.setDetailNums2(new ArrayList<Long>());
 				for(String optionValue2 : dto.getOptionValues2()) {
 					detailNum = mapper.detailSeq(); 
@@ -220,12 +220,12 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				return;
 			} 
 			
-			// 옵션2 가 존재하는 경우 옵션2 수정
+			
 			dto.setOptionNum(dto.getOptionNum2());
 			dto.setOptionName(dto.getOptionName2());
 			mapper.updateTalentOption(dto);
 			
-			// 기존 옵션2 옵션값 수정
+			
 			int size2 = dto.getDetailNums2().size();
 			for(int i = 0; i < size2; i++) {
 				dto.setDetailNum(dto.getDetailNums2().get(i));
@@ -233,7 +233,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 				mapper.updateOptionDetail(dto);
 			}
 
-			// 새로운 옵션2 옵션값 추가
+			
 			dto.setDetailNums2(new ArrayList<Long>());
 			for(int i = size2; i < dto.getOptionValues2().size(); i++) {
 				detailNum = mapper.detailSeq(); 
@@ -417,6 +417,18 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			throw e;
 		}
 		
+	}
+
+	@Override
+	public TalentMarket findByCategory(long categoryNum) {
+		TalentMarket dto = null;
+		
+		try {
+			dto = mapper.findByCategory(categoryNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
 	}
 
 	
