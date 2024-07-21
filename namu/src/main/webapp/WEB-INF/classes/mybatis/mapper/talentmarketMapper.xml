@@ -86,9 +86,11 @@
 		WHERE tboardNum = #{tboardNum}
 	</update>
 	
-	<delete id="deleteTalent" parameterType="Long">
-		DELECT FROM WHERE tboardNum=#{tboardNum}
-	</delete>
+	<update id="deleteTalent" parameterType="Long">
+		UPDATE talentmarket SET talentshow = 0
+		WHERE tboardNum= #{tboardNum}
+	</update>
+	
 	
 	<delete id="deleteTalentFile" parameterType="Long">
 		DELETE FROM tmFile WHERE fileNum = #{fileNum}

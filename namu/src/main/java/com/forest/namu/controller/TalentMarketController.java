@@ -327,4 +327,20 @@ public class TalentMarketController {
 	public String profile() {
 		return ".talentMarket.profile";
 	}
+	
+	@GetMapping("delete")
+	public String deleteTalent(TalentMarket dto, HttpSession session, Model model,
+			@RequestParam String page,
+			@RequestParam long num) {
+		
+		try {
+			service.deleteTalent(num);
+		} catch (Exception e) {
+		}
+		
+		String query = "page=" + page;
+		
+		return "redirect:/talent/list?" + query ;
+	}
+	
 }

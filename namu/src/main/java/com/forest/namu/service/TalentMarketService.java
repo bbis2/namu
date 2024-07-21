@@ -14,7 +14,8 @@ public interface TalentMarketService {
 	public void updateTalentOption(TalentMarket dto) throws Exception;
 	public void updateHitCount(long num) throws Exception;
 	
-	public void deleteTalent(long tboardNum, String pathname) throws Exception;
+	public void deleteTalent(long tboardNum) throws Exception;
+	public void deleteTalentByAdmin(long tboardNum,String pathname) throws Exception;
 	public void deleteTalentFile(long fileNum, String pathname) throws Exception;
 	public void deleteOptionDetail(long detailNum) throws Exception;
 	

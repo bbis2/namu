@@ -346,12 +346,14 @@ function filterByTown() {
 		         </c:choose>
 					<button class="btn_like">like</button>
 				</div>
-				<div style="display: flex;">
+				
 				<a href="${articleUrl}&num=${dto.tboardNum}" class="listTitle" style="display: flex;"> <h5 class="bd"> ${dto.subject} </h5></a>
-				<c:if test="${categoryNum == 0}">
+               
+               
+                <c:if test="${categoryNum == 0}">
                         <p class="categoryName" style="margin-left: auto; display: flex; align-items: center; color: #8B00FF;"><i class="bi bi-bookmark-star-fill"></i>${dto.categoryName}</p>
                     </c:if>
-                </div>
+                
 				<a href="${pageContext.request.contextPath}/talent/profile?nickname=${dto.nickName}"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
 				<div class="float-end"><i class="bi bi-clipboard-heart" style="color: red;"></i>&nbsp;${dto.type}</div> 
 				<div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">

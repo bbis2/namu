@@ -269,7 +269,7 @@
                     <!-- 상품 문의 콘텐츠 -->
                 </div>
                 <div id="exchange-content" class="tab-content">
-                    <!-- 교환/환불 콘텐츠 -->
+                    ${dto.guidelines}
                 </div>
             </div>
             <div class="col-md-4">

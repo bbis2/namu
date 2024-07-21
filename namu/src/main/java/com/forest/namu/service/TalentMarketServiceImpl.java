@@ -249,9 +249,20 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 	}
 		
 }
+	
+	@Override
+	public void deleteTalent(long tboardNum) throws Exception {
+		try {
+			mapper.deleteTalent(tboardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
 
 	@Override
-	public void deleteTalent(long tboardNum, String pathname) throws Exception {
+	public void deleteTalentByAdmin(long tboardNum, String pathname) throws Exception {
 					TalentMarket talent = mapper.findById(tboardNum);
 					
 					// 파일 삭제(thumbnail)
@@ -430,6 +441,8 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		}
 		return dto;
 	}
+
+
 
 	
 	
