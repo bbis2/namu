@@ -25,11 +25,9 @@ public class TalentMarket {
 	private long daysDifference;
 	private int talentShow;
 	
-	
-	
-	
-
-	
+	private long score;
+	private int reviewCount;
+	private int questionCount;
 	
 	private Long optionNum;
 	private String optionName;
@@ -288,6 +286,25 @@ public class TalentMarket {
 	}
 	public void setTalentShow(int talentShow) {
 		this.talentShow = talentShow;
+	}
+	
+	public long getScore() {
+		return score;
+	}
+	public void setScore(long score) {
+		this.score = score;
+	}
+	public int getReviewCount() {
+		return reviewCount;
+	}
+	public void setReviewCount(int reviewCount) {
+		this.reviewCount = reviewCount;
+	}
+	public int getQuestionCount() {
+		return questionCount;
+	}
+	public void setQuestionCount(int questionCount) {
+		this.questionCount = questionCount;
 	}
 	
 	
