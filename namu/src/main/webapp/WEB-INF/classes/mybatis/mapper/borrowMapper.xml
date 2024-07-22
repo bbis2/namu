@@ -3,6 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.forest.namu.mapper.BorrowMapper">
 
+	<!-- insert 트렌젝션 -->
 	<select id="borrowSeq" resultType="Long">
 		SELECT borrow_seq.NEXTVAL FROM dual
 	</select>
@@ -11,20 +12,134 @@
 		INSERT INTO borrow 
 			(borrowNum, userId, subject, price, strDate, endDate, content, regDate, hitCount, location, categoryNum) 
 			values 
-			(#{num}, #{userId}, #{subject}, #{price}, TO_DATE(#{strDate}, 'YYYY-MM-DD HH24:MI'), TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI'), #{content}, SYSDATE, 0, #{location}, #{categoryNum})
+			(#{borrowNum}, #{userId}, #{subject}, #{price}, TO_DATE(#{strDate}, 'YYYY-MM-DD HH24:MI'), TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI'), #{content}, SYSDATE, 0, #{location}, #{categoryNum})
 	</insert>
 	
 	<insert id="insertBorrowFile" parameterType="com.forest.namu.domain.Borrow">
 		INSERT INTO rbImage(imageNum, imageFilename, borrowNum, rentNum)
-			values (rbImage_SEQ.NEXTVAL, #{imageFilename}, #{num}, null)
+			values (rbImage_SEQ.NEXTVAL, #{imageFilename}, #{borrowNum}, null)
 	</insert>
 	
+	<!-- 검색시 추가 쿼리 -->
 	<sql id="where-list">
-		
+		INSTR(subject, #{kwd}) &gt; 0
+		<if test="categoryNum > 0">
+			AND categoryNum = #{categoryNum} 
+		</if>
 	</sql>
 	
+	<!-- 데이터 개수 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM borrow
+		<where>
+			location = #{location} 
+			<if test="categoryNum > 0">
+				AND categoryNum = #{categoryNum}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND INSTR(subject, #{kwd}) &gt; 0
+			</if>
+		</where>
+	</select>
+	
+	<!-- list -->
+	<select id="listBorrow" parameterType="map" resultType="com.forest.namu.domain.Borrow">
+		SELECT b.borrowNum, b.userId, nickName, subject, hitCount, b.regDate, location, imageFilename
+		FROM borrow b
+		LEFT OUTER JOIN (
+			SELECT imageNum, borrowNum, imageFilename FROM (
+				SELECT imageNum, borrowNum, imageFilename, 
+					ROW_NUMBER() OVER(PARTITION BY borrowNum ORDER BY imageNum ASC) rank
+				FROM rbImage
+			) WHERE rank = 1
+		) i ON b.borrowNum = i.borrowNum
+		JOIN member m ON b.userId = m.userId
+		<where>
+			location = #{location} 
+			<if test="categoryNum > 0">
+				AND categoryNum = #{categoryNum}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND INSTR(subject, #{kwd}) &gt; 0
+			</if>
+		</where>
+		ORDER BY b.borrowNum DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
 	<select id="listCategory" parameterType="map" resultType="com.forest.namu.domain.Borrow">
-		SELECT * from rbCategory
+		SELECT categoryNum, category from rbCategory
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE borrow SET hitCount = hitCount + 1 WHERE borrowNum = #{num}
+	</update>
+	
+	<!-- 글보기 -->
+	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Borrow">
+		SELECT borrowNum, nickName, subject, content, price, strDate, endDate, b.regDate, hitCount, location, b.categoryNum, rbc.category
+		FROM borrow b
+		JOIN member m ON b.userId = m.userId
+		JOIN rbCategory rbc On b.categoryNum = rbc.categoryNum
+		WHERE borrowNum = #{num}
+	</select>
+	
+	<!-- 파일 리스트 -->
+	<select id="listBorrowImage" parameterType="Long" resultType="com.forest.namu.domain.Borrow">
+		SELECT imageNum, imageFilename, borrowNum
+		FROM rbImage
+		WHERE borrowNum = #{num}
+	</select>
+	
+	<!-- 작성자 정보 -->
+	<select id="borrowWriter" parameterType="Long" resultType="com.forest.namu.domain.Member">
+		SELECT m.regDate, userManner, ment
+		FROM borrow b
+		JOIN member m ON b.userId = m.userId
+		JOIN memberDetail md ON  b.userId = md.userId
+		WHERE borrowNum = #{num}
+	</select>
+	
+	<!-- 찜 추가 -->
+	<insert id="insertBorrowLike" parameterType="map">
+		INSERT INTO borrowLike(borrowNum, userId) VALUES (#{num}, #{userId})
+	</insert>
+	
+	<!-- 찜 삭제 -->
+	<delete id="deleteBorrowLike" parameterType="map">
+		DELETE FROM borrowLike WHERE borrowNum = #{num} AND userId = #{userId}
+	</delete>
+	
+	<!-- 찜 개수 -->
+	<select id="borrowLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*) FROM borrowLike WHERE borrowNum = #{num}
 	</select>
 
+	<!-- 찜 여부 -->
+	<select id="userBorrowLiked" parameterType="map" resultType="com.forest.namu.domain.Borrow">
+		SELECT borrowNum, userId FROM borrowLike WHERE borrowNum = #{num} AND userId = #{userId}
+	</select>
+	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

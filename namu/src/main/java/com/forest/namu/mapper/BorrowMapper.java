@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.forest.namu.domain.Borrow;
+import com.forest.namu.domain.Member;
 
 @Mapper
 public interface BorrowMapper {
@@ -20,10 +21,10 @@ public interface BorrowMapper {
 	
 	public int dataCount(Map<String, Object> map);			// 개수 
 	public List<Borrow> listBorrow(Map<String, Object>map);	// borrow 게시판 리스트
-	public List<Borrow> listCategory(Map<String, Object>map);	// borrow 카테고리 리스트
+	public List<Borrow> listCategory();	// borrow 카테고리 리스트
+	public List<Borrow> listBorrowImage(long num); // article 갈때 이미지 목록
+	public Member borrowWriter(long num); // 작성자 정보
 	
-	public Borrow findByCategory(long categoryNum);
-	public List<Borrow> listBorrowCategory(long categoryNum);
 	
 	public Borrow findById(long num);						// 검색 찾기
 	public void updateHitCount(long num) throws Exception;	// 조회수

@@ -187,7 +187,7 @@
         }).then(response => {
             if(response.ok) {
                 alert('글이 성공적으로 등록되었습니다.');
-                // 필요한 경우 페이지 리다이렉트 등의 추가 작업
+                location.href = '${pageContext.request.contextPath}/borrow/list';
             } else {
                 alert('글 등록에 실패했습니다.');
             }
