@@ -16,4 +16,5 @@ public interface PointMapper {
 	public void insertRefund(Point dto)throws Exception;
 	
 	public void updatePoint(Point dto)throws Exception;
+	public void insertPoint2(Point pto)throws Exception;
 }

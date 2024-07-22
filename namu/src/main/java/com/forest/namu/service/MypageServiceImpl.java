@@ -40,7 +40,6 @@ public class MypageServiceImpl implements MypageService{
 			System.out.println("saveFilename:"+saveFilename);
 			if (saveFilename != null) {
 				dto.setPhoto(saveFilename);
-				System.out.println("saveFilename:"+saveFilename);
 				mapper.insertPhoto(dto);
 			}
 		} catch (Exception e) {
@@ -94,6 +93,41 @@ public class MypageServiceImpl implements MypageService{
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public void updateRider(Delivery dto) throws Exception {
+		try {
+			mapper.updateRider1(dto);
+			mapper.updateRider2(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public List<Delivery> waitRider(String userId) throws Exception {
+		List<Delivery> list = null;
+		
+		try {
+			mapper.waitRider(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	@Override
+	public void updateRider2(Delivery dto) throws Exception {
+		try {
+			mapper.updateRider3(dto);
+			mapper.updateRider4(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

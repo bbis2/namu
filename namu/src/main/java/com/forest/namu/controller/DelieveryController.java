@@ -1,5 +1,6 @@
 package com.forest.namu.controller;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.forest.namu.common.FileManager;
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Delivery;
 import com.forest.namu.domain.Point;
@@ -37,15 +39,27 @@ public class DelieveryController {
 	private PointService pService;
 	
 	@Autowired
+	private FileManager fileManager;
+	
+	@Autowired
 	private MyUtil myUtil;
 	
 	@RequestMapping("list")
 	public String list(
+			@RequestParam(value = "town", required = false)String town,
 			@RequestParam(value="page", defaultValue = "1") int current_page,
 			@RequestParam(defaultValue = "all") String schType,
 			@RequestParam(defaultValue = "") String kwd,
 			HttpServletRequest req,
+			HttpSession session,
 			Model model) throws Exception {
+		
+		if (town == null || town.isEmpty()) {
+            SessionInfo info = (SessionInfo) session.getAttribute("member");
+            if (info != null) {
+                town = info.getTown1(); 
+            }
+        }
 		
 		int size = 10;
 		int total_page = 0;
@@ -59,7 +73,7 @@ public class DelieveryController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("schType", schType);
 		map.put("kwd", kwd);
-		
+		map.put("town", town);
 		
 		dataCount = dService.dataCount(map);
 		if(dataCount != 0) {
@@ -96,6 +110,7 @@ public class DelieveryController {
 			articleUrl += "&" + query;
 		}
 		
+		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 		
 		model.addAttribute("list", list);
@@ -105,7 +120,7 @@ public class DelieveryController {
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("paging", paging);
 		model.addAttribute("size", size);
-		
+		model.addAttribute("town", town);
 		
 		model.addAttribute("schType", schType);
 		model.addAttribute("kwd", kwd);
@@ -191,6 +206,7 @@ public class DelieveryController {
 			@RequestParam(defaultValue = "all") String schType,
 			@RequestParam(defaultValue = "") String kwd,
 			HttpSession session,
+			Delivery dto2,
 			Model model)throws Exception{
 		
 		kwd = URLDecoder.decode(kwd, "utf-8");
@@ -200,11 +216,16 @@ public class DelieveryController {
 			query += "&schType=" + schType + 
 					"&kwd=" + URLEncoder.encode(kwd, "UTF-8");
 		}
-		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		dService.updateHitCount(num);
 		
 		Delivery dto = dService.findById(num);
 		
+		dto2.setNum2(num);
+		dto2.setUserId(info.getUserId());
+
+		long dstart = dService.findAutowired(dto2);
+		long count = dService.countOk(dto2);
 		if (dto == null) {
 			return "redirect:/delivery/list?" + query;
 		}
@@ -219,12 +240,12 @@ public class DelieveryController {
 		Delivery prevDto = dService.findByPrev(map);
 		Delivery nextDto = dService.findByNext(map);
 		
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
+		model.addAttribute("count",count);
 		model.addAttribute("dto", dto);
 		model.addAttribute("prevDto", prevDto);
 		model.addAttribute("nextDto", nextDto);
-
+		model.addAttribute("dstart",dstart);
 		model.addAttribute("page", page);
 		model.addAttribute("query", query);
 
@@ -234,16 +255,22 @@ public class DelieveryController {
 	
 	@PostMapping("answer")
 	public String answerSubmit(
-			@RequestParam String page,
-			HttpSession session
+			@RequestParam long num,
+			HttpSession session,
+			Delivery dto
 			)throws Exception {
-		
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "uploads" + File.separator + "delivery";
 		try {
+			
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			dto.setUserId(info.getUserId());
+			dto.setNum(num);
+			dService.updateAuthor(dto,path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "redirect:/delivery/list?page="+page;
+		return "redirect:/delivery/list";
 	}
 	
 	@PostMapping("application")
@@ -264,6 +291,7 @@ public class DelieveryController {
 			
 			dto.setUserId(info.getUserId());
 			dto.setNum2(num2);
+		
 			
 			dService.insertRider(dto);
 			dService.updateDelivery(dDto);

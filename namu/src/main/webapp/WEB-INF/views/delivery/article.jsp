@@ -166,7 +166,12 @@ textarea.form-control {
 						<button type="button" class="btn btn-light" disabled>삭제</button>
 					</c:otherwise>
 				</c:choose>
+			<c:if test="${count == 0}">
 				<button type="button" class="btn btn-light" onclick="itsMe();">신청</button>
+			</c:if>	
+			<c:if test="${count != 0}">
+			<button type="button" class="btn btn-light" onclick="itsMe();" disabled>신청</button>
+			</c:if>
 			</td>
 			<td class="text-end">
 				<button type="button" class="btn btn-light"
@@ -177,11 +182,17 @@ textarea.form-control {
 
 	<span class="bold">😊</span><span> 안타 안타 날려버려라 키움의 히어로 이정후 ❣️</span>
 	<div class="reply" style="display: none;">
-		<form name="answerForm" method="post">
-
+		<form name="answerForm" method="post" enctype="multipart/form-data">
+			<textarea class='form-control' name="" readonly style="height: 300px;">${dto.author}</textarea>
+			<img src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename1}">
+			<img src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename2}">
 			<table class="table table-borderless reply-form">
 				<tr>
-					<td><textarea class='form-control' id="ir1" name="answer"></textarea>
+					<td><textarea class='form-control' name="author"></textarea>
+					<div class="img-viewer"></div> <input type="file"
+							name="selectFile1" accept="image/*">
+							<div class="img-viewer"></div> <input type="file"
+							name="selectFile2" accept="image/*">
 					</td>
 				</tr>
 				<tr>
@@ -189,7 +200,7 @@ textarea.form-control {
 						value="${dto.num}"> <input type="hidden" name="page"
 						value="${page}">
 						<button type='button' class='btn btn-light btnSendAnswer'
-							onclick="submitContents(this.form);">답변 등록</button></td>
+							onclick="check();">배달 인증</button></td>
 				</tr>
 			</table>
 		</form>
@@ -197,8 +208,9 @@ textarea.form-control {
 </div>
 
 
-<c:if test="${sessionScope.member.membership>98}">
+<c:if test="${sessionScope.member.membership>98 || (dstart > 1 && dstart != 2)}">
 	<script type="text/javascript">
+	console.log(${dstart});
 		$(function() {
 			let answerName = "";
 			if (!answerName) {
@@ -209,16 +221,22 @@ textarea.form-control {
 		function check() {
 			console.log("답변 등록 버튼 클릭됨"); // 디버깅 메시지 추가
 			const f = document.answerForm;
-
-			if (!f.answer.value.trim()) {
+			let num = ${dto.num};
+			if (!f.author.value.trim()) {
 				alert("답변 내용을 입력하세요."); // 경고창 추가
-				f.answer.focus();
+				f.author.focus();
+				return false;
+			}
+			
+			if (!f.selectFile1 || !f.selectFile2) {
+				alert("사진을 올려주세요."); // 경고창 추가
+				f.author.focus();
 				return false;
 			}
 
-			f.action = "${pageContext.request.contextPath}/delivery/answer";
+			f.action = "${pageContext.request.contextPath}/delivery/answer?num="+num;
 			console.log("폼 제출 준비 완료"); // 디버깅 메시지 추가
-			return true;
+			f.submit();
 		}
 
 		$(function() {
@@ -379,39 +397,5 @@ textarea.form-control {
 				+ num2;
 		f.submit();
 
-	}
-</script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/vendor/se2/js/service/HuskyEZCreator.js"
-	charset="utf-8"></script>
-<script type="text/javascript">
-	var oEditors = [];
-	nhn.husky.EZCreator
-			.createInIFrame({
-				oAppRef : oEditors,
-				elPlaceHolder : "ir1",
-				sSkinURI : "${pageContext.request.contextPath}/resources/vendor/se2/SmartEditor2Skin.html",
-				fCreator : "createSEditor2"
-			});
-
-	function submitContents(elClickedObj) {
-		oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
-		try {
-			console.log("submitContents 호출됨"); // 디버깅 메시지 추가
-			if (!check()) {
-				console.log("check 실패"); // 디버깅 메시지 추가
-				return;
-			}
-			console.log("폼 제출 시작"); // 디버깅 메시지 추가
-			elClickedObj.submit();
-		} catch (e) {
-			console.log("에러 발생: " + e.message); // 에러 메시지 추가
-		}
-	}
-
-	function setDefaultFont() {
-		var sDefaultFont = '돋움';
-		var nFontSize = 12;
-		oEditors.getById["ir1"].setDefaultFont(sDefaultFont, nFontSize);
 	}
 </script>

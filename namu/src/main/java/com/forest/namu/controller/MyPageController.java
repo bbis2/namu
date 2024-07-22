@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.domain.Delivery;
@@ -222,6 +223,55 @@ public class MyPageController {
 		model.put("state", state);
 		model.put("Rlist", list);
 		return model;
+	}
+	
+	@PostMapping("myRider")
+	public String myRider(@RequestParam long num,
+			@RequestParam long num2,
+			HttpSession session,
+			Delivery dto)throws Exception{
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		try {
+			dto.setNum(num);
+			dto.setNum2(num2);
+			
+			myService.updateRider(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return "redirect:/mypage/list";
+	}
+	
+	@PostMapping("okMoney")
+	public String okMoney(@RequestParam long num,
+			@RequestParam long current,
+			@RequestParam long num2,
+			@RequestParam long point,
+			HttpSession session,
+			Delivery dto,
+			Point pto)throws Exception{
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		try {
+			dto.setNum(num);
+			dto.setNum2(num2);
+			
+			myService.updateRider2(dto);
+			
+			pto.setCurrentPoint(current);
+			pto.setUserId(info.getUserId());
+			pto.setPointVar(point);
+			
+			service.insertPoint2(pto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return "redirect:/mypage/list";
 	}
 
 }

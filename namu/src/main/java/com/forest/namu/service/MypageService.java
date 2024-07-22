@@ -13,4 +13,7 @@ public interface MypageService {
 	public Member getAddress(String userId)throws Exception;
 	public List<Member> selectSchedule(String userId)throws Exception;
 	public List<Delivery> selectRider(String userId)throws Exception;
+	public void updateRider(Delivery dto)throws Exception;
+	public void updateRider2(Delivery dto)throws Exception;
+	public List<Delivery> waitRider(String userId)throws Exception;
 }

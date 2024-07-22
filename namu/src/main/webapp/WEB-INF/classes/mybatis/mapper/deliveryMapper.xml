@@ -4,32 +4,48 @@
 <mapper namespace="com.forest.namu.mapper.DeliveryMapper">
 
 	<sql id="where-list">
-		(INSTR(subject, #{kwd}) &gt; 0
-		OR DBMS_LOB.INSTR(content,
-		#{kwd}) &gt; 0 )
+		<choose>
+			<when test="schType == 'all' ">
+			   ( INSTR(subject, #{kwd}) &gt; 0
+		          OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
+			</when>
+			<when test="schType == 'reg_date' ">
+			   ( TO_CHAR(regDate, 'YYYYMMDD') = #{kwd}
+		          OR TO_CHAR(regDate, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<when test="schType == 'content'">
+			    DBMS_LOB.INSTR(content, #{kwd}) &gt; 0
+			</when>
+			<otherwise>
+			    INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
 	</sql>
 
 	<insert id="insertDelivery"
 		parameterType="com.forest.namu.domain.Delivery">
 		insert into
-		delievery(num,state,content,subject,point,receive,receive2,saddr,saddr2,userId,regDate)
+		delievery(num,state,content,subject,point,receive,receive2,saddr,saddr2,userId,regDate,town)
 		values (delievery_seq.nextval,0,#{content},#{subject},NVL(#{point},
-		0),#{receive},#{receive2},#{saddr},#{saddr2},#{userId},SYSDATE)
+		0),#{receive},#{receive2},#{saddr},#{saddr2},#{userId},SYSDATE,#{town})
 	</insert>
 
 	<select id="listDelivery" parameterType="map"
 		resultType="com.forest.namu.domain.Delivery">
-		SELECT d.num,d.state,d.subject,d.hitCount,d.point,TO_CHAR(d.regDate,
-		'YYYY-MM-DD') regDate,m.nickname,d.content
+		SELECT d.num, d.state, d.subject, d.hitCount, d.point,
+		TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
+		m.nickname, d.content, d.town
 		FROM delievery d
-		JOIN member
-		m ON d.userId = m.userId
+		JOIN member m ON d.userId = m.userId
 		<where>
+			<if test="town != null and town != ''">
+				d.town = #{town}
+			</if>
 			<if test="kwd != null and kwd != ''">
-				<include refid="where-list" />
+				AND <include refid="where-list" />
 			</if>
 		</where>
-		ORDER BY num DESC
+		ORDER BY d.num DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 
@@ -39,8 +55,11 @@
 		JOIN member m ON d.userId =
 		m.userId
 		<where>
+			<if test="town != null and town != '' ">
+				d.town = #{town}
+			</if>
 			<if test="kwd !=null and kwd != '' ">
-				<include refid="where-list" />
+				AND <include refid="where-list" />
 			</if>
 		</where>
 	</select>
@@ -67,9 +86,12 @@
 
 	<select id="findById" parameterType="Long"
 		resultType="com.forest.namu.domain.Delivery">
-		SELECT d.num, d.userId, m.nickname, d.subject, d.content,
-		d.hitCount, d.regDate, d.receive, d.receive2, d.saddr, d.saddr2, d.point
-		FROM delievery d
+		SELECT d.num, d.userId, m.nickname, d.subject,
+		d.content,d.author,d.imageFilename1,d.imageFilename2,
+		d.hitCount,
+		d.regDate, d.receive, d.receive2, d.saddr, d.saddr2, d.point
+		FROM
+		delievery d
 		JOIN member m ON d.userId = m.userId
 		WHERE d.num = #{num}
 	</select>
@@ -104,16 +126,49 @@
 		ORDER BY num DESC
 		FETCH FIRST 1 ROWS ONLY
 	</select>
-	
-	
-	<insert id="insertRider" parameterType="com.forest.namu.domain.Rider">
-	INSERT INTO rider(num,userId,dstart,num2) VALUES(rider_seq.nextval,#{userId},0,#{num2})
+
+
+	<insert id="insertRider"
+		parameterType="com.forest.namu.domain.Rider">
+		INSERT INTO rider(num,userId,dstart,num2)
+		VALUES(rider_seq.nextval,#{userId},0,#{num2})
 	</insert>
-	
-	<update id="updateDelivery" parameterType="com.forest.namu.domain.Delivery">
-	UPDATE delievery SET stime = #{stime} ,sdate= #{sdate} WHERE num = #{num}
+
+	<update id="updateDelivery"
+		parameterType="com.forest.namu.domain.Delivery">
+		UPDATE delievery SET stime = #{stime} ,sdate= #{sdate}
+		WHERE num = #{num}
 	</update>
-	
-	
+
+	<select id="findAutowired"
+		parameterType="com.forest.namu.domain.Delivery" resultType="long">
+		SELECT
+		NVL((
+		SELECT dstart
+		FROM rider
+		WHERE userId = #{userId}
+		AND num2 = #{num2}
+		), 0) AS dstart
+		FROM DUAL
+	</select>
+
+	<select id="countOk"
+		parameterType="com.forest.namu.domain.Delivery" resultType="long">
+		select
+		Count(*) from rider where userId = #{userId} AND num2 = #{num2}
+	</select>
+
+	<update id="updateAuthor"
+		parameterType="com.forest.namu.domain.Delivery">
+		UPDATE delievery SET author =
+		#{author},imageFilename1=#{imageFilename1},imageFilename2 =
+		#{imageFilename2} WHERE num = #{num}
+	</update>
+
+	<update id="riderState"
+		parameterType="com.forest.namu.domain.Delivery">
+		UPDATE rider SET dstart = 3 WHERE userId = #{userId} AND
+		num2 = #{num2}
+	</update>
 
 </mapper>

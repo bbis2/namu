@@ -16,4 +16,9 @@ public interface MypageMapper {
 	public Member getAddress(String userId)throws Exception;
 	public List<Member> selectSchedule(String userId)throws Exception;
 	public List<Delivery> selectRider(String userId)throws Exception;
+	public void updateRider1(Delivery dto)throws Exception;
+	public void updateRider2(Delivery dto)throws Exception;
+	public void updateRider3(Delivery dto)throws Exception;
+	public void updateRider4(Delivery dto)throws Exception;
+	public List<Delivery> waitRider(String userId)throws Exception;
 }

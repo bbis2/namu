@@ -237,12 +237,28 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 		<form name="deliveryForm" method="post" enctype="multipart/form-data">
 			<table class="table mt-5 write-form">
 				<tr>
+					<td class="table-light col-sm-2">동네</td>
+					<td>
+						<div class="row">
+							<div class="col-6">
+								<select name="town" class="form-select">
+									<option value="${sessionScope.member.town1}">${sessionScope.member.town1}</option>
+									<c:if test="${sessionScope.member.town2 != null}">
+										<option value="${sessionScope.member.town2}">${sessionScope.member.town2}</option>
+									</c:if>
+								</select>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
 					<td class="bg-light col-sm-2" scope="row">보상 포인트</td>
-					<td scope="row" style="display: flex;"><input type="number" name="point" class="form-control" style="width: 70%;"
+					<td scope="row" style="display: flex;"><input type="number"
+						name="point" class="form-control" style="width: 70%;"
 						placeholder="입력하지 않으면 0원입니다."
 						value="${dto.point != null ? dto.point : 1000}">
-						<button class="btn btn-primary" type="button"
-								onclick="isPoint();" style="flex-shrink: 0;">포인트 검증</button></td>
+						<button class="btn btn-primary" type="button" onclick="isPoint();"
+							style="flex-shrink: 0;">포인트 검증</button></td>
 				</tr>
 
 

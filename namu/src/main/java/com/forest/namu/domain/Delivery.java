@@ -1,10 +1,32 @@
 package com.forest.namu.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Delivery {
 	private long num;
 	private String nickname;
 	private String regDate;
+	private long dstart;
+	private String town;
 	
+	private String imageFilename1;
+	private String imageFilename2;
+	
+	private MultipartFile selectFile1;
+	private MultipartFile selectFile2;
+
+	public MultipartFile getSelectFile1() {
+		return selectFile1;
+	}
+	public void setSelectFile1(MultipartFile selectFile1) {
+		this.selectFile1 = selectFile1;
+	}
+	public MultipartFile getSelectFile2() {
+		return selectFile2;
+	}
+	public void setSelectFile2(MultipartFile selectFile2) {
+		this.selectFile2 = selectFile2;
+	}
 	public long getNum() {
 		return num;
 	}
@@ -107,6 +129,36 @@ public class Delivery {
 	public void setUsermanner(long usermanner) {
 		this.usermanner = usermanner;
 	}
+	public long getDstart() {
+		return dstart;
+	}
+	public void setDstart(long dstart) {
+		this.dstart = dstart;
+	}
+	public long getNum2() {
+		return num2;
+	}
+	public void setNum2(long num2) {
+		this.num2 = num2;
+	}
+	public String getImageFilename2() {
+		return imageFilename2;
+	}
+	public void setImageFilename2(String imageFilename2) {
+		this.imageFilename2 = imageFilename2;
+	}
+	public String getImageFilename1() {
+		return imageFilename1;
+	}
+	public void setImageFilename1(String imageFilename1) {
+		this.imageFilename1 = imageFilename1;
+	}
+	public String getTown() {
+		return town;
+	}
+	public void setTown(String town) {
+		this.town = town;
+	}
 	private long state;
 	private String content;
 	private String subject;
@@ -121,6 +173,6 @@ public class Delivery {
 	private String sdate;
 	private String stime;
 	private String author;
-	
+	private long num2;
 	
 }

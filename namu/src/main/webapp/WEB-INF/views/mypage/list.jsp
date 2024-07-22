@@ -692,24 +692,26 @@ h1 {
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 					aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<table id="selectDTable" class="table">
+			<form name="riderForm" method="post">
+				<div class="modal-body">
+					<table id="selectDTable" class="table">
+						<thead>
 
-					<thead>
+							<tr>
+								<th>나의 글</th>
+								<th>신청한사람</th>
+								<th>출발예정시간</th>
+								<th>신청인 매너점수</th>
+								<th>승인여부</th>
+							</tr>
+						</thead>
+						<tbody>
 
-						<tr>
-							<th>나의 글</th>
-							<th>신청한사람</th>
-							<th>출발예정시간</th>
-							<th>신청인 매너점수</th>
-						</tr>
-					</thead>
-					<tbody>
+						</tbody>
 
-					</tbody>
-
-				</table>
-			</div>
+					</table>
+				</div>
+			</form>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary"
 					data-bs-dismiss="modal">닫기</button>
@@ -812,15 +814,44 @@ function delivery() {
         if (state === "true") {
         	
 			let htmlContent = '';
-			
-            for (let it of data.Rlist) {
-                htmlContent += '<tr>' +
-                    '<td>' + it.subject + '</td>' +
-                    '<td>' + it.nickname + '</td>' +
-                    '<td>' + it.sdate +','+it.stime +'</td>' +
-                    '<td>' + it.usermanner + '</td>'+
-                '</tr>';
-            }
+			console.log(data.Rlist);
+			for (let it of data.Rlist) {
+			    // dstart 값에 따라 텍스트 또는 버튼 결정하기
+			    let statusContent;
+			    if (it.dstart === 0) {
+			    	 statusContent = '<button type="button" class="btn btn-primary" name="riderNum" onclick="acceptRequest(this);" data-value="accept" value="' + it.num2 + '" data-num="' + it.num + '">수락</button>';
+			    } else {
+			        let statusText;
+			        switch (it.dstart) {
+			            case 1:
+			                statusText = '수락';
+			                break;
+			            case 2:
+			                statusText = '거절';
+			                break;
+			            case 3:
+			            	statusText = '정산대기'+'&nbsp;&nbsp;<button type="button" class="btn btn-primary" onclick="acceptMoney(this);"data-value="'+it.point+'" value="' + it.num2 + '" data-num="' + it.num + '">승인</button>&nbsp;<button class="btn btn-primary">거절</button>';
+			            	break;
+			            case 4:
+			            	statusText = '완료';
+			            	break;
+			            default:
+			                statusText = '알 수 없음';
+			                break;
+			        }
+			        statusContent = statusText;
+			    }
+
+			    // HTML 콘텐츠 생성
+			    htmlContent += '<tr>' +
+			        '<td>' + it.subject + '</td>' +
+			        '<td>' + it.nickname + '</td>' +
+			        '<td>' + it.sdate + ',' + it.stime + '</td>' +
+			        '<td>' + it.usermanner + '</td>' +
+			        '<td>' + statusContent + '</td>' +
+			    '</tr>';
+			}
+
 
             $('#selectDTable tbody').html(htmlContent);
         	
@@ -834,7 +865,26 @@ function delivery() {
     ajaxFun(url, "post", query, "json", fn);
 }
 
+function acceptMoney(button){
+	const f = document.riderForm;
+	const num2 = button.getAttribute('value');         // it.num2의 값
+    const num = button.getAttribute('data-num');  
+    const current = ${point};
+    const point = button.getAttribute('data-value');
+    
+	f.action = "${pageContext.request.contextPath}/mypage/okMoney?num2="+num2+"&num="+num+"&current="+current+"&point="+point;
+	f.submit();
+}
 
+function acceptRequest(button){
+	const f = document.riderForm;
+	const num2 = f.getAttribute('value');         // it.num2의 값
+    const num = button.getAttribute('data-num');  
+    
+    
+	f.action = "${pageContext.request.contextPath}/mypage/myRider?num2="+num2+"&num="+num;
+	f.submit();
+}
 
 function Ischange() {
     // 포커스를 이동시킬 요소를 가져옵니다.

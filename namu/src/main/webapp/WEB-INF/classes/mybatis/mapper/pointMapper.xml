@@ -10,6 +10,14 @@
 		VALUES
 		(#{pointNum},#{userId},#{description},SYSDATE,#{currentPoint},#{pointVar},#{pointCate},#{lastMoney})
 	</insert>
+	
+	<insert id="insertPoint2"
+		parameterType="com.forest.namu.domain.Point">
+		INSERT INTO point
+		(pointNum,userId,description,regDate,currentPoint,pointVar,pointCate,lastMoney)
+		VALUES
+		(point_seq.nextval,#{userId},#{description},SYSDATE,#{currentPoint},#{pointVar},#{pointCate},#{lastMoney})
+	</insert>
 
 	<select id="selectPoint" parameterType="String"
 		resultType="Integer">
