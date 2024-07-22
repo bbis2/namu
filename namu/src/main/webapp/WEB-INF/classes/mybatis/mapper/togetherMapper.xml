@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.TogetherMapper">
+	<select id="togetherListSeq" resultType="long">
+		SELECT  TOGETHERLIST_SEQ.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertTogether" parameterType="com.forest.namu.domain.Together">
+		INSERT INTO togetherList(tNum, categoryNum, userId, name, subject, regDate, hitCount, content, memberCnt, thumbnail ,town )
+		VALUES(#{tNum}, #{categoryNum}, #{userId}, #{name}, #{subject}, SYSDATE, 0,  #{content}, #{memberCnt}, #{thumbnail,jdbcType=INTEGER} , #{town,jdbcType=INTEGER})
+	</insert>
+
+<!-- 검색 -->
+	<sql id="where-list">
+	    <choose>
+	        <when test="schType == 'all' ">
+	            ( INSTR(subject, #{kwd}) &gt; 0
+	            OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 
+	            OR INSTR(name, #{kwd}) &gt; 0 )
+	        </when>
+	        <when test="schType == 'regDate' ">
+	            ( TO_CHAR(regDate, 'YYYYMMDD') = #{kwd}
+	            OR TO_CHAR(regDate, 'YYYY-MM-DD') = #{kwd} )
+	        </when>
+	        <when test="schType == 'name'">
+	            INSTR(name, #{kwd}) &gt; 0
+	        </when>
+	        <when test="schType == 'content'">
+	            DBMS_LOB.INSTR(content, #{kwd}) &gt; 0
+	        </when>
+	        <otherwise>
+	            INSTR(${schType}, #{kwd}) &gt; 0
+	        </otherwise>
+	    </choose>
+	</sql>
+	
+	<!-- 데이터 개수 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT  NVL(COUNT(*),0)
+		FROM togetherList t
+		JOIN member m ON t.userId  = m.userId
+		<where>
+				<if test="kwd != null and kwd!='' ">
+					AND <include refid="where-list"/>
+				</if>
+				<if test="categoryNum != 0 ">
+					AND categoryNum = #{categoryNum}
+				</if>
+			    <if test="town != null and town != ''">
+			        AND town = #{town}
+			    </if> 					
+		</where>
+	</select>
+	
+	<!-- 카테고리 -->
+	<insert id="insertCategory" parameterType="com.forest.namu.domain.Together">
+		INSERT INTO togetherCategory(categoryNum, categoryName)
+		VAlUES (togetherCategory_seq.NextVAL, #{categoryName})
+	</insert>
+
+	<select id="listTogetherCategory" resultType="com.forest.namu.domain.Together">
+		SELECT categoryNum, categoryName
+		FROM togetherCategory
+		ORDER BY categoryNum
+	</select>
+	
+	<select id="listTogether" parameterType="map" resultType="com.forest.namu.domain.Together">
+	SELECT tNum, l.userId, m.nickName, t.categoryNum, t.categoryName, l.name, l.subject, l.memberCnt, l.thumbnail , l.town, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate, l.hitCount 		
+	FROM togetherList l
+	JOIN  member m ON l.userId = m.userId
+	JOIN togetherCategory  t ON l.categoryNum = t.categoryNum
+	<where>
+	    <if test="kwd != null and kwd != ''">
+	        <include refid="where-list"/>
+	    </if>
+	    <if test="categoryNum != 0">
+	        AND l.categoryNum = #{categoryNum}
+	    </if>
+	    <if test="town != null and town != ''">
+	        AND town = #{town}
+	    </if> 		     
+	</where>
+		ORDER BY tNum DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- -->
+	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Together">
+		SELECT tNum, l.userId, m.nickName, subject, l.categoryNum, categoryName, content, hitCount, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate,
+			NVL(togetherLikeCount,0) togetherLikeCount
+		FROM togetherList l
+		JOIN member m ON l.userId = m.userId
+		JOIN togetherCategory t ON l.categoryNum = t.categoryNum
+		LEFT OUTER JOIN (
+			SELECT tNum, COUNT(*) togetherLikeCount 
+			FROM togetherLike
+			GROUP BY tNum
+		) c ON l.tNum = c.tNum
+		WHERE l.tNum = #{tNum}
+	</select>
+	
+	<!-- 이전글 -->
+	<select id="findByPrev" parameterType="map" resultType="com.forest.namu.domain.Together">
+		SELECt tNum, subject
+		FROM togetherList l
+		JOIN member m ON l.userId = m.userId
+		JOIN togetherCategory t ON l.categoryNum = t.categoryNum
+	<where>
+		    <if test="kwd != null and kwd != ''">
+		        <include refid="where-list"/>
+		    </if>
+		    <if test="town != null and town != ''">
+		        AND town = #{town}
+		    </if> 			    
+		    AND (tNum &gt; #{tNum})
+		</where>
+		ORDER BY tNum ASC
+		FETCH FIRST 1 ROWS ONLY	
+	</select>
+	
+	<!-- 다음글 -->
+	<select id="findByNext" parameterType="map" resultType="com.forest.namu.domain.Daily">
+		SELECT tNum, subject
+		FROM togetherList l
+		JOIN member m ON l.userId = m.userId
+		JOIN togetherCategory  t l.categoryNum = t.categoryNum
+		<where>
+		    <if test="kwd != null and kwd != ''">
+		        <include refid="where-list"/>
+		    </if>
+		    <if test="town != null and town != ''">
+		        AND town = #{town}
+		    </if> 	    
+		    AND (tNum &lt; #{tNum})
+		</where>
+		ORDER BY tNum DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE togetherList SET hitCount = hitCount+1 WHERE tNum = #{tNum}
+	</update>
+	
+	<!-- 수정 -->
+	<update id="updateTogether" parameterType="com.forest.namu.domain.Together">
+		UPDATE togetherList SET categoryNum=#{categoryNum}, subject=#{subject}, content=#{content}, town=#{town}, name=#{name}, 
+			memberCnt=#{memberCnt}, thumbnail=#{thumbnail,jdbcType=VARCHAR}
+		WHERE tNum = #{tNum}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteTogether" parameterType="Long">
+		DELETE FROM togetherList WHERE tNum = #{tNum}
+	</delete>
+
+	<!-- 게시글 좋아요 등록 -->	
+	<insert id="insertTogetherLike" parameterType="map">
+		INSERT INTO togetherLike(tNum, userId) VALUES (#{tNum}, #{userId})
+	</insert>
+	
+	<!-- 게시글 좋아요 삭제 -->	
+	<delete id="deleteTogetherLike" parameterType="map">
+		DELETE FROM togetherLike WHERE tNum = #{tNum} AND userId = #{userId}
+	</delete>
+	
+	<!-- 게시글 좋아요 개수 -->	
+	<select id="togetherLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*) FROM togetherLike WHERE tNum =#{tNum}
+	</select>
+	
+	<!-- 게시글 좋아요 여부 -->
+	<select id="userTogether" parameterType="map" resultType="com.forest.namu.domain.Daily">
+		SELECT tNum, userId FROM togetherLike WHERE tNum =#{tNum} AND userId = #{userId}
+	</select>
+	
+</mapper>
