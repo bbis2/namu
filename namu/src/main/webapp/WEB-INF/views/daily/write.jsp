@@ -137,11 +137,28 @@ function check() {
 				<td>
 					<div class="row">
 						<div class="col-6 pe-1">
-							<select id="categoryNum" name="categoryNum" class="form-control">
+							<select id="categoryNum" name="categoryNum" class="form-select">
 								<option value="" selected>카테고리 선택</option>
 								<c:forEach var="vo" items="${listDailyCategory}">
 									<option value="${vo.categoryNum}" ${categoryNum == vo.categoryNum?"selected" : ""}>${vo.categoryName}</option>
 								</c:forEach>
+							</select>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="table-light col-sm-2">동네</td>
+				<td>
+					<div class="row">
+						<div class="col-6">
+							<select name="town" class="form-select">
+								<option>동네 선택</option>
+								<option value="${sessionScope.member.town1}">${sessionScope.member.town1}</option>
+							<c:if test="${sessionScope.member.town2 != null}">
+								<option value="${sessionScope.member.town2}">${sessionScope.member.town2}</option>
+							</c:if>
 							</select>
 						</div>
 					</div>

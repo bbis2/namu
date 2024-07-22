@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
-
+<style type="text/css">
 .fleamarket-cover {
     background-color: #E3F1C5;
 }
@@ -27,17 +27,73 @@
         margin-top: 60px;
         margin-bottom: 60px;
 }
-/*여기까지 초록 박스*/
+/* 전체 배경색 */
 
 
-.body-left {
-	padding-bottom: 20px;
+.cover-description {
+    font-size: 1.2rem;
+    color: #4A5A2C;
 }
 
-.table {
-text-align: center;
+.cover-image {
+    margin-top: 20px;
 }
 
+/* 검색 및 필터 컨테이너 */
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-container .search-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    margin-right: 10px;
+    width: 500px;
+    height: 40px;
+}
+
+
+.search-button {
+    background-color: #74634F;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #4c3b2b;
+}
+
+/* 카드 스타일 */
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-body {
+    padding: 30px;
+    align-content: center;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 카테고리 스타일 */
 .categories {
     display: flex;
     justify-content: space-around;
@@ -45,59 +101,68 @@ text-align: center;
     background-color: #EEF2E3;
     border-radius: 10px;
     margin-bottom: 50px;
+    font-size: 1.1rem;
 }
+
 .categories span {
     font-weight: bold;
-}
-
-.filter-container {
-    text-align: right;
-    margin-bottom: 20px;
-}
-
-
-.filter-container .search-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    background-color: #FFFFFF;
-    margin-right: 10px;
-}
-
-.filter-container .search-button {
-    background-color: #74634F;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
     cursor: pointer;
+    transition: color 0.3s;
 }
 
-.filter-container .search-button:hover {
-    background-color: #4c3b2b;
+.categories span:hover {
+    color: #74634F;
 }
 
-h2 {
-	font-weight: bold;
+/* 테이블 스타일 */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    text-align: center;
 }
 
-.card {
-    background-color: #fff;
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    font-size: 1rem;
+    color: #74634F;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 페이지 네비게이션 스타일 */
+.page-navigation {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.page-navigation a {
+    margin: 0 5px;
+    padding: 8px 16px;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    text-decoration: none;
+    color: #74634F;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.card-body {
-    padding: 20px;
+.page-navigation a:hover {
+    background-color: #74634F;
+    color: #fff;
 }
 
-.card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-}
 </style>
+
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/paginatie-boot.js"> </script>
 
@@ -106,6 +171,9 @@ h2 {
 		<c:param name="schType" value="${schType}"/>
 		<c:param name="kwd" value="${kwd}"/>
 	</c:if>
+	<c:if test="${categoryNum != 0}">
+		<c:param name="categoryNum" value="${categoryNum}"/>
+	</c:if>	
 </c:url>
 
 <script type="text/javascript">
@@ -113,6 +181,7 @@ window.addEventListener('load', function() {
 	let page = ${page};
 	let pageSize = ${size};
 	let dataCount = ${dataCount};
+	let categoryNum = ${categoryNum};
 	let url = '${listUrl}';
 	
 	let total_page = pageCount(dataCount, pageSize);
@@ -131,6 +200,19 @@ function searchList() {
 	var f = document.searchForm;
 	f.submit();
 }
+
+function searchCategory(categoryNum) {
+	var f = document.searchForm;
+	f.categoryNum.value = categoryNum;
+	f.submit();
+}
+
+function filterByTown() {
+    let town = document.getElementById("townFilter").value;
+    var f = document.searchForm;
+    f.town.value = town;
+    f.submit();
+}
 </script>
 
 <div class="container">
@@ -143,33 +225,52 @@ function searchList() {
 
 
   <main class="container">
+			<div class="d-flex">
+				<h5 style="font-weight: bold;">${town}</h5>
+				<h5>&nbsp;동네의 전체 모임</h5>
+				<h5 style="color: #b3b3b3;" class="bd">&nbsp;${dataCount}개</h5>
+			</div>
    	<div class="body-title">
-		<h2>전체 게시글</h2>
 		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/daily/list" method="post">
             <div class="filter-container">
-                <input type="text" class="search-input" value="${kwd}" placeholder="검색어를 입력하세요">
-                <button type="button" class="search-button" onclick="searchList()" title="검색" >검색</button>
+                <input type="text" class="search-input border border-2"  name="kwd" value="${kwd}" placeholder="검색어를 입력하세요"/>
+				<input type="hidden" name="categoryNum" value="${categoryNum}">
+				<input type="hidden" name="town" value="${town}">    			
+                <button type="button" class="search-button" onclick="searchList()" title="검색" ><i class="fa-solid fa-magnifying-glass"></i></button>
+				<button class="btn reset" style="background-color: white; color:#74634F;"  type="button" onclick="location.href='${pageContext.request.contextPath}/daily/list';">
+					<i class="fa-solid fa-rotate-right"></i>
+				</button>
                 <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/daily/write';">글올리기</button>
             </div>
         </form>		
 	</div>
 	
-        <div class="row">
-            <div class="col-md-3">
+        <div class="row introduce">
+            <div class="col-md-3 ">
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">${sessionScope.member.nickName}</h5>
-            			   <p>서울특별시 마포구</p>
-          				   <p>쪽지 | 스크랩 | 알림</p>
+                        <h6 class="bd">나의 동네</h6>
+						<select id="townFilter" class="form-select border-2" aria-label="Default select example" onchange="filterByTown()">
+							<option value="">전체</option>
+							 <option value="${sessionScope.member.town1}" <c:if test="${town == sessionScope.member.town1}">selected</c:if>>${sessionScope.member.town1}</option>
+					            <c:if test="${sessionScope.member.town2 != null}">
+					                <option value="${sessionScope.member.town2}" <c:if test="${town == sessionScope.member.town2}">selected</c:if>>${sessionScope.member.town2}</option>
+					            </c:if>
+						</select>
+            			 <br>
+            			 <div>
+          				   <span><i class="fa-solid fa-heart"></i> </span>
+          				   <span><i class="bi bi-bell-fill"></i></span>
+          				 </div>
                     </div>
                 </div>
               
-			   <div class="card">
-					<ul class="list-group">
-						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100001">모임</li>
-						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100002">일상</li>
-						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100003">챌린지</li>
-					</ul>
+			    <div class="card mb-4">
+					<div class="list-group">
+						<a class="list-group-item list-subject" type="button"  onclick="location.href='${pageContext.request.contextPath}/daily/list';">일상</a>
+						<a class="list-group-item list-subject" type="button"  onclick="location.href='${pageContext.request.contextPath}/together/list';">모임</a>
+					</div>
 				</div>
 			
                 <div class="card">
@@ -181,10 +282,12 @@ function searchList() {
             </div>
             <div class="col-md-9">
               <div class="categories">
-                    <span><a href="">태그</a></span>         
-                    <span><a href="">태그</a></span>         
-                    <span><a href="">태그</a></span>         
-                    <span><a href="">태그</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(1)">#일상</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(2)">#맛집</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(3)">#취미</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(4)">#고민/사연</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(5)">#생활/편의</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(6)">#공공소식</a></span>         
                 </div>
                 
             <!-- 페이지 출력 -->
@@ -218,6 +321,9 @@ function searchList() {
 	                    		<c:url var="url" value="/daily/article">
 	                    			<c:param name="num" value="${dto.num}"/>
 	                    			<c:param name="page" value="${page}"/>
+									<c:if test="${categoryNum != 0}">
+										<c:param name="categoryNum" value="${categoryNum}"/>
+									</c:if>		                    			
 	                    			<c:if test="${not empty kwd}">
 	                    				<c:param name="schType" value="${schType}"/>
 	                    				<c:param name="kwd" value="${kwd}"/>
