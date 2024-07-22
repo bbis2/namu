@@ -84,5 +84,8 @@
 		delievery d on d.num = r.num2
 		where dstart = 3 AND d.userId = #{userId}
 	</select>
+	
+	
+
 
 </mapper>

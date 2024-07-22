@@ -110,7 +110,7 @@ public class DelieveryController {
 			articleUrl += "&" + query;
 		}
 		
-		
+		System.out.println("articleUrl:"+articleUrl);
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 		
 		model.addAttribute("list", list);

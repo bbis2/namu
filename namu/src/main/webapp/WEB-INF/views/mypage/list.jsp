@@ -242,8 +242,11 @@ h1 {
 						<p style="font-size: 20px;">${userdto.ment}</p>
 					</div>
 					<div class="inner-box"
-						style="background: gray; height: 60px; width: 50%">
-						<img> <img> <img>
+						style=" height: 60px; width: 50%">
+						<c:forEach var="bo" items="${blist}">
+							<img alt=""
+								src="${pageContext.request.contextPath}/resources/images/${bo.num}.png">
+						</c:forEach>
 					</div>
 				</div>
 			</div>
@@ -298,10 +301,10 @@ h1 {
 			<div class="col-sm-9 offset-sm-3">
 				<div class="box"
 					style="text-align: left; height: 70px; justify-content: center;">
-					<p style="font-size: 20px;">
-						🏠 집앞 산책하고 <span class="font-weight-bold text-primary">포인트를</span>
-						얻는 방법
-					</p>
+					<a href="${pageContext.request.contextPath}/delivery/list"
+						style="font-size: 20px;"> 🏠 집앞 산책하고 <span
+						class="font-weight-bold text-primary">포인트를</span> 얻는 방법
+					</a>
 				</div>
 			</div>
 			<div class="col-sm-9 offset-sm-3">
@@ -324,8 +327,8 @@ h1 {
 			</div>
 			<div class="col-sm-9">
 				<div class="box custom-margin-top3" style="background: #BEF4F1">
-					<p style="margin-top: 1rem; font-size: 25px;">나무에서 당신의 가치를
-						나눠보세요!</p>
+					<a href="${pageContext.request.contextPath}/talent/list"
+						style="margin-top: 1rem; font-size: 25px;">나무에서 당신의 가치를 나눠보세요!</a>
 				</div>
 			</div>
 		</div>
@@ -375,11 +378,10 @@ h1 {
 								src="${pageContext.request.contextPath}/resources/images/icon_pencil.png">
 							&nbsp;내가쓴글
 						</p>
-						<p>
-							<img class="icons"
-								src="${pageContext.request.contextPath}/resources/images/icon_badge.png">
+						<a onclick="badge();"> <img class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_badge.png">
 							&nbsp;나의뱃지
-						</p>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -682,7 +684,7 @@ h1 {
 	</div>
 </div>
 
-
+<!-- 배달관리모달 -->
 <div id="delivery" class="modal" tabindex="-1">
 	<div class="modal-dialog modal-lg">
 		<!-- modal-lg 추가 -->
@@ -720,6 +722,43 @@ h1 {
 	</div>
 </div>
 
+<!-- 뱃지모달 -->
+<div class="modal fade" id="badgeModal" tabindex="-1"
+	data-bs-backdrop="static" data-bs-keyboard="false"
+	aria-labelledby="badgeModal" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="">나의 뱃지</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="p-3">
+					<form name="modelLoginForm" action="" method="post" class="row g-3">
+						<c:forEach var="bbo" items="${blist}">
+						<div>
+							<img alt=""
+								src="${pageContext.request.contextPath}/resources/images/${bbo.num}.png">
+						</div>
+						<div class="mt-0">
+							<input type="text" name="userId" class="form-control" readonly
+								placeholder="뱃지이름 : ${bbo.name}">
+						</div>
+						<div>
+							<input type="password" name="userEamil" autocomplete="off"
+								readonly class="form-control"
+								placeholder="뱃지설명 : ${bbo.description}">
+						</div>
+						</c:forEach>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 
 window.onload = function() {
@@ -729,6 +768,19 @@ window.onload = function() {
     // 매너 온도 점수를 기준으로 프로그레스 바의 너비를 설정
     progressBar.style.width = (mannerTemperature)/5 + '%';
     progressBar.setAttribute('aria-valuenow', mannerTemperature);
+    
+    let url = "${pageContext.request.contextPath}/mypage/badgeInsert";
+	let query = "";
+	
+    const fn = function(data) {
+        let state = data.state;
+        if (state === "true") {
+            alert("뱃지 성공");
+        } else {
+            alert("뱃지 실패");
+        }
+    };
+    ajaxFun(url, "post", query, "json", fn);
 };
 
 
@@ -863,6 +915,10 @@ function delivery() {
 
     // ajaxFun 호출, query는 필요 없는 경우 빈 문자열로 설정
     ajaxFun(url, "post", query, "json", fn);
+}
+
+function badge(){
+	$('#badgeModal').modal('show');
 }
 
 function acceptMoney(button){
