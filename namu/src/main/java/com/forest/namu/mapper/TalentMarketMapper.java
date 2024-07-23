@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+
 import com.forest.namu.domain.TalentMarket;
 
 
@@ -49,6 +50,9 @@ public interface TalentMarketMapper {
 	public List<TalentMarket> listOptionDetail(long optionNum);
 	
 	
-	
+	public void insertTalentLike(Map<String, Object> map) throws SQLException;
+	public void deleteTalentLike(Map<String, Object> map) throws SQLException;
+	public int	talentLikeCount(long tboardNum);
+	public TalentMarket userTalentLiked(Map<String, Object> map);
 	
 }

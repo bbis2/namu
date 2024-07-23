@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.TmOrderMapper">
+	<insert id="insertTmOrder" parameterType="com.forest.namu.domain.TmOrder">
+		INSERT INTO tmOrder(applNum,applDate,state,userId,tboardNum) 
+		VALUES(tmorder_seq.NEXTVAL,SYSDATE,0,#{userId},#{tboardNum})
+	</insert>
+	
+	<select id="listTmOrder" parameterType="long" resultType="com.forest.namu.domain.TmOrder">
+		SELECT applNum,applDate,state,userId,tboardNum
+		FROM tmOrder
+		WHERE tboardNum = #{tboardNum}
+	</select>
+	
+	<select id="listTmOrderByUserId" parameterType="map" resultType="com.forest.namu.domain.TmOrder">
+		SELECT applNum,applDate,state,userId,tboardNum,completionDate,reviewState
+		FROM tmOrder
+		WHERE tboardNum = #{tboardNum} and userId = #{userId}
+	</select>
+	
+	<update id="updateState" parameterType="long">
+		UPDATE tmOrder
+		SET state=1
+		WHERE applNum = #{applNum}
+	</update>
+	
+	<update id="updateComplete" parameterType="long">
+		UPDATE tmOrder
+		SET state=1
+		WHERE applNum = #{applNum}
+	</update>
+	
+	<update id="updateReviewState" parameterType="long">
+		UPDATE tmOrder
+		SET reviewState=1
+		WHERE applNum = #{applNum}
+	</update>
+	
+	<delete id="deleteTmOrder" parameterType="long">
+		DELETE FROM tmOrder WHERE applNum=#{applNum}
+	</delete>
+</mapper>

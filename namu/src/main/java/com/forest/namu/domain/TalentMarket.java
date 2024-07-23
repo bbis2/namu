@@ -53,11 +53,29 @@ public class TalentMarket {
 	private String fileName;
 	private List<MultipartFile> addFiles;
 	
+	private boolean userLiked;
+	
+	// 찜 개수
+	private int likeCount;
+	
 	//수정전 옵션
 	private long prevOptionNum;
 	private long prevOptionNum2;
 	
 	
+	
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
+	}
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
 	public String getTown() {
 		return town;
 	}

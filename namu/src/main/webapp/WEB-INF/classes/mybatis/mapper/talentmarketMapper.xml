@@ -202,6 +202,24 @@
 		ORDER BY detailNum
 	</select>
 	
+		<!-- 찜 추가 -->
+	<insert id="insertTalentLike" parameterType="map">
+		INSERT INTO tmBookMarks(tboardNum, userId) VALUES (#{tboardNum}, #{userId})
+	</insert>
 	
+	<!-- 찜 삭제 -->
+	<delete id="deleteTalentLike" parameterType="map">
+		DELETE FROM tmBookMarks WHERE tboardNum = #{tboardNum} AND userId = #{userId}
+	</delete>
+	
+	<!-- 찜 개수 -->
+	<select id="talentLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*) FROM tmBookMarks WHERE tboardNum = #{tboardNum}
+	</select>
+
+	<!-- 찜 여부 -->
+	<select id="userTalentLiked" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
+		SELECT tboardNum, userId FROM tmBookMarks WHERE tboardNum = #{tboardNum} AND userId = #{userId}
+	</select>
 	
 </mapper>

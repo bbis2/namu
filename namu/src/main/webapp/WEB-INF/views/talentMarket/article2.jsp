@@ -299,37 +299,8 @@
     border-radius: 5px;
 }
 
- .review-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-}
-.review-toolbar .custom-button2 {
-    margin: 0;
-}
-.review-toolbar select {
-    margin: 0;
-}
-
 .review-rate .one-space.on {
     background: #f54a4c;
-}
-
-.reviewbox {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.reviewbutton {
-   flex: 1;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.reviewSort-area {
- flex:1;
 }
 
 .deleteReview, .notifyReview { cursor: pointer; padding-left: 5px; }
@@ -563,10 +534,9 @@ function validateAndSubmit() {
 						    </div>
 						</div>
 					</div>
-					<div class="reviewbox">
-					
-					<div class="row reviewSort-area">
-						<div class="col-auto">
+					<div class="col" style="display: flex;">&nbsp;<button type="button" class="btnReview btn custom-button2" ${empty sessionScope.member ? "disabled":""}> 상품 리뷰 작성 </button></div>
+					<div class="row mt-3 reviewSort-area">
+						<div class="col-auto text-end">
 							<select class="form-select reviewSortNo">
 								<option value="0"> 출력 순서 </option>
 								<option value="1"> 최신 글 </option>
@@ -574,10 +544,6 @@ function validateAndSubmit() {
 								<option value="3"> 평점 낮은순 </option>
 							</select>
 						</div>
-					</div>
-					<div class="reviewbutton">
-					<button type="button" class="btnReview btn custom-button2" ${empty sessionScope.member ? "disabled" : ""}>상품 리뷰 작성</button>
-					</div>
 					</div>
 					<div class="mt-2 list-review"></div>
                 </div>
@@ -603,7 +569,8 @@ function validateAndSubmit() {
 									<div class="p-1">
 										<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
 										<textarea name="review" id="review" class="form-control"></textarea>
-									</div>					
+									</div>
+														
 								</form>
 							</div>
 			

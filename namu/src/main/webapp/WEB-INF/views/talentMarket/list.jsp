@@ -30,6 +30,78 @@ function filterByTown() {
     document.getElementById("townFilterForm").submit();
 }
 
+
+function ajaxFun(url, method, formData, dataType, fn, file = false) {
+	const settings = {
+			type: method, 
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+	}
+	
+	$.ajax(url, settings);
+}
+
+$(function() {
+	$('.btnSendLike').click(function() {
+		
+		let $btn = $(this);
+		let userLiked = $btn.hasClass('on');
+		
+		let url = '${pageContext.request.contextPath}/talent/insertLike';
+		let num = $btn.next('input').val();
+		let query = 'tboardNum=' + num + '&userLiked=' + userLiked;
+		
+		// 토스트 팝업
+		let $toast = document.querySelector('#toast_message');
+		
+		const fn = function(data) {
+			let state = data.state;
+			if(state === 'true') {
+				let count = data.talentLikeCount;
+				$btn.closest('.list').find('.talentLikeCount').html('<i class="fa-solid fa-heart"></i>&nbsp;' + count);
+				
+				// 토스트 팝업
+				if(userLiked) {
+					$toast.innerText = '찜 목록에 추가되었습니다.';
+				} else {
+					$toast.innerText = '찜 목록에서 삭제되었습니다.';
+				}
+				
+				$toast.classList.add('active');
+				setTimeout(() => {
+					$toast.classList.remove('active');
+				}, 1500);
+			}
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
+
 </script>
 
 
@@ -131,12 +203,19 @@ function filterByTown() {
 		<div class="col-4">
 			<div class="row">
 				<div class="col">
+					
 					 <form id="townFilterForm" action="${pageContext.request.contextPath}/talent/list" method="get">
+					 
 					<h6 class="bd">나의 동네</h6>
 					<select name="town" class="form-select mb-4 border border-2" aria-label="Default select example" onchange="filterByTown()">
+						 <c:if test="${sessionScope.member.userId == null}">
+						 	<option selected>전체</option>
+						 </c:if>
+						 <c:if test="${sessionScope.member.userId != null}">	
 							 <option value="${sessionScope.member.town1}" <c:if test="${town == sessionScope.member.town1}">selected</c:if>>${sessionScope.member.town1}</option>
 					            <c:if test="${sessionScope.member.town2 != null}">
 					                <option value="${sessionScope.member.town2}" <c:if test="${town == sessionScope.member.town2}">selected</c:if>>${sessionScope.member.town2}</option>
+					            </c:if>
 					            </c:if>
 						</select>
 		
@@ -145,7 +224,9 @@ function filterByTown() {
 			</div>
 			<div class="d-flex">
 				<h5>
-				    [${town}] 동네의 
+					<c:if test="${sessionScope.member.userId != null}">
+				    [${town}] 동네의
+				    </c:if> 
 				    <span class="highlighted-text">${categoryNum==0 ? "전체" : category.categoryName}</span> 
 				    상품
 				</h5>
@@ -286,7 +367,7 @@ function filterByTown() {
     <input type="hidden" name="town" value="${town}">
 </form>
 
-  <script>
+  <script type="text/javascript">
   $(document).ready(function() {
 	    var currentCategory = ${categoryNum};
 
@@ -344,7 +425,12 @@ function filterByTown() {
                         <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-fluid object-fit-cover h-100" onclick="location.href='${articleUrl}&num=${dto.tboardNum}';">
                     </c:otherwise>
 		         </c:choose>
-					<button class="btn_like">like</button>
+		         <c:if test="${sessionScope.member.userId != null}">
+					<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
+									like
+					</button>
+					<input type="hidden" value="${dto.tboardNum}" class="likeTboardNum">
+				</c:if>
 				</div>
 				
 				<a href="${articleUrl}&num=${dto.tboardNum}" class="listTitle" style="display: flex;"> <h5 class="bd"> ${dto.subject} </h5></a>
@@ -357,7 +443,7 @@ function filterByTown() {
 				<a href="${pageContext.request.contextPath}/talent/profile?nickname=${dto.nickName}"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
 				<div class="float-end"><i class="bi bi-clipboard-heart" style="color: red;"></i>&nbsp;${dto.type}</div> 
 				<div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">
-					<p><i class="fa-solid fa-heart"></i>&nbsp;7</p>
+					<p><i class="fa-solid fa-heart"></i>&nbsp;${dto.likeCount}</p>
 					<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
 					<p><i class="fa-solid fa-clock"></i>&nbsp;${dto.daysDifference == 0 ? "오늘" : dto.daysDifference}${dto.daysDifference == 0 ?"":"일전"}</p>
 				</div>
@@ -372,7 +458,7 @@ function filterByTown() {
 		
 	</div>
 	<!-- 게시글 리스트 끝 -->
-
+	<div id="toast_message">찜 목록</div>
 </div>
 
 

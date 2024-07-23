@@ -21,7 +21,7 @@ import com.forest.namu.service.TmQuestionService;
 
 
 @RestController // @Controller + @ResponseBody
-@RequestMapping("/qna/*")
+@RequestMapping("/tmqna/*")
 public class TmQuestionController {
 	@Autowired
 	private TmQuestionService service;

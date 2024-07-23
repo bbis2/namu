@@ -340,6 +340,13 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		
 		try {
 			list = mapper.listTalentMarket(map);
+			
+			for(TalentMarket dto : list) {
+				map.put("tboardNum", dto.getTboardNum());
+				dto.setUserLiked(userTalentLiked(map));
+				dto.setLikeCount(talentLikeCount(dto.getTboardNum()));
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -440,6 +447,53 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			e.printStackTrace();
 		}
 		return dto;
+	}
+
+	@Override
+	public void insertTalentLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.insertTalentLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void deleteTalentLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.deleteTalentLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public int talentLikeCount(long tboardNum) {
+		int result = 0;
+		
+		try {
+			result = mapper.talentLikeCount(tboardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public boolean userTalentLiked(Map<String, Object> map) {
+		boolean result = false;
+		
+		try {
+			TalentMarket dto= mapper.userTalentLiked(map);
+			if(dto!=null) {
+				result =true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 

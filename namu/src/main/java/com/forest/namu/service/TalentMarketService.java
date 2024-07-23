@@ -31,4 +31,10 @@ public interface TalentMarketService {
 	public List<TalentMarket> listTalentMarketFile(long tboardNum);
 	
 	public List<TalentMarket> listCategory();
+	
+	public void insertTalentLike(Map<String, Object> map) throws Exception;
+	public void deleteTalentLike(Map<String, Object> map) throws Exception;
+	public int	talentLikeCount(long tboardNum);
+	public boolean userTalentLiked(Map<String, Object> map);
+	
 }

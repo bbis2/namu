@@ -20,7 +20,7 @@ import com.forest.namu.domain.TmReview;
 import com.forest.namu.service.TmReviewService;
 
 @RestController // @Controller + @ResponseBody
-@RequestMapping("/review/*")
+@RequestMapping("/tmreview/*")
 public class TmReviewController {
 	@Autowired
 	private TmReviewService service;

@@ -6,11 +6,13 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,9 @@ import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.TalentMarket;
+import com.forest.namu.domain.TmOrder;
 import com.forest.namu.service.TalentMarketService;
+import com.forest.namu.service.TmOrderService;
 
 
 
@@ -35,6 +39,9 @@ import com.forest.namu.service.TalentMarketService;
 public class TalentMarketController {
 	@Autowired
 	private TalentMarketService service;
+	
+	@Autowired
+	private TmOrderService orderService;
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -54,9 +61,10 @@ public class TalentMarketController {
 			Model model) throws Exception{
 		
 		String cp = req.getContextPath();
+		SessionInfo info = null;
 		
 		 if (town == null || town.isEmpty()) {
-	            SessionInfo info = (SessionInfo) session.getAttribute("member");
+	             info = (SessionInfo) session.getAttribute("member");
 	            if (info != null) {
 	                town = info.getTown1(); 
 	            }
@@ -74,6 +82,9 @@ public class TalentMarketController {
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		if (info != null) {
+			map.put("userId", info.getUserId());
+        }
 		map.put("talentShow", talentShow);
 		map.put("schType", schType);
 		map.put("kwd", kwd);
@@ -240,7 +251,7 @@ public class TalentMarketController {
 			HttpSession session,
 			Model model)  throws Exception{
 		
-		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		kwd = URLDecoder.decode(kwd, "utf-8");
 		
 		String query = "page=" + page;
@@ -253,6 +264,15 @@ public class TalentMarketController {
 		
 		if(dto==null) {
 			return "redirect:/talent/list?"+query;
+		}
+		
+		List<TmOrder> orderList =null;
+		if(info!=null) {
+		Map<String, Object> ordermap = new HashMap<String, Object>();
+		ordermap.put("userId", info.getUserId());
+		ordermap.put("tboardNum", num);
+		
+		orderList = orderService.listTmOrderByUserId(ordermap);
 		}
 		
 		List<TalentMarket> listFile = service.listTalentMarketFile(num);
@@ -279,6 +299,7 @@ public class TalentMarketController {
 		model.addAttribute("listOptionDetail2", listOptionDetail2);
 		model.addAttribute("query",query);
 		model.addAttribute("listFile",listFile);
+		model.addAttribute("orderList",orderList);
 		
 		
 		return ".talentMarket.article";
@@ -343,4 +364,66 @@ public class TalentMarketController {
 		return "redirect:/talent/list?" + query ;
 	}
 	
+	@GetMapping("order")
+	public String order(Member member, HttpSession session, Model model,
+			@RequestParam Optional<String> option1,
+            @RequestParam Optional<String> option2,
+			@RequestParam long tboardNum) {
+		
+		
+		
+		
+		TalentMarket dto=service.findById(tboardNum);
+		List<TalentMarket> listOption = service.listTalentOption(tboardNum);
+		
+		String opt1 = option1.orElse("0");
+	    String opt2 = option2.orElse("0");
+		
+		model.addAttribute("dto",dto);
+		model.addAttribute("listOption",listOption);
+		model.addAttribute("option1",opt1);
+		model.addAttribute("option2",opt2);
+		
+		return ".talentMarket.order";
+	}
+	
+	@PostMapping("insertLike")
+	@ResponseBody
+	public Map<String, Object> insertLike(
+			@RequestParam long tboardNum,
+			@RequestParam boolean userLiked,
+			HttpSession session
+			) {
+		
+		String state = "true";
+		int talentLikeCount = 0;
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tboardNum", tboardNum);
+		paramMap.put("userId", info.getUserId());
+		
+		try {
+			if(userLiked) {
+				service.insertTalentLike(paramMap);
+			} else {
+				service.deleteTalentLike(paramMap);
+			}
+		} catch (DuplicateKeyException e) {
+			state = "liked";
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		talentLikeCount = service.talentLikeCount(tboardNum);
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("talentLikeCount", talentLikeCount);
+		
+		return model;
+	}
+	
 }
+	
+
