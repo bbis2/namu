@@ -22,6 +22,7 @@ import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Point;
 import com.forest.namu.domain.Profile;
 import com.forest.namu.domain.SessionInfo;
+import com.forest.namu.domain.Url;
 import com.forest.namu.service.BadgeService;
 import com.forest.namu.service.DeliveryService;
 import com.forest.namu.service.MypageService;
@@ -293,6 +294,49 @@ public class MyPageController {
 		}
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("state", state);
+		return model;
+	}
+	
+	
+	@GetMapping("myWrite")
+	@ResponseBody
+	public Map<String, Object> myWrite(HttpSession session) throws Exception {
+
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		List<Url> list = myService.myWrite(info.getUserId());
+		List<Url> list2 = myService.myWrite2(info.getUserId());
+		
+		if (list.isEmpty()) {
+			state = "false";
+		}
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("Wlist1", list);
+		model.put("Wlist2", list2);
+		return model;
+	}
+	
+	@GetMapping("myGGim")
+	@ResponseBody
+	public Map<String, Object> myGGim(HttpSession session) throws Exception {
+
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		List<Url> list = myService.myGGim(info.getUserId());
+		List<Url> list2 = myService.myGGim2(info.getUserId());
+		
+		if (list.isEmpty()) {
+			state = "false";
+		}
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("Glist1", list);
+		model.put("Glist2", list2);
 		return model;
 	}
 

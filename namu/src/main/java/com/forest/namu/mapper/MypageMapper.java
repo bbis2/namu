@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.forest.namu.domain.Delivery;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Profile;
+import com.forest.namu.domain.Url;
 
 @Mapper
 public interface MypageMapper {
@@ -21,4 +22,11 @@ public interface MypageMapper {
 	public void updateRider3(Delivery dto)throws Exception;
 	public void updateRider4(Delivery dto)throws Exception;
 	public List<Delivery> waitRider(String userId)throws Exception;
+	
+	
+	public List<Url> myWrite(String userId)throws Exception;
+	public List<Url> myWrite2(String userId)throws Exception;
+
+	public List<Url> myGGim(String userId)throws Exception;
+	public List<Url> myGGim2(String userId)throws Exception;
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.TmQuestionMapper">
+	<insert id="insertQuestion" parameterType="com.forest.namu.domain.TmQuestion">
+		INSERT INTO talentQna(num, tboardNum, userId, secret, question, showQuestion, locked, questionDate)
+			VALUES(talentQna_seq.NEXTVAL, #{tboardNum}, #{userId}, #{secret}, #{question}, 1, 0, SYSDATE)
+	</insert>
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM talentQna
+		WHERE tboardNum = #{tboardNum} AND showQuestion = 1 AND locked = 0
+	</select>
+		
+	<select id="listQuestion" parameterType="map" resultType="com.forest.namu.domain.TmQuestion">
+		SELECT q.num, q.userId, m.nickName, secret, question, answer, m2.userId answerId, m2.nickName answerName, 
+			q.tboardNum, showQuestion,
+			questionDate, answerDate
+		FROM talentQna q
+		JOIN member m ON q.userId = m.userId
+		LEFT OUTER JOIN member m2 ON answerId = m2.userId
+		WHERE q.tboardNum = #{tboardNum} AND showQuestion = 1 AND locked = 0
+		ORDER BY q.num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+
+	<select id="dataCount2" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM talentQna
+		<where>
+			<if test="userId != null">
+				userId = #{userId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+	</select>
+		
+	<select id="listQuestion2" parameterType="map" resultType="com.forest.namu.domain.TmQuestion">
+		SELECT q.num, q.userId, m.nickName, secret, question, answer, 
+			m2.userId answerId, m2.nickName answerName, 
+			q.tboardNum, subject, showQuestion, locked,
+			questionDate, answerDate
+		FROM talentQna q
+		JOIN talentMarket p ON q.tboardNum = p.tboardNum 
+		JOIN member1 m ON q.userId = m.userId
+		
+		LEFT OUTER JOIN member1 m2 ON answerId = m2.userId
+		<where>
+			<if test="userId != null">
+				q.userId = #{userId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+		ORDER BY q.num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<update id="updateQuestion" parameterType="com.forest.namu.domain.TmQuestion">
+		UPDATE talentQna SET answer = #{answer}, answerId = #{answerId}, answerDate = SYSDATE, 
+			showQuestion = #{showQuestion}, locked = #{locked}
+		WHERE num = #{num}
+	</update>
+		
+		
+	<delete id="deleteQuestion" parameterType="long">
+		DELETE FROM talentQna
+		WHERE num = #{num}
+	</delete>
+</mapper>

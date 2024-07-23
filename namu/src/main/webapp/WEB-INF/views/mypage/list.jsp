@@ -360,11 +360,11 @@ h1 {
 					style="display: flex; border: none;">
 					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
 						<!-- 왼쪽 영역 -->
-						<p>
-							<img class="icons"
+						<a class="link-block" onclick="myGGim();">
+							<img class="icons" 
 								src="${pageContext.request.contextPath}/resources/images/icon_heart.png">
 							&nbsp;관심목록
-						</p>
+						</a>
 						<a class="link-block" onclick="delivery();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_transaction.png">
@@ -373,12 +373,12 @@ h1 {
 					</div>
 					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
 						<!-- 오른쪽 영역 -->
-						<p>
+						<a class="link-block" onclick="myWrite();">
 							<img class="icons"
 								src="${pageContext.request.contextPath}/resources/images/icon_pencil.png">
 							&nbsp;내가쓴글
-						</p>
-						<a onclick="badge();"> <img class="icons"
+						</a>
+						<a class="link-block" onclick="badge();"> <img class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_badge.png">
 							&nbsp;나의뱃지
 						</a>
@@ -759,6 +759,70 @@ h1 {
 	</div>
 </div>
 
+<!-- 내가 쓴 글 -->
+<div id="myWrite" class="modal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<!-- modal-lg 추가 -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">내가 쓴글</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table id="myWriteTable" class="table">
+					<thead>
+						<tr>
+							<th>제목</th>
+							<th>페이지</th>
+							<th>작성시간</th>
+							<th>이동하기</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 데이터가 동적으로 추가됩니다 -->
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 찜목록 -->
+<div id="myGGim" class="modal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<!-- modal-lg 추가 -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">관심목록</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table id="myGGimTable" class="table">
+					<thead>
+						<tr>
+							<th>제목</th>
+							<th>페이지</th>
+							<th>이동하기</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 데이터가 동적으로 추가됩니다 -->
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 
 window.onload = function() {
@@ -775,9 +839,7 @@ window.onload = function() {
     const fn = function(data) {
         let state = data.state;
         if (state === "true") {
-            alert("뱃지 성공");
         } else {
-            alert("뱃지 실패");
         }
     };
     ajaxFun(url, "post", query, "json", fn);
@@ -920,6 +982,220 @@ function delivery() {
 function badge(){
 	$('#badgeModal').modal('show');
 }
+
+function myWrite() {
+    let url = "${pageContext.request.contextPath}/mypage/myWrite";
+    let query = "";
+
+    const fn = function(data) {
+        let state = data.state;
+        if (state === "true") {
+            let htmlContent = '';
+            
+            for (let it of data.Wlist1) {
+                let msg;
+                
+                // tableName에 따라 메시지 설정
+                switch (it.tableName) {
+                    case 'together':
+                        msg = '나무모임';
+                        break;
+                    case 'delivery': // 예시로 거절 상태를 문자열로 가정
+                        msg = '배달';
+                        break;
+                    case 'talent': // 예시로 정산 대기를 문자열로 가정
+                        msg = '재능마켓';
+                        break;
+                    case 'daily': // 예시로 완료 상태를 문자열로 가정
+                        msg = '나무일상';
+                        break;
+                    case 'used': // 예시로 완료 상태를 문자열로 가정
+                        msg = '중고거래';
+                        break;
+                    case 'auction': // 예시로 완료 상태를 문자열로 가정
+                        msg = '중고경매';
+                        break;
+                    default:
+                        msg = '알 수 없음';
+                        break;
+                }
+
+                // HTML 콘텐츠 생성
+                htmlContent += '<tr>';
+                htmlContent += '<td>' + it.subject + '</td>';
+                htmlContent += '<td>' + msg + '</td>';
+                htmlContent += '<td>' + it.regDate + '</td>';
+                htmlContent += '<td><button type="button" class="btn btn-primary" onclick="moveArticle(\'' + it.tableName + '\', ' + it.num + ');">이동하기</button></td>';
+                htmlContent += '</tr>';
+            }
+
+            	for (let it of data.Wlist2) {
+                    let msg;
+                    
+                    // tableName에 따라 메시지 설정
+                    switch (it.tableName) {
+                        case 'borrow':
+                            msg = '빌려드림';
+                            break;
+                        case 'rent': // 예시로 거절 상태를 문자열로 가정
+                            msg = '빌림';
+                            break;
+                        default:
+                            msg = '알 수 없음';
+                            break;
+                    }
+            	
+                htmlContent += '<tr>';
+                htmlContent += '<td>' + it.subject + '</td>';
+                htmlContent += '<td>' + msg + '</td>';
+                htmlContent += '<td>' + it.regDate + '</td>';
+                htmlContent += '<td><button type="button" class="btn btn-primary" onclick="moveArticle2(\'' + it.tableName + '\', ' + it.num + ', ' + it.categoryNum + ', \'' + it.location + '\');">이동하기</button></td>';
+                htmlContent += '</tr>';
+            }
+
+            $('#myWriteTable tbody').html(htmlContent);
+            $('#myWrite').modal('show');
+        } else {
+            alert("작성한 글이 없습니다.");
+        }
+    };
+
+    ajaxFun(url, "get", query, "json", fn);
+}
+
+// 개별 기사로 이동하는 함수
+function moveArticle(tableName, num) {
+	if(tableName === 'auction'){
+		location.href = "${pageContext.request.contextPath}/" + tableName + "/article?aNum=" + num + "&page=1";
+	}else{
+		location.href = "${pageContext.request.contextPath}/" + tableName + "/article?num=" + num + "&page=1";
+	}
+    
+}
+
+function moveArticle2(tableName, num, categoryNum, location2) {
+
+    var townNum = 1;
+
+    if (location2 === '${sessionScope.member.town2}') {
+        townNum = 2;
+    }
+    alert("들어옴");
+    console.log(townNum);
+   // http://localhost:9090/namu/borrow/article?townNum=1&categoryNum=0&page=1&num=20
+	let url = "${pageContext.request.contextPath}/"+tableName+"/article?num="+num+"&page=1&categoryNum="+categoryNum+"&townNum="+townNum;
+	console.log(url);
+    location.replace(url);
+}
+
+function myGGim() {
+    let url = "${pageContext.request.contextPath}/mypage/myGGim";
+    let query = "";
+
+    const fn = function(data) {
+        let state = data.state;
+        if (state === "true") {
+            let htmlContent = '';
+         
+            	for (let it of data.Glist1) {
+                    let msg;
+                    
+                    // tableName에 따라 메시지 설정
+                    switch (it.tableName) {
+                        case 'together':
+                            msg = '나무모임';
+                            break;
+                        case 'delivery': // 예시로 거절 상태를 문자열로 가정
+                            msg = '배달';
+                            break;
+                        case 'talent': // 예시로 정산 대기를 문자열로 가정
+                            msg = '재능마켓';
+                            break;
+                        case 'daily': // 예시로 완료 상태를 문자열로 가정
+                            msg = '나무일상';
+                            break;
+                        case 'used': // 예시로 완료 상태를 문자열로 가정
+                            msg = '중고거래';
+                            break;
+                        case 'auction': // 예시로 완료 상태를 문자열로 가정
+                            msg = '중고경매';
+                            break;
+                        default:
+                            msg = '알 수 없음';
+                            break;
+                    }
+            	
+            	
+            
+                htmlContent += '<tr>';
+                htmlContent += '<td><img class="icons" src="' + 
+                '${pageContext.request.contextPath}/resources/images/icon_heart.png" />&nbsp;' + 
+                it.subject + '</td>';
+
+                htmlContent += '<td>' + msg + '</td>';
+                htmlContent += '<td><button type="button" class="btn btn-primary" onclick="ggimArticle(\'' + it.tableName + '\', ' + it.num + ');">이동하기</button></td>';
+                htmlContent += '</tr>';
+            }
+   
+            	
+            	for (let it of data.Glist2) {
+                    let msg;
+                    
+                    // tableName에 따라 메시지 설정
+                    switch (it.tableName) {
+                        case 'borrow':
+                            msg = '빌려드림';
+                            break;
+                        case 'rent': // 예시로 거절 상태를 문자열로 가정
+                            msg = '빌림';
+                            break;
+                        default:
+                            msg = '알 수 없음';
+                            break;
+                    }	
+            	
+            
+                htmlContent += '<tr>';
+                htmlContent += '<td><img class="icons" src="' + 
+                '${pageContext.request.contextPath}/resources/images/icon_heart.png" />&nbsp;' + 
+                it.subject + '</td>';
+
+                htmlContent += '<td>' + msg + '</td>';
+                htmlContent += '<td><button type="button" class="btn btn-primary" onclick="ggimArticle2(\'' + it.tableName + '\', ' + it.num + ', ' + it.categoryNum + ', \'' + it.location + '\');">이동하기</button></td>';
+                htmlContent += '</tr>';
+            }
+
+            $('#myGGimTable tbody').html(htmlContent);
+            $('#myGGim').modal('show');
+        } else {
+            alert("작성한 글이 없습니다.");
+        }
+    };
+
+    ajaxFun(url, "get", query, "json", fn);
+}
+
+// 개별 기사로 이동하는 함수
+function ggimArticle(tableName, num) {
+	if(tableName === 'auction'){
+		location.href = "${pageContext.request.contextPath}/" + tableName + "/article?aNum=" + num + "&page=1";
+	}else{
+		location.href = "${pageContext.request.contextPath}/" + tableName + "/article?num=" + num + "&page=1";
+	}
+    
+}
+
+function ggimArticle2(tableName, num, categoryNum, location2) {
+
+    var townNum = 1;
+
+    if (location2 === '${sessionScope.member.town2}') {
+        townNum = 2;
+    }
+	let url = "${pageContext.request.contextPath}/"+tableName+"/article?num="+num+"&page=1&categoryNum="+categoryNum+"&townNum="+townNum;
+    location.replace(url);
+}
+
 
 function acceptMoney(button){
 	const f = document.riderForm;
