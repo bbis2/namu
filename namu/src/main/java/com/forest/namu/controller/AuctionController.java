@@ -31,9 +31,6 @@ import com.forest.namu.service.AuctionService;
 public class AuctionController {
 	
 	@Autowired
-	private AuctionBoardService bService;
-	
-	@Autowired
 	private AuctionService service;
 	
 	@Autowired

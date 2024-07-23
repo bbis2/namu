@@ -3,7 +3,7 @@
 <mapper namespace="com.forest.namu.mapper.AuctionBoardMapper">
 
 <!-- 질문 -->
-<insert id="insertQuestion" parameterType="com.forest.namu.domain.AuctionQna">
+<insert id="insertQuestion" parameterType="com.forest.namu.domain.AuctionBoard">
 	insert into auctionBoard(qNum, userNickName, question, questionDate, secret, userId, aNum) 
 	values(auctionBoard_seq.nextval, #{userNickName}, #{question}, sysdate, #{secret}, #{userId}, #{aNum})
 </insert>
@@ -13,7 +13,7 @@
 </delete>
 
 <!-- 답변 -->
-<update id="insertAnswer" parameterType="com.forest.namu.domain.AuctionQna">
+<update id="insertAnswer" parameterType="com.forest.namu.domain.AuctionBoard">
 	update set auctionBoard answerNickName=#{answerNickName}, answer=#{answer}, answerDate=sysdate
 </update>
 
@@ -24,21 +24,21 @@
 </select>
 
 <!-- 리스트 -->
-<select id="listQuestion" resultType="com.forest.namu.domain.AuctionQna" parameterType="map">
+<select id="listQuestion" resultType="com.forest.namu.domain.AuctionBoard" parameterType="map">
 
 </select>
 
-<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.AuctionQna">
+<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.AuctionBoard">
 	
               
 </select>
 
-<select id="findByPrev" parameterType="map" resultType="com.forest.namu.domain.AuctionQna">
+<select id="findByPrev" parameterType="map" resultType="com.forest.namu.domain.AuctionBoard">
 	
 
 </select>
 	
-<select id="findByNext" parameterType="map" resultType="com.forest.namu.domain.AuctionQna">
+<select id="findByNext" parameterType="map" resultType="com.forest.namu.domain.AuctionBoard">
 	
 
 </select>
