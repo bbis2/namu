@@ -27,6 +27,33 @@
 	border: 1px solid #c2c2c2;
 	cursor: pointer;
 }
+
+.btn-cg {
+ border:none;
+ border-radius: 7px;
+ padding: 3px;
+ margin-right: 7px;
+ cursor: pointer;
+}
+
+.btn-cg.active {
+ background-color: skyblue; 
+ color: white;
+}
+
+.btn-town {
+ border:none;
+ border-radius: 7px;
+ padding: 3px;
+ margin-right: 7px;
+ cursor: pointer;
+}
+
+.btn-town.active {
+ background-color: skyblue; 
+ color: white;
+}
+
 </style>
 
 <div class="container body-container">
@@ -37,6 +64,17 @@
 		<form name="UsedForm" method="post" enctype="multipart/form-data">
 			<table class="table mt-2 write-form">
 			<tr>
+				<td class="bg-light col-sm-2" scope="row">카테고리</td>
+				<td>
+				  <button type="button" class="btn-cg ${empty dto || dto.cnum==1?'active':'' }" value="1" onclick="cnumChange(1)">디지털ㆍ가전</button>
+				  <button type="button" class="btn-cg ${dto.cnum==2?'active':'' }" value="2" onclick="cnumChange(2)">의류</button>
+				  <button type="button" class="btn-cg ${dto.cnum==3?'active':'' }" value="3" onclick="cnumChange(3)">식품</button>
+                  <button type="button" class="btn-cg ${dto.cnum==4?'active':'' }" value="4" onclick="cnumChange(4)">도서ㆍ상품권</button>
+                  <button type="button" class="btn-cg ${dto.cnum==5?'active':'' }" value="5" onclick="cnumChange(5)">기타</button>
+                  <input type="hidden" name="cnum" value="1">
+				</td>
+			</tr>
+			<tr>
 				<td class="bg-light col-sm-2" scope="row">제목</td>
 				<td>
 					<input class="block" type="text" name="subject" value="${dto.subject}">
@@ -46,6 +84,14 @@
 				<td class="bg-light col-sm-2" scope="row">작성자</td>
 				<td>
 					<p class="block">${sessionScope.member.nickName}</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="bg-light col-sm-2" scope="row">나의 동네</td>
+				<td>
+					<button type="button" class="btn-town ${dto.town==1?'active':'' }" value="1" onclick="townChange(1)">${sessionScope.member.town1}</button>
+					<button type="button" class="btn-town ${dto.town==2?'active':'' }" value="2" onclick="townChange(2)">${sessionScope.member.town2}</button>
+					<input type="hidden" name="town" value="1">
 				</td>
 			</tr>
 			<tr>
@@ -245,12 +291,21 @@ $(function(){
 function check() {
 	const f = document.UsedForm;
 	let str;
+	
+	str = f.cnum.value.trim();
+ 	if(!str) {
+ 		alert("카테고리를 선택하세요.");
+ 		f.cnum.focus();
+	 return false;
+	 	}
+ 	
  	str = f.subject.value.trim();
  	if(!str) {
  		alert("제목을 입력하세요.");
  		f.subject.focus();
 	 return false;
 	 	}
+ 	
 	 str = f.content.value.trim();
 	 if(! str || str === "<p><br></p>") {
 		 alert("내용을 입력하세요. ");
@@ -269,6 +324,35 @@ function UsedDelete() {
 	f.action = "${pageContext.request.contextPath}/used/list";
 	f.submit();
 }
+
+function cnumChange(cnum) {
+	const f = document.UsedForm;
+	
+	f.cnum.value = cnum;
+}
+
+function townChange(cnum) {
+	const f = document.UsedForm;
+	
+	f.town.value = town;
+}
+
+
+// 카테고리 버튼 클릭 시
+document.querySelectorAll('.btn-cg').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.btn-cg').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+  });
+});
+
+// 주소 버튼 클릭 시
+document.querySelectorAll('.btn-town').forEach(button => {
+	  button.addEventListener('click', () => {
+	    document.querySelectorAll('.btn-town').forEach(btn => btn.classList.remove('active'));
+	    button.classList.add('active');
+	  });
+	});
 </script>
 
 <style>
@@ -279,5 +363,6 @@ margin-top: 100px;
 .block {
 	border: none;
 }
+
 </style>
 

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.AuctionMapper">
+
+<!-- 경매 시퀀스 -->
+<select id="auction_seq" resultType="Long">
+	select auction_seq.nextval from dual
+</select>
+
+
+<sql id="where-list">
+	( INSTR(subject, #{kwd}) &gt; 0
+	    OR  INSTR(content, #{kwd}) &gt; 0 )
+</sql>
+
+<!-- 추가 -->
+<insert id="insertAuction" parameterType="com.forest.namu.domain.Auction">
+	insert into auction(aNum, subject, minBid, hitCount, state, 
+			salesStart, salesEnd, userId, content, imageFile, cnum, town, regDate)
+		values(#{aNum}, #{subject}, #{minBid}, 0, 0, 
+			#{salesStart}, #{salesEnd}, #{userId}, #{content}, #{imageFile, jdbcType=VARCHAR}, #{cnum}, #{town}, sysdate)	
+</insert>
+
+<!-- 수정 -->
+<update id="updateAuction" parameterType="com.forest.namu.domain.Auction">
+	update auction set cnum=#{cnum}, subject=#{subject}, content=#{content}, salesStart=#{salesStart}, minBid=#{minBid},
+			state=#{state}, imageFile=#{imageFile, jdbcType=VARCHAR}, town=#{town}, salesEnd=#{salesEnd}
+	where aNum = #{aNum}
+</update>
+
+<!-- 삭제 -->
+<delete id="deleteAuction" parameterType="com.forest.namu.domain.Auction">
+	delete from auction where aNum=#{aNum}
+</delete>
+
+<!-- 리스트 -->
+<!-- 입찰 내역 있어야 조회됨 ㅠ -->
+<!-- 
+select a.aNum, a.subject, a.minBid, a.state, a.content, imageFile, a.hitCount,
+	TO_CHAR(a.salesStart, 'YYYY-MM-DD') salesStart, TO_CHAR(a.salesEnd, 'YYYY-MM-DD') salesEnd, 
+	b.bid, m.town1, nvl(likeCount, 0)likeCount, a.cnum, c.name, a.town, a.userId
+	from auction a
+	join bidDetails b on b.aNum = a.aNum
+	join member m on a.userId = m.userId 
+	join auctioncategory c on a.cnum = c.cnum
+   left outer join (select aNum, count(*)likeCount from auctionLike group by aNum )al on a.aNum = al.aNum
+ -->
+<select id="listAuction" parameterType="map" resultType="com.forest.namu.domain.Auction">
+	select a.aNum, a.subject, a.minBid, a.state, a.content, imageFile, a.hitCount,
+	TO_CHAR(a.salesStart, 'YYYY-MM-DD') salesStart, TO_CHAR(a.salesEnd, 'YYYY-MM-DD') salesEnd, 
+	m.town1, nvl(likeCount, 0)likeCount, a.cnum, c.name, a.town, a.userId
+	from auction a
+	join member m on a.userId = m.userId 
+	join auctioncategory c on a.cnum = c.cnum
+   left outer join (select aNum, count(*)likeCount from auctionLike group by aNum )al on a.aNum = al.aNum
+	<where>
+		<if test="kwd != null and kwd != '' ">
+			<include refid="where-list"/>
+		</if>
+		<if test="cnum != 0">
+			AND a.cnum = #{cnum}
+		</if>
+		<if test="town != 0">
+			AND a.town = #{town}
+		</if>		
+	</where>   
+	order by aNum desc
+	OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY	
+</select>
+
+<!-- 게시글 수 -->
+<select id="dataCount" parameterType="map" resultType="Integer">
+select nvl(count(*),0)
+	from auction a
+	<where>
+		<if test="kwd != null and kwd != '' ">
+			<include refid="where-list"/>
+		</if>
+		<if test="cnum != 0">
+			AND a.cnum = #{cnum}
+		</if>
+		<if test="town != 0">
+			AND a.town = #{town}
+		</if>		
+	</where>
+</select>
+
+
+<select id="listCategory" resultType="com.forest.namu.domain.Auction">
+  select cNum, name from auctioncategory 
+</select>
+
+<!-- 조회수 -->
+<select id="updateHitCount" parameterType="Long">
+	update auction set hitCount = hitCount+1 where aNum = #{aNum}
+</select>
+
+<!-- 글보기 -->
+<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Auction">
+	select a.aNum, a.content, a.imageFile, a.subject, a.minBid, a.state, a.hitCount, a.cnum,
+	to_char(a.salesStart,'YYYY-MM-DD') salesStart, TO_CHAR(a.salesEnd, 'YYYY-MM-DD') salesEnd, 
+	m.nickName, m.town1, a.userId, m.nickName, a.town
+	from auction a 
+	left outer join(select aNum, count(*)
+	from auctionlike
+	group by aNum) al on a.aNum = al.aNum
+	join member m on a.userId = m.userId
+	where a.aNum = #{a.aNum}
+</select>
+
+<!-- 찜 수 -->
+<select id="likeCount" parameterType="map" resultType="Integer">
+	select count(*)
+	from auctionLike
+	where aNum = #{aNum} and userId = #{userId}
+</select>
+
+<!-- 찜 추가 -->
+<insert id="insertAuctionLike" parameterType="map">
+	insert into auctionLike(aNum, userId) values(#{aNum}, #{userId})
+</insert>
+
+<!-- 찜 삭제 -->
+<delete id="deleteAuctionLike" parameterType="map">
+	delete from auctionLike 
+	where aNum = #{aNum} and userId = #{userId}
+</delete>
+
+<!-- 다중 파일 추가 -->
+<insert id="insertAuctionFile" parameterType="com.forest.namu.domain.Auction">
+	insert into auctionFile(filenum, aNum, uploadFile) values(auctionFile_seq.nextval, #{aNum}, #{uploadFile})
+</insert>
+
+<!-- 다중 파일 삭제 -->
+<delete id="deleteAuctionFile" parameterType="Long">
+	delete from auctionFile where fileNum = #{fileNum}
+</delete>
+
+<!-- 파일 리스트 -->
+<select id="listAuctionFile" resultType="com.forest.namu.domain.Auction" parameterType="Long">
+	select fileNum, aNum, uploadFile
+	from auctionFile 
+	where aNum = #{aNum}
+</select>
+
+<!-- 다중 파일 보기 -->
+<select id="findByFileId" resultType="com.forest.namu.domain.Auction" parameterType="Long">
+	select fileNum, aNum, uploadFile
+	from auctionFile
+	where fileNum = #{fileNum}
+</select>
+
+</mapper>

@@ -88,18 +88,17 @@ textarea.form-control {
 }
 </style>
 
-<c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership > 99}">
-    <script type="text/javascript">
-        function deleteBoard() {
-            if (confirm('게시글을 삭제 하시겠습니까?')) {
-                let query = 'num=${dto.num}&${query}';
-                let url = '${pageContext.request.contextPath}/daily/delete?' + query;
-                location.href = url;
-            }
-        }
-    </script>
+<c:if test="${sessionScope.member.userId==dto.userId}">
+	<script type="text/javascript">
+		function deleteBoard() {
+		    if(confirm('게시글을 삭제 하시 겠습니까 ? ')) {
+			    let query = 'num=${dto.num}&${query}';
+			    let url = '${pageContext.request.contextPath}/daily/delete?' + query;
+		    	location.href = url;
+		    }
+		}
+	</script>
 </c:if>
-
 <div class="container">
     <section class="fleamarket-cover">
         <h1 class="cover-title htext bd">소통하는<br>일상 생활</h1>
@@ -110,7 +109,7 @@ textarea.form-control {
 
     <div class="body-title">
         <h2 style="font-weight: bold;">${dto.categoryName}</h2>
-        <h4>서울특별시 마포구</h4>
+        <h4>${dto.town}</h4>
     </div>
 
     <table class="table mt-5 mb-0 board-article">
@@ -172,7 +171,7 @@ textarea.form-control {
             <td width="50%">
                 <c:choose>
                     <c:when test="${sessionScope.member.userId == dto.userId}">
-                        <button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/daily/update?num=${dto.num}&page=${page}&categoryNum=${dto.categoryNum}';">수정</button>
+                        <button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/daily/update?num=${dto.num}&page=${page}&categoryNum=${dto.categoryNum}&town=${town}';">수정</button>
                     </c:when>
                     <c:otherwise>
                         <button type="button" class="btn btn-light" disabled>수정</button>
@@ -223,32 +222,31 @@ function login() {
     location.href = '${pageContext.request.contextPath}/member/login';
 }
 
-function ajaxFun(url, method, formData, dataType, fn) {
-    const settings = {
-        type: method,
-        data: formData,
-        dataType: dataType,
-        success: function(data) {
-            fn(data);
-        },
-        beforeSend: function(jqXHR) {
-            jqXHR.setRequestHeader('AJAX', true);
-        },
-        complete: function() {
-            // 요청 완료 후 실행할 코드
-        },
-        error: function(jqXHR) {
-            if (jqXHR.status === 403) {
-                login();
-                return false;
-            } else if (jqXHR.status === 400) {
-                alert('요청 처리가 실패했습니다.');
-                return false;
-            }
-
-            console.log(jqXHR.responseText);
-        }
-    };
+function ajaxFun(url, method, formData, dataType, fn, file = false) {
+	const settings = {
+			type: method, 
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
 
     $.ajax(url, settings);
 }
@@ -264,8 +262,8 @@ $(function() {
         }
 
         let url = '${pageContext.request.contextPath}/daily/insertDailyLike';
-        let num = '${dto.num}';
-        let query = 'num=' + num + '&userLiked=' + userLiked;
+		let num = '${dto.num}';
+		let query = 'num=' + num + '&userLiked=' + userLiked;
 
         const fn = function(data) {
             let state = data.state;
@@ -294,7 +292,7 @@ $(function() {
 });
 
 function listPage(page) {
-    let url = '${pageContext.request.contextPath}/daily/listReply';
+	let url = '${pageContext.request.contextPath}/daily/listReply';
     let query = 'num=${dto.num}&pageNo=' + page;
     let selector = '#listReply';
 
@@ -302,7 +300,7 @@ function listPage(page) {
         $(selector).html(data);
     };
 
-    ajaxFun(url, 'get', query, 'text', fn);
+	ajaxFun(url, 'get', query, 'text', fn);
 }
 
 // 댓글 등록
@@ -347,36 +345,250 @@ $(function() {
             $menu.fadeIn(100);
 
             let pos = $(this).offset(); 
-            $menu.offset({ left: pos.left - 70, top: pos.top + 20 });
+			$menu.offset( {left:pos.left-70, top:pos.top+20} );
         }
     });
 
-    $('.reply').on('click', function(event) {
-        if ($(event.target.parentNode).hasClass('reply-dropdown')) {
-            return false;
-        }
-        $(".reply-menu").hide();
-    });
+	$('.reply').on('click', function() {
+		if($(event.target.parentNode).hasClass('reply-dropdown')) {
+			return false;
+		}
+		$(".reply-menu").hide();
+	});
 });
 
-// 댓글 삭제
+//댓글 삭제
+$(function(){
+	$('.reply').on('click', '.deleteReply', function(){
+		if(! confirm('게시물을 삭제하시겠습니까 ? ')) {
+		    return false;
+		}
+		
+		let rNum = $(this).attr('data-rNum');
+		let page = $(this).attr('data-pageNo');
+		
+		let url = '${pageContext.request.contextPath}/daily/deleteReply';
+		let query = 'rNum=' + rNum + '&mode=reply';
+		
+		const fn = function(data){
+			listPage(page);
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
+
+
+$(function(){
+	// 댓글 좋아요 / 싫어요 등록
+	$('.reply').on('click', '.btnSendReplyLike', function(){
+		let rNum = $(this).attr('data-rNum');
+		let replyLike = $(this).attr('data-replyLike');
+		const $btn = $(this);
+		
+		let msg = '게시물이 마음에 들지 않으십니까 ?';
+		if(replyLike === '1') {
+			msg = '게시물에 공감하십니까 ?';
+		}
+		
+		if(! confirm(msg)) {
+			return false;
+		}
+		
+		let url = '${pageContext.request.contextPath}/daily/insertReplyLike';
+		let query = 'rNum=' + rNum + '&replyLike=' + replyLike;
+		
+		const fn = function(data){
+			let state = data.state;
+			if(state === 'true') {
+				let likeCount = data.likeCount;
+				let disLikeCount = data.disLikeCount;
+				
+				$btn.parent('td').children().eq(0).find('span').html(likeCount);
+				$btn.parent('td').children().eq(1).find('span').html(disLikeCount);
+			} else if(state === 'liked') {
+				alert('게시물 공감 여부는 한번만 가능합니다!');
+			} else {
+				alert('게시물 공감 여부 처리가 실패했습니다');
+			}
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
+
+//댓글별 답글 리스트
+function listReplyAnswer(answer) {
+	let url = '${pageContext.request.contextPath}/daily/listReplyAnswer';
+	let query = 'answer=' + answer;
+	let selector = '#listReplyAnswer' + answer;
+	
+	const fn = function(data) {
+		$(selector).html(data);
+	};
+	ajaxFun(url, 'get', query, 'text', fn);
+}
+
+//댓글별 답글 개수
+function countReplyAnswer(answer) {
+	let url = '${pageContext.request.contextPath}/daily/countReplyAnswer';
+	let query = 'answer=' + answer;
+	
+	const fn = function(data) {
+		let count = data.count;
+		let selector = '#answerCount' + answer;
+		$(selector).html(count);		
+	};
+	
+	ajaxFun(url,'post', query, 'json', fn);
+}
+
+//답글 버튼 
 $(function() {
-    $('.reply').on('click', '.deleteReply', function() {
-        if (!confirm('댓글을 삭제하시겠습니까?')) {
-            return false;
-        }
+	$('.reply').on('click', '.btnReplyAnswerLayout', function() {
+		const $trReplyAnswer = $(this).closest('tr').next();
+		
+		let isVisible = $trReplyAnswer.is(':visible');
+		let rNum = $(this).attr('data-rNum');
+		
+		if(isVisible){
+			$trReplyAnswer.hide();
+		} else {
+			$trReplyAnswer.show();
+			
+			listReplyAnswer(rNum);
+			countReplyAnswer(rNum);
+		}
+	});
+});
 
-        let rNum = $(this).attr('data-rNum');
-        let page = $(this).attr('data-pageNo');
+//댓글별 답글 등록
+$(function() {
+	$('.reply').on('click', '.btnSendReplyAnswer', function () {
+		let num = '${dto.num}';
+		let rNum = $(this).attr('data-rNum');
+		const $td = $(this).closest('td');
+		
+		let content =$td.find('textarea').val().trim();
+		if(! content) {
+			$td.find('textarea').focus();
+			return false;
+		}
+		
+		let url = '${pageContext.request.contextPath}/daily/insertReply';
+		let formData = {num:num, content:content, answer:rNum};
+		
+		const fn = function (data) {
+			$td.find('textarea').val('');
+			
+			var state = data.state;
+			if(state === 'true') {
+				listReplyAnswer(rNum);
+				countReplyAnswer(rNum);
+			}
+		};
+		
+		ajaxFun(url, 'post', formData, 'json', fn);
+	});
+});
+//댓글별 답글 삭제
+$(function(){
+	$('.reply').on('click', '.deleteReplyAnswer', function(){
+		if(! confirm('게시물을 삭제하시겠습니까 ? ')) {
+		    return false;
+		}
+		
+		let rNum = $(this).attr('data-rNum');
+		let answer = $(this).attr('data-answer');
+		
+		let url = '${pageContext.request.contextPath}/daily/deleteReply';
+		let query = 'rNum=' + rNum + '&mode=answer';
+		
+		const fn = function(data){
+			listReplyAnswer(answer);
+			countReplyAnswer(answer);
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
 
-        let url = '${pageContext.request.contextPath}/daily/deleteReply';
-        let query = 'rNum=' + rNum + '&mode=reply';
 
-        const fn = function(data) {
-            listPage(page);
-        };
+//댓글 숨김기능
+$(function(){
+	$('.reply').on('click', '.hideReply', function(){
+		let $menu = $(this);
+		
+		let rNum = $(this).attr('data-rNum');
+		let showReply = $(this).attr('data-showReply');
+		let msg = '댓글을 숨김 하시겠습니까 ? ';
+		if(showReply === '0') {
+			msg = '댓글 숨김을 해제 하시겠습니까 ? ';
+		}
+		if(! confirm(msg)) {
+			return false;
+		}
+		
+		showReply = showReply === '1' ? '0' : '1';
+		
+		let url = '${pageContext.request.contextPath}/daily/replyShowHide';
+		let query = 'rNum=' + rNum + '&showReply=' + showReply;
+		
+		const fn = function(data){
+			if(data.state === 'true') {
+				let $item = $($menu).closest('tr').next('tr').find('td');
+				if(showReply === "1") {
+					$item.removeClass('text-primary').removeClass('text-opacity-50');
+					$menu.attr('data-showReply', '1');
+					$menu.html('숨김');
+				} else {
+					$item.addClass('text-primary').addClass('text-opacity-50');
+					$menu.attr('data-showReply', '0');
+					$menu.html('표시');
+				}
+			}
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
 
-        ajaxFun(url, 'post', query, 'json', fn);
-    });
+$(function(){
+	$('.reply').on('click', '.hideReplyAnswer', function(){
+		let $menu = $(this);
+		
+		let rNum = $(this).attr('data-rNum');
+		let showReply = $(this).attr('data-showReply');
+		
+		let msg = '댓글을 숨김 하시겠습니까 ? ';
+		if(showReply === '0') {
+			msg = '댓글 숨김을 해제 하시겠습니까 ? ';
+		}
+		if(! confirm(msg)) {
+			return false;
+		}
+		
+		showReply = showReply === '1' ? '0' : '1';
+		
+		let url = '${pageContext.request.contextPath}/daily/replyShowHide';
+		let query = 'rNum=' + rNum + '&showReply='+showReply;
+		
+		const fn = function(data){
+			if(data.state === 'true') {
+				let $item = $($menu).closest('.row').next('div');
+				if(showReply === '1') {
+					$item.removeClass('text-primary').removeClass('text-opacity-50');
+					$menu.attr('data-showReply', '1');
+					$menu.html('숨김');
+				} else {
+					$item.addClass('text-primary').addClass('text-opacity-50');
+					$menu.attr('data-showReply', '0');
+					$menu.html('표시');
+				}
+			}
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
 });
 </script>

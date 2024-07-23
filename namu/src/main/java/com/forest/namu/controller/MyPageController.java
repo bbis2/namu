@@ -13,13 +13,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.forest.namu.domain.Badge;
 import com.forest.namu.domain.Delivery;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Point;
 import com.forest.namu.domain.Profile;
 import com.forest.namu.domain.SessionInfo;
+import com.forest.namu.domain.Url;
+import com.forest.namu.service.BadgeService;
 import com.forest.namu.service.DeliveryService;
 import com.forest.namu.service.MypageService;
 import com.forest.namu.service.PointService;
@@ -34,26 +38,31 @@ public class MyPageController {
 
 	@Autowired
 	private MypageService myService;
-	
+
 	@Autowired
 	private ScheduleService sService;
-	
+
 	@Autowired
 	private DeliveryService dService;
 
+	@Autowired
+	private BadgeService bService;
+
 	@GetMapping("list")
-	public String list(HttpSession session, Model model) throws Exception {
+	public String list(HttpSession session, Model model,Badge bto) throws Exception {
 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		long point = service.selectPoint(info.getUserId());
 		List<Member> list = myService.selectSchedule(info.getUserId());
+		List<Badge> blist = bService.selectBadge(info.getUserId());
 		
 		Profile userdto = myService.selectProfile(info.getUserId());
 		Profile dto = new Profile();
 		dto = myService.selectPhoto(info.getUserId());
-
-		model.addAttribute("list",list);
+		
+		model.addAttribute("blist",blist);
+		model.addAttribute("list", list);
 		model.addAttribute("dto", dto);
 		model.addAttribute("userdto", userdto);
 		model.addAttribute("userId", info.getUserId());
@@ -204,7 +213,7 @@ public class MyPageController {
 
 		return "/mypage/memberUpdate";
 	}
-	
+
 	@PostMapping("whoRider")
 	@ResponseBody
 	public Map<String, Object> selectRider(HttpSession session) throws Exception {
@@ -213,14 +222,121 @@ public class MyPageController {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		List<Delivery> list = myService.selectRider(info.getUserId());
-		
-		if(list.isEmpty()) {
+
+		if (list.isEmpty()) {
 			state = "false";
 		}
-		
+
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("state", state);
 		model.put("Rlist", list);
+		return model;
+	}
+
+	@PostMapping("myRider")
+	public String myRider(@RequestParam long num, @RequestParam long num2, HttpSession session, Delivery dto)
+			throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		try {
+			dto.setNum(num);
+			dto.setNum2(num2);
+
+			myService.updateRider(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:/mypage/list";
+	}
+
+	@PostMapping("okMoney")
+	public String okMoney(@RequestParam long num, @RequestParam long current, @RequestParam long num2,
+			@RequestParam long point, HttpSession session, Delivery dto, Point pto) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		try {
+			dto.setNum(num);
+			dto.setNum2(num2);
+
+			myService.updateRider2(dto);
+
+			pto.setCurrentPoint(current);
+			pto.setUserId(info.getUserId());
+			pto.setPointVar(point);
+
+			service.insertPoint2(pto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:/mypage/list";
+	}
+
+	@PostMapping("badgeInsert")
+	@ResponseBody
+	public Map<String, Object> badgeInsert(Badge bto, HttpSession session) throws Exception {
+
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		try {
+			List<Badge> list = bService.selectBadge(info.getUserId());
+			long count = bService.dailyCount(info.getUserId());
+			if ((list.isEmpty() || list == null) && count>5) {
+				
+				bto.setUserId(info.getUserId());
+				bService.insertBadge1(bto);
+			}
+
+		} catch (Exception e) {
+			state = "false";
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		return model;
+	}
+	
+	
+	@GetMapping("myWrite")
+	@ResponseBody
+	public Map<String, Object> myWrite(HttpSession session) throws Exception {
+
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		List<Url> list = myService.myWrite(info.getUserId());
+		List<Url> list2 = myService.myWrite2(info.getUserId());
+		
+		if (list.isEmpty()) {
+			state = "false";
+		}
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("Wlist1", list);
+		model.put("Wlist2", list2);
+		return model;
+	}
+	
+	@GetMapping("myGGim")
+	@ResponseBody
+	public Map<String, Object> myGGim(HttpSession session) throws Exception {
+
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		List<Url> list = myService.myGGim(info.getUserId());
+		List<Url> list2 = myService.myGGim2(info.getUserId());
+		
+		if (list.isEmpty()) {
+			state = "false";
+		}
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("Glist1", list);
+		model.put("Glist2", list2);
 		return model;
 	}
 

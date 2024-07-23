@@ -8,12 +8,10 @@
     background-color: #E3F1C5;
 }
 
-
 .htext{
 	padding-top: 100px;
 	padding-left : 100px;
 }
-
 .cover-content {
 	padding: 50px;
     position: relative;
@@ -27,42 +25,17 @@
         height: 315px;
         padding: 0 16px 0 16px;
         margin-top: 60px;
-  }   
+        margin-bottom: 60px;
 }
 /*여기까지 초록 박스*/
 
-.fleamarket-cover {
-    background-color: #e3f1c5;
-    padding: 20px;
-    text-align: center;
-}
-
-.fleamarket-cover .cover-title {
-    font-size: 2em;
-    font-weight: bold;
-    margin: 0;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
 
 .row {
     display: flex;
     flex-wrap: wrap;
 }
 
-.col-md-3 {
-    flex: 0 0 20%;
-    max-width: 20%;
-}
 
-.col-md-9 {
-    flex: 0 0 80%;
-    max-width: 80%;
-}
 
 .card {
     background-color: #fff;
@@ -93,9 +66,9 @@
     display: flex;
     justify-content: space-around;
     padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    margin-bottom: 20px;
+    background-color: #EEF2E3;
+    border-radius: 10px;
+    margin-bottom: 50px;
 }
 
 .categories span {
@@ -121,9 +94,11 @@
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 20px;
-    background-color: #f2f2f2;
+    border-radius: 4px;
+    background-color: #FFFFFF;
     margin-right: 10px;
+    width: 500px;
+    height: 40px;
 }
 
 .filter-container .search-button {
@@ -131,7 +106,7 @@
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 20px;
+    border-radius: 4px;
     cursor: pointer;
 }
 
@@ -151,77 +126,190 @@
     border-radius: 4px;
     height: 150px;
 }
-</style>
 
+.town {
+  width: 150px;
+  height: 30px;
+  border: 1px solid #999;
+  border-radius: 5px;
+}
+
+.togetherlist {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* 가운데 정렬 추가 */
+    gap: 20px; /* 항목 간의 간격 조정 */
+    max-height: 80vh; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
+    margin-bottom: 250px; /* footer와 겹치지 않도록 하단 여백 추가 */
+}
+
+.togetherlist .list {
+    flex: 1 1 30%; /* 고정된 너비 설정 */
+    max-width: 30%;
+    box-sizing: border-box;
+    height: 300px; /* 고정된 높이 추가 */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px; /* 리스트 아이템 사이의 마진 추가 */
+}
+
+.togetherlist .list img {
+    width: 100%;
+    height: 200px; /* 고정된 이미지 높이 */
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .togetherlist .list {
+        flex: 1 1 45%; /* 2개의 항목을 한 줄에 배치 */
+        max-width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .togetherlist .list {
+        flex: 1 1 100%; /* 1개의 항목을 한 줄에 배치 */
+        max-width: 100%;
+    }
+    
+
+}
+</style>
+<script type="text/javascript">
+function searchList() {
+	var f = document.searchForm;
+	f.submit();
+}
+
+function searchCategory(categoryNum) {
+	var f = document.searchForm;
+	f.categoryNum.value = categoryNum;
+	f.submit();
+}
+
+function filterByTown() {
+    let town = document.getElementById("townFilter").value;
+    var f = document.searchForm;
+    f.town.value = town;
+    f.submit();
+}
+</script>
 </head>
 <body>
 <div class="container">
-	<section class="fleamarket-cover">
-	      <h1 class="cover-title htext">믿을만한<br>나무 거래</h1>
-	      <span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>	
-	      <span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
-	      <div class="cover-image">
-	      </div>
-	</section>   
-</div>
+ 	<section class="fleamarket-cover">
+		<h1 class="cover-title htext bd">함께하는<br>모임 생활</h1>
+		<span class="cover-description htext"></span><br>
+		<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
+		<div class="cover-image"></div>
+  	</section> 
+
 
     <main class="container">
-    	<div class="body-title">
-			<h2>전체모임</h2>
-		</div>
-		
-        <div class="row">
-            <div class="col-md-3">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">정유진</h5>
-                           <p>puedo_j</p>
-            			   <p>서울특별시 마포구</p>
-          				   <p>쪽지 | 스크랩 | 알림</p>
-                    </div>
-                </div>
-			   <div class="body-left">
-					<ul class="list-group">
-						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100001">모임</li>
-						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100002">일상</li>
-						<li class="list-group-item list-subject" data-lecturecode="L100001" data-lecturesubcode="S0100003">챌린지</li>
-					</ul>
+   	 <div class="body-title">
+		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/together/list" method="post">
+            <div class="filter-container">
+
+			<div class="d-flex">
+				<h5 style="font-weight: bold;">${town}</h5>
+				<h5>&nbsp;동네의 전체 모임</h5>
+				<h5 style="color: #b3b3b3;" class="bd">&nbsp;${dataCount}개</h5>
+			</div>
+			
+	                <input type="text" class="search-input"  name="kwd" placeholder="검색어를 입력하세요"/>
+					<input type="hidden" name="categoryNum" value="${categoryNum}">
+					<input type="hidden" name="town" value="${town}">   					
+	                <button type="button" class="search-button" onclick="searchList()" title="검색" ><i class="fa-solid fa-magnifying-glass"></i></button>
+					<button class="btn reset" style="background-color: white; color:#74634F;"  type="button" onclick="location.href='${pageContext.request.contextPath}/together/list';">
+						<i class="fa-solid fa-rotate-right"></i>
+					</button>       			
+	                <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/together/write';">모임 등록</button>
+	          
+            </div>
+        </form>		
+	</div>
+    <div class="row">
+        <div class="col-md-3 ">
+        
+			<div class="card mb-4">
+				<div class="card-body">
+					<h5 class="card-title">${sessionScope.member.nickName}</h5>
+				    <h6 class="bd">나의 동네</h6>
+						<select id="townFilter" class="form-select border-2" aria-label="Default select example" onchange="filterByTown()">
+							<option value="">전체</option>
+							<option value="${sessionScope.member.town1}" <c:if test="${town == sessionScope.member.town1}">selected</c:if>>${sessionScope.member.town1}</option>
+							<c:if test="${sessionScope.member.town2 != null}">
+								<option value="${sessionScope.member.town2}" <c:if test="${town == sessionScope.member.town2}">selected</c:if>>${sessionScope.member.town2}</option>
+							</c:if>
+						</select>
+				   		<br>
+						<div>
+							<span><i class="fa-solid fa-heart"></i> </span>
+							<span><i class="bi bi-bell-fill"></i></span>
+						</div>
 				</div>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">BEST TOP 10</h5>
-                        <!-- 목록 추가 -->
-                    </div>
-                </div>
-            </div>
+			</div>
             
-              <div class="col-md-9">
-                <div class="filter-container">
-                    <input type="text" class="search-input" placeholder="검색어를 입력하세요">
-                    <button class="search-button">검색</button>
-                </div>
-                <div class="categories">
-                    <span>동네친구</span>
-                    <span>문화/예술</span>
-                </div>
-                <div class="filter-container">
-                    <button class="search-button">모임등록</button>
-                </div>
-                <div class="grid-container">
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
-                    <div class="grid-item"></div>
+		    <div class="card mb-4">
+				<div class="list-group">
+					<a class="list-group-item list-subject" type="button"  onclick="location.href='${pageContext.request.contextPath}/daily/list';">일상</a>
+					<a class="list-group-item list-subject" type="button"  onclick="location.href='${pageContext.request.contextPath}/together/list';">모임</a>
+				</div>
+			</div>              
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">BEST TOP 10</h5>
+                    <!-- 목록 추가 -->
                 </div>
             </div>
+		</div>
+            
+       <div class="col-md-9">
+			<div class="categories">
+              <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(1)">#운동</a></span>         
+              <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(2)">#자기계발</a></span>         
+              <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(3)">#동네친구</a></span>         
+              <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(4)">#반려동물</a></span>         
+              <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(5)">#취미/오락</a></span>         
+              <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(6)">#기타</a></span>         
+			</div>
+
+			<div class="togetherlist">
+				<c:forEach var="dto" items="${list}" varStatus="status">
+					<div class="list">
+					    <div>
+					        <!-- 이미지 -->
+					            <c:choose>
+					                <c:when test="${dto.thumbnail != null && !dto.thumbnail.isEmpty()}">
+					                    <img class="img-fluid object-fit-cover h-100" src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" onclick="location.href='${articleUrl}&num=${dto.tNum}';">
+					                </c:when>
+					                <c:otherwise>
+					                    <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-fluid object-fit-cover h-100" onclick="location.href='${articleUrl}&num=${dto.tNum}';">
+					                </c:otherwise>
+					            </c:choose>
+					            <button class="btn_like">like</button>
+					        <a href="${pageContext.request.contextPath}/" class="listTitle"> <h5>${dto.subject}</h5></a>
+					        <a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
+					        <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>
+					        <div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">
+					            <p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
+					            <p><i class="fa-solid fa-clock"></i>&nbsp;${dto.regDate}</p>
+					        </div>
+					    </div>
+					</div>
+				</c:forEach>
+			</div>
+			
+            <div class="page-navigation">
+            	${dataCount==0? "등록된 게시글이 없습니다." : paging }
+            </div>
+			
+			
+			</div>
         </div>
     </main>
-
+</div>
 </body>
 </html>

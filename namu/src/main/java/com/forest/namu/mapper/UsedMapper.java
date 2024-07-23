@@ -16,6 +16,7 @@ public interface UsedMapper {
 	public void deleteUsed(long num) throws SQLException;
 	public List<Used> listUsed(Map<String, Object> map);
 
+	public List<Used> listCategory();
 	public int dataCount(Map<String, Object> map);
 	public void updateHitCount(long num) throws SQLException;
 	public Used findById(long num);

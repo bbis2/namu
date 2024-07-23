@@ -24,96 +24,155 @@ public class Used {
 	
 	private int likeCount;
 	
-	public int getLikeCount() {
-		return likeCount;
+	// 카테고리 번호, 이름
+	private String name;
+	private int cnum;
+	
+	// 주소
+	private int town;
+	
+	public String getName() {
+		return name;
 	}
-	public void setLikeCount(int likeCount) {
-		this.likeCount = likeCount;
+
+	public void setName(String name) {
+		this.name = name;
 	}
+
+	public int getCnum() {
+		return cnum;
+	}
+
+	public void setCnum(int cnum) {
+		this.cnum = cnum;
+	}
+
 	public long getNum() {
 		return num;
 	}
+
 	public void setNum(long num) {
 		this.num = num;
 	}
+
 	public String getSubject() {
 		return subject;
 	}
+
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 	public long getPrice() {
 		return price;
 	}
+
 	public void setPrice(long price) {
 		this.price = price;
 	}
+
 	public String getRegDate() {
 		return regDate;
 	}
+
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
+
 	public long getHitCount() {
 		return hitCount;
 	}
+
 	public void setHitCount(long hitCount) {
 		this.hitCount = hitCount;
 	}
+
 	public int getState() {
 		return state;
 	}
+
 	public void setState(int state) {
 		this.state = state;
 	}
+
 	public String getUserId() {
 		return userId;
 	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
 	public String getNickName() {
 		return nickName;
 	}
+
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
+
 	public MultipartFile getThumbFile() {
 		return thumbFile;
 	}
+
 	public void setThumbFile(MultipartFile thumbFile) {
 		this.thumbFile = thumbFile;
 	}
+
 	public String getImageFile() {
 		return imageFile;
 	}
+
 	public void setImageFile(String imageFile) {
 		this.imageFile = imageFile;
 	}
+
 	public List<MultipartFile> getSelectFile() {
 		return selectFile;
 	}
+
 	public void setSelectFile(List<MultipartFile> selectFile) {
 		this.selectFile = selectFile;
 	}
+
 	public String getUploadFile() {
 		return uploadFile;
 	}
+
 	public void setUploadFile(String uploadFile) {
 		this.uploadFile = uploadFile;
 	}
+
 	public long getFileNum() {
 		return fileNum;
 	}
+
 	public void setFileNum(long fileNum) {
 		this.fileNum = fileNum;
 	}
-	
-	
+
+	public int getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+
+	public int getTown() {
+		return town;
+	}
+
+	public void setTown(int town) {
+		this.town = town;
+	}
+
 }

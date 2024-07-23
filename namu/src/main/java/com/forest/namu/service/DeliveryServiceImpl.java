@@ -5,13 +5,18 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.forest.namu.common.FileManager;
 import com.forest.namu.domain.Delivery;
 import com.forest.namu.domain.Rider;
 import com.forest.namu.mapper.DeliveryMapper;
 
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
+
+	@Autowired
+	private FileManager fileManager;
 
 	@Autowired
 	private DeliveryMapper mapper;
@@ -53,7 +58,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 	@Override
 	public long selectPoint(String userId) throws Exception {
 		long money = 0;
-		
+
 		try {
 			money = mapper.selectPoint(userId);
 		} catch (Exception e) {
@@ -70,7 +75,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 	}
 
 	@Override
@@ -113,7 +118,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
@@ -123,8 +128,54 @@ public class DeliveryServiceImpl implements DeliveryService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
+	@Override
+	public long findAutowired(Delivery dto) throws Exception {
+		long dstate = 0;
+		try {
+			dstate = mapper.findAutowired(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dstate;
+	}
+
+	@Override
+	public long countOk(Delivery dto) throws Exception {
+		long countOk = 0;
+
+		try {
+			countOk = mapper.countOk(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return countOk;
+	}
+
+	@Override
+	public void updateAuthor(Delivery dto, String path) throws Exception {
+		try {
+			String saveFilename1 = fileManager.doFileUpload(dto.getSelectFile1(), path);
+			String saveFilename2 = fileManager.doFileUpload(dto.getSelectFile2(), path);
+			
+			if (saveFilename1 != null) {
+				dto.setImageFilename1(saveFilename1);
+			}
+			if (saveFilename2 != null) {
+				dto.setImageFilename2(saveFilename2);
+			}
+			
+			mapper.updateAuthor(dto);
+			
+			dto.setNum2(dto.getNum());
+			mapper.riderState(dto);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 }

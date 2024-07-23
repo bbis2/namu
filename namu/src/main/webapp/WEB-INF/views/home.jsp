@@ -227,48 +227,35 @@
   </div>
   <div style="margin-top: 50px">
 			<div class="flex-row" style="justify-content: space-between; align-items: center">
-				<div class="main-label">✨중고거래✨</div>
+				<div class="main-label">중고거래 ✨ 최신글</div>
 
 	        <%-- 클릭시 인기 집들이 탭으로 이동 --%>
 			<div class="more-view-btn" onclick="location.href='${pageContext.request.contextPath}/used/list';">더보기</div>
 			</div>
 
 			<div class="main-best-board-container">
+				  <c:forEach var="dto" items="${list}" varStatus="status">
 				<div class="flex-col banner-card-container">
+				  <div class="flex-col">
 					<div class="home-img-container">
-						<img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" src="${pageContext.request.contextPath}/">
+						<a href="${pageContext.request.contextPath}/used/article?num=${dto.num}">
+					<c:choose>	
+                        <c:when test="${dto.imageFile != null && !dto.imageFile.isEmpty()}">
+                            <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" 
+                                 src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFile}">
+                        </c:when>
+                        <c:otherwise>
+                            <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" 
+                                 src="${pageContext.request.contextPath}/resources/images/noimage.png">
+                        </c:otherwise>
+                    </c:choose>
+						</a>
 					</div>
-
-					<div style="font-weight: 700; color: #65C2EC; margin-top: 10px">수납공간 확실하게!</div>
-					<div>동선을 고려한 30평대 신축 리모델링</div>
+					<div style="font-weight: 700; color: #65C2EC; margin-top: 10px">${dto.subject}</div>
+					<div>${dto.content}</div>
 				</div>
-
-				<div class="flex-col banner-card-container">
-					<div class="home-img-container">
-						<img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" src="${pageContext.request.contextPath}/">
-					</div>
-
-					<div style="font-weight: 700; color: #65C2EC; margin-top: 10px">수납공간 확실하게!</div>
-					<div>동선을 고려한 30평대 신축 리모델링</div>
 				</div>
-
-				<div class="flex-col banner-card-container">
-					<div class="home-img-container">
-						<img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" src="${pageContext.request.contextPath}/">
-					</div>
-
-					<div style="font-weight: 700; color: #65C2EC; margin-top: 10px">수납공간 확실하게!</div>
-					<div>동선을 고려한 30평대 신축 리모델링</div>
-				</div>
-
-				<div class="flex-col banner-card-container">
-					<div class="home-img-container">
-						<img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" src="${pageContext.request.contextPath}/">
-					</div>
-
-					<div style="font-weight: 700; color: #65C2EC; margin-top: 10px">수납공간 확실하게!</div>
-					<div>동선을 고려한 30평대 신축 리모델링</div>
-				</div>
+				</c:forEach>
 			</div>
 		</div>
 

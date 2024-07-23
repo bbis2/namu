@@ -4,58 +4,67 @@
 
 
 <div class="container body-container">
-	<div class="main1">
-	중고거래
-	</div>
-<div style="margin-top: 20px">
-   <select>
-     <option>주소1</option>
-     <option>주소2</option>
-</select>
-</div>
-<div class="cg-main">
-  <div class="cg-one">
-	<button type="button" class="btn-cg" onclick="${pageContext.request.contextPath}/">
-	<div class="cg-text">디지털 &nbsp;|&nbsp;</div>
-	</button>
-  
-  </div>
-  <div class="cg-one">
-	<button type="button" class="btn-cg" onclick="${pageContext.request.contextPath}/">
-	<div class="cg-text">의류 &nbsp;|&nbsp;</div>
-	</button>
-  
-  </div>
-  <div class="cg-one">
-	<button type="button" class="btn-cg" onclick="${pageContext.request.contextPath}/">
-	<div class="cg-text">식품 &nbsp;|&nbsp;</div>
-	</button>
-  
-  </div>
-  <div class="cg-one">
-	<button type="button" class="btn-cg" onclick="${pageContext.request.contextPath}/">
-	<div class="cg-text">도서 &nbsp;|&nbsp;</div>
-	</button>
-	
-	</div>
-  <div class="cg-one">
-	<button type="button" class="btn-cg" onclick="${pageContext.request.contextPath}/">
-	<div class="cg-text">기타</div>
-	</button>
-    
-  </div>
-</div>
+	<section class="fleamarket-cover">
+		<h1 class="cover-title htext bd">
+			나무<br>중고거래
+		</h1>
+		<span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>
+		<span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
+		<div class="cover-image"></div>
+	</section>
 
-<div style="margin-top: 10px;">총 <span style="color: blue; font-weight: bold;" class="data-count">${dataCount}</span> 개</div>
-<div class="search-container">
-            <input type="text" class="searchInput" placeholder="검색어 입력" value="${kwd}">
-            <button class="search-btn">검색</button>
-            <input type="hidden" class="searchWord">
-        <button class="submit-button" onclick="location.href='${pageContext.request.contextPath}/used/write';">
-            <span>+</span>
-            글쓰기
-        </button>
-    </div>
+
+	<div class="row">
+		<form class="d-flex" name="searchForm" id="searchForm" action="${pageContext.request.contextPath}/used/list" method="POST">
+			<div class="col-4">
+				<div class="row">
+					<div class="col">
+						<h6 class="bd">나의 동네</h6>
+						<select class="form-select mb-4 border border-2" aria-label="Default select example" name="town" onchange="change();">
+							<option value="0" ${town==0?'selected':''}>전체</option>
+							<option value="1" ${town==1?'selected':''}>${sessionScope.member.town1}</option>
+							<c:if test="${sessionScope.member.town2 != null}">
+								<option value="2" ${town==2?'selected':''}>${sessionScope.member.town2}</option>
+							</c:if>
+						</select>
+					</div>
+					<div class="col">
+						<h6 class="bd">카테고리</h6>
+						<select class="form-select mb-4 border border-2" aria-label="Default select example" name="cnum" onchange="change();">
+							<option value="0" ${cnum==0?'selected':''}>전체</option>
+							<c:forEach var="vo" items="${listCategory}">
+								<option value="${vo.cnum}" ${cnum==vo.cnum?'selected':''}>${vo.name}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div style="margin-top: 10px;">총 <span style="color: blue; font-weight: bold;" class="data-count">${dataCount}</span> 개</div>
+			</div>
+			<div class="col-8">
+				<div class="row d-flex justify-content-end">
+					<div class="col-7" style="padding-right: 0;">
+						<h6>&nbsp;</h6>
+						<div class="d-flex">
+							<input class="form-control border border-2" onkeypress="if( event.keyCode == 13 ){searchData();}" type="search" name="kwd" value="${kwd}" placeholder="검색어를 입력하세요"/>
+							<h6>&nbsp;&nbsp;</h6>
+							<button class="btn" type="submit">
+								<i class="fa-solid fa-magnifying-glass"></i>
+							</button>&nbsp;&nbsp;
+							<button class="btn reset" style="background-color: white; color: darkgreen;"  type="button" onclick="location.href='${pageContext.request.contextPath}/used/list';">
+								<i class="fa-solid fa-rotate-right"></i>
+							</button>
+						</div>
+					</div>
+					<div class="col-2">
+						<h6>&nbsp;</h6>
+						<button type="button" class="write btn w-100" onclick="location.href='${pageContext.request.contextPath}/used/write';">글올리기</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+
 		<div class="flex-row" style="justify-content: space-between; align-items: center">
 		</div>
 	
@@ -82,7 +91,7 @@
 
 				<div class="list-subject" style="color: navy; margin-top: 10px; font-weight: bold;">${dto.subject}</div>
 				<div class="list-content" style="display: none;">${dto.content}</div>
-				<div>현재 입찰가 : <fmt:formatNumber value="${dto.price}"/>원
+				<div>판매가 : <fmt:formatNumber value="${dto.price}"/>원
 					<div style="float: right;">
 						<c:if test="${dto.state == 1}" >
 							<span style="color: #D24F04; font-weight: bold;">예약중</span>
@@ -98,13 +107,15 @@
 			</div>
 		</c:forEach>
 		</div>
-		<div class="sentinal" data-loading="false" style="height: 50px;"></div> <!-- 무한 스크롤을 위한 sentinal 요소 -->
+		
 	</div>
-
+	
+	<div class="page-navigation">
+		${dataCount==0? "등록된 게시글이 없습니다." : paging }
+	</div>
 
 <script type="text/javascript">
 $(document).ready(function () {
-    // 검색 버튼 클릭 이벤트
     $('.search-btn').click(function () {
         let kwd = $('.searchInput').val().trim().toLowerCase();
         let count = 0; // 개수를 저장할 변수 초기화
@@ -124,10 +135,15 @@ $(document).ready(function () {
             alert('검색어를 입력하세요.');
         }
     });
+   
+});
+
+function change() {
+	const f = document.searchForm;
+	f.submit();
+}
 
 </script>
-
-
 
 <style>
 .main1 {
@@ -243,4 +259,5 @@ $(document).ready(function () {
 .cg-text {
 text-align: center;
 }
+
 </style>

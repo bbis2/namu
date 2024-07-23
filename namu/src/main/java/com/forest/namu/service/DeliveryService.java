@@ -19,5 +19,9 @@ public interface DeliveryService {
 	
 	public void insertRider(Rider dto)throws Exception;
 	public void updateDelivery(Delivery dto)throws Exception;
+	public long findAutowired(Delivery dto)throws Exception;
+	public long countOk(Delivery dto)throws Exception;
+	
+	public void updateAuthor(Delivery dto,String path)throws Exception;
 
 }

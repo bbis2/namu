@@ -35,7 +35,7 @@ public interface DailyService {
     public List<Reply> listReplyAnswer(Map<String, Object> map);
     public int replyAnswerCount(Map<String,Object> map);
     
-    public void insertReplyLike(Map<String, Object> map);
+    public void insertReplyLike(Map<String, Object> map) throws Exception;
     public Map<String, Object> replyLikeCount(Map<String, Object> map);
     
     public void updateReplyShowHide(Map<String, Object> map) throws Exception;

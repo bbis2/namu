@@ -9,13 +9,14 @@
 
 <!-- 추가 -->
 <insert id="insertUsed" parameterType="com.forest.namu.domain.Used">
-	insert into used(num, subject, content, imageFile, price, regDate, hitCount, state, userId) 
-		values(#{num}, #{subject}, #{content}, #{imageFile, jdbcType=VARCHAR}, #{price}, sysdate, 0, 0, #{userId})
+	insert into used(num, subject, content, imageFile, price, regDate, hitCount, state, userId, cnum, town) 
+		values(#{num}, #{subject}, #{content}, #{imageFile, jdbcType=VARCHAR}, #{price}, sysdate, 0, 0, #{userId}, #{cnum}, #{town})
 </insert>
 
 <!-- 수정 -->
 <update id="updateUsed" parameterType="com.forest.namu.domain.Used">
-	update used set subject=#{subject}, content=#{content}, price=#{price}, state=#{state}, imageFile=#{imageFile, jdbcType=VARCHAR}
+	update used set cnum=#{cnum}, subject=#{subject}, content=#{content}, price=#{price}, 
+			state=#{state}, imageFile=#{imageFile, jdbcType=VARCHAR}, town=#{town}
 	where num = #{num}
 </update>
 
@@ -24,21 +25,53 @@
 	delete from used where num=#{num}
 </delete>
 
+	<sql id="where-list">
+		( INSTR(subject, #{kwd}) &gt; 0
+		    OR  INSTR(content, #{kwd}) &gt; 0 )
+	</sql>
+	
 <!-- 리스트 -->
 <select id="listUsed" parameterType="map" resultType="com.forest.namu.domain.Used">
 	select u.num, u.content, u.subject, imageFile, u.state, u.price, u.hitCount, 
-   TO_CHAR(u.regDate, 'YYYY-MM-DD') regDate, m.town1, nvl(likeCount, 0)likeCount
+   TO_CHAR(u.regDate, 'YYYY-MM-DD') regDate, m.town1, nvl(likeCount, 0)likeCount, u.cnum, c.name, u.town
    from used u
+    join usedcategory c on u.cnum = c.cnum
 	join member m on u.userId = m.userId 
    left outer join (select num, count(*)likeCount from usedLike group by num )ul on u.num = ul.num
+	<where>
+		<if test="kwd != null and kwd != '' ">
+			<include refid="where-list"/>
+		</if>
+		<if test="cnum != 0">
+			AND u.cnum = #{cnum}
+		</if>
+		<if test="town != 0">
+			AND u.town = #{town}
+		</if>		
+	</where>   
 	order by num desc
-	
+	OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY	
 </select>
 
 <!-- 게시글 수 -->
 <select id="dataCount" parameterType="map" resultType="Integer">
 	select nvl(count(*),0)
-	from used
+	from used u
+	<where>
+		<if test="kwd != null and kwd != '' ">
+			<include refid="where-list"/>
+		</if>
+		<if test="cnum != 0">
+			AND u.cnum = #{cnum}
+		</if>
+		<if test="town != 0">
+			AND u.town = #{town}
+		</if>		
+	</where>
+</select>
+
+<select id="listCategory" resultType="com.forest.namu.domain.Used">
+  select cNum, name from usedcategory 
 </select>
 
 <!-- 조회수 -->
@@ -60,8 +93,8 @@
 	 -->
 <select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Used">
  
-	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, 
-	to_char(u.regDate,'YYYY-MM-DD') regDate, m.nickName, m.town1, u.userId, m.nickName
+	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, u.cnum,
+	to_char(u.regDate,'YYYY-MM-DD') regDate, m.nickName, m.town1, u.userId, m.nickName, u.town
 	from used u 
 	left outer join(select num, count(*)
 	from usedlike
@@ -112,6 +145,5 @@
 	from usedFile
 	where fileNum = #{fileNum}
 </select>
-
 
 </mapper>

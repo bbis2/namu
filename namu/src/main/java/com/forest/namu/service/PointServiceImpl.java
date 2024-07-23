@@ -136,4 +136,20 @@ public class PointServiceImpl implements PointService {
 
 	}
 
+	@Override
+	public void insertPoint2(Point pto) throws Exception {
+		try {
+			long lastMoney = pto.getCurrentPoint() + pto.getPointVar();
+			pto.setLastMoney(lastMoney);
+			pto.setDescription("배달 적립");
+			pto.setPointCate(0);
+
+			mapper.insertPoint2(pto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 }

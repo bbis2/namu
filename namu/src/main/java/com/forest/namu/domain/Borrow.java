@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class Borrow {
 	
 	// 빌림 테이블 (borrow)
-	private long num;
+	private long borrowNum;
 	private String userId;
 	private String subject;
 	private int price;
@@ -18,7 +18,13 @@ public class Borrow {
 	private int hitCount;
 	private String location;
 	private int categoryNum;
-
+	
+	// member join해서 가져오는 데이터
+	private String nickName;
+	
+	// 지난 시간(초)
+	private String passedTime;
+	
 	// 카테고리 테이블 (rbCategory)
 	private String category;
 	
@@ -27,12 +33,29 @@ public class Borrow {
 	private List<MultipartFile> image; // 사진
 	private String imageFilename;
 	
+	// 찜 여부
+	private boolean userLiked;
 	
-	public long getNum() {
-		return num;
+	// 찜 개수
+	private int likeCount;
+	
+	public String getPassedTime() {
+		return passedTime;
 	}
-	public void setNum(long num) {
-		this.num = num;
+	public void setPassedTime(String passedTime) {
+		this.passedTime = passedTime;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+	public long getBorrowNum() {
+		return borrowNum;
+	}
+	public void setBorrowNum(long num) {
+		this.borrowNum = num;
 	}
 	public String getUserId() {
 		return userId;
@@ -117,5 +140,17 @@ public class Borrow {
 	}
 	public void setImageFilename(String imageFilename) {
 		this.imageFilename = imageFilename;
+	}
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
+	}
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
 	}
 }

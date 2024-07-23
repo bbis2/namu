@@ -4,13 +4,31 @@
 <mapper namespace="com.forest.namu.mapper.DailyMapper">
 
 	<insert id="insertDaily" parameterType="com.forest.namu.domain.Daily">
-		INSERT INTO daily (num, userId, categoryNum, subject, content, regDate, hitCount, notice)
-		VALUES (daily_seq.NEXTVAL, #{userId},#{categoryNum}, #{subject}, #{content}, SYSDATE, 0, 0)
+		INSERT INTO daily (num, userId, categoryNum, subject, content, regDate, hitCount, notice, town)
+		VALUES (daily_seq.NEXTVAL, #{userId},#{categoryNum}, #{subject}, #{content}, SYSDATE, 0, 0, #{town})
 	</insert>
 	
 	<sql id="where-list">
-		(INSTR(subject, #{kwd}) &gt; 0
-		OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
+	    <choose>
+	        <when test="schType == 'all' ">
+	            ( INSTR(subject, #{kwd}) &gt; 0
+	            OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 
+	            OR INSTR(nickName, #{kwd}) &gt; 0 )
+	        </when>
+	        <when test="schType == 'regDate' ">
+	            ( TO_CHAR(regDate, 'YYYYMMDD') = #{kwd}
+	            OR TO_CHAR(regDate, 'YYYY-MM-DD') = #{kwd} )
+	        </when>
+	        <when test="schType == 'nickName'">
+	            INSTR(nickName, #{kwd}) &gt; 0
+	        </when>
+	        <when test="schType == 'content'">
+	            DBMS_LOB.INSTR(content, #{kwd}) &gt; 0
+	        </when>
+	        <otherwise>
+	            INSTR(${schType}, #{kwd}) &gt; 0
+	        </otherwise>
+	    </choose>
 	</sql>
 
 	<!-- 글개수 -->
@@ -19,19 +37,22 @@
 		FROM daily d
 		JOIN member  m ON  d.userId = m.userId
 		<where>
-			<if test="kwd !=null and kwd != '' ">
-				<include refid="where-list"/>
-			</if>
-			<if test="categoryNum != 0">
-			AND  categoryNum = #{categoryNum}
-			</if>
-		</where>	
+		    <if test="kwd != null and kwd != ''">
+		        <include refid="where-list"/>
+		    </if>
+		    <if test="categoryNum != 0">
+		        AND categoryNum = #{categoryNum}
+		    </if>
+		    <if test="town != null and town != ''">
+		        AND town = #{town}
+		    </if> 		     
+		</where>
 	</select>
 	
 	<!-- 글리스트 -->
 	<select id="listDaily" parameterType="map" resultType="com.forest.namu.domain.Daily">
-		SELECT d.num, d.userId, m.nickName, d.categoryNum, categoryName , subject, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
-			hitCount
+		SELECT d.num, d.userId, m.nickName, t.categoryNum, t.categoryName , d.subject, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
+			hitCount, town
 		FROM daily d
 		JOIN member m ON d.userId=m.userId
 		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
@@ -40,14 +61,17 @@
 			WHERE answer = 0 AND showReply=1
 			GROUP BY num
 		)c ON d.num = c.num
-		<where>
-			<if test="kwd != null and kwd != ''">
-				<include refid="where-list"/>
-			</if>
-			<if test="categoryNum != 0">
-				AND  categoryNum = #{categoryNum}
-			</if>			
-		</where>
+	<where>
+	    <if test="kwd != null and kwd != ''">
+	        <include refid="where-list"/>
+	    </if>
+	    <if test="categoryNum != 0">
+	        AND d.categoryNum = #{categoryNum}
+	    </if> 
+	    <if test="town != null and town != ''">
+	        AND town = #{town}
+	    </if> 			    
+	</where>
 		ORDER BY num DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
@@ -76,15 +100,17 @@
 		FROM daily d
 		JOIN member m ON  d.userId = m.userId
 		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
-		<where>
-			<if test="kwd != null and kwd != '' ">
-				<include refid="where-list"/>
-			</if>
-			AND (num &gt; #{num})
-		
-			ORDER BY num  ASC
-			FETCH FIRST 1 ROWS ONLY
-		</where>
+	<where>
+	    <if test="kwd != null and kwd != ''">
+	        <include refid="where-list"/>
+	    </if>
+	    <if test="town != null and town != ''">
+	        AND town = #{town}
+	    </if> 			    
+	    AND (num &gt; #{num})
+	</where>
+	ORDER BY num ASC
+	FETCH FIRST 1 ROWS ONLY
 	</select>
 	
 	<!-- 다음글 -->
@@ -93,20 +119,22 @@
 		FROM daily d
 		JOIN member m ON d.userId=m.userId
 		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
-		<where>
-			<if test="kwd != null and kwd != '' ">
-				<include refid="where-list"/>
-			</if>
-			AND (num &lt; #{num})
-	
-		ORDER BY num DESC
-		FETCH FIRST 1 ROWS ONLY
-		</where>
+	<where>
+	    <if test="kwd != null and kwd != ''">
+	        <include refid="where-list"/>
+	    </if>
+	    <if test="town != null and town != ''">
+	        AND town = #{town}
+	    </if> 	    
+	    AND (num &lt; #{num})
+	</where>
+	ORDER BY num DESC
+	FETCH FIRST 1 ROWS ONLY
 	</select>
 	
 	<!-- 수정 -->
 	<update id="updateDaily" parameterType="com.forest.namu.domain.Daily">
-		UPDATE daily SET categoryNum=#{categoryNum}, subject=#{subject}, content=#{content}
+		UPDATE daily SET categoryNum=#{categoryNum}, subject=#{subject}, content=#{content} ,town = #{town})
 		WHERE num =#{num}
 	</update>
 	
@@ -132,6 +160,9 @@
 		FROM dailyCategory 
 		WHERE categoryNum = #{categoryNum}
 	</select>	
+	
+	
+	<!-- 게시글 좋아요/싫어요 -->
 	
 	<!-- 게시글 좋아요 등록 -->
 	<insert id="insertDailyLike" parameterType="map">
@@ -162,15 +193,13 @@
 	<select id="replyCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*),0)
 		FROM dailyReply
-		WHERE num =#{num} AND answer =0
-		<if test="membership lt 10 ">
-			AND(showReply =1 OR (showReply =0 AND userId =#{userId}))
-		</if>
+		WHERE num=#{num} AND answer=0
+			AND( showReply =1 OR (showReply =0 AND userId =#{userId} ) )
 	</select>
 	
 	
 	<select id="listReply" parameterType="map" resultType="com.forest.namu.domain.Reply">
-	    SELECT r.rNum, r.userId, m.nickName, r.num, r.content, r.regDate, NVL(showReply, 1) showReply,
+	    SELECT r.rNum, r.userId, nickName, r.num, r.content, r.regDate, NVL(showReply, 1) showReply,
 	        NVL(answerCount, 0) answerCount,
 	        NVL(likeCount, 0) likeCount,
 	        NVL(disLikeCount, 0) disLikeCount
@@ -179,10 +208,8 @@
 	    LEFT OUTER JOIN (
 	        SELECT answer, COUNT(*) answerCount
 	        FROM dailyReply
-	        WHERE answer != 0
-	        <if test="membership lt 10">
+	        WHERE answer!= 0
 	            AND ( showReply=1 OR ( showReply=0 AND userId=#{userId} ) )
-	        </if>
 	        GROUP BY answer
 	    ) a ON r.rNum = a.answer
 	    LEFT OUTER JOIN (
@@ -193,9 +220,7 @@
 	        GROUP BY rNum
 	    ) c ON r.rNum = c.rNum
 	    WHERE num=#{num} AND r.answer = 0
-	    <if test="membership lt 10">
 	        AND ( showReply=1 OR ( showReply=0 AND r.userId=#{userId} ) )
-	    </if>
 	    ORDER BY r.rNum DESC
 	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
@@ -207,7 +232,41 @@
 			OR answer=#{rNum}
 		</if>
 	</delete>	
-
 	
+	<!-- 댓글의 답글 리스트 -->
+	<select id="listReplyAnswer" parameterType="map" resultType="com.forest.namu.domain.Reply">
+		SELECT rNum, num, r.userId, nickName, r.content, r.regDate, answer, NVL(showReply,1) showReply
+		FROM dailyReply r
+		JOIN member m ON r.userId = m.userId
+		WHERE answer = #{answer}
+			AND (showReply =1 OR (showReply=0 AND r.userId =#{userId}))
+		ORDER BY rNUM DESC
+	</select>
+	
+	<!-- 좋아요/ 싫어요 -->
+	<select id="replyAnswerCount" parameterType="map" resultType="Integer">
+	    SELECT NVL(COUNT(*), 0)
+	    FROM dailyReply
+	    WHERE answer = #{answer}
+	        AND (showReply = 1 OR (showReply = 0 AND userId = #{userId}))
+	</select>
+	
+	<!-- 좋아요/ 싫어요 등록 -->
+	<insert id="insertReplyLike" parameterType="map">
+		INSERT INTO dailyReplyLike(rNum, userId, replyLike )
+		VALUES (#{rNum}, #{userId}, #{replyLike})
+	</insert>
+	
+	<!-- 좋아요/ 싫어요 카운드 -->
+	<select id="replyLikeCount" parameterType="map" resultType="map">
+		SELECT COUNT(DECODE(replyLike, 1, 1)) likeCount,
+				COUNT(DECODE(replyLike, 0, 1)) disLikeCount
+		FROM dailyReplyLike WHERE rNum = #{rNum}
+	</select>
 
+	<!-- 댓글 보이기/숨기기 -->
+	<update id="updateReplyShowHide" parameterType="map">
+		UPDATE dailyReply SET showReply = #{showReply}
+		WHERE rNum = #{rNum} AND userId = #{userId}
+	</update>
 </mapper>

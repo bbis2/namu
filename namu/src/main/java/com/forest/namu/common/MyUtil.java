@@ -1,5 +1,8 @@
 package com.forest.namu.common;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -184,4 +187,54 @@ public abstract class MyUtil {
 	    }
 	    return town1Value;
 	}
+	
+	/**
+	* inputDate 로부터 현재까지 경과한 시간을 String으로 반환해주는 메서드
+	* 
+	* @param regDate		게시글이 등록된 시간 (yyyy-MM-dd HH:mm:ss)
+	* @return passedTime 	경과한 시간 (~초전, ~분전, ~시간전, ~일전, ~년전)
+	*/
+	public String returnPassedTime(String inputDate) {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
+		LocalDateTime reg = null;
+		reg = LocalDateTime.parse(inputDate, dtf);
+		
+		LocalDateTime now = LocalDateTime.now();
+		
+		long passedSecond = 0;
+		passedSecond = ChronoUnit.SECONDS.between(reg, now);
+		
+		if (passedSecond < 60) {
+			return passedSecond + "초전";
+		} else if (passedSecond < (60 * 60)) {
+			return passedSecond / 60 + "분전";
+		} else if (passedSecond < (60 * 60 * 24)) {
+			return passedSecond / (60 * 60) + "시간전";
+		} else if (passedSecond < (60 * 60 * 24 * 365)) {
+			return passedSecond / (60 * 60 * 24) + "일전";
+		} else {
+			return passedSecond / (60 * 60 * 24 * 365) + "년전";
+		}
+	}
+	
+	/**
+	* "yyyy-MM-dd HH:mm:ss" 형식의 문자열을 "yyyy년 MM월 dd일 HH시 mm분" 형식의 문자열로 반환
+	* 
+	* @param inputDate	변환할 문자열 (yyyy-MM-dd HH:mm:ss)
+	* @return 			변환된 문자열 (yyyy년 MM월 dd일 HH시 mm분)
+	*/
+    public String convertDateFormat(String inputDate) {
+        // 입력 문자열의 형식을 정의
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+        // 입력 문자열을 LocalDateTime 객체로 파싱
+        LocalDateTime dateTime = LocalDateTime.parse(inputDate, inputFormatter);
+        
+        // 원하는 출력 형식을 정의
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        
+        // LocalDateTime 객체를 원하는 형식의 문자열로 변환
+        return dateTime.format(outputFormatter);
+    }
 }

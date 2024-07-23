@@ -21,7 +21,12 @@ public interface DeliveryMapper {
 	public Delivery findByPrev(Map<String, Object> map);
 	public Delivery findByNext(Map<String, Object> map);
 	
-	public void updateDelivery(Delivery dto)throws Exception;
+	public long updateDelivery(Delivery dto)throws Exception;
 	
 	public void insertRider(Rider dto)throws Exception;
+	public long findAutowired(Delivery dto)throws Exception;
+	public long countOk(Delivery dto)throws Exception;
+	
+	public void updateAuthor(Delivery dto)throws Exception;
+	public void riderState(Delivery dto)throws Exception;
 }

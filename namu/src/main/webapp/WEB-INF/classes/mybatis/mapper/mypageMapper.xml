@@ -16,7 +16,8 @@
 
 	<update id="insertPhoto"
 		parameterType="com.forest.namu.domain.Profile">
-		UPDATE profile SET photo = #{photo} WHERE userId = #{userId}
+		UPDATE profile SET photo = #{photo} WHERE userId =
+		#{userId}
 	</update>
 
 	<select id="selectPhoto" parameterType="String"
@@ -33,16 +34,21 @@
 
 	<select id="selectSchedule" parameterType="String"
 		resultType="com.forest.namu.domain.Schedule">
-		SELECT subject,stime FROM schedule WHERE userId = #{userId} AND sday =
+		SELECT subject,stime FROM schedule WHERE userId = #{userId}
+		AND sday =
 		to_char(SYSDATE,'YYYY-MM-DD')
 	</select>
 
-	<select id="selectRider" parameterType="String" resultType="com.forest.namu.domain.Delivery">
-		SELECT d.subject, m.nickname, d.sdate, d.stime, md.usermanner
+	<select id="selectRider" parameterType="String"
+		resultType="com.forest.namu.domain.Delivery">
+		SELECT d.subject, m.nickname, d.sdate, d.stime,d.point,
+		md.usermanner,r.dstart,r.num2,r.num
 		FROM delievery d
-		JOIN rider r ON r.num2 = d.num
+		JOIN rider r ON
+		r.num2 = d.num
 		JOIN member m ON m.userId = r.userId
-		JOIN memberdetail md ON md.userId = d.userId
+		JOIN memberdetail md
+		ON md.userId = d.userId
 		WHERE d.userId = #{userId}
 		AND d.subject IN (
 		SELECT subject
@@ -52,4 +58,96 @@
 		)
 		ORDER BY d.subject
 	</select>
+
+	<update id="updateRider1"
+		parameterType="com.forest.namu.domain.Delivery">
+		UPDATE rider SET dstart = 2 WHERE num2 = #{num2}
+	</update>
+
+	<update id="updateRider2"
+		parameterType="com.forest.namu.domain.Delivery">
+		UPDATE rider SET dstart = 1 WHERE num = #{num}
+	</update>
+
+	<update id="updateRider4"
+		parameterType="com.forest.namu.domain.Delivery">
+		UPDATE rider SET dstart = 4 WHERE num = #{num}
+	</update>
+	<update id="updateRider3"
+		parameterType="com.forest.namu.domain.Delivery">
+		UPDATE delievery SET state = 2 WHERE num = #{num2}
+	</update>
+
+	<select id="waitRider" parameterType="String"
+		resultType="com.forest.namu.domain.Delivery">
+		select d.subject,r.userId ,r.num, point from rider r join
+		delievery d on d.num = r.num2
+		where dstart = 3 AND d.userId = #{userId}
+	</select>
+
+	<select id="myWrite" parameterType="String"
+		resultType="com.forest.namu.domain.Url">
+		select tablename,num,subject,regDate from delievery where
+		userId = #{userId}
+		union
+		select tablename,num,subject,regDate from daily
+		where userId = #{userId}
+		union
+		select tablename,tnum,subject,regDate
+		from togetherlist where userId = #{userId}
+		union
+		select
+		tablename,tboardnum,subject,regDate from talentMarket where userId =
+		#{userId}
+		union
+		select tablename,num,subject,regDate from used where
+		userId = #{userId}
+		union
+		select tablename,anum,subject,regDate from
+		auction where userId = #{userId}
+	</select>
+
+	<select id="myWrite2" parameterType="String"
+		resultType="com.forest.namu.domain.Url">
+		select tablename,borrownum
+		num,location,categorynum,subject,regDate from
+		borrow where
+		userId=#{userId}
+	</select>
+
+	<select id="myGGim" parameterType="String"
+		resultType="com.forest.namu.domain.Url">
+		select s.tnum,s.userId,subject,tablename from scrap s
+		join
+		togetherlist t on t.tnum = s.tnum
+		where s.userId = #{userId}
+		union
+		select tm.tboardnum,tm.userId,subject,tablename from tmBookmarks tm
+		join talentMarket ta on ta.tboardnum=tm.tboardnum
+		where tm.userId =
+		#{userId}
+		union
+		select u.num,u.userId,subject,tablename from usedLike u
+		join used ud on ud.num=u.num
+		where u.userId = #{userId}
+		union
+		select
+		a.anum,a.userId,subject,tablename from auctionLike a
+		join auction at on
+		at.anum=a.anum
+		where a.userId = #{userId}
+	</select>
+
+	<select id="myGGim2" parameterType="String"
+		resultType="com.forest.namu.domain.Url">
+		select
+		b.tablename,bw.borrownum num,b.location,b.categorynum,b.subject
+		from borrow b
+		join borrowLike bw on bw.borrownum = b.borrownum
+		where bw.userId=#{userId}
+	</select>
+
+
+
+
 </mapper>

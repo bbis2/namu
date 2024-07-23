@@ -261,31 +261,63 @@ public class DailyServiceImpl implements DailyService {
 
 	@Override
 	public List<Reply> listReplyAnswer(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Reply> list = null;
+		
+		try {
+			list = mapper.listReplyAnswer(map);
+			for(Reply dto : list) {
+				dto.setContent(myUtil.htmlSymbols(dto.getContent()));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public int replyAnswerCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.replyAnswerCount(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result ;
 	}
 
 	@Override
-	public void insertReplyLike(Map<String, Object> map) {
-		// TODO Auto-generated method stub
+	public void insertReplyLike(Map<String, Object> map) throws Exception {
 		
+		try {
+			mapper.insertReplyLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
 	public Map<String, Object> replyLikeCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> countMap = null;
+		
+		try {
+			countMap = mapper.replyLikeCount(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return countMap;
 	}
 
 	@Override
 	public void updateReplyShowHide(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.updateReplyShowHide(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 }

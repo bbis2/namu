@@ -251,4 +251,16 @@ public class UsedServiceImpl implements UsedService {
 		}
 	}
 	
+	public List<Used> listCategory() {
+		List<Used> list = null;
+		
+		try {
+			list = mapper.listCategory();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
 }
