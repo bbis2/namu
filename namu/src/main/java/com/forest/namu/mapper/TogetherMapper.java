@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.forest.namu.domain.Together;
+import com.forest.namu.domain.TogetherApply;
 
 @Mapper
 public interface TogetherMapper {
@@ -30,5 +31,10 @@ public interface TogetherMapper {
 	public void deleteTogetherLike(Map<String, Object>map) throws SQLException; 
 	public int togetherLikeCount(long tNum);
 	public Together userTogetherLiked(Map<String, Object> map);
+	
+	// 모임참가
+	public void insertTogetherApply(TogetherApply dto) throws SQLException; // 모임신청
+	public List<TogetherApply> listTogetherApply (Map<String, Object> map); // 모임리스트
+	
 	
 }

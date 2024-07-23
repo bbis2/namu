@@ -139,8 +139,8 @@
     flex-wrap: wrap;
     justify-content: center; /* 가운데 정렬 추가 */
     gap: 20px; /* 항목 간의 간격 조정 */
-    max-height: 80vh; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
-    margin-bottom: 250px; /* footer와 겹치지 않도록 하단 여백 추가 */
+    max-height: 80%; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
+    margin-bottom: 450px; /* footer와 겹치지 않도록 하단 여백 추가 */
 }
 
 .togetherlist .list {
@@ -283,10 +283,10 @@ function filterByTown() {
 					        <!-- 이미지 -->
 					            <c:choose>
 					                <c:when test="${dto.thumbnail != null && !dto.thumbnail.isEmpty()}">
-					                    <img class="img-fluid object-fit-cover h-100" src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" onclick="location.href='${articleUrl}&num=${dto.tNum}';">
+					                    <img class="img-fluid object-fit-cover h-100" src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" onclick="location.href='${articleUrl}&tNum=${dto.tNum}';">
 					                </c:when>
 					                <c:otherwise>
-					                    <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-fluid object-fit-cover h-100" onclick="location.href='${articleUrl}&num=${dto.tNum}';">
+					                    <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-fluid object-fit-cover h-100" onclick="location.href='${articleUrl}&tNum=${dto.tNum}';">
 					                </c:otherwise>
 					            </c:choose>
 					            <button class="btn_like">like</button>

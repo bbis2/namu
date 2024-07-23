@@ -25,6 +25,8 @@ public class Together {
 	
 	private String town;
 
+	private int userApply; // 참여 여부
+
 	public long gettNum() {
 		return tNum;
 	}
@@ -151,6 +153,14 @@ public class Together {
 
 	public void setTown(String town) {
 		this.town = town;
+	}
+
+	public int getUserApply() {
+		return userApply;
+	}
+
+	public void setUserApply(int userApply) {
+		this.userApply = userApply;
 	}
 
 	

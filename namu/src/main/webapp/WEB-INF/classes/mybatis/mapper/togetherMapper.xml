@@ -69,7 +69,7 @@
 	SELECT tNum, l.userId, m.nickName, t.categoryNum, t.categoryName, l.name, l.subject, l.memberCnt, l.thumbnail , l.town, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate, l.hitCount 		
 	FROM togetherList l
 	JOIN  member m ON l.userId = m.userId
-	JOIN togetherCategory  t ON l.categoryNum = t.categoryNum
+	JOIN togetherCategory t ON l.categoryNum = t.categoryNum
 	<where>
 	    <if test="kwd != null and kwd != ''">
 	        <include refid="where-list"/>
@@ -87,14 +87,16 @@
 	
 	<!-- -->
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Together">
-		SELECT tNum, l.userId, m.nickName, subject, l.categoryNum, categoryName, content, hitCount, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate,
-			NVL(togetherLikeCount,0) togetherLikeCount
+		SELECT l.tNum, l.userId, m.nickName, l.subject, l.categoryNum, categoryName, l.content, l.hitCount, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate, l.name,l.memberCnt,
+			NVL(togetherLikeCount,0) togetherLikeCount, NVL(userApply, 0) userApply
 		FROM togetherList l
 		JOIN member m ON l.userId = m.userId
 		JOIN togetherCategory t ON l.categoryNum = t.categoryNum
 		LEFT OUTER JOIN (
-			SELECT tNum, COUNT(*) togetherLikeCount 
-			FROM togetherLike
+			SELECT userId, CASE WHEN applyDate IS NULL THEN 1 ELSE 2  END userApply FROM togetherApply WHERE userId = #{userId}
+		) ap ON l.userId = ap.userId
+		LEFT OUTER JOIN (
+			SELECT tNum, COUNT(*) togetherLikeCount FROM togetherLike
 			GROUP BY tNum
 		) c ON l.tNum = c.tNum
 		WHERE l.tNum = #{tNum}
@@ -120,11 +122,11 @@
 	</select>
 	
 	<!-- 다음글 -->
-	<select id="findByNext" parameterType="map" resultType="com.forest.namu.domain.Daily">
+	<select id="findByNext" parameterType="map" resultType="com.forest.namu.domain.Together">
 		SELECT tNum, subject
 		FROM togetherList l
 		JOIN member m ON l.userId = m.userId
-		JOIN togetherCategory  t l.categoryNum = t.categoryNum
+		JOIN togetherCategory t ON l.categoryNum = t.categoryNum
 		<where>
 		    <if test="kwd != null and kwd != ''">
 		        <include refid="where-list"/>
@@ -146,8 +148,8 @@
 	
 	<!-- 수정 -->
 	<update id="updateTogether" parameterType="com.forest.namu.domain.Together">
-		UPDATE togetherList SET categoryNum=#{categoryNum}, subject=#{subject}, content=#{content}, town=#{town}, name=#{name}, 
-			memberCnt=#{memberCnt}, thumbnail=#{thumbnail,jdbcType=VARCHAR}
+		UPDATE togetherList SET categoryNum=#{categoryNum}, town=#{town}, name=#{name}, subject=#{subject},
+			memberCnt=#{memberCnt},  content=#{content}, thumbnail=#{thumbnail,jdbcType=VARCHAR}
 		WHERE tNum = #{tNum}
 	</update>
 	
@@ -172,8 +174,24 @@
 	</select>
 	
 	<!-- 게시글 좋아요 여부 -->
-	<select id="userTogether" parameterType="map" resultType="com.forest.namu.domain.Daily">
+	<select id="userTogetherLiked" parameterType="map" resultType="com.forest.namu.domain.Together">
 		SELECT tNum, userId FROM togetherLike WHERE tNum =#{tNum} AND userId = #{userId}
+	</select>
+	
+	<!-- 참가신청 만들기 -->
+	<insert id="insertTogetherApply" parameterType="com.forest.namu.domain.TogetherApply">
+		INSERT into togetherApply(tNum, userId, applyDate ,acceptance, content) 
+		VALUES (#{tNum}, #{userId}, SYSDATE, 0, #{content});	
+	</insert>
+	
+	<!-- 리스트에서 update 상태를 변경해줘야함. -->	
+	
+	<!-- 모임 신청 리스트 만들기 -->
+	<select id="listApply" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
+		SELECT tNum, userId, nickName, categoryNum, categoryName, applyDate, content, userApply , acceptance
+		FROM togetherApply a
+		JOIN member m ON a.userId = m.userId
+		JOIN togethrtCategory t ON a.categoryNum = t.categoryNum
 	</select>
 	
 </mapper>

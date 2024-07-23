@@ -95,10 +95,11 @@ textarea.form-control {
 }
 
 .thumb {
-    width: 640px;
+    width:470px;
     height: 470px;
     display: block;
     padding: 40px 10px;
+    border-radius: 15px;
 }
 
 .together-info {
@@ -184,6 +185,21 @@ textarea.form-control {
     cursor: pointer;
     color: white;
 }
+
+.apply{
+    border-radius: 10px;
+	height: 50px;
+	width: 450px;
+	border: none;
+	background-color: #B4CA8A;
+}
+
+textarea::placeholder{
+	opacity: 1; /* 파이어폭스에서 뿌옇게 나오는 현상 제거 */
+	color: #333;
+	text-align: center;
+	line-height: 80px;
+}
 </style>
 
 <script type="text/javascript">
@@ -219,10 +235,10 @@ textarea.form-control {
             <div>
                 <div>
                     <c:choose>
-                        <c:when test="${dto.imageFile != null}">
+                        <c:when test="${dto.thumbnail != null && !dto.thumbnail.isEmpty()}">
                             <c:forEach var="vo" items="${listFile}" varStatus="status">
                                 <div ${status.index == 0 ? 'active' : ''}>
-                                    <img src="${pageContext.request.contextPath}/uploads/photo/${vo.thumbnail}" class="thumbnail">
+                                    <img src="${pageContext.request.contextPath}/uploads/photo/${vo.thumbnail}">
                                 </div>
                             </c:forEach>
                         </c:when>
@@ -232,17 +248,33 @@ textarea.form-control {
                             </div>
                         </c:otherwise>
                     </c:choose>
+	                    <div>
+	                    	<c:if test="${sessionScope.member.userId != dto.userId}">
+		                    	<c:if test="${dto.userApply == 0}">
+		                        	<button type="button" class="apply applyAccept">참가신청</button>
+		                    	</c:if>
+		                    	<c:if test="${dto.userApply == 1}">
+		                        	<button type="button" class="apply">신청완료</button>
+		                    	</c:if>
+		                    	<c:if test="${dto.userApply == 2}">
+		                        	<button type="button" class="apply">참여중</button>
+		                    	</c:if>
+	                    	</c:if>
+	                    	<c:if test="${sessionScope.member.userId == dto.userId}">
+	                    		<button type="button" class="apply applyAcceptList">참여자 리스트</button>
+	                    	</c:if>
+	                    </div>
                 </div>
             </div>
         </div>
         <div class="together-info">
             <div class="rpr">
-                <h1>${dto.name }</h1>
-                <div class="seller-location">주소1${dto.town}</div>
+                <h1>${dto.name}</h1>
+                <div class="seller-location">${dto.town}</div>
             </div>
             <hr>
             <div class="used-header">
-                <div class="title">${dto.subject} 같이 즐겨요!</div>
+                <div class="title">${dto.subject}</div>
             </div>
 
             <table class="table table-borderless mb-2">
@@ -276,6 +308,49 @@ textarea.form-control {
 </div>
 
 <div class="content1">${dto.content}</div>
+
+
+
+<div class="modal fade" id="myApplyModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="myApplyModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="myApplyModalLabel">참가신청</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form name="applyForm" method="post">
+					<div class="row m-1">
+						<textarea name="content" class="form-control" placeholder="각오 한마디를 입력하세요"></textarea>
+						<input type="hidden" name="tNum" value="${dto.tNum}">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary btnAcceptOk">신청하기</button>
+				<button type="button" class="btn btn-secondary btnSendCancel" data-bs-dismiss="modal">취소</button>
+			</div>			
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="myApplyListModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="myApplyListModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="myApplyListModalLabel">참여자 리스트</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+			
+			</div>
+		</div>
+	</div>
+</div>
 
 <script type="text/javascript">
 function login() {
@@ -343,6 +418,38 @@ $(function() {
 
         ajaxFun(url, 'post', query, 'json', fn);
     });
+});
+
+// 참여하기
+$('.applyAccept').click(function(){
+	$('#myApplyModal').modal('show');
+});
+
+$('.btnAcceptOk').click(function(){
+	const f = document.applyForm;
+	
+	if( ! f.content.value.trim() ) {
+		f.content.focus();
+		return false;
+	}
+	
+	let formData = $('form[name=applyForm]').serialize();
+	let url = '${pageContext.request.contextPath}/together/등록주소';
+	const fn = function(data) {
+		let state = data.state;
+        if (state === 'true') {
+       	  alert('참가 신청 되었습니다.');
+       	  $('.applyAccept').html('신청완료');
+       	  $('.applyAccept').removeClass('applyAccept');
+        }
+	};
+	ajaxFun(url, 'post', formData, 'json', fn);
+	
+});
+
+// 참여자 리스트
+$('#applyAcceptList').click(function(){
+	$('#myApplyListModal').modal('show');
 });
 
 

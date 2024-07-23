@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.forest.namu.domain.Together;
+import com.forest.namu.domain.TogetherApply;
 
 public interface TogetherService {
 	public void insertTogether(Together dto, String pathname) throws Exception;
@@ -25,5 +26,9 @@ public interface TogetherService {
 	public void deleteTogetherLike(Map<String, Object> map) throws Exception;
 	public int togetherLikeCount (long tNum);
 	public boolean userTogetherLiked(Map<String, Object> map);
+	
+	public void insertTogetherApply(TogetherApply dto) throws Exception;
+	public List<TogetherApply> listTogetherApply(Map<String, Object> map);
+	
 
 }

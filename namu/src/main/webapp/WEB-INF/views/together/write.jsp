@@ -130,21 +130,16 @@ function check() {
     }
 
     let mode = "${mode}";
-    if ((mode === "write") && (!f.thumbFile.value)) {
+    if ((mode === "write") && (!f.selectFile.value)) {
         alert("이미지 파일을 추가하세요.");
-        f.thumbFile.focus();
+        f.selectFile.focus();
         return false;
     }
 
-    return true;
+    f.action = "${pageContext.request.contextPath}/together/${mode}";
+    f.submit();
 }
 
-function submitContents(form) {
-    oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
-    if (check()) {
-        form.submit();
-    }
-}
 </script>
 
 </head>
@@ -160,7 +155,7 @@ function submitContents(form) {
 		<h2>모임 등록</h2>
 	</div>
 		  
-				<form name="togetherForm" method="post" enctype="multipart/form-data">
+				<form name="togetherForm" method="post" enctype="multipart/form-data" action="">
 				<table class="table mt-5 write-form">
 					<tr>
 						<td class="bg-light col-sm-2" scope="row">카테고리</td>
@@ -168,7 +163,6 @@ function submitContents(form) {
 							<div class="row">
 								<div class="col-6 pe-1">
 									<select id="categoryNum" name="categoryNum" class="form-select">
-										<option value="" selected>카테고리 선택</option>
 										<c:forEach var="vo" items="${listTogetherCategory}">
 											<option value="${vo.categoryNum}" ${categoryNum == vo.categoryNum?"selected" : ""}>${vo.categoryName}</option>
 										</c:forEach>
@@ -184,7 +178,7 @@ function submitContents(form) {
 							<div class="row">
 								<div class="col-6">
 									<select name="town" class="form-select">
-										<option>동네 선택</option>
+										<option value="">동네 선택</option>
 										<option value="${sessionScope.member.town1}">${sessionScope.member.town1}</option>
 									<c:if test="${sessionScope.member.town2 != null}">
 										<option value="${sessionScope.member.town2}">${sessionScope.member.town2}</option>
@@ -217,7 +211,7 @@ function submitContents(form) {
 					<tr>
 						<td class="bg-light col-sm-2" scope="row"> 인원 수</td>
 						<td>
-							<input type="text" name="cnt" class="form-control" style="width: 300px;" value="${dto.togetherCnt}">
+							<input type="text" name="cnt" class="form-control" style="width: 300px;" value="${dto.memberCnt}">
 						</td>
 					</tr>
 		
@@ -231,7 +225,7 @@ function submitContents(form) {
 						<td class="bg-light col-sm-2" scope="row">썸네일</td>
 						<td>
 							<div class="img-viewer"></div>
-							<input type="file" name="thumbFile" accept="image/*" class="form-control" style="display: none;">
+							<input type="file" name="selectFile" accept="image/*" class="form-control" style="display: none;">
 						</td>
 					</tr>
 
@@ -244,8 +238,8 @@ function submitContents(form) {
 							<button type="reset" class="btn btn-light">다시입력</button>
 							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/together/list';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
 							<c:if test="${mode=='update'}">
-								<input type="hidden" name="num" value="${dto.tnum}">
-								<input type="hidden" name="imageFilename" value="${dto.thumbnail}">
+								<input type="hidden" name="tNum" value="${dto.tNum}">
+								<input type="hidden" name="thumbnail" value="${dto.thumbnail}">
 								<input type="hidden" name="page" value="${page}">
 							</c:if>
 						</td>
@@ -263,10 +257,10 @@ $(function() {
 	}
 	
 	$(".write-form .img-viewer").click(function(){
-		$("form[name=togetherForm] input[name=thumbFile]").trigger("click"); 
+		$("form[name=togetherForm] input[name=selectFile]").trigger("click"); 
 	});
 	
-	$("form[name=togetherForm] input[name=thumbFile]").change(function(){
+	$("form[name=togetherForm] input[name=selectFile]").change(function(){
 		let file = this.files[0];
 		if(! file) {
 			$(".write-form .img-viewer").empty();

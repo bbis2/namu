@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.forest.namu.common.FileManager;
 import com.forest.namu.domain.Together;
+import com.forest.namu.domain.TogetherApply;
 import com.forest.namu.mapper.TogetherMapper;
 
 @Service
@@ -23,10 +24,14 @@ public class TogetherServiceImpl implements TogetherService{
 	public void insertTogether(Together dto, String pathname) throws Exception {
 		try {
 			long seq = mapper.togetherListSeq();
-		dto.settNum(seq);
+			dto.settNum(seq);
 		
-		mapper.insertTogether(dto);
-		
+			String saveFilename = fileManager.doFileUpload(dto.getSelectFile(), pathname);
+			if(saveFilename != null) {
+				dto.setThumbnail(saveFilename);
+			}
+			
+			mapper.insertTogether(dto);
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -213,6 +218,31 @@ public class TogetherServiceImpl implements TogetherService{
 		}
 		
 		return result;
+	}
+
+	
+// 
+	
+	@Override
+	public void insertTogetherApply(TogetherApply dto) throws Exception {
+		try {
+			mapper.insertTogetherApply(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public List<TogetherApply> listTogetherApply(Map<String, Object> map) {
+		List<TogetherApply> list = null;
+		try {
+			list = mapper.listTogetherApply(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 
