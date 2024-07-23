@@ -388,6 +388,44 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 	$.ajax(url, settings);
 }
 
+
+
+$(function() {
+	$('.btnSendLike').click(function() {
+		
+		let $btn = $(this);
+		let userLiked = $btn.hasClass('on');
+		
+		let url = '${pageContext.request.contextPath}/talent/insertLike';
+		let num = $btn.next('input').val();
+		let query = 'tboardNum=' + num + '&userLiked=' + userLiked;
+		
+		// 토스트 팝업
+		let $toast = document.querySelector('#toast_message');
+		
+		const fn = function(data) {
+			let state = data.state;
+			if(state === 'true') {
+				let count = data.talentLikeCount;
+				$btn.closest('.list').find('.talentLikeCount').html('<i class="fa-solid fa-heart"></i>&nbsp;' + count);
+				
+				// 토스트 팝업
+				if(userLiked) {
+					$toast.innerText = '찜 목록에 추가되었습니다.';
+				} else {
+					$toast.innerText = '찜 목록에서 삭제되었습니다.';
+				}
+				
+				$toast.classList.add('active');
+				setTimeout(() => {
+					$toast.classList.remove('active');
+				}, 1500);
+			}
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+
 function changeCarouselImage(index) {
     var carousel = document.getElementById('carouselExample');
     var carouselItems = carousel.getElementsByClassName('carousel-item');
@@ -677,10 +715,23 @@ function validateAndSubmit() {
             </div>
             <div class="col-md-4">
 	            <div class="product-details">
-	                            <h2>${dto.subject}</h2>
-	                            
+	            				<div class="d-flex justify-content-between">
+	                            <div><h2>${dto.subject}</h2></div>
+		                            <div><c:if test="${sessionScope.member.userId != null}">
+										<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
+														like
+										</button>
+										<input type="hidden" value="${dto.tboardNum}" class="likeTboardNum">
+									</c:if>
+									</div>
+	                            </div>
+	                            <div class="d-flex justify-content-between">
 	                            <div class="rating">
-	                                <span>★ ${dto.score}</span> (${dto.reviewCount})
+	                                <span>★ ${dto.score}(${dto.reviewCount})</span> 
+	                            </div>
+	                            <div class="hitCount">
+	                            	<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
+	                            </div>
 	                            </div>
 	                            <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>
 	                            <div class="seller"><i class="bi bi-person-circle"></i>${dto.nickName}</div>
@@ -768,7 +819,9 @@ function validateAndSubmit() {
 						    </div>
             </div>
         </div>
+        <div id="toast_message">찜 목록</div>
     </div>
+    
     <c:if test="${sessionScope.member.membership>50 || dto.userId == sessionScope.member.userId}">
 	<script type="text/javascript">
 	function deleteBoard() {
@@ -778,6 +831,8 @@ function validateAndSubmit() {
 			location.href = url + "?" + query;
 		}
 	}
+	
+	
 	</script>
 	</c:if>
    
@@ -1163,6 +1218,6 @@ function validateAndSubmit() {
         	});
         });
     </script>
-</body>
+
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.forest.namu.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -263,7 +264,10 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 
 	@Override
 	public void deleteTalentByAdmin(long tboardNum, String pathname) throws Exception {
-					TalentMarket talent = mapper.findById(tboardNum);
+					
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("tboardNum", tboardNum);
+					TalentMarket talent = mapper.findById(map);
 					
 					// 파일 삭제(thumbnail)
 					if(talent !=null && talent.getThumbnail() != null) {
@@ -355,11 +359,13 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 	}
 
 	@Override
-	public TalentMarket findById(long tboardNum) {
+	public TalentMarket findById(Map<String, Object> map) {
 		TalentMarket dto = null;
 		
 		try {
-			dto = mapper.findById(tboardNum);
+			dto = mapper.findById(map);
+			dto.setUserLiked(userTalentLiked(map));
+			dto.setLikeCount(talentLikeCount(dto.getTboardNum()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

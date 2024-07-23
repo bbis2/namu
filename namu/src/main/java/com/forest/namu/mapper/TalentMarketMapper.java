@@ -44,7 +44,7 @@ public interface TalentMarketMapper {
 	public int dataCount(Map<String,Object> map);
 	public List<TalentMarket> listTalentMarket(Map<String, Object>map);
 	
-	public TalentMarket findById(long tboardNum);
+	public TalentMarket findById(Map<String,Object> map);
 	public List<TalentMarket> listTalentMarketFile(long tboardNum);
 	public List<TalentMarket> listTalentOption(long tboardNum);
 	public List<TalentMarket> listOptionDetail(long optionNum);

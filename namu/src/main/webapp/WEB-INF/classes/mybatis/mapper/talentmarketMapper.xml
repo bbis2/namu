@@ -172,7 +172,7 @@
 	</select>
 	
 	<!--상세정보-->
-	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.TalentMarket">
+	<select id="findById" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
 		SELECT tboardNum,t.subject,t.content,price,guidelines,t.regDate,t.userId,t.typeNum,talentShow,t.categoryNum,c.categoryName,optionCount,t.thumbnail,t.hitCount,t.town,p.type
 		,m.nickName
 		FROM talentMarket t

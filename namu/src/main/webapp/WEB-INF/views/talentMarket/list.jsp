@@ -427,7 +427,7 @@ $(function() {
 		         </c:choose>
 		         <c:if test="${sessionScope.member.userId != null}">
 					<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
-									like
+						like
 					</button>
 					<input type="hidden" value="${dto.tboardNum}" class="likeTboardNum">
 				</c:if>

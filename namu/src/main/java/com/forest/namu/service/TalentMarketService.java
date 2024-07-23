@@ -26,7 +26,7 @@ public interface TalentMarketService {
 	public List<TalentMarket> listType();
 	
 	
-	public TalentMarket findById(long tboardNum);
+	public TalentMarket findById(Map<String, Object> map);
 	public TalentMarket findByCategory(long categoryNum);
 	public List<TalentMarket> listTalentMarketFile(long tboardNum);
 	
