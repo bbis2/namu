@@ -121,7 +121,10 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 		const f = document.deliveryForm;
 		let str;
 	
-		isPoint();
+		if(!isPoint()){
+			alert("잔액부족입니다.");
+			return false;
+		}
 		
 		
 		str = f.point.value.trim();
@@ -321,7 +324,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 						</button>
 						<button type="reset" class="btn btn-light">다시입력</button>
 						<button type="button" class="btn btn-light"
-							onclick="location.href='${pageContext.request.contextPath}/daily/list';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i
+							onclick="location.href='${pageContext.request.contextPath}/delivery/list';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i
 								class="bi bi-x"></i>
 						</button> <c:if test="${mode=='update'}">
 							<input type="hidden" name="num" value="${dto.num}">

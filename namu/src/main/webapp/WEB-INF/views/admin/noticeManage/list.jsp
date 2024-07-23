@@ -210,30 +210,17 @@ function searchCategory(categoryNum) {
 </script>
 
 <div class="container">
- 	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">소통하는<br>일상 생활</h1>
-		<span class="cover-description htext"></span><br>
-		<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
-		<div class="cover-image"></div>
-  	</section>
-
-
   <main class="container">
-			<div class="d-flex">
-				<h5 style="font-weight: bold;">${town}</h5>
-				<h5>&nbsp;전체 공지</h5>
-				<h5 style="color: #b3b3b3;" class="bd">&nbsp;${dataCount}개</h5>
-			</div>
    	<div class="body-title">
-		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/notice/list" method="post">
+		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/noticeManage/list" method="post">
             <div class="filter-container">
                 <input type="text" class="search-input border border-2"  name="kwd" value="${kwd}" placeholder="검색어를 입력하세요"/>
 				<input type="hidden" name="categoryNum" value="${categoryNum}">
-				<input type="hidden" name="town" value="${town}">    			
                 <button type="button" class="search-button" onclick="searchList()" title="검색" ><i class="fa-solid fa-magnifying-glass"></i></button>
-				<button class="btn reset" style="background-color: white; color:#74634F;"  type="button" onclick="location.href='${pageContext.request.contextPath}/notice/list';">
+				<button class="btn reset" style="background-color: white; color:#74634F;"  type="button" onclick="location.href='${pageContext.request.contextPath}/noticeManage/list';">
 					<i class="fa-solid fa-rotate-right"></i>
 				</button>
+                <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/admin/noticeManage/write';">글올리기</button>
             </div>
         </form>		
 	</div>

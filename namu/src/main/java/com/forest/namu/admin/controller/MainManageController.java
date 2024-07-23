@@ -11,4 +11,5 @@ public class MainManageController {
 	public String method() {
 		return ".adminLayout";
 	}
+
 }
