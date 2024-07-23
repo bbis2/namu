@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.TmReviewMapper">
+	<insert id="insertReview" parameterType="com.forest.namu.domain.TmReview">
+		INSERT INTO talentReview(num, score, review, tboardNum, userId, reviewDate, showReview, locked)
+			VALUES(#{num}, #{score}, #{review}, #{tboardNum}, #{userId}, SYSDATE, 1, 0)
+	</insert>
+
+	
+	<select id="findByReviewSummary" parameterType="map" resultType="com.forest.namu.domain.Summary">
+		SELECT NVL(COUNT(*), 0) count,
+			   ROUND(NVL(AVG(score), 0), 1) ave,
+			   COUNT(DECODE(score, 1, 1)) score1, 
+			   COUNT(DECODE(score, 2, 1)) score2, 
+			   COUNT(DECODE(score, 3, 1)) score3, 
+			   COUNT(DECODE(score, 4, 1)) score4, 
+			   COUNT(DECODE(score, 5, 1)) score5 
+		FROM talentReview
+		WHERE tboardNum = #{tboardNum} AND showReview = 1 AND locked = 0
+	</select>
+
+	<select id="listReview" parameterType="map" resultType="com.forest.namu.domain.TmReview">
+		SELECT pr.num, pr.userId, m.nickName, pr.score, review, answer, tboardNum,
+			TO_CHAR(reviewDate, 'YYYY-MM-DD') reviewDate, 
+			TO_CHAR(answerDate, 'YYYY-MM-DD') answerDate
+		FROM talentReview pr
+		JOIN member m ON pr.userId = m.userId 
+		WHERE pr.tboardNum = #{tboardNum} AND showReview = 1 AND locked = 0
+		<choose>
+			<when test="sortNo==2">
+				ORDER BY score DESC, reviewDate DESC
+			</when>
+			<when test="sortNo==3">
+				ORDER BY score ASC, reviewDate DESC
+			</when>
+			<otherwise>
+				ORDER BY reviewDate DESC
+			</otherwise>
+		</choose>
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="dataCount2" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM talentReview
+		<where>
+			<if test="userId != null">
+				userId = #{userId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+	</select>
+	
+	<select id="listReview2" parameterType="map" resultType="com.forest.namu.domain.TmReview">
+		SELECT pr.num, pr.userId, m.nickName, score, review, answer, pr.tboardNum,
+			showReview, locked, pr.reviewDate, pr.answerDate, 
+			p.subject, op.optionValue, op2.optionValue optionValue2
+		FROM talentReview pr
+		JOIN member m ON pr.userId = m.userId 
+		JOIN TMPURCHASEREQUEST td ON pr.userId = td.userId
+		JOIN talentMarket p ON p.tboardNum = td.tboardNum
+		LEFT OUTER JOIN optionDetail op ON td.detailNum = op.detailNum
+		LEFT OUTER JOIN optionDetail op2 ON td.detailNum2 = op2.detailNum		
+		
+		<where>
+			<if test="userId != null">
+				pr.userId = #{userId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+		ORDER BY reviewDate DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<update id="updateReview" parameterType="com.forest.namu.domain.TmReview">
+		UPDATE talentReview SET answer = #{answer}, answerDate = SYSDATE, 
+			showReview = #{showReview}, locked = #{locked}
+		WHERE num = #{num}
+	</update>
+	
+
+	
+	<delete id="deleteReview" parameterType="long">
+		DELETE FROM talentReview
+		WHERE num = #{num}
+	</delete>
+</mapper>

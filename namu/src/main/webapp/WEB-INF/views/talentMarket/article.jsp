@@ -329,7 +329,41 @@
 .deleteQuestion:hover, .notifyQuestion:hover { font-weight: 500; color: #2478FF; }
 
 </style>
-<script>
+<script type="text/javascript">
+function ajaxFun(url, method, formData, dataType, fn, file = false) {
+	const settings = {
+			type: method, 
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+	}
+	
+	$.ajax(url, settings);
+}
+
 function changeCarouselImage(index) {
     var carousel = document.getElementById('carouselExample');
     var carouselItems = carousel.getElementsByClassName('carousel-item');
@@ -507,7 +541,7 @@ function validateAndSubmit() {
 					</div>
 
 					<div class="row mt-3 reviewSort-area">
-						<div class="col">&nbsp;</div>
+						<div class="col">&nbsp;<button type="button" class="btnReview btn custom-button2" ${empty sessionScope.member ? "disabled":""}> 상품 리뷰 작성 </button></div>
 						<div class="col-auto text-end">
 							<select class="form-select reviewSortNo">
 								<option value="0"> 출력 순서 </option>
@@ -520,8 +554,55 @@ function validateAndSubmit() {
 					
 					<div class="mt-2 list-review"></div>
                 </div>
+                
+                <div class="modal fade" id="reviewDialogModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="reviewDialogModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="questionDialogModalLabel">상품 평점남기기 </h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<div class="qna-form p-2">
+					<form name="reviewForm">
+						<div class="row">
+							<div class="col">
+								<span class="fw-bold">리뷰 쓰기</span><span> - 상품 및 상품 구매 과정과 관련없는 글은 삭제 될 수 있습니다.</span>
+							</div>
+						</div>
+						<div class="p-1">
+							<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
+							<textarea name="review" id="review" class="form-control"></textarea>
+						</div>
+											
+					</form>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn custom-button2 btnReviewSendOk">문의등록 <i class="bi bi-check2"></i> </button>
+				<button type="button" class="btn custom-button2 btnReviewSendCancel" data-bs-dismiss="modal">취소</button>
+			</div>			
+		</div>
+	</div>
+	</div>
                 <div id="inquiry-content" class="tab-content">
-              
+              	<div class="mt-3 pt-3 border-bottom">
+						<p class="fs-4 fw-semibold">상품 문의 사항</p> 
+					</div>
+			
+					<div class="mt-3 p-2 text-end">
+						<button type="button" class="btnMyQuestion btn custom-button2" ${empty sessionScope.member ? "disabled":""}> 내 Q&amp;A 보기  </button>
+						<button type="button" class="btnQuestion btn custom-button2" ${empty sessionScope.member ? "disabled":""}> 상품 Q&amp;A 작성 </button>
+					</div>
+					<div class="mt-1 p-2 list-question"></div>
+					
+	<div class="modal fade" id="questionDialogModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="questionDialogModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -543,15 +624,10 @@ function validateAndSubmit() {
 							</div>
 						</div>
 						<div class="p-1">
-							<input type="hidden" name="productNum" value="${dto.tboardNum}">
+							<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
 							<textarea name="question" id="question" class="form-control"></textarea>
 						</div>
-						<div class="p-1">
-							<div class="img-grid">
-								<img class="item img-add" src="${pageContext.request.contextPath}/resources/images/add_photo.png">
-							</div>
-							<input type="file" name="selectFile" accept="image/*" multiple class="form-control" style="display: none;">
-						</div>							
+											
 					</form>
 				</div>
 
@@ -561,6 +637,7 @@ function validateAndSubmit() {
 				<button type="button" class="btn custom-button2 btnQuestionSendCancel" data-bs-dismiss="modal">취소</button>
 			</div>			
 		</div>
+	</div>
 	</div>
                 </div>
                 <div id="exchange-content" class="tab-content">
@@ -581,7 +658,7 @@ function validateAndSubmit() {
 	                            </div>
 	                            <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>
 	                            <div class="seller"><i class="bi bi-person-circle"></i>${dto.nickName}</div>
-	                            <div class="price">8,000원</div>
+	                            <div class="price">${dto.price}원</div>
 	                            <form name="option" method="get" action="${pageContext.request.contextPath}/talent/buy">
 	                            <div class="details">
 	                                		<c:if test="${dto.optionCount > 0}">
@@ -679,29 +756,34 @@ function validateAndSubmit() {
 	</c:if>
    
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('.tabs button').click(function() {
-                var target = $(this).attr('id').replace('-btn', '-content');
-                $('.tab-content').removeClass('active');
-                $('#' + target).addClass('active');
-                $('.tabs button').removeClass('active');
-                $(this).addClass('active');
+    $(document).ready(function() {
+        $('.tabs button').click(function() {
+            var target = $(this).attr('id').replace('-btn', '-content');
+            $('.tab-content').removeClass('active');
+            $('#' + target).addClass('active');
+            $('.tabs button').removeClass('active');
+            $(this).addClass('active');
 
-            });
-            
-            $('.thumbnail').click(function() {
-                var index = $(this).index();
-                $('#productCarousel').carousel(index);
-                $('.thumbnail').removeClass('active');
-                $(this).addClass('active');
-            });
-
-            $('#productCarousel').on('slide.bs.carousel', function (e) {
-                var index = $(e.relatedTarget).index();
-                $('.thumbnail').removeClass('active');
-                $('.thumbnail').eq(index).addClass('active');
-            });
+            if ($(this).attr('id') === 'review-btn') {
+                listReview(1);
+            } else if ($(this).attr('id') === 'inquiry-btn') {
+                listQuestion(1);
+            }
         });
+        
+        $('.thumbnail').click(function() {
+            var index = $(this).index();
+            $('#productCarousel').carousel(index);
+            $('.thumbnail').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $('#productCarousel').on('slide.bs.carousel', function (e) {
+            var index = $(e.relatedTarget).index();
+            $('.thumbnail').removeClass('active');
+            $('.thumbnail').eq(index).addClass('active');
+        });
+    });
         
         function submitContents(elClickedObj) {
        	 oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
@@ -724,10 +806,10 @@ function validateAndSubmit() {
         });
 
         function listReview(page) {
-        	let productNum = '${dto.tboardNum}';
+        	let num = '${dto.tboardNum}';
         	let sortNo = $('.reviewSortNo').val();
         	let url = '${pageContext.request.contextPath}/review/list';
-        	let query = 'productNum='+productNum+'&pageNo='+page+'&sortNo='+sortNo;
+        	let query = 'num='+num+'&pageNo='+page+'&sortNo='+sortNo;
         	
         	const fn = function(data) {
         		printReview(data);
@@ -752,22 +834,23 @@ function validateAndSubmit() {
         	printSummary(summary);
         	
         	let out = '';
+        	
         	for(let item of data.list) {
         		let num = item.num;
-        		let userName = item.userName;
+        		let nickName = item.nickName;
+        		let answerNickName = '${dto.nickName}';
         		let score = item.score;
         		let review = item.review;
-        		let review_date = item.review_date;
+        		let reviewDate = item.reviewDate;
         		let answer = item.answer;
-        		let answer_date = item.answer_date;
-        		let listFilename = item.listFilename;
-        		// let deletePermit = item.deletePermit;
+        		let answerDate = item.answerDate;
+      	
 
         		out += '<div class="mt-3 border-bottom">';
         		out += '  <div class="row p-2">';
         		out += '     <div class="col-auto fs-2"><i class="bi bi-person-circle text-muted icon"></i></div>';
         		out += '     <div class="col pt-3 ps-0 fw-semibold">'+nickName+'</div>';
-        		out += '     <div class="col pt-3 text-end"><span>'+review_date+'</span>';
+        		out += '     <div class="col pt-3 text-end"><span>'+reviewDate+'</span>';
         		out += '       |<span class="notifyReview" data-num="' + num + '">신고</span></div>';
         		out += '  </div>';
         		out += '  <div class="row p-2">';
@@ -780,21 +863,12 @@ function validateAndSubmit() {
         		out += '  </div>';
         		out += '  <div class="mt-2 p-2">' + review + '</div>';
 
-        		if(listFilename && listFilename.length > 0) {
-        			out += '<div class="row gx-1 mt-2 mb-1 p-1">';
-        				for(let f of listFilename) {
-        					out += '<div class="col-md-auto md-img">';
-        					out += '  <img class="border rounded" src="${pageContext.request.contextPath}/uploads/review/'+f+'">';
-        					out += '</div>';
-        				}
-        			out += '</div>';
-        		}
         		
         		if(answer) {
         			out += '  <div class="p-3 pt-0">';
         			out += '    <div class="bg-light">';
         			out += '      <div class="p-3 pb-0">';
-        			out += '        <label class="text-bg-primary px-2"> 관리자 </label> <label>' + answer_date + '</label>';
+        			out += '        <label class="text-bg-primary px-2"> '+answerNickName+ ' </label> <label>' + answerDate + '</label>';
         			out += '      </div>';
         			out += '      <div class="p-3 pt-1">' + answer + '</div>';
         			out += '    </div>';
@@ -878,7 +952,7 @@ function validateAndSubmit() {
 
         // question -----
         function listQuestion(page) {
-        	let productNum = '${dto.tboardNum}';
+        	let tboardNum = '${dto.tboardNum}';
         	let url = '${pageContext.request.contextPath}/qna/list';
         	let query = 'tboardNum='+tboardNum+'&pageNo='+page;
         	
@@ -899,31 +973,23 @@ function validateAndSubmit() {
         	let out = '';
         	for(let item of data.list) {
         		let num = item.num;
-        		let userName = item.userName;
+        		let nickName = item.nickName;
+        		let answerNickName = '${dto.nickName}'
         		let question = item.question;
-        		let question_date = item.question_date;
+        		let questionDate = item.questionDate;
         		let answer = item.answer;
-        		let answer_date = item.answer_date;
-        		let answerState = answer_date ? '<span class="text-primary">답변완료</span>' : '<span class="text-secondary">답변대기</span>';
-        		let listFilename = item.listFilename;
+        		let answerDate = item.answerDate;
+        		let answerState = answerDate ? '<span class="text-primary">답변완료</span>' : '<span class="text-secondary">답변대기</span>';
+       
         		let secret = item.secret;
 
         		out += '<div class="mt-1 border-bottom">';
         		out += '  <div class="mt-2 p-2">' + question + '</div>';
 
-        		if(listFilename && listFilename.length > 0) {
-        			out += '<div class="row gx-1 mt-2 mb-1 p-1">';
-        				for(let f of listFilename) {
-        					out += '<div class="col-md-auto md-img">';
-        					out += '  <img class="border rounded" src="${pageContext.request.contextPath}/uploads/qna/'+f+'">';
-        					out += '</div>';
-        				}
-        			out += '</div>';
-        		}
         		out += '  <div class="row p-2">';
         		out += '     <div class="col-auto pt-2 pe-0">' + answerState + '</div>';
-        		out += '     <div class="col-auto pt-2 px-0">&nbsp;|&nbsp;'+userName+'</div>';
-        		out += '     <div class="col-auto pt-2 px-0">&nbsp;|&nbsp;<span>'+question_date+'</span>';
+        		out += '     <div class="col-auto pt-2 px-0">&nbsp;|&nbsp;'+nickName+'</div>';
+        		out += '     <div class="col-auto pt-2 px-0">&nbsp;|&nbsp;<span>'+questionDate+'</span>';
         		if(secret === 0) {
         			out += '       |<span class="notifyQuestion" data-num="' + num + '">신고</span>';
         		}
@@ -936,7 +1002,7 @@ function validateAndSubmit() {
         			out += '  <div class="p-3 pt-0 answer-content" style="display: none;">';
         			out += '    <div class="bg-light">';
         			out += '      <div class="p-3 pb-0">';
-        			out += '        <label class="text-bg-primary px-2"> 관리자 </label> <label>' + answer_date + '</label>';
+        			out += '        <label class="text-bg-primary px-2"> '+answerNickName+' </label> <label>' + answerDate + '</label>';
         			out += '      </div>';
         			out += '      <div class="p-3 pt-1">' + answer + '</div>';
         			out += '    </div>';
@@ -965,76 +1031,61 @@ function validateAndSubmit() {
         		}
         	});
         });
+		
+  $(function(){
+        	
+        	
+        	
+        	$('.btnReview').click(function(){
+        		$("#reviewDialogModal").modal("show");
+        	});
 
+        	$('.btnReviewSendOk').click(function(){
+        		const f = document.reviewForm;
+        		let s;
+        		
+        		s = f.review.value.trim();
+        		if( ! s ) {
+        			alert("문의 사항을 입력하세요.")	;
+        			f.question.focus();
+        			return false;
+        		}
+        		
+       
+        		
+        		let url = "${pageContext.request.contextPath}/review/write";
+        	
+        		let query = new FormData(f); 
+        		
+        		const fn = function(data) {
+        			if(data.state === "true") {
+        				f.reset();
+        				
+        			
+        				
+        				$("#reviewDialogModal").modal("hide");
+        				
+        				listReview(1);
+        			}
+        		};
+        		
+        		ajaxFun(url, "post", query, "json", fn, true);
+        	});
+        	
+        	$('.btnReviewSendCancel').click(function(){
+        		const f = document.reviewForm;
+        		f.reset();
+        	
+        	
+        		
+        		$("#reviewDialogModal").modal("hide");
+        	});	
+        	
+  });
+        
         $(function(){
-        	var sel_files = [];
         	
-        	$("body").on("click", ".qna-form .img-add", function(){
-        		$(this).closest(".qna-form").find("input[name=selectFile]").trigger("click");
-        	});
         	
-        	$("form[name=questionForm] input[name=selectFile]").change(function(e){
-        		if(! this.files) {
-        			let dt = new DataTransfer();
-        			for(let f of sel_files) {
-        				dt.items.add(f);
-        			}
-        			
-        			this.files = dt.files;
-        			
-        			return false;
-        		}
-        		
-        		let $form = $(this).closest("form");
-        		
-        		// 유사 배열을  배열로 변환
-        		const fileArr = Array.from(this.files);
-        		
-        		fileArr.forEach((file, index) => {
-        			sel_files.push(file);
-        			
-        			const reader = new FileReader();
-        			const $img = $("<img>", {"class":"item img-item"});
-        			$img.attr("data-filename", file.name);
-        			reader.onload = e => {
-        				$img.attr("src", e.target.result);		
-        			};
-        			reader.readAsDataURL(file);
-        			$form.find(".img-grid").append($img);
-        		});
-        		
-        		let dt = new DataTransfer();
-        		for(let f of sel_files) {
-        			dt.items.add(f);
-        		}
-        		
-        		this.files = dt.files;
-        	});
-        	
-        	$("body").on("click", ".qna-form .img-item", function(){
-        		if(! confirm("선택한 파일을 삭제 하시겠습니까 ? ")) {
-        			return false;
-        		}
-        		
-        		let filename = $(this).attr("data-filename");
-        		
-        		for(let i=0; i<sel_files.length; i++) {
-        			if(filename === sel_files[i].name) {
-        				sel_files.splice(i, 1);
-        				break;
-        			}
-        		}
-        		
-        		let dt = new DataTransfer();
-        		for(let f of sel_files) {
-        			dt.items.add(f);
-        		}
-        		
-        		const f = this.closest("form");
-        		f.selectFile.files = dt.files;
-        		
-        		$(this).remove();
-        	});
         	
         	$('.btnQuestion').click(function(){
         		$("#questionDialogModal").modal("show");
@@ -1051,23 +1102,17 @@ function validateAndSubmit() {
         			return false;
         		}
         		
-        		if(f.selectFile.files.length > 5) {
-        			alert("이미지는 최대 5개까지 가능합니다..")	;
-        			return false;
-        		}
+       
         		
         		let url = "${pageContext.request.contextPath}/qna/write";
-        		// FormData : form 필드와 그 값을 나타내는 일련의 key/value 쌍을 쉽게 생성하는 방법을 제공 
-        		// FormData는 Content-Type을 명시하지 않으면 multipart/form-data로 전송
+        	
         		let query = new FormData(f); 
         		
         		const fn = function(data) {
         			if(data.state === "true") {
         				f.reset();
-        				$(".qna-form .img-item").each(function(){
-        					$(this).remove();
-        				});
-        				sel_files.length = 0;
+        				
+        			
         				
         				$("#questionDialogModal").modal("hide");
         				
@@ -1081,10 +1126,8 @@ function validateAndSubmit() {
         	$('.btnQuestionSendCancel').click(function(){
         		const f = document.questionForm;
         		f.reset();
-        		$(".qna-form .img-item").each(function(){
-        			$(this).remove();
-        		});
-        		sel_files.length = 0;
+        	
+        	
         		
         		$("#questionDialogModal").modal("hide");
         	});	
