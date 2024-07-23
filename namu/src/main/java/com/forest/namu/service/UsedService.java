@@ -10,6 +10,7 @@ public interface UsedService {
 	public void updateUsed(Used dto, String pathname) throws Exception;
 	public void deleteUsed(long num, String pathname) throws Exception;
 	public List<Used> listUsed(Map<String, Object> map);
+	public List<Used> listCategory();
 
 	public int dataCount(Map<String, Object> map);
 	public void updateHitCount(long num) throws Exception;

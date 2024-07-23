@@ -8,25 +8,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.forest.namu.common.FileManager;
-import com.forest.namu.domain.Used;
-import com.forest.namu.mapper.UsedMapper;
+import com.forest.namu.domain.Auction;
+import com.forest.namu.mapper.AuctionMapper;
 
 @Service
-public class UsedServiceImpl implements UsedService {
+public class AuctionServiceImpl implements AuctionService {
 
 	@Autowired
-	private UsedMapper mapper;
+	private AuctionMapper mapper;
 	
 	@Autowired
 	private FileManager fileManager;
 	
+	
 	@Override
-	public void insertUsed(Used dto, String pathname) throws Exception {
-		
+	public void insertAuction(Auction dto, String pathname) throws Exception {
+
 		try {
-			long seq = mapper.used_seq();
+			long seq = mapper.auction_seq();
 			
-			dto.setNum(seq);
+			dto.setaNum(seq);
 			
 			String saveFile = fileManager.doFileUpload(dto.getThumbFile(), pathname);
 
@@ -35,7 +36,7 @@ public class UsedServiceImpl implements UsedService {
 				
 			} 
 			
-			mapper.insertUsed(dto);
+			mapper.insertAuction(dto);
 			
 			// 다중파일
 			if(! dto.getSelectFile().isEmpty()) {
@@ -47,11 +48,9 @@ public class UsedServiceImpl implements UsedService {
 					
 					dto.setUploadFile(saveFile2);
 					
-					insertUsedFile(dto);
+					insertAuctionFile(dto);
 				}
 			}
-			
-			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,7 +60,8 @@ public class UsedServiceImpl implements UsedService {
 	}
 
 	@Override
-	public void updateUsed(Used dto, String pathname) throws Exception {
+	public void updateAuction(Auction dto, String pathname) throws Exception {
+
 
 		try {
 			String saveFile = fileManager.doFileUpload(dto.getThumbFile(), pathname);
@@ -81,12 +81,12 @@ public class UsedServiceImpl implements UsedService {
 					}
 					
 					dto.setUploadFile(saveFile2);
-					
-					insertUsedFile(dto);
+					System.out.println("다중파일"+saveFile2);
+					insertAuctionFile(dto);
 				}
 			}
 			
-			mapper.updateUsed(dto);
+			mapper.updateAuction(dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,31 +96,43 @@ public class UsedServiceImpl implements UsedService {
 	}
 
 	@Override
-	public void deleteUsed(long num, String pathname) throws Exception {
-
+	public void deleteAuction(long num, String pathname) throws Exception {
+		
 		try {
 			if (pathname != null) {
 				fileManager.doFileDelete(pathname);
 			}
 			
-			mapper.deleteUsed(num);
+			mapper.deleteAuction(num);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		
 	}
 
 	@Override
-	public List<Used> listUsed(Map<String, Object> map) {
-		List<Used> list = null;
+	public List<Auction> listAuction(Map<String, Object> map) {
+		List<Auction> list = null;
 		
 		try {
-			list = mapper.listUsed(map);
+			list = mapper.listAuction(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-			
+		
+		return list;
+	}
+
+	@Override
+	public List<Auction> listCategory() {
+		List<Auction> list = null;
+		
+		try {
+			list = mapper.listCategory();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return list;
 	}
 
@@ -139,20 +151,17 @@ public class UsedServiceImpl implements UsedService {
 
 	@Override
 	public void updateHitCount(long num) throws Exception {
-
 		try {
 			mapper.updateHitCount(num);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		
 	}
 
 	@Override
-	public Used findById(long num) {
-
-		Used dto = null;
+	public Auction findById(long num) {
+		Auction dto = null;
 		
 		 try {
 	            dto = mapper.findById(num);
@@ -176,10 +185,9 @@ public class UsedServiceImpl implements UsedService {
 	}
 
 	@Override
-	public void insertUsedLike(Map<String, Object> map) throws Exception {
-
+	public void insertAuctionLike(Map<String, Object> map) throws Exception {
 		try {
-			mapper.insertUsedLike(map);
+			mapper.insertAuctionLike(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -187,34 +195,51 @@ public class UsedServiceImpl implements UsedService {
 	}
 
 	@Override
-	public void deleteUsedLike(Map<String, Object> map) throws Exception {
-
+	public void deleteAuctionLike(Map<String, Object> map) throws Exception {
 		try {
-			mapper.deleteUsedLike(map);
+			mapper.deleteAuctionLike(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+
+	@Override
+	public void insertAuctionFile(Auction dto) throws Exception {
+		try {
+			mapper.insertAuctionFile(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public void deleteAuctionFile(long fileNum) throws Exception {
+		try {
+			mapper.deleteAuctionFile(fileNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<Auction> listAuctionFile(long num) {
+		List<Auction> list = null;
+		
+		try {
+			list = mapper.listAuctionFile(num);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
+		return list;
 	}
 
 	@Override
-	public void insertUsedFile(Used dto) throws Exception {
-
-		try {
-			mapper.insertUsedFile(dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-		
-	}
-
-
-	@Override
-	public Used findByFileId(long num) throws Exception {
-
-		Used dto = null;
+	public Auction findByFileId(long num) throws Exception {
+		Auction dto = null;
 		
 		try {
 			dto = mapper.findByFileId(num);
@@ -224,43 +249,6 @@ public class UsedServiceImpl implements UsedService {
 		}
 		
 		return dto;
-	}
-
-	@Override
-	public List<Used> listUsedFile(long num) {
-		
-		List<Used> list = null;
-		
-		try {
-			list = mapper.listUsedFile(num);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-
-	@Override
-	public void deleteUsedFile(long fileNum) throws Exception {
-
-		try {
-			mapper.deleteUsedFile(fileNum);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
-	
-	public List<Used> listCategory() {
-		List<Used> list = null;
-		
-		try {
-			list = mapper.listCategory();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return list;
 	}
 
 }

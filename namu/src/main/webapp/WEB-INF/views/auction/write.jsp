@@ -58,10 +58,10 @@
 
 <div class="container body-container">
 	<div class="title">
-		<h3>🌳중고거래</h3>
+		<h3>👑중고경매</h3>
 		</div>
 		
-		<form name="UsedForm" method="post" enctype="multipart/form-data">
+		<form name="AuctionForm" method="post" enctype="multipart/form-data">
 			<table class="table mt-2 write-form">
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">카테고리</td>
@@ -95,9 +95,21 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="bg-light col-sm-2" scope="row">금액</td>
+				<td class="bg-light col-sm-2" scope="row">시작가</td>
 				<td>
-					<input class="block" type="number" name="price" value="${dto.price}">
+					<input class="block" type="number" name="minBid" value="${dto.minBid}">
+				</td>
+			</tr>
+			<tr>
+				<td class="bg-light col-sm-2" scope="row">경매시작</td>
+				<td>
+					<input class="block" type="date" name="salesStart" value="${dto.salesStart}">
+				</td>
+			</tr>
+			<tr>
+				<td class="bg-light col-sm-2" scope="row">경매종료</td>
+				<td>
+					<input class="block" type="date" name="salesEnd" value="${dto.salesEnd}">
 				</td>
 			</tr>
 			<c:if test="${mode=='update'}">
@@ -107,9 +119,9 @@
 				  <input type="radio" name="state" value="0" 
                 <c:if test="${dto.state == 0}">checked</c:if>>&nbsp;판매중
 				  <input type="radio" name="state" value="1" 
-                <c:if test="${dto.state == 1}">checked</c:if>>&nbsp;예약중
+                <c:if test="${dto.state == 1}">checked</c:if>>&nbsp;낙찰완료
 				  <input type="radio" name="state" value="2" 
-                <c:if test="${dto.state == 2}">checked</c:if>>&nbsp;판매완료
+                <c:if test="${dto.state == 2}">checked</c:if>>&nbsp;유찰
 				</td>
 			</tr>
 			</c:if>
@@ -126,7 +138,7 @@
 					<div class="img-grid">
 						<img class="item img-add" src="${pageContext.request.contextPath}/resources/images/add_photo.png">
 						<c:forEach var="vo" items="${listFile}">
-							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.uploadFile}"
+							<img src="${pageContext.request.contextPath}/uploads/auctionPhoto/${vo.uploadFile}"
 								class="item delete-img"
 								data-fileNum="${vo.fileNum}"
 								data-filename="${vo.uploadFile}">
@@ -150,7 +162,7 @@
 							<button type="reset" class="btn btn-light">다시입력</button>
 							<button type="button" class="btn btn-light" onclick="UsedDelete()">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
 							<c:if test="${mode=='update'}">
-								<input type="hidden" name="num" value="${dto.num}">
+								<input type="hidden" name="aNum" value="${dto.aNum}">
 								<input type="hidden" name="imageFile" value="${dto.imageFile}">
 								<input type="hidden" name="selectFile" value="${vo.uploadFile}">
 							</c:if>
@@ -165,23 +177,23 @@
 $(function(){
 	var img = "${dto.imageFile}";
 	if( img ) {
-		img = "${pageContext.request.contextPath}/uploads/photo/"+img;
+		img = "${pageContext.request.contextPath}/uploads/auctionPhoto/"+img;
 		$(".write-form .thumbnail-viewer").empty();
 		$(".write-form .thumbnail-viewer").css("background-image", "url("+img+")");
 	}
 	
 	$(".write-form .thumbnail-viewer").click(function(){
-		$("form[name=UsedForm] input[name=thumbFile]").trigger("click");
+		$("form[name=AuctionForm] input[name=thumbFile]").trigger("click");
 	});
 	
-	$("form[name=UsedForm] input[name=thumbFile]").change(function(){
+	$("form[name=AuctionForm] input[name=thumbFile]").change(function(){
 		let file = this.files[0];
 		
 		if(! file) {
 			$(".write-form .thumbnail-viewer").empty();
 			
 			if( img ) {
-				img = "${pageContext.request.contextPath}/uploads/photo/"+img;
+				img = "${pageContext.request.contextPath}/uploads/auctionPhoto/"+img;
 			} else {
 				img = "${pageContext.request.contextPath}/resources/images/add_photo.png";
 			}
@@ -214,7 +226,7 @@ $(function(){
 		let $img = $(this);
 		let fileNum = $img.attr("data-fileNum");
 		let filename = $img.attr("data-filename");
-		let url="${pageContext.request.contextPath}/used/deleteFile";
+		let url="${pageContext.request.contextPath}/auction/deleteFile";
 		$.post(url, {fileNum:fileNum, filename:filename}, function(data){
 			$img.remove();
 		}, "json");
@@ -226,16 +238,16 @@ $(function(){
 	var sel_files = [];
 	
 	$("body").on("click", ".write-form .img-add", function(){
-		$("form[name=UsedForm] input[name=selectFile]").trigger("click");
+		$("form[name=AuctionForm] input[name=selectFile]").trigger("click");
 	});
 	
-	$("form[name=UsedForm] input[name=selectFile]").change(function(){
+	$("form[name=AuctionForm] input[name=selectFile]").change(function(){
 		if(! this.files) {
 			let dt = new DataTransfer();
 			for(let f of sel_files) {
 				dt.items.add(f);
 			}
-			document.UsedForm.selectFile.files = dt.files;
+			document.AuctionForm.selectFile.files = dt.files;
 			
 			return false;
 		}
@@ -258,7 +270,7 @@ $(function(){
 		for(let f of sel_files) {
 			dt.items.add(f);
 		}
-		document.UsedForm.selectFile.files = dt.files;
+		document.AuctionForm.selectFile.files = dt.files;
 	});
 	
 	$("body").on("click", ".write-form .img-item", function(){
@@ -279,7 +291,7 @@ $(function(){
 		for(let f of sel_files) {
 			dt.items.add(f);
 		}
-		document.UsedForm.selectFile.files = dt.files;		
+		document.AuctionForm.selectFile.files = dt.files;		
 		
 		$(this).remove();
 	});
@@ -289,7 +301,7 @@ $(function(){
 
 <script type="text/javascript">
 function check() {
-	const f = document.UsedForm;
+	const f = document.AuctionForm;
 	let str;
 	
 	str = f.cnum.value.trim();
@@ -312,27 +324,42 @@ function check() {
 		 f.content.focus();
 		 return false;
 	 }
-	 f.action = "${pageContext.request.contextPath}/used/${mode}";
+	 
+	 str = f.salesEnd.value.trim();
+	 if(! str || str === "<p><br></p>") {
+		 alert("경매종료 일자를 선택하세요. ");
+		 f.content.focus();
+		 return false;
+	 }
+	 
+	 str = f.minBid.value.trim();
+	 if(! str || str === "<p><br></p>") {
+		 alert("금액을 입력하세요. ");
+		 f.content.focus();
+		 return false;
+	 }
+	 
+	 f.action = "${pageContext.request.contextPath}/auction/${mode}";
 	 f.submit();
 	 return true;
 }
 
 
 function UsedDelete() {
-	const f = document.UsedForm;
+	const f = document.AuctionForm;
 	
-	f.action = "${pageContext.request.contextPath}/used/list";
+	f.action = "${pageContext.request.contextPath}/auction/list";
 	f.submit();
 }
 
 function cnumChange(cnum) {
-	const f = document.UsedForm;
+	const f = document.AuctionForm;
 	
 	f.cnum.value = cnum;
 }
 
 function townChange(cnum) {
-	const f = document.UsedForm;
+	const f = document.AuctionForm;
 	
 	f.town.value = town;
 }

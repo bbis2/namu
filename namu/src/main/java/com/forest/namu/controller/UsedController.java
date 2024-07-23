@@ -1,6 +1,8 @@
 package com.forest.namu.controller;
 
 import java.io.File;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.Used;
 import com.forest.namu.service.UsedService;
@@ -29,21 +32,78 @@ public class UsedController {
 	@Autowired
 	private UsedService service;
 	
+	@Autowired
+	private MyUtil myUtil;
+	
 	@RequestMapping(value = "list")
 	public String list(HttpServletRequest req,
-			Model model, @RequestParam(defaultValue = "") String kwd) throws Exception {
+			@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(defaultValue = "0") int cnum, 
+			@RequestParam(defaultValue = "0") int town , 
+			@RequestParam(defaultValue = "") String kwd,
+			Model model) throws Exception {
 
+		int size = 10;
+		int total_page = 0;
 		int dataCount = 0;
+		
+		if(req.getMethod().equals("GET")) {
+			kwd = URLDecoder.decode(kwd, "utf-8");
+		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("kwd", kwd);
+		map.put("cnum", cnum);
+		map.put("town", town);
 		
 		dataCount = service.dataCount(map);
+		if(dataCount != 0) {
+			total_page = myUtil.pageCount(dataCount, size);
+		}
+		if(total_page < current_page) {
+			current_page = total_page;
+		}
+		
+		// 리스트
+		int offset = (current_page - 1) * size;
+		if(offset < 0) offset = 0;
+		map.put("offset", offset);
+		map.put("size", size);
 		
 		List<Used> list = service.listUsed(map);
+		List<Used> listCategory = service.listCategory();
+				
+		String query = "town=" + town;
+		String cp = req.getContextPath();
+		String listUrl;
+		String articleUrl;
+		if(kwd.length() != 0) {
+			query += "&kwd=" +
+					URLEncoder.encode(kwd, "utf-8");
+		}
+		if(cnum != 0) {
+			query += "&cnum=" + cnum;
+		}
+		
+		listUrl = cp + "/used/list";
+		articleUrl = cp + "/used/article?page=" + current_page;
+		if(query.length() != 0) {
+			listUrl += "?" + query;
+			articleUrl += "&" + query;
+		}
+		
+		String paging = myUtil.paging(current_page, total_page, listUrl);		
+		
 		model.addAttribute("list", list);
 		model.addAttribute("kwd", kwd);
+		model.addAttribute("cnum", cnum);
+		model.addAttribute("town", town);
 		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("articleUrl", articleUrl);
+		model.addAttribute("page", current_page);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);		
+		model.addAttribute("listCategory", listCategory);
 		
 		return ".used.list";
 	}
