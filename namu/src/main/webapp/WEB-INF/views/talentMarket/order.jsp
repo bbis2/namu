@@ -171,6 +171,17 @@ h1 em {
     text-align: left;
 }
 </style>
+<script type="text/javascript">
+function updateOrderPrice() {
+    const pricePerItem = ${dto.price};
+    const quantity = document.getElementById('quantity').value;
+    const orderAmount = pricePerItem * quantity;
+
+    document.getElementById('orderAmount').textContent = orderAmount + '원';
+    document.getElementById('totalAmount').textContent = orderAmount + '원';
+    document.getElementById('totalAmountText').textContent = orderAmount + '원';
+}
+</script>
 </head>
 <body>
 	<div class="custom-container">
@@ -178,69 +189,68 @@ h1 em {
             <h1>결제하기</h1>
         </div>
         <div class="order-summary">
-            <div class="order-details">
-                <h2>주문내역</h2>
-                <div class="order-item">
-                    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" alt="그림">
-                    <div class="order-info">
-                        <p>${dto.subject}</p>
-                        <p>${dto.nickName}</p>
-                        <div class="quantity-select">
-                            <label for="quantity">수량 선택 :</label>
-                            <select id="quantity" name="quantity">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                        </div>
-                        <div class="date-select">
-                            <label for="option">선택 옵션 : </label>
-                            <label>
-							    <c:choose>
-							        <c:when test="${option1 == '0'}">
-							            없음
-							        </c:when>
-							        <c:otherwise>
-							          ${listOption[0].optionName} : ${option1}
-							        </c:otherwise>
-							    </c:choose>
-							</label>
-							<label>
-							    <c:choose>
-							        <c:when test="${option2 == '0'}">
-							        </c:when>
-							        <c:otherwise>
-							           , ${listOption[1].optionName} : ${option2}
-							        </c:otherwise>
-							    </c:choose>
-							</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="order-price">
-                <table>
-                    <tr>
-                        <td>주문금액</td>
-                        <td>${dto.price}원</td>
-                    </tr>
-                    
-                    <tr>
-                        <td>보유 포인트</td>
-                        <td>2,000원</td>
-                    </tr>
-                    <tr>
-                        <td>총 결제금액</td>
-                        <td>6,000원</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="total-price">
-            <p>총 결제금액: <span>6,000원</span></p>
-        </div>
+			    <div class="order-details">
+			        <h2>주문내역</h2>
+			        <div class="order-item">
+			            <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" alt="그림">
+			            <div class="order-info">
+			                <p>${dto.subject}</p>
+			                <p>${dto.nickName}</p>
+			                <div class="quantity-select">
+			                    <label for="quantity">수량 선택 :</label>
+			                    <select id="quantity" name="quantity" onchange="updateOrderPrice()">
+			                        <option value="1">1</option>
+			                        <option value="2">2</option>
+			                        <option value="3">3</option>
+			                        <option value="4">4</option>
+			                        <option value="5">5</option>
+			                    </select>
+			                </div>
+			                <div class="date-select">
+			                    <label for="option">선택 옵션 : </label>
+			                    <label>
+			                        <c:choose>
+			                            <c:when test="${option1 == '0'}">
+			                                없음
+			                            </c:when>
+			                            <c:otherwise>
+			                                ${listOption[0].optionName} : ${option1}
+			                            </c:otherwise>
+			                        </c:choose>
+			                    </label>
+			                    <label>
+			                        <c:choose>
+			                            <c:when test="${option2 == '0'}">
+			                            </c:when>
+			                            <c:otherwise>
+			                                , ${listOption[1].optionName} : ${option2}
+			                            </c:otherwise>
+			                        </c:choose>
+			                    </label>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			    <div class="order-price">
+			        <table>
+			            <tr>
+			                <td>주문금액</td>
+			                <td id="orderAmount">${dto.price}원</td>
+			            </tr>
+			            <tr>
+			                <td>보유 포인트</td>
+			                <td>2,000원</td>
+			            </tr>
+			            <tr>
+			                <td>총 결제금액</td>
+			                <td id="totalAmount">6,000원</td>
+			            </tr>
+			        </table>
+			    </div>
+			</div>
+			<div class="total-price">
+			    <p>총 결제금액: <span id="totalAmountText">6,000원</span></p>
+			</div>
         
         <div class="footer-notes">
               <div class="accordion" id="accordionExample">
