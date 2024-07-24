@@ -141,7 +141,7 @@
     gap: 21px; /* 항목 간의 간격 조정 */
     max-height: 80%; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
     margin-bottom: 450px; /* footer와 겹치지 않도록 하단 여백 추가 */
-    pa
+    
 }
 
 .togetherlist .list {

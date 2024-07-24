@@ -186,36 +186,18 @@
 	
 	<!-- 모임 신청 리스트 만들기 -->
 	<select id="listApply" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
-		SELECT tNum, userId, nickName, applyDate, content, userApply , acceptance
+		SELECT tNum, a.userId, m.nickName, applyDate, content, acceptance
 		FROM togetherApply a
 		JOIN member m ON a.userId = m.userId
 	    WHERE a.tNum =#{tNum}
+	    <if test="acceptance != -1">
+	    	AND acceptance = #{acceptance}
+	    </if>
 	</select>
 
-	<select id="listApplyRequest" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
-		SELECT tNum, userId, nickName, applyDate, content, userApply , acceptance
-		FROM togetherApply a
-		JOIN member m ON a.userId = m.userId
-	    WHERE a.tNum =#{tNum} AND acceptance = 0
-	</select>
-
-	<select id="listApplyOk" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
-		SELECT tNum, userId, nickName, applyDate, content, userApply , acceptance
-		FROM togetherApply a
-		JOIN member m ON a.userId = m.userId
-	    WHERE a.tNum =#{tNum} AND acceptance = 1
-	</select>
-
-	<select id="listApplyCancel" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
-		SELECT tNum, userId, nickName, applyDate, content, userApply , acceptance
-		FROM togetherApply a
-		JOIN member m ON a.userId = m.userId
-	    WHERE a.tNum =#{tNum} AND acceptance = 2
-	</select>
-
-	<!--  -->
-	<update id="">
-	
+	<update id="updateApply" parameterType="com.forest.namu.domain.TogetherApply">
+		UPDATE togetherApply SET acceptance = #{acceptance}
+		WHERE tNum = #{tNum} AND userId = #{userId} 
 	</update>
 	
 </mapper>

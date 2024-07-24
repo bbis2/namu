@@ -226,8 +226,6 @@ textarea::placeholder{
     </section>
 </div>   
 
-<div class="body-title">
-</div>    
 
 <div class="container body-container">
     <div class="used">
@@ -248,15 +246,16 @@ textarea::placeholder{
                             </div>
                         </c:otherwise>
                     </c:choose>
+				
 	                    <div>
 	                    	<c:if test="${sessionScope.member.userId != dto.userId}">
 		                    	<c:if test="${dto.acceptance == -1}">
 		                        	<button type="button" class="apply applyAccept">참가신청</button>
 		                    	</c:if>
-		                    	<c:if test="${dto.userApply == 0}">
+		                    	<c:if test="${dto.acceptance == 0}">
 		                        	<button type="button" class="apply">신청완료</button>
 		                    	</c:if>
-		                    	<c:if test="${dto.userApply == 1}">
+		                    	<c:if test="${dto.acceptance == 1}">
 		                        	<button type="button" class="apply">참여중</button>
 		                    	</c:if>
 	                    	</c:if>
@@ -268,6 +267,7 @@ textarea::placeholder{
             </div>
         </div>
         <div class="together-info">
+        
             <div class="rpr">
                 <h1>${dto.name}</h1>
                 <div class="seller-location">${dto.town}</div>
@@ -275,6 +275,7 @@ textarea::placeholder{
             <hr>
             <div class="used-header">
                 <div class="title">${dto.subject}</div>
+                <div> <h4>모임장 : ${dto.nickName}</h4></div>	
             </div>
 
             <table class="table table-borderless mb-2">
@@ -339,32 +340,29 @@ textarea::placeholder{
 <div class="modal fade" id="myApplyListModal" tabindex="-1" 
 		data-bs-backdrop="static" data-bs-keyboard="false"
 		aria-labelledby="myApplyListModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 800px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="myApplyListModalLabel">참여자 리스트</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
+				<div style="width: 190px;" class="p-2">
+					<select id="selectAcceptance" class="form-select">
+						<option value="-1">전체 리스트</option>
+						<option value="0">신청자 리스트</option>
+						<option value="1">참여자 리스트</option>
+						<option value="2">거절 리스트</option>
+					</select>
+				</div>
+				
+				<div class="p-2 applyList"></div>
 			
 			</div>
 		</div>
 	</div>
 </div>
 
-<!-- Modal Dialog -->
-<div class="modal fade" id="listApply" tabindex="-1" aria-labelledby="myDialogModalLabel" 
-		aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="listApplyLabel">참가신청 리스트</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body pt-1"></div>
-		</div>
-	</div>
-</div>	
 
 <script type="text/javascript">
 function login() {
@@ -488,11 +486,12 @@ $(function(){
 	});
 });
 
-// 참여하기
+// 참여하기 대화상자
 $('.applyAccept').click(function(){
 	$('#myApplyModal').modal('show');
 });
 
+// 참여완료
 $('.btnAcceptOk').click(function(){
 	const f = document.applyForm;
 	
@@ -512,30 +511,61 @@ $('.btnAcceptOk').click(function(){
         }
 	};
 	ajaxFun(url, 'post', formData, 'json', fn);
-	
 });
 
-// 참여자 리스트
-$('#applyAcceptList').click(function(){
+// 참여자 리스트 대화상자
+$('.applyAcceptList').click(function(){
+	applyList(-1);
 	$('#myApplyListModal').modal('show');
 });
 
-$(function(){
-	$('.container').on('click', '.item-view', function() {
-		// 글보기
-		$('#listApply .modal-body').empty();
-		
-		let num = $(this).attr('data-num');
-		let url = '${pageContext.request.contextPath}/together/applyList/' + tNum;
-		let kwd = $('#searchWord').val();
-		$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
-		$.get(url, {kwd: kwd}, function(data){
-			$('#myDialogModal .modal-body').html(data);
-			$('#myDialogModal').modal('show');
-		}).fail(function() {
-			alert('error');
-		});
-	});
+// select 
+$('#selectAcceptance').change(function(){
+	let acceptance = $(this).val();
+	applyList(acceptance);
 });
+
+function applyList(acceptance) {
+	let tNum = "${dto.tNum}";
+	
+	let formData = "tNum=" + tNum + "&acceptance=" + acceptance;
+	let url = '${pageContext.request.contextPath}/together/applyList';
+	
+	const fn = function(data) {
+		$("#myApplyListModal .applyList").html(data);
+	};
+	ajaxFun(url, 'get', formData, 'text', fn);	
+}
+
+// 거절/수락 하기
+$("#myApplyListModal").on("click", ".btnAcceptOk", function(){
+	let tNum = $(this).attr("data-tNum");
+	let acceptance = $(this).attr("data-acceptance");
+	let userId = $(this).attr("data-userId");
+	let nickName = $(this).attr('data-nickName');
+
+	var s = nickName + "님의 요청을 수락하시겠습니까 ?";
+	if(acceptance === "2") {
+		s = nickName + "님의 요청을 거절하시겠습니까 ?";
+	}
+	
+	if(! confirm(s)) {
+		return false;
+	}
+	
+	let formData = "tNum=" + tNum + "&acceptance=" + acceptance + "&userId=" + userId;
+	let url = '${pageContext.request.contextPath}/together/applyUpdate';
+	
+	const fn = function(data) {
+		let state = data.state;
+        if (state === 'true') {
+       	  alert('정보가 변경 돠었습니다.');
+          applyList(-1);
+        }
+	};
+	ajaxFun(url, 'post', formData, 'json', fn);
+});
+
+
 
 </script>

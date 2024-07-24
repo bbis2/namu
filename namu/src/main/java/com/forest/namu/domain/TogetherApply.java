@@ -6,8 +6,8 @@ public class TogetherApply {
 	private String userId;
 	private String applyDate;
 	private String content;
-	private int userApply; // 참여 여부
 	private String acceptance;
+	private String nickName;
 	
 	public long gettNum() {
 		return tNum;
@@ -33,17 +33,17 @@ public class TogetherApply {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public int getUserApply() {
-		return userApply;
-	}
-	public void setUserApply(int userApply) {
-		this.userApply = userApply;
-	}
 	public String getAcceptance() {
 		return acceptance;
 	}
 	public void setAcceptance(String acceptance) {
 		this.acceptance = acceptance;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 	
 	

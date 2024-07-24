@@ -329,11 +329,6 @@ public class TogetherController {
 		
 		return model;
 	}
-	// 주소만들기
-	// apply 주소: insert - tNum, content, id는 세션것, 리턴 은 Map
-	
-	// applyList : 참여자 목록, 파라미터 - tNum, id는 세션것, 리턴 은 String, applyList 이름의 jsp, 참여자 목록 하고 체크박스
-
 	
 	@PostMapping("apply")
 	@ResponseBody
@@ -348,35 +343,45 @@ public class TogetherController {
 		} catch (Exception e) {
 			state = "false";
 		}
+		
 		Map<String, Object> model = new HashMap<>();
 		model.put("state", state);
+		model.put("tNum", dto.gettNum());
+		model.put("userId", info.getUserId());
+		model.put("content", dto.getContent());
 		
 		return model;
 	}
 	
-	
-	// applyList : 참여자 목록, 파라미터 - tNum, id는 세션것, 리턴 은 String, applyList 이름의 jsp, 참여자 목록 하고 체크박스
-	
 	@GetMapping("applyList")
 	public String listApply (
-			@RequestParam long tNum,
+			@RequestParam Map<String, Object> paramMap,
 			HttpSession session,
 			Model model) throws Exception {
 		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-				
-		Map<String, Object> map = new HashMap<>();
-		map.put("tNum", tNum);
-		map.put("userId", info.getUserId());
-		
-		List<TogetherApply> listApply = service.listApply(map);
+		List<TogetherApply> listApply = service.listApply(paramMap);
 		
 		model.addAttribute("listApply",listApply);
 		
 		return "together/applyList";
 	}
 	
-	// applyUpdate : tNum, userId, 체크유무
 	
+	@ResponseBody
+	@PostMapping("applyUpdate")
+	public Map<String, Object> updateApply(TogetherApply dto) throws Exception {
+		String state = "true";
+		
+			try {
+				service.updateApply(dto);
+			} catch (Exception e) {
+				 state = "false";
+			}
+			
+			Map<String, Object> model = new HashMap<>();
+			model.put("state", state);
+			
+			return model;
+	}
 	
 }
