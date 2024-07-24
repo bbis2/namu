@@ -13,7 +13,7 @@
 
 	<sql id="where-list">
 		<if test="schType=='all' ">
-		d	( INSTR(subject, #{kwd}) &gt; 0
+			( INSTR(subject, #{kwd}) &gt; 0
 				OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
 		</if>
 		<if test="schType=='subject' ">
@@ -55,16 +55,21 @@
 			<if test="kwd != null and kwd!=''  ">
 				<include refid="where-list"/>
 			</if>
+			<if test="categoryNum != 0">
+				AND n.categoryNum = #{categoryNum}
+			</if>
 		</where>
 	</select>
 	
 	<!-- 리스트 -->
 	<select id="listNotice" parameterType="map" resultType="com.forest.namu.admin.domain.NoticeManage">
-		SELECT n.num, n.notice, n.userId, md.userName, n.subject, n.hitCount,m.nickName,
+		SELECT n.num, n.notice, n.userId, md.userName, n.subject, n.hitCount,m.nickName,nc.categoryName,
 			   n.regDate, showNotice, NVL(fileCount, 0) fileCount
 		FROM notices n
 		JOIN member m ON n.userId=m.userId
 		JOIN memberdetail md ON n.userId=md.userId
+		JOIN noticeCategory
+		nc ON nc.categoryNum = n.categoryNum
 		LEFT OUTER JOIN (
 			SELECT num, COUNT(*) fileCount FROM noticeFile
 			GROUP BY num
@@ -73,16 +78,24 @@
 			<if test="kwd != null and kwd != ''">
 				<include refid="where-list"/>
 			</if>
+			<if test="categoryNum != 0">
+				AND nc.categoryNum = #{categoryNum}
+			</if>
 		</where>
 		ORDER BY n.num DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 
     <!-- 글보기 -->
-    <select id="findById" parameterType="Long" resultType="com.forest.namu.admin.domain.NoticeManage">
-		SELECT num, n.userId, userName, subject, content, regDate, hitCount, notice, showNotice
+    <select id="findById" parameterType="Long"
+		resultType="com.forest.namu.admin.domain.NoticeManage">
+		SELECT n.num, n.userId, m.nickname, n.subject, n.content, n.regDate,nc.categoryName,
+		n.hitCount, n.notice, n.showNotice
 		FROM notices n
-		JOIN member m ON n.userId=m.userId 
+		JOIN member m ON
+		n.userId=m.userId
+		JOIN noticeCategory
+		nc ON nc.categoryNum = n.categoryNum
 		WHERE num = #{num}
 	</select>
 
@@ -123,7 +136,7 @@
     
 	<!-- 수정 -->
 	<update id="updateNotice" parameterType="com.forest.namu.admin.domain.NoticeManage">
-		UPDATE notices SET subject=#{subject},
+		UPDATE notices SET subject=#{subject},categoryNum=#{categoryNum},
 			content=#{content}, notice=#{notice}, showNotice=#{showNotice}
 		WHERE num=#{num}
 	</update>

@@ -164,7 +164,7 @@
 </style>
 
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/paginatie-boot.js"> </script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/paginate-boot.js"> </script>
 
 <c:url var="listUrl" value="/daily/list">
 	<c:if test="${not empty kwd}">
@@ -181,7 +181,7 @@ window.addEventListener('load', function() {
 	let page = ${page};
 	let pageSize = ${size};
 	let dataCount = ${dataCount};
-	let categoryNum = ${categoryNum};
+	let categoryNum = '${categoryNum}';
 	let url = '${listUrl}';
 	
 	let total_page = pageCount(dataCount, pageSize);
@@ -212,7 +212,7 @@ function searchCategory(categoryNum) {
 <div class="container">
   <main class="container">
    	<div class="body-title">
-		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/noticeManage/list" method="post">
+		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/admin/noticeManage/list" method="post">
             <div class="filter-container">
                 <input type="text" class="search-input border border-2"  name="kwd" value="${kwd}" placeholder="검색어를 입력하세요"/>
 				<input type="hidden" name="categoryNum" value="${categoryNum}">
@@ -229,18 +229,18 @@ function searchCategory(categoryNum) {
 
             <div class="col-md-9">
               <div class="categories">
-                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(1)">#전체</a></span>         
-                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(2)">#빌려드림</a></span>         
-                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(3)">#중고거래</a></span>         
-                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(4)">#중고경매</a></span>         
-                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(5)">#재능마켓</a></span>         
-                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(6)">#나무모임</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(0)">#전체</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(1)">#빌려드림</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(2)">#중고거래</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(3)">#중고경매</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(4)">#재능마켓</a></span>         
+                    <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(5)">#나무모임</a></span>         
                 </div>
                 
             <!-- 페이지 출력 -->
             <div class="row board-list-header">
 	            <div class="col-auto me-auto">
-	            	${dataCount}개(${current_page}/${total_page} 페이지)
+	            	${dataCount}개(${page}/${total_page} 페이지)
 	            </div>
 	            <div class="col-auto">&nbsp;</div>
 	        </div>	
