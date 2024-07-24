@@ -5,125 +5,138 @@
 	<sql id="where-list">
 		<if test="schType=='all' ">
 			( INSTR(subject, #{kwd}) &gt; 0
-				OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
+			OR DBMS_LOB.INSTR(content, #{kwd}) &gt; 0 )
 		</if>
 		<if test="schType=='subject' ">
 			INSTR(subject, #{kwd}) &gt; 0
 		</if>
 		<if test="schType=='content' ">
-			DBMS_LOB.INSTR( content, #{kwd}) &gt; 0 
+			DBMS_LOB.INSTR( content, #{kwd}) &gt; 0
 		</if>
 		<if test="schType=='userName' ">
 			userName=#{kwd}
 		</if>
 		<if test="schType=='regDate' ">
 			( TO_CHAR(regDate, 'YYYY-MM-DD') = #{kwd}
-				OR TO_CHAR(regDate, 'YYYYMMDD') = #{kwd} )
+			OR TO_CHAR(regDate, 'YYYYMMDD') = #{kwd} )
 		</if>
 	</sql>
-	
-	<!-- 공지 글  리스트 -->
-	<select id="listNoticeTop" resultType="com.forest.namu.domain.Notice">
-		SELECT n.num, n.notice, n.userId, m.userName, n.subject, n.hitCount, 
-				TO_CHAR(regDate, 'YYYY-MM-DD') regDate,
-				NVL(fileCount, 0) fileCount
-		FROM notices n
-		JOIN memberdetail m ON n.userId=m.userId
-		LEFT OUTER JOIN (
-			SELECT num, COUNT(*) fileCount FROM noticeFile
-			GROUP BY num
-		) f ON n.num=f.num
-		WHERE notice = 1 AND showNotice = 1
-		ORDER BY num DESC
-	</select>
-	
-	<!-- 데이터개수  -->
+
+
+
+	<!-- 데이터개수 -->
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM notices n
-		JOIN member m ON n.userId=m.userId
+		JOIN member m ON
+		n.userId=m.userId
 		<where>
 			showNotice = 1
 			<if test="kwd != null and kwd!=''  ">
-				AND <include refid="where-list"/>
+				AND
+				<include refid="where-list" />
 			</if>
+			<if test="categoryNum != 0">
+		        AND categoryNum = #{categoryNum}
+		    </if>
 		</where>
 	</select>
-	
+
 	<!-- 리스트 -->
-	<select id="listNotice" parameterType="map" resultType="com.forest.namu.domain.Notice">
-		SELECT n.num, n.notice, n.userId, m.userName, n.subject, n.hitCount, 
-			   n.regDate, NVL(fileCount, 0) fileCount
+	<select id="listNotice" parameterType="map"
+		resultType="com.forest.namu.domain.Notice">
+		SELECT n.num, n.notice, n.userId, m.userName, n.subject, n.hitCount,nc.categoryName,
+		n.regDate, NVL(fileCount, 0) fileCount
 		FROM notices n
-		JOIN memberdetail m ON n.userId=m.userId
+		JOIN memberdetail
+		m ON n.userId=m.userId
+		JOIN noticeCategory
+		nc ON nc.categoryNum = n.categoryNum
 		LEFT OUTER JOIN (
-			SELECT num, COUNT(*) fileCount FROM noticeFile
-			GROUP BY num
+		SELECT num, COUNT(*) fileCount FROM noticeFile
+		GROUP BY num
 		) f ON n.num=f.num
 		<where>
-			showNotice = 1
 			<if test="kwd != null and kwd != ''">
-				AND <include refid="where-list"/>
+				AND
+				<include refid="where-list" />
+			</if>
+			<if test="categoryNum != 0">
+				AND n.categoryNum = #{categoryNum}
 			</if>
 		</where>
 		ORDER BY num DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 
-    <!-- 글보기 -->
-    <select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Notice">
-		SELECT num, n.userId, userName, subject, content, regDate, hitCount, notice, showNotice
+	<!-- 글보기 -->
+	<select id="findById" parameterType="Long"
+		resultType="com.forest.namu.domain.Notice">
+		SELECT n.num, n.userId, m.nickname, n.subject, n.content, n.regDate,nc.categoryName,
+		n.hitCount, n.notice, n.showNotice
 		FROM notices n
-		JOIN member m ON n.userId=m.userId 
+		JOIN member m ON
+		n.userId=m.userId
+		JOIN noticeCategory
+		nc ON nc.categoryNum = n.categoryNum
 		WHERE num = #{num}
 	</select>
 
 	<!-- 조회수 증가 -->
 	<update id="updateHitCount" parameterType="Long">
-		UPDATE notices SET hitCount=hitCount+1 WHERE num = #{num}
+		UPDATE notices SET
+		hitCount=hitCount+1 WHERE num = #{num}
 	</update>
 
 	<!-- 이전글 -->
-	<select id="findByPrev" parameterType="map" resultType="com.forest.namu.domain.Notice">
+	<select id="findByPrev" parameterType="map"
+		resultType="com.forest.namu.domain.Notice">
 		SELECT num, subject
 		FROM notices n
 		JOIN member m ON n.userId=m.userId
 		<where>
 			showNotice = 1
 			<if test="kwd != null and kwd != '' ">
-				AND <include refid="where-list"/>
+				AND
+				<include refid="where-list" />
 			</if>
 			AND (num &gt; #{num})
 		</where>
 		ORDER BY num ASC
 		FETCH FIRST 1 ROWS ONLY
-    </select>
+	</select>
 
-    <!-- 다음글 -->
-    <select id="findByNext" parameterType="map" resultType="com.forest.namu.domain.Notice">
+	<!-- 다음글 -->
+	<select id="findByNext" parameterType="map"
+		resultType="com.forest.namu.domain.Notice">
 		SELECT num, subject
 		FROM notices n
 		JOIN member m ON n.userId=m.userId
 		<where>
 			showNotice = 1
 			<if test="kwd != null and kwd != '' ">
-				AND <include refid="where-list"/>
+				AND
+				<include refid="where-list" />
 			</if>
 			AND (num &lt; #{num})
 		</where>
 		ORDER BY num DESC
 		FETCH FIRST 1 ROWS ONLY
-    </select>
-    
-	<select id="listNoticeFile" parameterType="Long" resultType="com.forest.namu.domain.Notice">
-		SELECT fileNum, num, saveFilename, originalFilename, fileSize
-		FROM noticeFile
-		WHERE num=#{num}    
 	</select>
-	
-	<select id="findByFileId" parameterType="Long" resultType="com.forest.namu.domain.Notice">
-		SELECT fileNum, num, saveFilename, originalFilename, fileSize
+
+	<select id="listNoticeFile" parameterType="Long"
+		resultType="com.forest.namu.domain.Notice">
+		SELECT fileNum, num, saveFilename, originalFilename,
+		fileSize
 		FROM noticeFile
-	    WHERE fileNum=#{fileNum}      
+		WHERE num=#{num}
+	</select>
+
+	<select id="findByFileId" parameterType="Long"
+		resultType="com.forest.namu.domain.Notice">
+		SELECT fileNum, num, saveFilename, originalFilename,
+		fileSize
+		FROM noticeFile
+		WHERE fileNum=#{fileNum}
 	</select>
 </mapper>

@@ -10,6 +10,7 @@ public class Notice {
 	private int hitCount;
 	private int notice;
 	private int showNotice;
+	private String nickName;
 	
 	private String categoryName;
 	private long categoryNum;
@@ -130,5 +131,11 @@ public class Notice {
 	}
 	public void setGap(long gap) {
 		this.gap = gap;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 }

@@ -250,13 +250,13 @@ textarea::placeholder{
                     </c:choose>
 	                    <div>
 	                    	<c:if test="${sessionScope.member.userId != dto.userId}">
-		                    	<c:if test="${dto.userApply == 0}">
+		                    	<c:if test="${dto.acceptance == -1}">
 		                        	<button type="button" class="apply applyAccept">참가신청</button>
 		                    	</c:if>
-		                    	<c:if test="${dto.userApply == 1}">
+		                    	<c:if test="${dto.userApply == 0}">
 		                        	<button type="button" class="apply">신청완료</button>
 		                    	</c:if>
-		                    	<c:if test="${dto.userApply == 2}">
+		                    	<c:if test="${dto.userApply == 1}">
 		                        	<button type="button" class="apply">참여중</button>
 		                    	</c:if>
 	                    	</c:if>
@@ -352,6 +352,20 @@ textarea::placeholder{
 	</div>
 </div>
 
+<!-- Modal Dialog -->
+<div class="modal fade" id="listApply" tabindex="-1" aria-labelledby="myDialogModalLabel" 
+		aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="listApplyLabel">참가신청 리스트</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body pt-1"></div>
+		</div>
+	</div>
+</div>	
+
 <script type="text/javascript">
 function login() {
     location.href = '${pageContext.request.contextPath}/member/login';
@@ -420,6 +434,60 @@ $(function() {
     });
 });
 
+$(function(){
+	$('.btnInsertForm').on('click', function(){
+		// 글 등록 폼
+		$('#myDialogModal .modal-body').empty();
+		
+		let url = '${pageContext.request.contextPath}/together/write';
+		$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
+		$.get(url, function(data){
+			$('#myDialogModal .modal-body').html(data);
+			$('#myDialogModal').modal('show');
+		}).fail(function(){
+			alert('error');
+		});
+	});
+});
+
+$(function(){
+	$('.container').on('click', '.btnSendOk', function() {
+		//  글 등록 완료 및 수정 완료
+		const f = document.applyForm;
+		
+		let str;
+
+		str = f.content.value.trim();
+	    if(!str) {
+	        alert('내용을 입력하세요. ');
+	        f.content.focus();
+	        return;
+	    }
+	    
+		    
+		let url = "${pageContext.request.contextPath}/together/"+mode;
+	    let formData = new FormData(f);
+
+		const fn = function(data){
+			let state = data.state;
+	        if(state === "false") {
+	            alert("게시물을 추가(수정)하지 못했습니다. !!!");
+	            return false;
+	        }
+
+	        $('#searchInput').val('');
+	        $('#searchWord').val('');
+	        
+			$('.list-content').empty();
+	    	loadContent(1);
+	    	
+	    	$('#myDialogModal').modal('hide');
+		};
+		
+		ajaxFun(url, 'post', formData, 'json', fn, true);		
+	});
+});
+
 // 참여하기
 $('.applyAccept').click(function(){
 	$('#myApplyModal').modal('show');
@@ -434,7 +502,7 @@ $('.btnAcceptOk').click(function(){
 	}
 	
 	let formData = $('form[name=applyForm]').serialize();
-	let url = '${pageContext.request.contextPath}/together/등록주소';
+	let url = '${pageContext.request.contextPath}/together/apply';
 	const fn = function(data) {
 		let state = data.state;
         if (state === 'true') {
@@ -452,5 +520,22 @@ $('#applyAcceptList').click(function(){
 	$('#myApplyListModal').modal('show');
 });
 
+$(function(){
+	$('.container').on('click', '.item-view', function() {
+		// 글보기
+		$('#listApply .modal-body').empty();
+		
+		let num = $(this).attr('data-num');
+		let url = '${pageContext.request.contextPath}/together/applyList/' + tNum;
+		let kwd = $('#searchWord').val();
+		$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
+		$.get(url, {kwd: kwd}, function(data){
+			$('#myDialogModal .modal-body').html(data);
+			$('#myDialogModal').modal('show');
+		}).fail(function() {
+			alert('error');
+		});
+	});
+});
 
 </script>

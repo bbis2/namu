@@ -41,6 +41,7 @@ public class NoticeController {
 
 	@RequestMapping(value = "list")
 	public String list(@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(defaultValue = "0") int categoryNum,
 			@RequestParam(defaultValue = "all") String schType,
 			@RequestParam(defaultValue = "") String kwd,
 			HttpServletRequest req,
@@ -58,7 +59,8 @@ public class NoticeController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("schType", schType);
 		map.put("kwd", kwd);
-
+		map.put("categoryNum", categoryNum);
+		
 		dataCount = service.dataCount(map);
 		if (dataCount != 0) {
 			total_page = myUtil.pageCount(dataCount, size);
@@ -68,20 +70,14 @@ public class NoticeController {
 		if (total_page < current_page) {
 			current_page = total_page;
 		}
-
-		// 1페이지인 경우 공지리스트 가져오기
-		List<Notice> noticeList = null;
-		if (current_page == 1) {
-			noticeList = service.listNoticeTop();
-		}
-
+		
+	
 		// 리스트에 출력할 데이터를 가져오기
 		int offset = (current_page - 1) * size;
 		if(offset < 0) offset = 0;
 
 		map.put("offset", offset);
 		map.put("size", size);
-
 		// 글 리스트
 		List<Notice> list = service.listNotice(map);
 
@@ -114,10 +110,16 @@ public class NoticeController {
 			listUrl = cp + "/notice/list?" + query;
 			articleUrl = cp + "/notice/article?page=" + current_page + "&" + query;
 		}
+		
+		if(categoryNum != 0) {
+			if(query.length() != 0)
+				query += "&categoryNum=" + categoryNum;
+			else 
+				query += "categoryNum=" + categoryNum;
+		}
 
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 
-		model.addAttribute("noticeList", noticeList);
 		model.addAttribute("list", list);
 		model.addAttribute("page", current_page);
 		model.addAttribute("dataCount", dataCount);
@@ -125,7 +127,7 @@ public class NoticeController {
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("paging", paging);
 		model.addAttribute("articleUrl", articleUrl);
-
+		model.addAttribute("categoryNum", categoryNum);
 		model.addAttribute("schType", schType);
 		model.addAttribute("kwd", kwd);
 

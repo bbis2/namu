@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.Together;
+import com.forest.namu.domain.TogetherApply;
 import com.forest.namu.service.TogetherService;
 import com.mongodb.DuplicateKeyException;
 
@@ -161,6 +162,8 @@ public class TogetherController {
 			@RequestParam(defaultValue = "0") int categoryNum,
 			@RequestParam(value = "town", defaultValue = "") String town) throws Exception {
 		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+
 		kwd  = URLDecoder.decode(kwd, "utf-8");
 		town  = URLDecoder.decode(town, "utf-8");
 		
@@ -177,24 +180,23 @@ public class TogetherController {
 		
 		service.updateHitCount(tNum);
 		
-		Together dto = service.findById(tNum);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", info.getUserId());
+		map.put("tNum", tNum);
+		
+		Together dto = service.findById(map);
 		if(dto == null) {
 			return "redirect:/together/list?" + query;
 		}
 		
-		
-		// 이전글 다음글
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("schType", schType);
 		map.put("kwd", kwd);
 		map.put("town", town);
-		map.put("tNum", tNum);
 		
-		
+		// 이전글 다음글
 		Together prevDto = service.findByPrev(map);
 		Together nextDto = service.findByNext(map);
 		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		// 게시글 좋아요
 		map.put("userId", info.getUserId());
@@ -228,7 +230,11 @@ public class TogetherController {
 		
 		List<Together> listTogetherCategory = service.listTogetherCategory();
 		
-		Together dto = service.findById(tNum);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", info.getUserId());
+		map.put("tNum", tNum);
+		Together dto = service.findById(map);
+		
 		if(dto == null || ! info.getUserId().equals(dto.getUserId())) {
 			return "redirect:/together/list?page=" + page;
 		}
@@ -323,6 +329,54 @@ public class TogetherController {
 		
 		return model;
 	}
+	// 주소만들기
+	// apply 주소: insert - tNum, content, id는 세션것, 리턴 은 Map
+	
+	// applyList : 참여자 목록, 파라미터 - tNum, id는 세션것, 리턴 은 String, applyList 이름의 jsp, 참여자 목록 하고 체크박스
+
+	
+	@PostMapping("apply")
+	@ResponseBody
+	public Map<String, Object> insertTogetherApply (TogetherApply dto, HttpSession session) throws Exception {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String state = "true";
+		
+		try {
+			dto.setUserId(info.getUserId());
+			service.insertTogetherApply(dto);
+		} catch (Exception e) {
+			state = "false";
+		}
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		
+		return model;
+	}
+	
+	
+	// applyList : 참여자 목록, 파라미터 - tNum, id는 세션것, 리턴 은 String, applyList 이름의 jsp, 참여자 목록 하고 체크박스
+	
+	@GetMapping("applyList")
+	public String listApply (
+			@RequestParam long tNum,
+			HttpSession session,
+			Model model) throws Exception {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+				
+		Map<String, Object> map = new HashMap<>();
+		map.put("tNum", tNum);
+		map.put("userId", info.getUserId());
+		
+		List<TogetherApply> listApply = service.listApply(map);
+		
+		model.addAttribute("listApply",listApply);
+		
+		return "together/applyList";
+	}
+	
+	// applyUpdate : tNum, userId, 체크유무
 	
 	
 }
