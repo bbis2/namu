@@ -137,27 +137,29 @@
 .togetherlist {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* 가운데 정렬 추가 */
-    gap: 20px; /* 항목 간의 간격 조정 */
+    justify-content: flex-start; /* 가운데 정렬 추가 */
+    gap: 21px; /* 항목 간의 간격 조정 */
     max-height: 80%; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
     margin-bottom: 450px; /* footer와 겹치지 않도록 하단 여백 추가 */
+    pa
 }
 
 .togetherlist .list {
-    flex: 1 1 30%; /* 고정된 너비 설정 */
+    flex: 1 1 30%;
     max-width: 30%;
     box-sizing: border-box;
     height: 300px; /* 고정된 높이 추가 */
     display: flex;
     flex-direction: column;
-    margin-bottom: 50px; /* 리스트 아이템 사이의 마진 추가 */
+    margin-bottom: 100px;
 }
 
 .togetherlist .list img {
     width: 100%;
     height: 200px; /* 고정된 이미지 높이 */
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: 10px;
+    padding-bottom: 20px;
 }
 
 @media (max-width: 768px) {

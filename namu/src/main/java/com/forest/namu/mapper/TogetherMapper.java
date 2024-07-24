@@ -22,7 +22,7 @@ public interface TogetherMapper {
 	public void insertCategory(Together dto) throws SQLException; // 카테고리 추가
 	public List<Together> listTogetherCategory(); // 카테고리 리스트
 	
-	public Together findById(long tNum);
+	public Together findById(Map<String, Object> map);
 	public Together findByPrev(Map<String, Object> map); // 이전글
 	public Together findByNext(Map<String, Object> map); // 다음글
 	public void updateHitCount(long tNum) throws Exception; // 조회수
@@ -34,7 +34,12 @@ public interface TogetherMapper {
 	
 	// 모임참가
 	public void insertTogetherApply(TogetherApply dto) throws SQLException; // 모임신청
-	public List<TogetherApply> listTogetherApply (Map<String, Object> map); // 모임리스트
+	public List<TogetherApply> listApply (Map<String, Object> map); // 모임리스트
+	public List<TogetherApply> listApplyRequest(Map<String, Object> map);
+	public List<TogetherApply> listApplyOk(Map<String, Object> map);
+	public List<TogetherApply> listApplyCancel(Map<String, Object> map);
+	
+	
 	
 	
 }

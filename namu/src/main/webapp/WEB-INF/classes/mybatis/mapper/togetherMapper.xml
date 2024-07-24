@@ -86,15 +86,15 @@
 	</select>
 	
 	<!-- -->
-	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Together">
+	<select id="findById" parameterType="map" resultType="com.forest.namu.domain.Together">
 		SELECT l.tNum, l.userId, m.nickName, l.subject, l.categoryNum, categoryName, l.content, l.hitCount, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate, l.name,l.memberCnt,
-			NVL(togetherLikeCount,0) togetherLikeCount, NVL(userApply, 0) userApply
+			NVL(togetherLikeCount,0) togetherLikeCount, NVL(acceptance, -1) acceptance
 		FROM togetherList l
 		JOIN member m ON l.userId = m.userId
 		JOIN togetherCategory t ON l.categoryNum = t.categoryNum
 		LEFT OUTER JOIN (
-			SELECT userId, CASE WHEN applyDate IS NULL THEN 1 ELSE 2  END userApply FROM togetherApply WHERE userId = #{userId}
-		) ap ON l.userId = ap.userId
+			SELECT tNum, acceptance FROM togetherApply WHERE tNum = #{tNum} AND userId = #{userId}
+		) ap ON l.tNum = ap.tNum
 		LEFT OUTER JOIN (
 			SELECT tNum, COUNT(*) togetherLikeCount FROM togetherLike
 			GROUP BY tNum
@@ -178,20 +178,44 @@
 		SELECT tNum, userId FROM togetherLike WHERE tNum =#{tNum} AND userId = #{userId}
 	</select>
 	
-	<!-- 참가신청 만들기 -->
+	<!-- 참가신청 -->
 	<insert id="insertTogetherApply" parameterType="com.forest.namu.domain.TogetherApply">
 		INSERT into togetherApply(tNum, userId, applyDate ,acceptance, content) 
-		VALUES (#{tNum}, #{userId}, SYSDATE, 0, #{content});	
+		VALUES (#{tNum}, #{userId}, SYSDATE, 0, #{content})	
 	</insert>
-	
-	<!-- 리스트에서 update 상태를 변경해줘야함. -->	
 	
 	<!-- 모임 신청 리스트 만들기 -->
 	<select id="listApply" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
-		SELECT tNum, userId, nickName, categoryNum, categoryName, applyDate, content, userApply , acceptance
+		SELECT tNum, userId, nickName, applyDate, content, userApply , acceptance
 		FROM togetherApply a
 		JOIN member m ON a.userId = m.userId
-		JOIN togethrtCategory t ON a.categoryNum = t.categoryNum
+	    WHERE a.tNum =#{tNum}
 	</select>
+
+	<select id="listApplyRequest" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
+		SELECT tNum, userId, nickName, applyDate, content, userApply , acceptance
+		FROM togetherApply a
+		JOIN member m ON a.userId = m.userId
+	    WHERE a.tNum =#{tNum} AND acceptance = 0
+	</select>
+
+	<select id="listApplyOk" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
+		SELECT tNum, userId, nickName, applyDate, content, userApply , acceptance
+		FROM togetherApply a
+		JOIN member m ON a.userId = m.userId
+	    WHERE a.tNum =#{tNum} AND acceptance = 1
+	</select>
+
+	<select id="listApplyCancel" parameterType="map" resultType="com.forest.namu.domain.TogetherApply">
+		SELECT tNum, userId, nickName, applyDate, content, userApply , acceptance
+		FROM togetherApply a
+		JOIN member m ON a.userId = m.userId
+	    WHERE a.tNum =#{tNum} AND acceptance = 2
+	</select>
+
+	<!--  -->
+	<update id="">
+	
+	</update>
 	
 </mapper>

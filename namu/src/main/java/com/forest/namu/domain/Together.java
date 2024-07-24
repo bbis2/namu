@@ -22,6 +22,7 @@ public class Together {
 
 	private int replyCount;
 	private int togetherLikeCount;
+	private int acceptance; 
 	
 	private String town;
 
@@ -161,6 +162,14 @@ public class Together {
 
 	public void setUserApply(int userApply) {
 		this.userApply = userApply;
+	}
+
+	public int getAcceptance() {
+		return acceptance;
+	}
+
+	public void setAcceptance(int acceptance) {
+		this.acceptance = acceptance;
 	}
 
 	

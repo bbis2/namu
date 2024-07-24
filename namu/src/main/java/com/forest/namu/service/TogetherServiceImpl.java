@@ -1,5 +1,6 @@
 package com.forest.namu.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -136,7 +137,10 @@ public class TogetherServiceImpl implements TogetherService{
 	@Override
 	public void deleteTogether(long tNum, String userId, int membership) throws Exception {
 		try {
-			Together dto = findById(tNum);
+			Map<String, Object> map = new HashMap<>();
+			map.put("tNum", tNum);
+			map.put("uertId", userId);
+			Together dto = findById(map);
 			if(dto == null ||  (membership < 99 && ! dto.getUserId().equals(userId))) {
 				return;
 			}
@@ -161,11 +165,11 @@ public class TogetherServiceImpl implements TogetherService{
 	}
 
 	@Override
-	public Together findById(long tNum) {
+	public Together findById(Map<String, Object> map) {
 		Together dto = null;
 		
 		try {
-			dto = mapper.findById(tNum);
+			dto = mapper.findById(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -221,7 +225,7 @@ public class TogetherServiceImpl implements TogetherService{
 	}
 
 	
-// 
+//  모임참가
 	
 	@Override
 	public void insertTogetherApply(TogetherApply dto) throws Exception {
@@ -235,16 +239,53 @@ public class TogetherServiceImpl implements TogetherService{
 	}
 
 	@Override
-	public List<TogetherApply> listTogetherApply(Map<String, Object> map) {
+	public List<TogetherApply> listApply(Map<String, Object> map) {
 		List<TogetherApply> list = null;
+		
 		try {
-			list = mapper.listTogetherApply(map);
+			list= mapper.listApply(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
 
+	@Override
+	public List<TogetherApply> listApplRequest(Map<String, Object> map) {
+		List<TogetherApply> list = null;
+		
+		try {
+			list = mapper.listApplyRequest(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<TogetherApply> listApplyOk(Map<String, Object> map) {
+		List<TogetherApply> list = null;
+		
+		try {
+			list = mapper.listApplyOk(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<TogetherApply> listApplyCancel(Map<String, Object> map) {
+		List<TogetherApply>list = null;
+		
+		try {
+			list = mapper.listApplyCancel(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
 
 
 	

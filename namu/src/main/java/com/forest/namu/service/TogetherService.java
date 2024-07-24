@@ -14,7 +14,7 @@ public interface TogetherService {
 	public void insertCategory(Together dto) throws Exception;
 	public List<Together> listTogetherCategory();
 	
-	public Together findById(long tNum);
+	public Together findById(Map<String, Object> map);
 	public Together findByPrev(Map<String, Object> map);
 	public Together findByNext(Map<String, Object> map);
 	
@@ -28,7 +28,9 @@ public interface TogetherService {
 	public boolean userTogetherLiked(Map<String, Object> map);
 	
 	public void insertTogetherApply(TogetherApply dto) throws Exception;
-	public List<TogetherApply> listTogetherApply(Map<String, Object> map);
-	
+	public List<TogetherApply> listApply (Map<String, Object> map);
+	public List<TogetherApply> listApplRequest(Map<String, Object> map);
+	public List<TogetherApply> listApplyOk(Map<String, Object> map);
+	public List<TogetherApply> listApplyCancel(Map<String, Object> map);
 
 }
