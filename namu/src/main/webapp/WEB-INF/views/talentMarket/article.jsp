@@ -3,6 +3,49 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
+a{
+  text-decoration:none; color:inherit; cursor: pointer;
+}
+ .right_area .icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100vw * (35 / 1920));
+    height: calc(100vw * (35 / 1920));
+
+    border-radius: 50%;
+    border: solid 2px #eaeaea;
+    background-color: #fff;
+}
+
+.icon.heart img{
+    width: calc(100vw * (24 / 1920));
+    height: calc(100vw * (24 / 1920));
+}
+
+.icon.heart.fas{
+  color:red
+}
+.heart{
+    transform-origin: center;
+}
+.heart.active img{
+    animation: animateHeart .3s linear forwards;
+}
+
+@keyframes animateHeart{
+    0%{transform:scale(.2);}
+    40%{transform:scale(1.2);}
+    100%{transform:scale(1);}
+  }
+  
+#detail-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
 .seller{
 	font-weight: bold;
 }
@@ -388,43 +431,60 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 	$.ajax(url, settings);
 }
 
-
-
 $(function() {
-	$('.btnSendLike').click(function() {
-		
-		let $btn = $(this);
-		let userLiked = $btn.hasClass('on');
-		
-		let url = '${pageContext.request.contextPath}/talent/insertLike';
-		let num = $btn.next('input').val();
-		let query = 'tboardNum=' + num + '&userLiked=' + userLiked;
-		
-		// 토스트 팝업
-		let $toast = document.querySelector('#toast_message');
-		
-		const fn = function(data) {
-			let state = data.state;
-			if(state === 'true') {
-				let count = data.talentLikeCount;
-				$btn.closest('.list').find('.talentLikeCount').html('<i class="fa-solid fa-heart"></i>&nbsp;' + count);
-				
-				// 토스트 팝업
-				if(userLiked) {
-					$toast.innerText = '찜 목록에 추가되었습니다.';
-				} else {
-					$toast.innerText = '찜 목록에서 삭제되었습니다.';
-				}
-				
-				$toast.classList.add('active');
-				setTimeout(() => {
-					$toast.classList.remove('active');
-				}, 1500);
-			}
-		};
-		
-		ajaxFun(url, 'post', query, 'json', fn);
-	});
+    var $likeBtn = $('.icon.heart');
+
+    $likeBtn.click(function() {
+        var $btn = $(this);
+        $btn.toggleClass('active');
+
+        if ($btn.hasClass('active')) {
+            $btn.find('img').attr({
+                'src': 'https://cdn-icons-png.flaticon.com/512/803/803087.png',
+                'alt': '찜하기 완료'
+            });
+        } else {
+            $btn.find('img').attr({
+                'src': 'https://cdn-icons-png.flaticon.com/512/812/812327.png',
+                'alt': '찜하기'
+            });
+        }
+
+        let userLiked = $btn.hasClass('active');
+        let url = '${pageContext.request.contextPath}/talent/insertLike';
+        let num = $btn.closest('.right_area').next('input').val();
+        let query = { tboardNum: num, userLiked: userLiked };
+
+        // 토스트 팝업
+        let $toast = $('#toast_message');
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: query,
+            dataType: 'json',
+            success: function(data) {
+                let state = data.state;
+                if (state === 'true') {
+                    let count = data.talentLikeCount;
+                    $btn.closest('.list').find('.talentLikeCount').html('<i class="fa-solid fa-heart"></i>&nbsp;' + count);
+
+                    // 토스트 팝업
+                    if (userLiked) {
+                        $toast.text('찜 목록에 추가되었습니다.');
+                    } else {
+                        $toast.text('찜 목록에서 삭제되었습니다.');
+                    }
+
+                    $toast.addClass('active');
+                    setTimeout(function() {
+                        $toast.removeClass('active');
+                    }, 1500);
+                }
+            }
+        });
+    });
+});
 
 function changeCarouselImage(index) {
     var carousel = document.getElementById('carouselExample');
@@ -464,6 +524,7 @@ function validateAndSubmit() {
             
     window.location.href = url;
 }
+
 </script>
 </head>
 <body>
@@ -626,7 +687,7 @@ function validateAndSubmit() {
 				<div class="modal-dialog modal-dialog-centered modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="questionDialogModalLabel" >상품 평점남기기 </h5>
+							<h5 class="modal-title" id="reviewDialogModalLabel" >상품 평점남기기 </h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
@@ -664,45 +725,45 @@ function validateAndSubmit() {
 					</div>
 					<div class="mt-1 p-2 list-question"></div>
 					
-	<div class="modal fade" id="questionDialogModal" tabindex="-1" 
-		data-bs-backdrop="static" data-bs-keyboard="false"
-		aria-labelledby="questionDialogModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="questionDialogModalLabel">상품 문의 하기</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-
-				<div class="qna-form p-2">
-					<form name="questionForm">
-						<div class="row">
-							<div class="col">
-								<span class="fw-bold">문의사항 쓰기</span><span> - 상품 및 상품 구매 과정과 관련없는 글은 삭제 될 수 있습니다.</span>
-							</div>
-							<div class="col-3 text-end">
-								<input type="checkbox" name="secret" id="secret1" class="form-check-input" 
-									value="1">
-								<label class="form-check-label" for="secret1">비공개</label>
-							</div>
+				<div class="modal fade" id="questionDialogModal" tabindex="-1" 
+					data-bs-backdrop="static" data-bs-keyboard="false"
+					aria-labelledby="questionDialogModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="questionDialogModalLabel">상품 문의 하기</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
-						<div class="p-1">
-							<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
-							<textarea name="question" id="question" class="form-control"></textarea>
+						<div class="modal-body">
+			
+							<div class="qna-form p-2">
+								<form name="questionForm">
+									<div class="row">
+										<div class="col">
+											<span class="fw-bold">문의사항 쓰기</span><span> - 상품 및 상품 구매 과정과 관련없는 글은 삭제 될 수 있습니다.</span>
+										</div>
+										<div class="col-3 text-end">
+											<input type="checkbox" name="secret" id="secret1" class="form-check-input" 
+												value="1">
+											<label class="form-check-label" for="secret1">비공개</label>
+										</div>
+									</div>
+									<div class="p-1">
+										<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
+										<textarea name="question" id="question" class="form-control"></textarea>
+									</div>
+														
+								</form>
+							</div>
+			
 						</div>
-											
-					</form>
+						<div class="modal-footer">
+							<button type="button" class="btn custom-button2 btnQuestionSendOk">문의등록 <i class="bi bi-check2"></i> </button>
+							<button type="button" class="btn custom-button2 btnQuestionSendCancel" data-bs-dismiss="modal">취소</button>
+						</div>			
+					</div>
 				</div>
-
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn custom-button2 btnQuestionSendOk">문의등록 <i class="bi bi-check2"></i> </button>
-				<button type="button" class="btn custom-button2 btnQuestionSendCancel" data-bs-dismiss="modal">취소</button>
-			</div>			
-		</div>
-	</div>
-	</div>
+				</div>
                 </div>
                 <div id="exchange-content" class="tab-content">
                    <div class="mt-3 pt-3 border-bottom">
@@ -715,15 +776,26 @@ function validateAndSubmit() {
             </div>
             <div class="col-md-4">
 	            <div class="product-details">
-	            				<div class="d-flex justify-content-between">
-	                            <div><h2>${dto.subject}</h2></div>
-		                            <div><c:if test="${sessionScope.member.userId != null}">
-										<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
-														like
-										</button>
-										<input type="hidden" value="${dto.tboardNum}" class="likeTboardNum">
+	            				 <div class="d-flex justify-content-between">
+	                           <div><h2>${dto.subject}</h2></div>
+	                            <div><c:if test="${sessionScope.member.userId != null}">
+									    <div class="right_area">
+									        <a href="javascript:;" class="icon heart btnSendLike ${dto.userLiked?'active':''}">
+									        	<c:choose>
+									        	<c:when test="${dto.userLiked==null}">
+									        	<img src="https://cdn-icons-png.flaticon.com/512/812/812327.png" alt="찜하기">
+									        	</c:when>
+									        	<c:otherwise>
+									        	<img src="https://cdn-icons-png.flaticon.com/512/803/803087.png" alt="찜하기완료">
+									        	</c:otherwise>
+									        	</c:choose>
+									            
+									        </a>
+									    </div>
+									    <input type="hidden" value="${dto.tboardNum}" class="likeTboardNum">
 									</c:if>
 									</div>
+		                            
 	                            </div>
 	                            <div class="d-flex justify-content-between">
 	                            <div class="rating">
@@ -769,9 +841,12 @@ function validateAndSubmit() {
 											</c:if>
 	                            </div>
 	                            <input type="hidden" value="${dto.tboardNum}">
-	                             <div class="custom-button-container">
+	                           
+	                            
+	                             
 		                            <button type="button" class="btn custom-button" onclick="validateAndSubmit();">구매하기</button>
-		                        </div>
+		                       
+		                        
 	                            </form>
 	                        </div>
 	                        <c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50}">
@@ -1115,8 +1190,6 @@ function validateAndSubmit() {
 		
   $(function(){
         	
-        	
-        	
         	$('.btnReview').click(function(){
         		$("#reviewDialogModal").modal("show");
         	});
@@ -1134,7 +1207,7 @@ function validateAndSubmit() {
         		
        
         		
-        		let url = "${pageContext.request.contextPath}/review/write";
+        		let url = "${pageContext.request.contextPath}/tmreview/write";
         	
         		let query = new FormData(f); 
         		
@@ -1166,8 +1239,6 @@ function validateAndSubmit() {
         
         $(function(){
         	
-        	
-        	
         	$('.btnQuestion').click(function(){
         		$("#questionDialogModal").modal("show");
         	});
@@ -1185,7 +1256,7 @@ function validateAndSubmit() {
         		
        
         		
-        		let url = "${pageContext.request.contextPath}/qna/write";
+        		let url = "${pageContext.request.contextPath}/tmqna/write";
         	
         		let query = new FormData(f); 
         		

@@ -21,6 +21,7 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.service.MemberService;
+import com.forest.namu.service.PointService;
 
 // 로그인 성공후 세션 및 쿠키등의 처리를 할 수 있다.
 // 로그인 전 정보를 Cache : 로그인 되지 않은 상태에서 로그인 상태에서만 사용할 수 있는 페이지로 이동할 경우
@@ -33,7 +34,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	@Autowired
 	private MemberService memberService;
-
+	
+	@Autowired
+	private PointService pointService;
+	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
@@ -50,14 +54,23 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		HttpSession session = request.getSession();
 
 		Member member = memberService.findById(authentication.getName());
+		
 		SessionInfo info = new SessionInfo();
-
+		
+		info.setPoint(member.getPoint());
 		info.setMemberIdx(member.getMemberIdx());
 		info.setMembership(member.getMembership());
 		info.setUserId(member.getUserId());
 		info.setNickName(member.getNickName());
 		info.setTown1(member.getTown1());
 		info.setTown2(member.getTown2());
+		
+		try {
+			info.setPoint(pointService.selectPoint(info.getUserId()));
+		} catch (Exception e1) {
+			System.out.println("point=="+info.getPoint());
+			e1.printStackTrace();
+		}
 
 		session.setAttribute("member", info);
 

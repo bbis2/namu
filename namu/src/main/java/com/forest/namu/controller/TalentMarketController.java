@@ -185,6 +185,9 @@ public class TalentMarketController {
 			) {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		Map<String, Object> map = new HashMap<String, Object>();
+		if (info != null) {
+			map.put("userId", info.getUserId());
+        }
 		map.put("tboardNum", tboardNum);
 		TalentMarket dto=service.findById(map);
 		
@@ -376,9 +379,12 @@ public class TalentMarketController {
             @RequestParam Optional<String> option2,
 			@RequestParam long tboardNum) {
 		
-		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		if (info != null) {
+			map.put("userId", info.getUserId());
+        }
 		map.put("tboardNum", tboardNum);
 		TalentMarket dto=service.findById(map);
 		List<TalentMarket> listOption = service.listTalentOption(tboardNum);

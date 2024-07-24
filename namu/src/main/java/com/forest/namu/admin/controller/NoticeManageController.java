@@ -48,7 +48,7 @@ public class NoticeManageController {
 			@RequestParam(defaultValue = "") String kwd,
 			HttpServletRequest req,
 			Model model) throws Exception {
-		System.out.println("실행해봄");
+		
 		int size = 10; // 한 화면에 보여주는 게시물 수
 		int total_page = 0;
 		int dataCount = 0;
@@ -61,7 +61,7 @@ public class NoticeManageController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("schType", schType);
 		map.put("kwd", kwd);
-
+		map.put("categoryNum", categoryNum);
 		dataCount = service.dataCount(map);
 		if (dataCount != 0) {
 			total_page = myUtil.pageCount(dataCount, size);
@@ -207,7 +207,9 @@ public class NoticeManageController {
 		}
 
 		List<NoticeManage> listFile = service.listNoticeFile(num);
-
+		List<NoticeManage> list = service.listNoticeCategory();
+		
+		model.addAttribute("list",list);
 		model.addAttribute("mode", "update");
 		model.addAttribute("page", page);
 		model.addAttribute("dto", dto);

@@ -17,7 +17,7 @@ public class Member {
 	private String town2;			// 추가동네
 	private int enabled;			// 아이디로 로그인 가능여부
 	private int membership;			// 회원권한 
-	
+	private int point;
 	// memberDetail 테이블 (회원 상세)
 	private String userName;		// 아이디
 	private String birth;			// 생일
@@ -292,4 +292,11 @@ public class Member {
 	public void setReportNum(long reportNum) {
 		this.reportNum = reportNum;
 	}
+	public int getPoint() {
+		return point;
+	}
+	public void setPoint(int point) {
+		this.point = point;
+	}
+	
 }

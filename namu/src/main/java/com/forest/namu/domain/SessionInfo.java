@@ -5,12 +5,19 @@ public class SessionInfo {
 	private long memberIdx;
 	private String userId;
 	private String nickName;
+	private int point;
 	private int membership;
 	private int enabled;
 	private String town1;
 	private String town2;
 	
 	
+	public int getPoint() {
+		return point;
+	}
+	public void setPoint(int point) {
+		this.point = point;
+	}
 	public String getTown1() {
 		return town1;
 	}

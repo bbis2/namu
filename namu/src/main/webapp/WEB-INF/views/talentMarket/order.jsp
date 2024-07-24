@@ -148,6 +148,7 @@ h1 em {
     width: 100%;
     padding: 15px;
     background-color: #a393eb;
+    border-color:#a393eb;
     color: white;
     text-align: center;
     text-decoration: none;
@@ -171,6 +172,52 @@ h1 em {
     text-align: left;
 }
 </style>
+<script type="text/javascript">
+function updateOrderPrice() {
+    const pricePerItem = ${dto.price};
+    const quantity = document.getElementById('quantity').value;
+    const orderAmount = pricePerItem * quantity;
+	const userPiont = ${sessionScope.member.point==null?"0":sessionScope.member.point};
+	
+    document.getElementById('orderAmount').textContent = orderAmount + '원';
+    document.getElementById('totalAmount').textContent = orderAmount- userPiont + '원';
+    document.getElementById('totalAmountText').textContent = orderAmount- userPiont + '원';
+}
+
+function ajaxFun(url, method, formData, dataType, fn, file = false) {
+	const settings = {
+			type: method, 
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+	}
+	
+	$.ajax(url, settings);
+}
+</script>
 </head>
 <body>
 	<div class="custom-container">
@@ -178,69 +225,68 @@ h1 em {
             <h1>결제하기</h1>
         </div>
         <div class="order-summary">
-            <div class="order-details">
-                <h2>주문내역</h2>
-                <div class="order-item">
-                    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" alt="그림">
-                    <div class="order-info">
-                        <p>${dto.subject}</p>
-                        <p>${dto.nickName}</p>
-                        <div class="quantity-select">
-                            <label for="quantity">수량 선택 :</label>
-                            <select id="quantity" name="quantity">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                        </div>
-                        <div class="date-select">
-                            <label for="option">선택 옵션 : </label>
-                            <label>
-							    <c:choose>
-							        <c:when test="${option1 == '0'}">
-							            없음
-							        </c:when>
-							        <c:otherwise>
-							          ${listOption[0].optionName} : ${option1}
-							        </c:otherwise>
-							    </c:choose>
-							</label>
-							<label>
-							    <c:choose>
-							        <c:when test="${option2 == '0'}">
-							        </c:when>
-							        <c:otherwise>
-							           , ${listOption[1].optionName} : ${option2}
-							        </c:otherwise>
-							    </c:choose>
-							</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="order-price">
-                <table>
-                    <tr>
-                        <td>주문금액</td>
-                        <td>${dto.price}원</td>
-                    </tr>
-                    
-                    <tr>
-                        <td>보유 포인트</td>
-                        <td>2,000원</td>
-                    </tr>
-                    <tr>
-                        <td>총 결제금액</td>
-                        <td>6,000원</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="total-price">
-            <p>총 결제금액: <span>6,000원</span></p>
-        </div>
+			    <div class="order-details">
+			        <h2>주문내역</h2>
+			        <div class="order-item">
+			            <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" alt="그림">
+			            <div class="order-info">
+			                <p>${dto.subject}</p>
+			                <p>${dto.nickName}</p>
+			                <div class="quantity-select">
+			                    <label for="quantity">수량 선택 :</label>
+			                    <select id="quantity" name="quantity" onchange="updateOrderPrice()">
+			                        <option value="1">1</option>
+			                        <option value="2">2</option>
+			                        <option value="3">3</option>
+			                        <option value="4">4</option>
+			                        <option value="5">5</option>
+			                    </select>
+			                </div>
+			                <div class="date-select">
+			                    <label for="option">선택 옵션 : </label>
+			                    <label>
+			                        <c:choose>
+			                            <c:when test="${option1 == '0'}">
+			                                없음
+			                            </c:when>
+			                            <c:otherwise>
+			                                ${listOption[0].optionName} : ${option1}
+			                            </c:otherwise>
+			                        </c:choose>
+			                    </label>
+			                    <label>
+			                        <c:choose>
+			                            <c:when test="${option2 == '0'}">
+			                            </c:when>
+			                            <c:otherwise>
+			                                , ${listOption[1].optionName} : ${option2}
+			                            </c:otherwise>
+			                        </c:choose>
+			                    </label>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			    <div class="order-price">
+			        <table>
+			            <tr>
+			                <td>주문금액</td>
+			                <td id="orderAmount">${dto.price}원</td>
+			            </tr>
+			            <tr>
+			                <td>보유 포인트</td>
+			                <td>${sessionScope.member.point==null?"0":sessionScope.member.point}원</td>
+			            </tr>
+			            <tr>
+			                <td>총 결제금액</td>
+			                <td id="totalAmount">${dto.price - (sessionScope.member.point==null?"0":sessionScope.member.point)}원</td>
+			            </tr>
+			        </table>
+			    </div>
+			</div>
+			<div class="total-price">
+			    <p>총 결제금액: <span id="totalAmountText">${dto.price - (sessionScope.member.point==null?"0":sessionScope.member.point)}원</span></p>
+			</div>
         
         <div class="footer-notes">
               <div class="accordion" id="accordionExample">
@@ -289,8 +335,103 @@ h1 em {
                     </div>
                 </div>
         </div>
-        <a href="#" class="btn-pay">결제하기</a>
+        <div>
+			<button type="button" class="btn-pay"
+				onclick="sendOk();">결제하기</button>
+		</div>
+        
     </div>
     </div>
+    
+    <script type="text/javascript">
+    
+    function sendOk() {
+    	 var totalAmountElement = document.getElementById("totalAmount");
+
+ 	    // 요소의 텍스트 값 가져오기
+ 	    var totalAmountText = totalAmountElement.textContent || totalAmountElement.innerText;
+
+ 	    // 숫자만 추출하기
+ 	    var numericValue = totalAmountText.replace(/[^0-9.-]+/g, "");
+        var money =numericValue;
+        if (money < 100) {
+            alert("100원 이상 입력이 가능합니다.");
+        } else {
+            selectSeq(function(sequence) {
+                requestPay(money, sequence);
+            });
+        }
+    }
+
+    function selectSeq(callback) {
+    	    let url = "${pageContext.request.contextPath}/mypage/selectSeq";
+    	    let query = "";
+
+    	    const fn = function(data) {
+    	        let state = data.state;
+    	        if (state === "true") {
+    	            var sequence = data.sequence;
+    	            callback(sequence); // 콜백 함수를 호출하여 sequence 값을 전달
+    	        } else {
+    	            alert("실패");
+    	        }
+    	    };
+    	    ajaxFun(url, "post", query, "json", fn);
+    	}
+
+    	function pointCharge(sequence) {
+    	    let url = "${pageContext.request.contextPath}/mypage/pointCharge";
+    	    let currentPoint = "${point}";
+    	    let pointVar = document.getElementById("money").value;
+    	    
+    	    
+    	    let formData = {currentPoint:currentPoint,pointVar:pointVar,pointNum:sequence};
+    		console.log(formData);
+    		
+    	    const fn = function(data) {
+    	        let state = data.state;
+    	        if (state === "true") {
+    	            alert("저장 성공");
+    	            location.href = "${pageContext.request.contextPath}/mypage/list";
+    	        } else {
+    	            alert("저장 실패");
+    	        }
+    	    };
+    	    ajaxFun(url, "post", formData, "json", fn);
+    	}
+    </script>
+    
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+<script>
+	var IMP = window.IMP;
+	IMP.init("");
+	
+	
+	function requestPay(money,sequence) {
+		IMP.request_pay({
+			pg : 'html5_inicis.INIpayTest', // 테스트 시 html5_inicis.INIpayTest 기재 
+			pay_method : 'card',
+			merchant_uid : sequence, // 상점에서 생성한 고유 주문번호
+			name : '나무머니',
+			amount : money, // 금액
+			buyer_email : 'test@portone.io',
+			buyer_name : '${sessionScope.member.userId}',
+			buyer_tel : '010-1234-5678', // 필수 파라미터
+			buyer_addr : '서울특별시 강남구 삼성동',
+			buyer_postcode : '123-456',
+		}, function(resp) { // callback
+			if (resp.success) {
+				
+				pointCharge(sequence);
+				alert('결제가 완료되었습니다...');
+				
+			} else {
+				alert('fail...');
+				console.log(resp);
+			}
+		});
+	}
+</script>
+    
 </body>
 </html>
