@@ -54,11 +54,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		HttpSession session = request.getSession();
 
 		Member member = memberService.findById(authentication.getName());
-		try {
-			member.setPoint(pointService.selectPoint(authentication.getName()));
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
+		
 		SessionInfo info = new SessionInfo();
 		
 		info.setPoint(member.getPoint());
@@ -68,6 +64,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		info.setNickName(member.getNickName());
 		info.setTown1(member.getTown1());
 		info.setTown2(member.getTown2());
+		
+		try {
+			info.setPoint(pointService.selectPoint(info.getUserId()));
+		} catch (Exception e1) {
+			System.out.println("point=="+info.getPoint());
+			e1.printStackTrace();
+		}
 
 		session.setAttribute("member", info);
 

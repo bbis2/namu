@@ -366,6 +366,7 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 			dto = mapper.findById(map);
 			dto.setUserLiked(userTalentLiked(map));
 			dto.setLikeCount(talentLikeCount(dto.getTboardNum()));
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -492,10 +493,14 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		boolean result = false;
 		
 		try {
-			TalentMarket dto= mapper.userTalentLiked(map);
-			if(dto!=null) {
-				result =true;
-			}
+			
+				TalentMarket dto= mapper.userTalentLiked(map);
+				if(dto!=null) {
+					result =true;
+				}
+			
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
