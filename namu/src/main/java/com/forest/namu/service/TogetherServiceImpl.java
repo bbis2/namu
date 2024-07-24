@@ -250,41 +250,16 @@ public class TogetherServiceImpl implements TogetherService{
 		return list;
 	}
 
-	@Override
-	public List<TogetherApply> listApplRequest(Map<String, Object> map) {
-		List<TogetherApply> list = null;
-		
-		try {
-			list = mapper.listApplyRequest(map);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
 
 	@Override
-	public List<TogetherApply> listApplyOk(Map<String, Object> map) {
-		List<TogetherApply> list = null;
-		
+	public void updateApply(TogetherApply dto) throws Exception {
 		try {
-			list = mapper.listApplyOk(map);
+			mapper.updateApply(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		return list;
-	}
-
-	@Override
-	public List<TogetherApply> listApplyCancel(Map<String, Object> map) {
-		List<TogetherApply>list = null;
-		
-		try {
-			list = mapper.listApplyCancel(map);
-		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 		
-		return list;
 	}
 
 

@@ -35,11 +35,7 @@ public interface TogetherMapper {
 	// 모임참가
 	public void insertTogetherApply(TogetherApply dto) throws SQLException; // 모임신청
 	public List<TogetherApply> listApply (Map<String, Object> map); // 모임리스트
-	public List<TogetherApply> listApplyRequest(Map<String, Object> map);
-	public List<TogetherApply> listApplyOk(Map<String, Object> map);
-	public List<TogetherApply> listApplyCancel(Map<String, Object> map);
 	
-	
-	
+	public void updateApply(TogetherApply dto)throws SQLException;	
 	
 }

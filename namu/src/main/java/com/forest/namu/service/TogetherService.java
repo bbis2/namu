@@ -29,8 +29,6 @@ public interface TogetherService {
 	
 	public void insertTogetherApply(TogetherApply dto) throws Exception;
 	public List<TogetherApply> listApply (Map<String, Object> map);
-	public List<TogetherApply> listApplRequest(Map<String, Object> map);
-	public List<TogetherApply> listApplyOk(Map<String, Object> map);
-	public List<TogetherApply> listApplyCancel(Map<String, Object> map);
 
+	public void updateApply(TogetherApply dto)throws Exception;
 }
