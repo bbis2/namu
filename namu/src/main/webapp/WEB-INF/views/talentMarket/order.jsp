@@ -177,11 +177,18 @@ function updateOrderPrice() {
     const pricePerItem = ${dto.price};
     const quantity = document.getElementById('quantity').value;
     const orderAmount = pricePerItem * quantity;
-	const userPiont = ${sessionScope.member.point==null?"0":sessionScope.member.point};
+	const userPoint = ${sessionScope.member.point==null?'0':sessionScope.member.point};
 	
     document.getElementById('orderAmount').textContent = orderAmount + '원';
-    document.getElementById('totalAmount').textContent = orderAmount- userPiont + '원';
-    document.getElementById('totalAmountText').textContent = orderAmount- userPiont + '원';
+    if(orderAmount>userPoint){
+    document.getElementById('totalAmount').textContent = orderAmount- userPoint + '원';
+    document.getElementById('totalAmountText').textContent = orderAmount- userPoint + '원';
+    document.getElementById('totalPoint').textContent = 0 + '원';
+    }else{
+    document.getElementById('totalAmount').textContent = 0 + '원';
+    document.getElementById('totalAmountText').textContent = 0 + '원';
+    document.getElementById('totalPoint').textContent = userPoint - orderAmount + '원';
+    }
 }
 
 function ajaxFun(url, method, formData, dataType, fn, file = false) {
@@ -277,15 +284,20 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 			                <td>보유 포인트</td>
 			                <td>${sessionScope.member.point==null?"0":sessionScope.member.point}원</td>
 			            </tr>
+			           
 			            <tr>
 			                <td>총 결제금액</td>
-			                <td id="totalAmount">${dto.price - (sessionScope.member.point==null?"0":sessionScope.member.point)}원</td>
+			                <td id="totalAmount">${(dto.price - sessionScope.member.point)<0?'0':(dto.price - sessionScope.member.point)} 원</td>
+			            </tr>
+			             <tr>
+			                <td>결제시 남는 포인트</td>
+			                <td id="totalPoint">${(sessionScope.member.point)-dto.price<0?'0':(sessionScope.member.point)-dto.price}원</td>
 			            </tr>
 			        </table>
 			    </div>
 			</div>
 			<div class="total-price">
-			    <p>총 결제금액: <span id="totalAmountText">${dto.price - (sessionScope.member.point==null?"0":sessionScope.member.point)}원</span></p>
+			    <p>총 결제금액: <span id="totalAmountText">${(dto.price - sessionScope.member.point)<0?'0':(dto.price - sessionScope.member.point)}원</span></p>
 			</div>
         
         <div class="footer-notes">
@@ -354,8 +366,8 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
  	    // 숫자만 추출하기
  	    var numericValue = totalAmountText.replace(/[^0-9.-]+/g, "");
         var money =numericValue;
-        if (money < 100) {
-            alert("100원 이상 입력이 가능합니다.");
+        if (money ==0) {
+            alert("구매완료");
         } else {
             selectSeq(function(sequence) {
                 requestPay(money, sequence);
@@ -379,10 +391,10 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
     	    ajaxFun(url, "post", query, "json", fn);
     	}
 
-    	function pointCharge(sequence) {
+    	function pointCharge(sequence,money) {
     	    let url = "${pageContext.request.contextPath}/mypage/pointCharge";
-    	    let currentPoint = "${point}";
-    	    let pointVar = document.getElementById("money").value;
+    	    let currentPoint = "${sessionScope.member.point}";
+    	    let pointVar = money;
     	    
     	    
     	    let formData = {currentPoint:currentPoint,pointVar:pointVar,pointNum:sequence};
@@ -404,7 +416,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <script>
 	var IMP = window.IMP;
-	IMP.init("");
+	IMP.init("imp62772272");
 	
 	
 	function requestPay(money,sequence) {
@@ -422,7 +434,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 		}, function(resp) { // callback
 			if (resp.success) {
 				
-				pointCharge(sequence);
+				pointCharge(sequence,money);
 				alert('결제가 완료되었습니다...');
 				
 			} else {

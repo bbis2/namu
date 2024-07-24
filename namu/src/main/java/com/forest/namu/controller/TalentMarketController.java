@@ -83,7 +83,7 @@ public class TalentMarketController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (info != null) {
-			map.put("userId", info.getUserId());
+			map.put("likeUserId", info.getUserId());
         }
 		map.put("talentShow", talentShow);
 		map.put("schType", schType);
@@ -184,12 +184,9 @@ public class TalentMarketController {
 			@RequestParam long tboardNum
 			) {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (info != null) {
-			map.put("userId", info.getUserId());
-        }
-		map.put("tboardNum", tboardNum);
-		TalentMarket dto=service.findById(map);
+		
+		
+		TalentMarket dto=service.findById(tboardNum);
 		
 		if(dto == null || !info.getUserId().equals(dto.getUserId())) {
 			String query = "num=" + tboardNum + "&page=" + page;
@@ -264,16 +261,18 @@ public class TalentMarketController {
 					"&kwd=" + URLEncoder.encode(kwd, "utf-8");
 		}
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("tboardNum", num);
-		if(info!=null) {
-		map.put("userId", info.getUserId());
-		}
-		TalentMarket dto = service.findById(map);
 		
+		TalentMarket dto = service.findById(num);
 		if(dto==null) {
 			return "redirect:/talent/list?"+query;
 		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tboardNum", num);
+		if(info!=null) {
+			map.put("likeUserId", info.getUserId());
+			}
+		
+		dto.setUserLiked(service.userTalentLiked(map));
 		
 		List<TmOrder> orderList =null;
 		if(info!=null) {
@@ -379,14 +378,8 @@ public class TalentMarketController {
             @RequestParam Optional<String> option2,
 			@RequestParam long tboardNum) {
 		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (info != null) {
-			map.put("userId", info.getUserId());
-        }
-		map.put("tboardNum", tboardNum);
-		TalentMarket dto=service.findById(map);
+		TalentMarket dto=service.findById(tboardNum);
 		List<TalentMarket> listOption = service.listTalentOption(tboardNum);
 		
 		String opt1 = option1.orElse("0");

@@ -782,7 +782,7 @@ function validateAndSubmit() {
 									    <div class="right_area">
 									        <a href="javascript:;" class="icon heart btnSendLike ${dto.userLiked?'active':''}">
 									        	<c:choose>
-									        	<c:when test="${dto.userLiked==null}">
+									        	<c:when test="${dto.userLiked==false}">
 									        	<img src="https://cdn-icons-png.flaticon.com/512/812/812327.png" alt="찜하기">
 									        	</c:when>
 									        	<c:otherwise>

@@ -426,7 +426,7 @@ $(function() {
                     </c:otherwise>
 		         </c:choose>
 		         <c:if test="${sessionScope.member.userId != null}">
-					<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
+					<button type="button" class="btn_like btnSendLike ${dto.userLiked? 'on' : ''}" title="찜하기">
 						like
 					</button>
 					<input type="hidden" value="${dto.tboardNum}" class="likeTboardNum">
@@ -443,7 +443,7 @@ $(function() {
 				<a href="${pageContext.request.contextPath}/talent/profile?nickname=${dto.nickName}"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
 				<div class="float-end"><i class="bi bi-clipboard-heart" style="color: red;"></i>&nbsp;${dto.type}</div> 
 				<div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">
-					<p><i class="fa-solid fa-heart"></i>&nbsp;${dto.likeCount}</p>
+					<p class="talentLikeCount"><i class="fa-solid fa-heart"></i>&nbsp;${dto.likeCount}</p>
 					<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
 					<p><i class="fa-solid fa-clock"></i>&nbsp;${dto.daysDifference == 0 ? "오늘" : dto.daysDifference}${dto.daysDifference == 0 ?"":"일전"}</p>
 				</div>

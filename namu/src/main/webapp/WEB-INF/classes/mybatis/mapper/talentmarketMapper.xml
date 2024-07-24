@@ -219,7 +219,7 @@
 
 	<!-- 찜 여부 -->
 	<select id="userTalentLiked" parameterType="map" resultType="com.forest.namu.domain.TalentMarket">
-		SELECT tboardNum, userId FROM tmBookMarks WHERE tboardNum = #{tboardNum} AND userId = #{userId}
+		SELECT tboardNum, userId AS likeUserId FROM tmBookMarks WHERE tboardNum = #{tboardNum} AND userId = #{likeUserId}
 	</select>
 	
 </mapper>

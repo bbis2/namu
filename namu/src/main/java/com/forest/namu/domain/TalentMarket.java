@@ -54,7 +54,7 @@ public class TalentMarket {
 	private List<MultipartFile> addFiles;
 	
 	private boolean userLiked;
-	
+	private String likeUserId;
 	// 찜 개수
 	private int likeCount;
 	
@@ -324,6 +324,14 @@ public class TalentMarket {
 	public void setQuestionCount(int questionCount) {
 		this.questionCount = questionCount;
 	}
+	public String getLikeUserId() {
+		return likeUserId;
+	}
+	public void setLikeUserId(String likeUserId) {
+		this.likeUserId = likeUserId;
+	}
+	
+	
 	
 	
 }
