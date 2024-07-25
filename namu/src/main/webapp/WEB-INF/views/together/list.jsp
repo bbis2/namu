@@ -239,7 +239,7 @@ function filterByTown() {
 					<h5 class="card-title">${sessionScope.member.nickName}</h5>
 				    <h6 class="bd">나의 동네</h6>
 						<select id="townFilter" class="form-select border-2" aria-label="Default select example" onchange="filterByTown()">
-							<option value="">전체</option>
+							
 							<option value="${sessionScope.member.town1}" <c:if test="${town == sessionScope.member.town1}">selected</c:if>>${sessionScope.member.town1}</option>
 							<c:if test="${sessionScope.member.town2 != null}">
 								<option value="${sessionScope.member.town2}" <c:if test="${town == sessionScope.member.town2}">selected</c:if>>${sessionScope.member.town2}</option>
@@ -282,6 +282,7 @@ function filterByTown() {
 				<c:forEach var="dto" items="${list}" varStatus="status">
 					<div class="list">
 					    <div>
+					   
 					        <!-- 이미지 -->
 					            <c:choose>
 					                <c:when test="${dto.thumbnail != null && !dto.thumbnail.isEmpty()}">
@@ -291,7 +292,10 @@ function filterByTown() {
 					                    <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-fluid object-fit-cover h-100" onclick="location.href='${articleUrl}&tNum=${dto.tNum}';">
 					                </c:otherwise>
 					            </c:choose>
-					            <button class="btn_like">like</button>
+					      
+					            <button class="btn_like">like
+					            	<span class="like-count">찜</span>
+					            </button>
 					        <a href="${pageContext.request.contextPath}/" class="listTitle"> <h5>${dto.subject}</h5></a>
 					        <a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
 					        <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>
@@ -302,6 +306,7 @@ function filterByTown() {
 					    </div>
 					</div>
 				</c:forEach>
+				
 			</div>
 			
             <div class="page-navigation">

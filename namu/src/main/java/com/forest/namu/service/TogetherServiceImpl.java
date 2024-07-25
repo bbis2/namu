@@ -139,7 +139,8 @@ public class TogetherServiceImpl implements TogetherService{
 		try {
 			Map<String, Object> map = new HashMap<>();
 			map.put("tNum", tNum);
-			map.put("uertId", userId);
+			map.put("userId", userId);
+			map.put("acceptance", -1);
 			Together dto = findById(map);
 			if(dto == null ||  (membership < 99 && ! dto.getUserId().equals(userId))) {
 				return;

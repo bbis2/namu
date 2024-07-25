@@ -266,12 +266,10 @@ public class TogetherController {
 	
 	@GetMapping("delete")
 	public String delete (
-			@RequestParam  long tNum,
-			@RequestParam  String page, 
+			@RequestParam long tNum,
+			@RequestParam String page, 
 			@RequestParam (defaultValue = "all") String schType,
 			@RequestParam (defaultValue = "") String kwd,
-			@RequestParam(defaultValue = "0") long categoryNum,
-			@RequestParam(value = "town", defaultValue = "") String town,
 			HttpSession session) throws Exception {
 		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -279,14 +277,8 @@ public class TogetherController {
 		kwd = URLDecoder.decode(kwd, "utf-8");
 		
 		String query = "page=" + page;
-		if(categoryNum != 0 ) {
-			query += "&categoryNum=" + categoryNum;
-		}
 		if(kwd.length() != 0) {
 			query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd,"UTF-8");
-		}
-		if(town.length() != 0) {
-			query += "&town=" + URLEncoder.encode(town,"utf-8");
 		}
 		
 		service.deleteTogether(tNum, info.getUserId(), info.getMembership());

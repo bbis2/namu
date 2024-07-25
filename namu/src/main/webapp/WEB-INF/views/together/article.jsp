@@ -95,13 +95,11 @@ textarea.form-control {
 }
 
 .thumb {
-    width:470px;
+    width: 640px;
     height: 470px;
     display: block;
-    padding: 40px 10px;
-    border-radius: 15px;
+	padding: 40px 10px;
 }
-
 .together-info {
     padding: 40px 40px 20px 20px;
     flex-grow: 1;
@@ -113,11 +111,6 @@ textarea.form-control {
     margin-bottom: 10px;
 }
 
-.user-name {
-    font-size: 18px;
-    font-weight: bold;
-    margin-right: 10px;
-}
 
 .seller-location {
     font-size: 14px;
@@ -148,16 +141,6 @@ textarea.form-control {
     flex-grow: 1;
 }
 
-.chat1 {
-    border-radius: 16px;
-    background: #61ac2d;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    margin-left: 20px;
-    height: 80%;
-}
 
 .content1 {
     font-size: 14px;
@@ -178,7 +161,7 @@ textarea.form-control {
 
 .update-btn {
     border-radius: 16px;
-    background-color: #ffd615;
+    background-color: #A4B974;
     border: none;
     padding: 5px 10px;
     margin-left: 10px;
@@ -187,11 +170,13 @@ textarea.form-control {
 }
 
 .apply{
-    border-radius: 10px;
+    border-radius: 30px;
 	height: 50px;
-	width: 450px;
+	width: 620px;
 	border: none;
-	background-color: #B4CA8A;
+	background-color: #A4B974;
+	color: #fff;
+	font-weight: 600;
 }
 
 textarea::placeholder{
@@ -200,6 +185,62 @@ textarea::placeholder{
 	text-align: center;
 	line-height: 80px;
 }
+
+/*togetherBoard*/
+
+#myTab {
+    padding: 50px 50px 0px 0px ;
+    border-bottom: none;
+    display: flex;
+    justify-content: center;
+}
+.nav-tabs .nav-link {
+	min-width: 300px;
+	background: #5d4734;
+	font-color:white;
+	border-radius: 0;
+	color: #fff;
+	font-weight: 600;
+}
+.nav-tabs .nav-link.active {
+	background: #A4B974;
+	color: #fff;
+}
+.tab-pane { min-height: 300px; }
+
+.score-star { font-size: 0; letter-spacing: -4px; }
+.score-star .item {
+	font-size: 22px; letter-spacing: 1px; display: inline-block;
+	color: #ccc; text-decoration: none; vertical-align: middle;
+}
+.score-star .item:first-child{ margin-left: 0; }
+.score-star .on { color: #f54a4c; }
+.graph { font-size: 0;  letter-spacing: 0; word-spacing: 0; }
+.graph-title { padding-right: 3px; }
+.graph .one-space { font-size:13px; background:#eee;}
+.graph .one-space:after { content: ''; display: inline-block; width:17px; }
+.graph .one-space.on{ background:  #f54a4c; }
+.graph .one-space:first-child{ border-top-left-radius:5px;  border-bottom-left-radius:5px; }
+.graph .one-space:last-child{ border-top-right-radius:5px; border-bottom-right-radius:5px; }
+.graph-rate { padding-left: 5px; display: inline-block; width: 60px; text-align: left; }
+
+.deleteReview, .notifyReview { cursor: pointer; padding-left: 5px; }
+.deleteReview:hover, .notifyReview:hover { font-weight: 500; color: #2478FF; }
+
+.qna-form textarea { width: 100%; height: 75px; resize: none; }
+.qna-form .img-grid {
+	display: grid;
+	grid-template-columns:repeat(auto-fill, 54px);
+	grid-gap: 2px;
+}
+
+.qna-form .img-grid .item {
+	object-fit:cover;
+	width: 50px; height: 50px; border-radius: 10px;
+	border: 1px solid #c2c2c2;
+	cursor: pointer;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -233,10 +274,10 @@ textarea::placeholder{
             <div>
                 <div>
                     <c:choose>
-                        <c:when test="${dto.thumbnail != null && !dto.thumbnail.isEmpty()}">
-                            <c:forEach var="vo" items="${listFile}" varStatus="status">
+                        <c:when test="${dto.thumbnail != null && dto.thumbnail.isEmpty()}">
+                            <c:forEach var="dto" items="${list}" varStatus="status">
                                 <div ${status.index == 0 ? 'active' : ''}>
-                                    <img src="${pageContext.request.contextPath}/uploads/photo/${vo.thumbnail}">
+                                    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}">
                                 </div>
                             </c:forEach>
                         </c:when>
@@ -306,12 +347,65 @@ textarea::placeholder{
             </table>  
         </div>
     </div>
+    
+    <!--  여기서 부터 게시판  -->
+	<ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+		<li class="nav-item" role="presentation">
+			<button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" type="button" role="tab" aria-controls="1" aria-selected="true">모임정보</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#tab-pane-2" type="button" role="tab" aria-controls="2" aria-selected="false">공지사항<span class="title-reviewCount"></span></button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">앨범<span class="title-qnaCount"></span></button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="tab-4" data-bs-toggle="tab" data-bs-target="#tab-pane-4" type="button" role="tab" aria-controls="4" aria-selected="false">방명록</button>
+		</li>
+	</ul>
+
+	
+			<div class="tab-content pt-2" id="myTabContent">
+				<div class="tab-pane fade show active" id="tab-pane-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
+					<div class="mt-3 pt-3 border-bottom">
+						<p class="fs-4 fw-semibold"></p> 
+					</div>
+					<div class="mt-3 product-content">
+						${dto.content}
+					</div>
+				</div>
+				<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
+					<div class="mt-3 pt-3 border-bottom">
+						<p class="fs-4 fw-semibold">공지사항</p> 
+					</div>
+					
+					<div class="mt-2 list-review"></div>
+				</div>
+				
+				<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
+					<div class="mt-3 pt-3 border-bottom">
+						<p class="fs-4 fw-semibold">앨범</p> 
+					</div>
+			
+					<div class="mt-3 p-2 text-end">
+						<button type="button" class="btnMyQuestion btn btn-dark" ${empty sessionScope.member ? "disabled":""}> 내 Q&amp;A 보기  </button>
+						<button type="button" class="btnQuestion btn btn-dark" ${empty sessionScope.member ? "disabled":""}> 상품 Q&amp;A 작성 </button>
+					</div>
+					<div class="mt-1 p-2 list-question"></div>
+										
+				</div>
+				
+				<div class="tab-pane fade" id="tab-pane-4" role="tabpanel" aria-labelledby="tab-4" tabindex="0">
+					<div class="mt-3 pt-3 border-bottom">
+						<p class="fs-4 fw-semibold">방명록</p> 
+					</div>
+					<div class="mt-3">
+						<p> 배송 및 환불 정책 입니다. </p>
+					</div>				
+				</div>
+			</div>
+
 </div>
-
-<div class="content1">${dto.content}</div>
-
-
-
 <div class="modal fade" id="myApplyModal" tabindex="-1" 
 		data-bs-backdrop="static" data-bs-keyboard="false"
 		aria-labelledby="myApplyModalLabel" aria-hidden="true">
