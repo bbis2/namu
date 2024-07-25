@@ -20,6 +20,50 @@
 			values (rbImage_SEQ.NEXTVAL, #{imageFilename}, #{borrowNum}, null)
 	</insert>
 	
+	<!-- update 쿼리 -->
+	<update id="updateBorrow" parameterType="com.forest.namu.domain.Borrow">
+	    UPDATE borrow SET
+	        subject = #{subject},
+	        price = #{price},
+	        strDate = TO_DATE(#{strDate}, 'YYYY-MM-DD HH24:MI'),
+	        endDate = TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI'),
+	        content = #{content},
+	        location = #{location},
+	        categoryNum = #{categoryNum}
+	    WHERE borrowNum = #{borrowNum} AND userId = #{userId}
+	</update>
+	
+	<!-- 파일 update -->
+	<update id="updateBorrowFile" parameterType="com.forest.namu.domain.Borrow">
+	    UPDATE rbImage SET
+	        imageFilename = #{imageFilename}
+	    WHERE borrowNum = #{borrowNum} AND imageNum = #{imageNum}
+	</update>
+	
+	<!-- 데이터 DELETE -->	
+	<delete id="deleteBorrow" parameterType="com.forest.namu.domain.Borrow">
+		DELETE FROM borrow WHERE borrowNum = #{borrowNum}
+	</delete>
+	
+	<!-- rbImage 테이블에서 삭제 -->
+	<delete id="deleteBorrowFile" parameterType="com.forest.namu.domain.Borrow">
+	    DELETE FROM rbImage WHERE borrowNum = #{borrowNum}
+	</delete>
+	
+	<!-- borrowLike 테이블에서 삭제 -->
+	<delete id="deleteBorrowLike2" parameterType="com.forest.namu.domain.Borrow">
+	    DELETE FROM borrowLike WHERE borrowNum = #{borrowNum}
+	</delete>
+	
+	<delete id="deleteNonMatchingImages">
+	    DELETE FROM rbImage 
+	    WHERE borrowNum = #{borrowNum} 
+	    AND imageNum NOT IN 
+	    <foreach item="imageNum" collection="remainingImageNums" open="(" separator="," close=")">
+	        #{imageNum}
+	    </foreach>
+	</delete>
+	
 	<!-- 검색시 추가 쿼리 -->
 	<sql id="where-list">
 		INSTR(subject, #{kwd}) &gt; 0
@@ -45,7 +89,7 @@
 	
 	<!-- list -->
 	<select id="listBorrow" parameterType="map" resultType="com.forest.namu.domain.Borrow">
-		SELECT b.borrowNum, b.userId, nickName, subject, hitCount, b.regDate, location, imageFilename
+		SELECT b.borrowNum, b.userId, nickName, subject, hitCount, b.regDate, location, imageFilename, NVL(likeCount, 0) likeCount
 		FROM borrow b
 		LEFT OUTER JOIN (
 			SELECT imageNum, borrowNum, imageFilename FROM (
@@ -55,6 +99,11 @@
 			) WHERE rank = 1
 		) i ON b.borrowNum = i.borrowNum
 		JOIN member m ON b.userId = m.userId
+		LEFT OUTER JOIN (
+			SELECT COUNT(*) likeCount, borrowNum
+			FROM borrowLike
+			GROUP BY borrowNum
+		) bl ON b.borrowNum = bl.borrowNum
 		<where>
 			location = #{location} 
 			<if test="categoryNum > 0">
@@ -64,12 +113,88 @@
 				AND INSTR(subject, #{kwd}) &gt; 0
 			</if>
 		</where>
-		ORDER BY b.borrowNum DESC
+		<if test="sortNum == 0">
+			ORDER BY b.borrowNum DESC
+		</if>
+		<if test="sortNum == 1">
+			ORDER BY b.borrowNum ASC
+		</if>
+		<if test="sortNum == 2">
+			ORDER BY hitCount DESC
+		</if>
+		<if test="sortNum == 3">
+			ORDER BY likeCount DESC, b.borrowNum DESC
+		</if>
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
+	<!-- 카테고리 목록 반환 -->
 	<select id="listCategory" parameterType="map" resultType="com.forest.namu.domain.Borrow">
 		SELECT categoryNum, category from rbCategory
+	</select>
+	
+	<!-- article 에서 다른글 -->
+	<select id="listOtherPosts" parameterType="map" resultType="com.forest.namu.domain.Borrow">
+	    SELECT b.borrowNum, b.userId, b.subject, b.content, b.hitCount, b.regDate, 
+	           b.location, b.categoryNum, b.price, b.strDate, b.endDate,
+	           m.nickName, NVL(f.imageFilename, 'default.png') imageFilename
+	    FROM borrow b
+	    JOIN member m ON b.userId = m.userId
+	    LEFT OUTER JOIN (
+	        SELECT borrowNum, MIN(imageFilename) imageFilename
+	        FROM rbImage
+	        GROUP BY borrowNum
+	    ) f ON b.borrowNum = f.borrowNum
+	    WHERE b.location = #{location} AND b.categoryNum = #{categoryNum} AND b.borrowNum != #{borrowNum}
+	    ORDER BY b.regDate DESC
+	    FETCH FIRST 15 ROWS ONLY
+	</select>
+	
+	<!-- 글쓴이의 다른 글 가져오기 -->
+	<select id="selectWriterOtherPosts" resultType="java.util.Map">
+	    SELECT tablename, num, subject, regDate, location, categorynum
+	    FROM (
+	        SELECT tablename, num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM delievery
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM daily
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, tnum AS num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM togetherlist
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, tboardnum AS num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM talentMarket
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM used
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, anum AS num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM auction
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, borrownum AS num, subject, regDate, location, categorynum
+	        FROM borrow
+	        WHERE userId = #{userId} AND borrownum != #{currentPostNum}
+	    ) combined_data
+	    ORDER BY regDate DESC
 	</select>
 	
 	<!-- 조회수 증가 -->
@@ -95,7 +220,7 @@
 	
 	<!-- 작성자 정보 -->
 	<select id="borrowWriter" parameterType="Long" resultType="com.forest.namu.domain.Member">
-		SELECT m.regDate, userManner, ment
+		SELECT b.userId, m.regDate, userManner, ment
 		FROM borrow b
 		JOIN member m ON b.userId = m.userId
 		JOIN memberDetail md ON  b.userId = md.userId
