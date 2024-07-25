@@ -232,7 +232,7 @@ public abstract class MyUtil {
         LocalDateTime dateTime = LocalDateTime.parse(inputDate, inputFormatter);
         
         // 원하는 출력 형식을 정의
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 a hh시 mm분");
         
         // LocalDateTime 객체를 원하는 형식의 문자열로 변환
         return dateTime.format(outputFormatter);

@@ -16,10 +16,20 @@ $(function() {
 	$('.sortMethod').click(function() {
 		$('.sortSelected').removeClass('sortSelected');
 		$(this).addClass('sortSelected');
+		
+        // 선택된 정렬 방식의 인덱스를 가져옵니다
+        let index = $(this).parent().index() / 2;  // 구분자 때문에 2로 나눕니다
+        $('input[name="sortNum"]').val(index);
+        
+        searchList();
 	});
 	
+    // 페이지 로드 시 현재 선택된 정렬 방식에 'sortSelected' 클래스를 추가합니다
+    let currentSort = $('input[name="sortNum"]').val();
+    $('.sortMethod').eq(currentSort).addClass('sortSelected');
+	
 	$('.write').click(function() {
-		location.href = "${pageContext.request.contextPath}/borrow/write";
+		location.href = "${pageContext.request.contextPath}/borrow/write?townNum=" + ${townNum};
 	});
 	
 });
@@ -100,11 +110,14 @@ $(function() {
 					</div>
 				</div>
 				<div class="sortWrap d-flex float-end mt-4 gap-2">
-					<h6><a class="sortMethod sortSelected" href="#">최신순</a></h6>
+					<h6><a class="sortMethod">최신순</a></h6>
 					<h6>|</h6>
-					<h6><a class="sortMethod" href="#">오래된순</a></h6>
+					<h6><a class="sortMethod">오래된순</a></h6>
 					<h6>|</h6>
-					<h6><a class="sortMethod" href="#">인기순</a></h6>
+					<h6><a class="sortMethod">조회수순</a></h6>
+					<h6>|</h6>
+					<h6><a class="sortMethod">찜 많은순</a></h6>
+					<input type="hidden" value="${sortNum}" name="sortNum">
 				</div>
 			</div>
 		</form>
@@ -121,10 +134,12 @@ $(function() {
 								<a href="${articleUrl}&num=${dto.borrowNum}" class="listTitle">
 									<img class="img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/album/${dto.imageFilename}">
 								</a>
-								<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
-									like
-								</button>
-								<input type="hidden" value="${dto.borrowNum}" class="likeBorrowNum">
+								<c:if test="${!dto.nickName.equals(sessionScope.member.nickName)}">
+									<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
+										like
+									</button>
+									<input type="hidden" value="${dto.borrowNum}" class="likeBorrowNum">
+								</c:if>
 							</div>
 							<a href="${articleUrl}&num=${dto.borrowNum}" class="listTitle"> <h5 class="bd">${dto.subject}</h5> </a>
 							<a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
@@ -146,13 +161,13 @@ $(function() {
 					<h3 class="bd">등록된 글이 없어요. 가장 먼저 등록해보세요!</h3>
 				</div>
 				<div class="d-flex justify-content-center mb-5 pb-5">
-					<a href="${pageContext.request.contextPath}/borrow/write"><h5 class="bd" style="color: #61ac2d;"> > 눌러서 글쓰러 가기 < </h5></a>
+					<a href="${pageContext.request.contextPath}/borrow/write?townNum=${townNum}"><h5 class="bd" style="color: #61ac2d;"> > 눌러서 글쓰러 가기 < </h5></a>
 				</div>
 			</c:otherwise>
 		</c:choose>
 	</div>
 	<!-- 게시글 리스트 끝 -->
-	<div id="toast_message">찜 목록</div>
+	<div id="toast_message"></div>
 </div>
 
 <script type="text/javascript">

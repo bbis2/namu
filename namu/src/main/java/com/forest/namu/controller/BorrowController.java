@@ -10,15 +10,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.forest.namu.common.FileManager;
 import com.forest.namu.common.MyUtil;
@@ -39,6 +43,8 @@ public class BorrowController {
 	
 	@Autowired
 	private FileManager fileManager;
+	
+	private static final Logger logger = LoggerFactory.getLogger(BorrowController.class);
 
 	
 	@RequestMapping(value = "list")
@@ -47,6 +53,7 @@ public class BorrowController {
 			@RequestParam(defaultValue = "0") String categoryNum,
 			@RequestParam(defaultValue = "") String kwd,
 			@RequestParam(defaultValue = "1") String townNum,
+			@RequestParam(defaultValue = "0") String sortNum,
 			HttpServletRequest req,
 			HttpSession session,
 			Model model) throws Exception {
@@ -86,7 +93,7 @@ public class BorrowController {
 		
 		map.put("offset", offset);
 		map.put("size", size);
-		
+		map.put("sortNum", sortNum);
 		
 		List<Borrow> list = service.listBorrow(map);
 		
@@ -105,14 +112,14 @@ public class BorrowController {
 		}
 		
 		String query = "";
-		String listUrl = cp + "/borrow/list?townNum=" + townNum;
-		String articleUrl = cp + "/borrow/article?townNum=" + townNum + "&categoryNum=" + categoryNum + "&page=" + current_page;
+		String listUrl = cp + "/borrow/list?townNum=" + townNum + "&sortNum=" + sortNum;
+		String articleUrl = cp + "/borrow/article?townNum=" + townNum + "&categoryNum=" + categoryNum + "&page=" + current_page + "&sortNum=" + sortNum;
 		if (kwd.length() != 0) {
 			query = "&kwd=" + URLEncoder.encode(kwd, "utf-8");
 		}
 		if (query.length() != 0) {
-			listUrl = cp + "/borrow/list?townNum=" + townNum + query;
-			articleUrl = cp + "/borrow/article?townNum=" + townNum + "&categoryNum=" + categoryNum + "&page=" + current_page + query;
+			listUrl = cp + "/borrow/list?townNum=" + townNum + query + "&sortNum=" + sortNum;
+			articleUrl = cp + "/borrow/article?townNum=" + townNum + "&categoryNum=" + categoryNum + "&page=" + current_page + query + "&sortNum=" + sortNum;
 		}
 		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
@@ -123,6 +130,7 @@ public class BorrowController {
 		model.addAttribute("articleUrl", articleUrl);
 		model.addAttribute("page", current_page);
 		model.addAttribute("paging", paging);
+		model.addAttribute("sortNum", sortNum);
 
 		model.addAttribute("townNum", townNum);
 		model.addAttribute("location", location);
@@ -138,6 +146,142 @@ public class BorrowController {
 	@GetMapping("article")
 	public String article(
 			@RequestParam long num,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "0") String categoryNum,
+			@RequestParam(defaultValue = "") String kwd,
+			@RequestParam(defaultValue = "1") String townNum,
+			HttpSession session,
+			Model model
+			) throws Exception {
+		
+		try {
+			
+			service.updateHitCount(num);
+			
+			Borrow dto = service.findById(num);
+			categoryNum = dto.getCategoryNum() + "";
+			
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", info.getUserId());
+			map.put("num", num);
+			dto.setUserLiked(service.userBorrowLiked(map)); 
+			
+			kwd = URLDecoder.decode(kwd, "utf-8");
+			
+			String query = "townNum=" + townNum + "&page=" + page + "&categoryNum=" + categoryNum;
+			if (kwd.length() != 0) {
+				query += "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
+			}
+			
+			// 게시글 등록한지 얼마나 지났는지 계산해서 set
+			dto.setPassedTime(myUtil.returnPassedTime(dto.getRegDate()));
+			
+			// 대여희망시간 날짜형식 변환해서 set
+			dto.setStrDate(myUtil.convertDateFormat(dto.getStrDate()));
+			dto.setEndDate(myUtil.convertDateFormat(dto.getEndDate()));
+			
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+			
+			// 글쓴이 정보 가져오기
+			Member writer = service.borrowWriter(num);
+			writer.setRegDate(myUtil.convertDateFormat(writer.getRegDate()).substring(0, 9));
+			
+	        // 글쓴이의 다른 글 목록 가져오기
+	        List<Map<String, Object>> writerOtherPosts = service.getWriterOtherPosts(writer.getUserId(), num);
+	        logger.info("Writer's other posts: " + writerOtherPosts);
+	        
+	        
+	        for(Map<String, Object> map2 : writerOtherPosts) {
+	        	String boardName = switch ((String)map2.get("TABLENAME")) {
+				case "borrow" 			-> "빌림";
+				case "rent" 			-> "빌려드림";
+				case "delievery" 		-> "배달해요";
+				case "daily" 			-> "나무일상";
+				case "togetherlist" 	-> "나무모임";
+				case "talent" 			-> "재능마켓";
+				case "used" 			-> "중고";
+				case "auction" 			-> "경매";
+				default					-> "오류";
+				};
+				
+				map2.put("boardName", boardName);
+	        }
+	        
+	        model.addAttribute("writerOtherPosts", writerOtherPosts);
+			
+			// 이미지 파일
+			List<Borrow> listImage = service.listBorrowImage(num);
+			// 카테고리
+			List<Borrow> category = service.listCategory();
+			
+		    // 동일한 동네, 동일한 카테고리의 다른 글 가져오기
+		    map.put("location", dto.getLocation());
+		    map.put("categoryNum", dto.getCategoryNum());
+		    map.put("borrowNum", num); // 현재 글 제외
+		    List<Borrow> otherPosts = service.listOtherPosts(map);
+		    
+		    int totalPages = Math.max(1, (otherPosts.size() + 4) / 5); // 최소 1페이지
+	
+		    model.addAttribute("otherPosts", otherPosts);
+		    model.addAttribute("totalPages", totalPages);
+	
+			model.addAttribute("dto", dto);
+			model.addAttribute("writer", writer);
+			model.addAttribute("listImage", listImage);
+			model.addAttribute("category", category);
+			model.addAttribute("categoryNum", categoryNum);
+			model.addAttribute("kwd", kwd);
+			model.addAttribute("townNum", townNum);
+			
+			model.addAttribute("page", page);
+			model.addAttribute("query", query);
+			
+			return ".borrow.article";
+		
+	    } catch (Exception e) {
+	        logger.error("Error in article method", e);
+	        model.addAttribute("errorMessage", "페이지를 불러오는 중 오류가 발생했습니다.");
+	        return "error/500"; // 에러 페이지
+	    }
+	}
+	
+	@GetMapping("write")
+	public String writeForm(@RequestParam String townNum, Model model, Member member) throws Exception {
+		
+		List<Borrow> category = service.listCategory();
+		
+		model.addAttribute("category", category);
+		model.addAttribute("member", member);
+		model.addAttribute("townNum", townNum);
+		model.addAttribute("mode", "write");
+		
+		return ".borrow.write";
+	}
+	
+	@PostMapping("write")
+	@ResponseBody
+	public String writeSubmit(@ModelAttribute Borrow dto,
+	                          @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
+	                          HttpSession session) throws Exception {
+	    String root = session.getServletContext().getRealPath("/");
+	    String path = root + "uploads" + File.separator + "album";
+	    
+	    SessionInfo info = (SessionInfo)session.getAttribute("member");
+	    
+	    try {
+	        dto.setUserId(info.getUserId());
+	        dto.setImage(newImages);  // 새로운 이미지 설정
+	        service.insertBorrow(dto, path);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return "redirect:/borrow/list";
+	}
+	
+	@GetMapping("update")
+	public String updateForm(
+			@RequestParam long num,
 			@RequestParam String page,
 			@RequestParam(defaultValue = "0") String categoryNum,
 			@RequestParam(defaultValue = "") String kwd,
@@ -145,12 +289,63 @@ public class BorrowController {
 			Model model
 			) throws Exception {
 		
-		
-		service.updateHitCount(num);
-		
 		Borrow dto = service.findById(num);
-		categoryNum = dto.getCategoryNum() + "";
 		
+		// 카테고리
+		List<Borrow> category = service.listCategory();
+		// 이미지 파일
+		List<Borrow> listImage = service.listBorrowImage(num);
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("mode", "update");
+		model.addAttribute("page", page);
+		model.addAttribute("categoryNum", categoryNum);
+		model.addAttribute("kwd", kwd);
+		model.addAttribute("townNum", townNum);
+		model.addAttribute("category", category);
+		model.addAttribute("listImage", listImage);
+		
+		return ".borrow.write";
+	}
+	
+	@PostMapping("update")
+	@ResponseBody
+	public String updateSubmit(
+	        @ModelAttribute Borrow dto,
+	        @RequestParam(value = "remainingImageNums", required = false) List<Long> remainingImageNums,
+	        @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
+	        @RequestParam String page,
+	        @RequestParam(defaultValue = "0") String categoryNum,
+	        @RequestParam(defaultValue = "") String kwd,
+	        @RequestParam String townNum,
+	        HttpSession session
+	) throws Exception {
+	    String root = session.getServletContext().getRealPath("/");
+	    String pathname = root + "uploads" + File.separator + "album";
+	    
+	    SessionInfo info = (SessionInfo)session.getAttribute("member");
+	    
+	    try {
+	        dto.setUserId(info.getUserId());
+	        dto.setImage(newImages);  // 새로운 이미지 설정
+	        service.updateBorrow(dto, pathname, remainingImageNums);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return "redirect:/borrow/article?townNum=" + townNum + "&page=" + page + "&categoryNum=" + categoryNum + "&kwd=" + kwd + "&num=" + dto.getBorrowNum();
+	}
+    
+    @GetMapping("delete")
+    public String delete(
+    		@RequestParam long num,
+            @RequestParam String page,
+            @RequestParam(defaultValue = "0") String categoryNum,
+            @RequestParam(defaultValue = "") String kwd,
+            @RequestParam String townNum,
+            HttpSession session
+    		) throws Exception {
+    	
 		kwd = URLDecoder.decode(kwd, "utf-8");
 		
 		String query = "townNum=" + townNum + "&page=" + page + "&categoryNum=" + categoryNum;
@@ -158,65 +353,17 @@ public class BorrowController {
 			query += "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
 		}
 		
-		// 게시글 등록한지 얼마나 지났는지 계산해서 set
-		dto.setPassedTime(myUtil.returnPassedTime(dto.getRegDate()));
-		
-		// 대여희망시간 날짜형식 변환해서 set
-		dto.setStrDate(myUtil.convertDateFormat(dto.getStrDate()));
-		dto.setEndDate(myUtil.convertDateFormat(dto.getEndDate()));
-		
-		dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
-		
-		// 글쓴이 정보 가져오기
-		Member writer = service.borrowWriter(num);
-		writer.setRegDate(myUtil.convertDateFormat(writer.getRegDate()).substring(0, 9));
-		
-		// 이미지 파일
-		List<Borrow> listImage = service.listBorrowImage(num);
-		// 카테고리
-		List<Borrow> category = service.listCategory();
-		
-		
-		model.addAttribute("dto", dto);
-		model.addAttribute("writer", writer);
-		model.addAttribute("listImage", listImage);
-		model.addAttribute("category", category);
-		
-		model.addAttribute("page", page);
-		model.addAttribute("query", query);
-		
-		return ".borrow.article";
-	}
-	
-	@GetMapping("write")
-	public String writeForm(Model model, Member member) throws Exception {
-		
-		List<Borrow> category = service.listCategory();
-		
-		model.addAttribute("category", category);
-		model.addAttribute("member", member);
-		model.addAttribute("mode", "write");
-		
-		return ".borrow.write";
-	}
-	
-	@PostMapping("write")
-	public String writeSubmit(Borrow dto, HttpSession session) throws Exception {
-		System.out.println("writeSubmit");
-		
 		String root = session.getServletContext().getRealPath("/");
-		String path = root + "uploads" + File.separator + "album";
-		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String pathname = root + "uploads" + File.separator + "album";
 		
 		try {
-			dto.setUserId(info.getUserId());
-			service.insertBorrow(dto, path);
+			service.deleteBorrow(num, pathname);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "redirect:/borrow/list";
-	}
+		
+    	return "redirect:/borrow/list?" + query;
+    }
 	
 	@PostMapping("insertLike")
 	@ResponseBody

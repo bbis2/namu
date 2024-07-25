@@ -83,7 +83,7 @@ textarea:focus, input:focus { outline: none; }
 	top: 0;
 	transition: top 0.2s ease-in-out;
 	width: 100%;
-	z-index: 1;
+	z-index: 10;
 	box-shadow: 0px 5px 15px #D1D2D2;
 	
 	background-color: white;
