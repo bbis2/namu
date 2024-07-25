@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.SingoMapper">
+	<insert id="insertReport" parameterType="com.forest.namu.domain.Singo">
+		INSERT INTO report(reportNum,postNum,Field,reportDate,reportType,reportContent,userId,banUser,subject,processresult)
+		VALUES(report_seq.nextval,#{postNum},#{Field},SYSDATE,#{reportType},#{reportContent},#{userId},#{banUser},#{subject},0)
+	</insert>
+</mapper>

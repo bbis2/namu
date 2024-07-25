@@ -6,7 +6,7 @@
 	<sql id="where-list">
 		<choose>
 			<when test="schType=='userId'">
-				INSTR(m1.userId, #{kwd}) &gt;= 1
+				INSTR(m.userId, #{kwd}) &gt;= 1
 			</when>
 			<otherwise>
 				INSTR(${schType}, #{kwd}) &gt;= 1
@@ -17,8 +17,7 @@
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT COUNT(*)
 		FROM member m
-		JOIN member1 m1 ON m.memberIdx = m1.memberIdx
-		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
+		JOIN memberdetail m1 ON m.userId = m1.userId
 		<where>
 			<if test="kwd!=null and kwd!='' ">
 				<include refid="where-list"/>
@@ -31,13 +30,11 @@
     </select>
     
 	<select id="listMember" parameterType="map" resultType="com.forest.namu.admin.domain.MemberManage">
-		SELECT m1.memberIdx, membership, m1.userId, userName, 
-			m1.register_date, m1.modify_date, last_login,
-			enabled, email, tel, 
-			TO_CHAR(birth, 'YYYY-MM-DD') birth
+		SELECT m.membership, m.userId, m1.userName, 
+			m.regDate, m.modifyDate, m.lastLogin,
+			m.enabled, m1.email, m1.tel,m.town1
 		FROM member m
-		JOIN member1 m1 ON m.memberIdx = m1.memberIdx
-		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
+		JOIN memberdetail m1 ON m.userId = m1.userId
 		<where>
 			<if test="kwd!=null and kwd!='' ">
 				<include refid="where-list"/>
@@ -47,45 +44,44 @@
 			</if>
 			AND m.membership &lt; 90
 		</where> 
-		ORDER BY register_date DESC
+		ORDER BY regDate DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 
 	<select id="findById" parameterType="String" resultType="com.forest.namu.admin.domain.MemberManage">
-		SELECT membership, m1.memberIdx, m1.userId, userName, userPwd, enabled,
-			register_date, modify_date, last_login,
-			TO_CHAR(birth, 'YYYY-MM-DD') birth, email, tel, 
-			zip, addr1, addr2
+		SELECT m.membership, m.memberIdx, m.userId, m1.userName, m.userPwd, m.enabled,
+			m.regDate, m.modifyDate, m.lastLogin,
+			m1.email, m1.tel, m.town1, m.town2
 		FROM member m
-		JOIN member1 m1 ON m.memberIdx = m1.memberIdx
-		LEFT OUTER JOIN member2 m2 ON m1.userId = m2.userId
+		JOIN memberdetail m1 ON m.userId = m1.userId
 		WHERE m1.userId = #{userId}
 	</select>
 
 	<update id="updateFailureCountReset" parameterType="String">
-		UPDATE member1 SET failure_cnt = 0
+		UPDATE member SET failure_cnt = 0
 		WHERE userId = #{userId}
 	</update>
 
     <update id="updateMemberEnabled" parameterType="map">
-		UPDATE member1 SET enabled=#{enabled} WHERE userId=#{userId}
+		UPDATE member SET enabled=#{enabled} WHERE userId=#{userId}
     </update>
     
 	<insert id="insertMemberState" parameterType="com.forest.namu.admin.domain.MemberManage">
-		INSERT INTO memberState(num, userId, stateCode, memo, registerId, reg_date)
+		INSERT INTO memberState(statenum, userId, stateCode, memo, registerId, regDate)
 		VALUES (memberState_seq.NEXTVAL, #{userId}, #{stateCode}, #{memo}, #{registerId}, SYSDATE)
 	</insert>
 	
 	<select id="listMemberState" parameterType="String" resultType="com.forest.namu.admin.domain.MemberManage">
-		SELECT num, userId, stateCode, memo, registerId, reg_date
-		FROM memberState
+		SELECT resultType, banDate
+		FROM report
 		WHERE userId = #{userId}
-		ORDER BY num DESC
+		ORDER BY reportnum DESC
+		FETCH FIRST 1 ROWS ONLY
 	</select>
 
 	<select id="findByState" parameterType="String" resultType="com.forest.namu.admin.domain.MemberManage">
-		SELECT num, userId, stateCode, memo, registerId, reg_date
-		FROM memberState
+		SELECT resultType, banDate
+		FROM report
 		WHERE userId = #{userId}
 		ORDER BY num DESC
 		FETCH FIRST 1 ROWS ONLY

@@ -8,7 +8,7 @@ public class Delivery {
 	private String regDate;
 	private long dstart;
 	private String town;
-	
+	private String tableName;
 	private String imageFilename1;
 	private String imageFilename2;
 	
@@ -158,6 +158,12 @@ public class Delivery {
 	}
 	public void setTown(String town) {
 		this.town = town;
+	}
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 	private long state;
 	private String content;

@@ -161,7 +161,8 @@ public class DelieveryController {
 
 		try {
 			long saveMoney = dService.selectPoint(info.getUserId());
-			
+			System.out.println("inputPoint"+inputPoint);;
+			System.out.println("saveMoney"+saveMoney);
 			if(saveMoney<inputPoint) {
 				state = "false";
 			}

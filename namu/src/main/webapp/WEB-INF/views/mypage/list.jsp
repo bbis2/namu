@@ -1210,7 +1210,7 @@ function acceptMoney(button){
 
 function acceptRequest(button){
 	const f = document.riderForm;
-	const num2 = f.getAttribute('value');         // it.num2의 값
+	const num2 = button.getAttribute('value');             // it.num2의 값
     const num = button.getAttribute('data-num');  
     
     

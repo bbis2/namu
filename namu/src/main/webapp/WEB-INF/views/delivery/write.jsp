@@ -121,10 +121,6 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 		const f = document.deliveryForm;
 		let str;
 	
-		if(!isPoint()){
-			alert("잔액부족입니다.");
-			return false;
-		}
 		
 		
 		str = f.point.value.trim();
