@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.forest.namu.common.FileManager;
 import com.forest.namu.domain.Auction;
+import com.forest.namu.domain.Point;
 import com.forest.namu.mapper.AuctionMapper;
 
 @Service
@@ -20,6 +21,8 @@ public class AuctionServiceImpl implements AuctionService {
 	@Autowired
 	private FileManager fileManager;
 	
+	@Autowired
+	private PointService pointService;	
 	
 	@Override
 	public void insertAuction(Auction dto, String pathname) throws Exception {
@@ -264,14 +267,91 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	@Override
-	public void insertBid(Auction dto) throws Exception {
+	public void insertBid(Map<String, Object> map) throws Exception {
 
 		try {
-			mapper.insertBid(dto);
+			mapper.insertBid(map);
+			
+			String userId = (String)map.get("userId");
+			Auction maxAuction = (Auction)map.get("maxAuction");
+			long userPoint = (Long)map.get("userPoint");
+			long bid = (Long)map.get("bid");
+			long pbid = (Long)map.get("pbid"); // 이전 입찰금액
+			
+			// 내포인트 변동
+			Point pdto = new Point();
+			pdto.setPointNum(pointService.selectSeq());
+			pdto.setUserId(userId);
+			pdto.setDescription("경매 참여");
+			pdto.setCurrentPoint(userPoint);
+			pdto.setPointVar(bid - pbid);
+			pdto.setPointCate(2);
+			pointService.pointMinus(pdto);
+			
+			if(maxAuction != null && ! maxAuction.getUserId().equals(userId)) {
+				// 다른 유저는 환불
+				pdto = new Point();
+				pdto.setUserId(maxAuction.getUserId());
+				pdto.setDescription("경매 취소");
+				pdto.setCurrentPoint(userPoint);
+				pdto.setPointVar(maxAuction.getBid());
+				pdto.setPointCate(1);
+				pointService.insertPoint2(pdto);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	@Override
+	public List<Auction> listBid(Map<String, Object> map) {
+		List<Auction> list = null;
+		
+		try {
+			list = mapper.listBid(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+
+	@Override
+	public void auctionSold(Auction dto) throws Exception {
+
+		try {
+			mapper.auctionSold(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public Auction findByMaxBid(Map<String, Object> map) {
+		Auction dto = null;
+		
+		try {
+			dto = mapper.findByMaxBid(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public Auction findByUserBid(Map<String, Object> map) {
+		Auction dto = null;
+		
+		try {
+			mapper.findByUserBid(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
 	}
 
 }

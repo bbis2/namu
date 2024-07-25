@@ -13,6 +13,9 @@
 	    OR  INSTR(content, #{kwd}) &gt; 0 )
 </sql>
 
+
+<!-- state:0 경매등록, state:1 유찰, state:2 경매취소 state:3 경매완료-삭제, 수정불가 -->
+
 <!-- 추가 -->
 <insert id="insertAuction" parameterType="com.forest.namu.domain.Auction">
 	insert into auction(aNum, subject, minBid, hitCount, state, 
@@ -54,7 +57,7 @@ select a.aNum, a.subject, a.minBid, a.state, a.content, imageFile, a.hitCount,
 	from auction a
 	join member m on a.userId = m.userId 
 	join auctioncategory c on a.cnum = c.cnum
-   left outer join (select aNum, count(*)likeCount from auctionLike group by aNum )al on a.aNum = al.aNum
+    left outer join (select aNum, count(*)likeCount from auctionLike group by aNum )al on a.aNum = al.aNum
 	<where>
 		<if test="kwd != null and kwd != '' ">
 			<include refid="where-list"/>
@@ -100,7 +103,7 @@ select nvl(count(*),0)
 <select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Auction">
 	select a.aNum, a.content, a.imageFile, a.subject, a.minBid, a.state, a.hitCount, a.cnum,
 	  TO_CHAR(a.salesStart,'YYYY-MM-DD HH24:MI') salesStart, TO_CHAR(a.salesEnd,'YYYY-MM-DD HH24:MI') salesEnd, 
-	  m.nickName, m.town1, a.userId, m.nickName, a.town, a.tableName
+	  m.nickName, m.town1, a.userId, m.nickName, a.town, a.tableName, a.soldId
 	from auction a 
 	left outer join(
 	  select aNum, count(*)
@@ -154,9 +157,44 @@ select nvl(count(*),0)
 </select>
 
 <!-- 입찰하기 -->
-<insert id="insertBid" parameterType="com.forest.namu.domain.Auction">
+<insert id="insertBid" parameterType="map">
 	insert into bidDetails(bidNum, bid, bidDate, aNum, userId, apply) 
 		values(bidDetails_seq.nextval, #{bid}, sysdate, #{aNum}, #{userId}, 0)
 </insert>
+
+<!-- 유저별 경매 참여 금액 -->
+<select id="listBid" parameterType="map" resultType="com.forest.namu.domain.Auction">
+	SELECT * FROM (
+		SELECT bidNum, bid, bidDate, aNum, userId, apply,
+	    	RANK() OVER(PARTITION BY userId  ORDER BY bid DESC) rank
+		FROM bidDetails
+		WHERE aNum = #{aNum}
+	)
+	WHERE rank = 1
+</select>
+
+<!-- 경매 입찰 최고가 -->
+<select id="findByMaxBid" parameterType="map" resultType="com.forest.namu.domain.Auction">
+	SELECT bidNum, bid, bidDate, aNum, userId, apply
+	FROM bidDetails
+	WHERE aNum = #{aNum}
+	ORDER BY bid DESC
+	FETCH FIRST 1 ROWS ONLY
+</select>
+
+<!-- 유저의 마지막 경매 내역 -->
+<select id="findByUserBid" parameterType="map" resultType="com.forest.namu.domain.Auction">
+	SELECT bidNum, bid, bidDate, aNum, userId, apply
+	FROM bidDetails
+	WHERE aNum = #{aNum} AND userId = #{userId}
+	ORDER BY bid DESC
+	FETCH FIRST 1 ROWS ONLY
+</select>
+
+<!-- 경매 완료 -->
+<update id="auctionSold" parameterType="com.forest.namu.domain.Auction">
+	UPDATE auction SET state = 3, soldId = #{soldId}
+	WHERE aNum = #{aNum}
+</update>
 
 </mapper>

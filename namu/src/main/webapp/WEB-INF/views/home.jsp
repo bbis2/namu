@@ -302,10 +302,14 @@
 		<div style="margin-top: 50px">
 			<div class="flex-row" style="justify-content: space-between; align-items: center">
 				<div class="main-label">재능마켓🧑‍💻</div>
-
+					
 				<div class="more-view-btn"onclick="location.href='${pageContext.request.contextPath}/talent/list';">더보기</div>
 			</div>
-
+			
+			<div style="margin-top: 50px;">
+				<jsp:include page="/WEB-INF/views/layout/category.jsp"/>
+			</div>		
+			
 			<div class="main-best-board-container">
 				  <c:forEach var="talent" items="${list3}" varStatus="status">
 				<div class="flex-col banner-card-container">

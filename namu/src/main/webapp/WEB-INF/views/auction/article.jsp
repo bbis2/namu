@@ -34,32 +34,48 @@
 </div>
 
 <div class="used-info">
- <div class="user">
-	<img src="회원 프로필!!">
-	   <div class="user-name">${dto.nickName}</div>
-	   <div class="seller-location">${dto.town}</div>
-	   <div class="time-remaining" style="margin-left: 15px; color: blue; font-weight: 500;"></div>
-</div>
+
+ 	<div class="row">
+ 		<div class="col">
+ 			<div class="row">
+ 				<div class="col-auto">
+ 					<img src="회원 프로필!!">
+ 				</div>
+ 				<div class="col  align-self-center">
+					<div class="user-name">${dto.nickName}</div>
+	   				<div class="seller-location">${dto.town}</div>
+ 				</div>
+ 			</div>
+ 		</div>
+ 		<div class="col-auto text-end  align-self-center">
+ 			<label class="time-remaining" style="color: blue; font-weight: 500;"></label>
+ 		</div>
+ 	</div>
+
 <hr>
 
 <div class="used-header">
   <div class="title">${dto.subject}</div>
   <c:if test="${dto.state == 0 }">
   	<c:if test="${sessionScope.member.userId != dto.userId}">
-   		<button class="btn-bid">입찰하기</button>
+   		<button type="button" class="btn-bid">입찰하기</button>
     </c:if>
-    <c:if test="${sessionScope.member.userId != dto.userId}">
-   		<button class="btn-bidclose">입찰완료</button>
+    <c:if test="${sessionScope.member.userId != dto.userId && dto.bidNum > 0}">
+   		<button type="button" class="btn-bidclose">입찰완료</button>
     </c:if>
    </c:if>
 </div>
-<div class="price">현재가&nbsp;&nbsp;<fmt:formatNumber value="${dto.bid}"/> 원</div>
+<div class="bid">현재가&nbsp;&nbsp;<span class="div-bid" data-bid="${dto.bid}"><fmt:formatNumber value="${dto.bid}"/></span> 원</div>
+<div class="min-bid">시작가&nbsp;&nbsp;<fmt:formatNumber value="${dto.minBid}"/> 원</div>
 <div class="state">
 	<c:if test="${dto.state == 1}" >
-		<span style="color: #D24F04; font-weight: bold;">낙찰완료</span>
+		<span style="color: #D24F04; font-weight: bold;">유찰</span>
 	</c:if>	
 	<c:if test="${dto.state == 2}">
-		<span style="color: #2E8B1F; font-weight: bold;">유찰</span>
+		<span style="color: #8B0000; font-weight: bold;">경매취소</span>
+	</c:if>	
+	<c:if test="${dto.state == 3}">
+		<span style="color: #2E8B1F; font-weight: bold;">경매완료</span>
 	</c:if>	
 	<c:if test="${dto.state == 0}">
 	</c:if>		
@@ -96,7 +112,7 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="bidModalLabel">입찰하기 &nbsp;[ 보유 포인트 : <a style="color: blue;"><fmt:formatNumber value="${sessionScope.member.point}"/></a> ]</h5>
+				<h5 class="modal-title" id="bidModalLabel">입찰하기 &nbsp;[ 보유 포인트 : <span class="span-userPoint" style="color: blue;"><fmt:formatNumber value="${userPoint}"/></span> ]</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -104,6 +120,7 @@
 					<div class="row m-1">
 						<input type="number" name="bid" class="form-control" placeholder="입찰가를 입력하세요">
 						<input type="hidden" name="aNum" value="${dto.aNum}">
+						<input type="hidden" name="userPoint" value="${userPoint}">
 					</div>
 				</form>
 			</div>
@@ -171,7 +188,6 @@ function usedDelete() {
 	}
 }
 
-
 function SinGo(){
 	$('#SinGoModal').modal('show');
 }
@@ -196,26 +212,71 @@ function sendOk() {
 
   
 <script type="text/javascript">
+// 경매 참여 모달
 $('.btn-bid').click(function(){
-	$('#bidModal').modal('show');
+	let aNum = ${dto.aNum};
+	
+	let formData ={aNum: aNum};
+	let url = '${pageContext.request.contextPath}/auction/userPoint';
+	const fn = function(data) {
+		let userPoint = parseInt(data.userPoint);
+		let minBid = ${dto.minBid};
+		let bid = parseInt($('.div-bid').attr('data-bid'));
+		let b = bid == 0 ? minBid : bid;
+		
+		$('.span-userPoint').html(userPoint.toLocaleString());
+		
+		if(b > userPoint) {
+			alert('포인트가 부족합니다.');
+			return false;
+		}
+		
+		document.bidForm.userPoint.value = userPoint;
+		
+		$('#bidModal').modal('show');
+	};
+	
+	ajaxFun(url, 'post', formData, 'json', fn);
 });
 
 $('.btnBidOk').click(function(){
 	const f = document.bidForm;
 	
-	if( ! f.bid.value.trim() ) {
+	if( ! /^\d+$/.test(f.bid.value)) {
 		f.bid.focus();
+		return false;
+	}
+
+	let bid = parseInt(f.bid.value);
+	
+	let minBid = ${dto.minBid};
+	let cbid = parseInt($('.div-bid').attr('data-bid'));
+	
+	if(parseInt(f.userPoint.value) < bid) {
+		alert('포인트가 부족합니다.');
+		return false;
+	}
+	
+	if( (cbid == 0 && minBid > bid) || (cbid != 0 && cbid >= bid) ) {
+		alert('입찰금액이 적습니다.');
 		return false;
 	}
 	
 	let formData = $('form[name=bidForm]').serialize();
-	let url = '${pageContext.request.contextPath}/auction/bid';
+	let url = '${pageContext.request.contextPath}/auction/auctionAccept';
 	const fn = function(data) {
 		let state = data.state;
         if (state === 'true') {
-       	  alert('입찰 완료 되었습니다.');
-       	  $('.bidAccept').html('신청완료');
-       	  $('.bidAccept').removeClass('bidAccept');
+        	$('.div-bid').attr('data-bid', bid);
+        	
+        	let a = bid.toLocaleString();
+        	$('.div-bid').html(a);
+        	
+        	alert('입찰 완료 되었습니다.');
+			$('.bidAccept').html('신청완료');
+			$('.bidAccept').removeClass('bidAccept');
+			
+			$('#bidModal').modal('hide');
         }
 	};
 	ajaxFun(url, 'post', formData, 'json', fn);
@@ -372,7 +433,10 @@ $('.btnBidOk').click(function(){
     }
     
     $(function(){
-    	task();
+    	let state = "${dto.state}";
+    	if(state === "0") {
+    		task();
+    	}
     }); 
 </script>
 
@@ -445,10 +509,17 @@ $('.btnBidOk').click(function(){
 }
 
 
-.price {
+.bid {
     font-size: 24px;
     font-weight: bold;
     color: green;
+    margin-bottom: 10px;
+}
+
+.min-bid {
+    font-size: 17px;
+    font-weight: bold;
+    color: #708090;
     margin-bottom: 10px;
 }
 

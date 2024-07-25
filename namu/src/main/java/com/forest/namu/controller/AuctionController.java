@@ -26,6 +26,7 @@ import com.forest.namu.domain.AuctionBoard;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.service.AuctionBoardService;
 import com.forest.namu.service.AuctionService;
+import com.forest.namu.service.PointService;
 
 @Controller
 @RequestMapping("/auction/*")
@@ -36,6 +37,9 @@ public class AuctionController {
 	
 	@Autowired
 	private AuctionService service;
+	
+	@Autowired
+	private PointService pointService;	
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -147,6 +151,24 @@ public class AuctionController {
 			Model model) throws Exception {
 		
 		Auction dto = service.findById(aNum);
+		if(dto == null) {
+			return "redirect:/auction/list";
+		}
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		long userPoint = 0;
+		try {
+			userPoint = pointService.selectPoint(info.getUserId());		
+		} catch (Exception e) {
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("aNum", aNum);
+		Auction maxAuction = service.findByMaxBid(map);
+		if(maxAuction != null) {
+			dto.setBid(maxAuction.getBid());
+		}
 		
 		List<Auction> listFile = service.listAuctionFile(aNum);
 		dto.setUploadFile(dto.getImageFile());
@@ -156,10 +178,96 @@ public class AuctionController {
 		
 		model.addAttribute("dto", dto);
 		model.addAttribute("kwd", kwd);
+		model.addAttribute("userPoint", userPoint);
 		model.addAttribute("listFile", listFile);
 
 		return ".auction.article";
 	}
+	
+	// 유저의 포인트 가져오기
+	@ResponseBody
+	@PostMapping("userPoint")
+	public Map<String, Object> userPoint(HttpSession session) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		long userPoint = 0;
+		try {
+			userPoint = pointService.selectPoint(info.getUserId());		
+		} catch (Exception e) {
+		}
+		
+		model.put("userPoint", userPoint);
+
+		return model;
+	}
+	
+	// 경매 참여
+	@ResponseBody
+	@PostMapping("auctionAccept")
+	public Map<String, Object> auctionAccept(
+			@RequestParam long aNum,
+			@RequestParam long bid,
+			HttpSession session) {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+
+		Auction auction = service.findById(aNum);
+		if(auction == null || auction.getState() != 0 || auction.getSoldId() != null) {
+			model.put("state", "endAction"); // 경매종료 
+			return model;
+		}
+		
+		// 참여자 포인트 가져오기
+		long userPoint = 0;
+		try {
+			userPoint = pointService.selectPoint(info.getUserId());		
+		} catch (Exception e) {
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", info.getUserId());
+		map.put("aNum", aNum);
+		
+		// 현재 경매 최고가 
+		Auction maxAuction = service.findByMaxBid(map);
+		if(maxAuction != null && bid <= maxAuction.getBid()) { // 최고가가 아님
+			model.put("state", "noMaxPoint");
+			return model;
+		}
+		
+		try {
+			long point = userPoint;
+			long pbid = 0;
+			if(maxAuction != null && maxAuction.getUserId().equals(info.getUserId())) {
+				point += maxAuction.getBid();
+				pbid = maxAuction.getBid();
+			}
+			if(bid > point) {
+				model.put("state", "lockPoint"); // 잔액부족
+				return model;
+			}
+			map.put("userPoint", userPoint);
+			map.put("bid", bid);
+			map.put("pbid", pbid);
+			map.put("maxAuction", maxAuction);
+			
+			// 입찰 저장
+			service.insertBid(map);
+			
+			userPoint = pointService.selectPoint(info.getUserId());
+			
+			model.put("userPoint", userPoint);
+			model.put("state", "true");
+		} catch (Exception e) {
+			model.put("state", "false");
+		}
+
+		return model;
+	}
+	
+	
 	
 	@GetMapping("qnaList")
 	public String qnaList(@RequestParam long aNum,
@@ -351,24 +459,5 @@ public class AuctionController {
 		model.put("state", state);
 		return model;
 	}
-	
-	@PostMapping("bid")
-	@ResponseBody
-	public Map<String, Object> insertBid(Auction dto, HttpSession session) throws Exception {
 
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		String state = "true";
-		
-		try {
-			dto.setUserId(info.getUserId());
-			service.insertBid(dto);
-		} catch (Exception e) {
-			state = "false";
-		}
-		
-		Map<String, Object> model = new HashMap<>();
-		model.put("state", state);
-		
-		return model;
-	}
 }
