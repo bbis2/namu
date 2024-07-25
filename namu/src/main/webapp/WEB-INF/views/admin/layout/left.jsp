@@ -77,9 +77,6 @@ $(function(){
 	
 			<ul class="sub_menu">
 				<li class="sub_menu--item">
-					<a href="<c:url value='/admin/'/>" class="sub_menu--link">자주하는 질문</a>
-				</li>
-				<li class="sub_menu--item">
 					<a href="<c:url value='/admin/noticeManage/list'/>" class="sub_menu--link">공지사항</a>
 				</li>
 				<li class="sub_menu--item">
@@ -88,51 +85,31 @@ $(function(){
 				<li class="sub_menu--item">
 					<a href="<c:url value='/admin/'/>" class="sub_menu--link">이벤트</a>
 				</li>
-				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">신고</a>
-				</li>
 			</ul>
 		</li>
-	
-		<li class="menu--item menu--item__has_sub_menu">
-			<label class="menu--link" title="강좌관리">
-				<i class="menu--icon bi bi-book-half"></i>
-				<span class="menu--label">강좌관리</span>
-			</label>
 		
+		<li class="menu--item menu--item__has_sub_menu">
+			<label class="menu--link" title="통계">
+				<i class="menu--icon bi bi-question-square"></i>
+				<span class="menu--label">목차별 통계 확인</span>
+			</label>
+	
 			<ul class="sub_menu">
 				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">카테고리</a>
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">접속자</a>
 				</li>
 				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">강좌</a>
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">포인트</a>
 				</li>
 				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">강사</a>
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">게시물</a>
+				</li>
+				<li class="sub_menu--item">
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">VIP</a>
 				</li>
 			</ul>
 		</li>
-	
-		<li class="menu--item">
-	        <a href="#" class="menu--link" title="일정관리">
-				<i class="menu--icon bi bi-calendar"></i>
-				<span class="menu--label">일정관리</span>
-			</a>
-		</li>
-		
-		<li class="menu--item">
-	        <a href="#" class="menu--link" title="지역명소관리">
-				<i class="menu--icon bi bi-geo"></i>
-				<span class="menu--label">지역명소관리</span>
-			</a>
-		</li>
-	
-		<li class="menu--item">
-	        <a href="#" class="menu--link" title="메인화면 설정">
-				<i class="menu--icon bi bi-gear-fill"></i>
-				<span class="menu--label">메인화면 설정</span>
-			</a>
-		</li>
+
 	
 		<li class="menu--item">
 	        <a href="#" class="menu--link" title="GroupWare">

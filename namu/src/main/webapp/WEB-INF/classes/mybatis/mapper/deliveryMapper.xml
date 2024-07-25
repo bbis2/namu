@@ -170,5 +170,9 @@
 		UPDATE rider SET dstart = 3 WHERE userId = #{userId} AND
 		num2 = #{num2}
 	</update>
+	
+	<select id="selectAddr" parameterType="long" resultType="com.forest.namu.domain.Delivery">
+	select saddr,receive from delievery where num = #{num}
+	</select>
 
 </mapper>

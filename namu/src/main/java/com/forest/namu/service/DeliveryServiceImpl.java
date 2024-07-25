@@ -178,4 +178,16 @@ public class DeliveryServiceImpl implements DeliveryService {
 
 	}
 
+	@Override
+	public Delivery selectAddr(long num) throws Exception {
+		Delivery dto = null;
+		try {
+			dto = mapper.selectAddr(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+
 }
