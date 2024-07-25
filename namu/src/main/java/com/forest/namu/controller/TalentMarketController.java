@@ -61,10 +61,9 @@ public class TalentMarketController {
 			Model model) throws Exception{
 		
 		String cp = req.getContextPath();
-		SessionInfo info = null;
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
-		 if (town == null || town.isEmpty()) {
-	             info = (SessionInfo) session.getAttribute("member");
+		 if (info==null||town == null || town.isEmpty()) {
 	            if (info != null) {
 	                town = info.getTown1(); 
 	            }
@@ -391,6 +390,12 @@ public class TalentMarketController {
 		model.addAttribute("option2",opt2);
 		
 		return ".talentMarket.order";
+	}
+	
+	@GetMapping("ordercomplete")
+	public String ordercomplete () {
+		
+		return ".talentMarket.ordercomplete";
 	}
 	
 	@PostMapping("insertLike")

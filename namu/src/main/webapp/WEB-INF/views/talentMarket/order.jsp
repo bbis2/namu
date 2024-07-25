@@ -348,10 +348,10 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
                 </div>
         </div>
         <div>
-			<button type="button" class="btn-pay"
-				onclick="sendOk();">결제하기</button>
+			<button type="button" class="btn-pay" onclick="sendOk();">결제하기</button>
 		</div>
-        
+        <form name="orderForm" method="post">
+        </form>
     </div>
     </div>
     
@@ -367,7 +367,8 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
  	    var numericValue = totalAmountText.replace(/[^0-9.-]+/g, "");
         var money =numericValue;
         if (money ==0) {
-            alert("구매완료");
+        	location.href='${pageContext.request.contextPath}/talent/ordercomplete';
+            
         } else {
             selectSeq(function(sequence) {
                 requestPay(money, sequence);
