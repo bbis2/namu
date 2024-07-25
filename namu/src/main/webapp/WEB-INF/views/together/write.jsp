@@ -225,7 +225,7 @@ function check() {
 						<td class="bg-light col-sm-2" scope="row">썸네일</td>
 						<td>
 							<div class="img-viewer"></div>
-							<input type="file" name="selectFile" accept="image/*" class="form-control" style="display: none;">
+							<input type="file" name="thumbnail" accept="image/*" class="form-control" style="display: none;">
 						</td>
 					</tr>
 
