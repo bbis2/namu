@@ -45,7 +45,6 @@
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/daily/list">나무일상</a></li>
 								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/together/list">나무모임</a></li>
-								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/challenge/list">챌린지</a></li>
 								<li><hr class="dropdown-divider"></li>
 								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/myhome/list">내집근처</a></li>
 							</ul>
