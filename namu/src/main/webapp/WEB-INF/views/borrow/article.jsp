@@ -94,6 +94,43 @@ a:hover {text-decoration: none;}
     object-fit: contain;
 }
 
+.tree-icon {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-icon {
+  position: absolute;
+  color: #888;
+  font-size: 14px;
+  margin-left: 5px;
+  cursor: help;
+  left: 105%;
+  bottom: 60%;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 50%;
+  left: 355%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tree-icon:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -103,6 +140,22 @@ function searchList() {
 	form.action = "${pageContext.request.contextPath}/borrow/list";
 	form.submit();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+	  var tooltipIcons = document.querySelectorAll('.tooltip-icon');
+	  tooltipIcons.forEach(function(icon) {
+	    icon.addEventListener('touchstart', function(e) {
+	      e.preventDefault();
+	      this.parentNode.querySelector('.tooltip-text').style.visibility = 'visible';
+	      this.parentNode.querySelector('.tooltip-text').style.opacity = '1';
+	    });
+	    icon.addEventListener('touchend', function(e) {
+	      e.preventDefault();
+	      this.parentNode.querySelector('.tooltip-text').style.visibility = 'hidden';
+	      this.parentNode.querySelector('.tooltip-text').style.opacity = '0';
+	    });
+	  });
+	});
 </script>
 
 
@@ -293,18 +346,27 @@ function searchList() {
                     <h5 class="bd">프로필</h5>
 	                <hr class="mt-0 mb-2">
                     <div class="mx-3">
-                    	<div class="d-flex justify-content-between mb-3">
+                    	<div class="d-flex justify-content-between mb-1">
                     		<div class="mt-3">
-			                    <h3><a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a></h3>
+								<div class="d-flex align-items-center">
+								    <img style="width: 50px; height: 50px; margin-bottom: 20px; border-radius: 50%; object-fit: cover; cursor: pointer;" 
+								         alt="" src="${pageContext.request.contextPath}/uploads/photo/${writer.profile}" 
+								         data-bs-toggle="modal" data-bs-target="#profileImageModal"> 
+								    <h3 class="ms-2">${dto.nickName}</h3>
+								</div>
 			                    <div class="d-flex">
 				                    한마디: <p class="bd ms-1">${writer.ment}</p>
 			                    </div>
                     		</div>
 		                    <div>
 			                    <p>가입일 | ${writer.regDate}</p>
-			                    <div class="d-flex">
-									<img alt="" src="${pageContext.request.contextPath}/resources/images/namuLogo.png" width="40px;" height="40px;">
-				                    <p class="bd"><br>${writer.userManner}cm</p>
+			                    <div class="d-flex align-items-center">
+			                        <img alt="" src="${pageContext.request.contextPath}/resources/images/namuLogo.png" width="40px;" height="40px;">
+			                        <span class="tree-icon ms-2">
+			                            <p class="bd">${writer.userManner}cm</p>
+			                            <i class="fas fa-question-circle tooltip-icon"></i>
+			                            <span class="tooltip-text">좋은 평가를 받으면 나무가 자라요!<br>초기높이: 200cm</span>
+			                        </span>
 			                    </div>
 		                    </div>
                     	</div>
@@ -387,7 +449,7 @@ function searchList() {
 					</div>
 		        </c:when>
 		        <c:otherwise>
-				    <div id="otherPostsCarousel" class="carousel slide" data-bs-ride="carousel">
+				    <div id="otherPostsCarousel" class="carousel slide" data-bs-interval="false">
 				        <div class="carousel-inner">
 				            <c:forEach var="page" begin="0" end="${totalPages - 1}" varStatus="status">
 				                <div class="carousel-item ${status.first ? 'active' : ''}">
@@ -440,6 +502,22 @@ function searchList() {
 </div>
 
 <div id="toast_message"></div>
+
+<!-- 프로필 이미지 모달 -->
+<div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileImageModalLabel">${dto.nickName}님의 프로필 사진</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="${pageContext.request.contextPath}/uploads/photo/${writer.profile}" 
+                     class="img-fluid" alt="프로필 사진">
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
 function ajaxFun(url, method, formData, dataType, fn, file = false) {

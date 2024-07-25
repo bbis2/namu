@@ -31,6 +31,9 @@ public class Member {
 	private String tel2;
 	private String tel3;
 	
+	// profile 테이블 (프로필사진)
+	private String profile;
+	
 	// memberAuthority 테이블 (회원 권한)
 	private String authority;
 	
@@ -52,6 +55,12 @@ public class Member {
 	private String educationMajor;
 	
 	
+	public String getProfile() {
+		return profile;
+	}
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
 	public int getTmMemberType() {
 		return tmMemberType;
 	}

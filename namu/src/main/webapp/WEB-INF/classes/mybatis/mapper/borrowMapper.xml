@@ -220,10 +220,11 @@
 	
 	<!-- 작성자 정보 -->
 	<select id="borrowWriter" parameterType="Long" resultType="com.forest.namu.domain.Member">
-		SELECT b.userId, m.regDate, userManner, ment
+		SELECT b.userId, m.regDate, userManner, ment, photo as profile
 		FROM borrow b
 		JOIN member m ON b.userId = m.userId
 		JOIN memberDetail md ON  b.userId = md.userId
+		JOIN profile p ON b.userId = p.userId
 		WHERE borrowNum = #{num}
 	</select>
 	
