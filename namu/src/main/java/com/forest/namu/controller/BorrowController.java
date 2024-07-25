@@ -41,9 +41,6 @@ public class BorrowController {
 	@Autowired
 	private MyUtil myUtil;
 	
-	@Autowired
-	private FileManager fileManager;
-	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowController.class);
 
 	
@@ -194,7 +191,7 @@ public class BorrowController {
 	        
 	        for(Map<String, Object> map2 : writerOtherPosts) {
 	        	String boardName = switch ((String)map2.get("TABLENAME")) {
-				case "borrow" 			-> "빌림";
+				case "borrow" 			-> "빌려줘요";
 				case "rent" 			-> "빌려드림";
 				case "delievery" 		-> "배달해요";
 				case "daily" 			-> "나무일상";

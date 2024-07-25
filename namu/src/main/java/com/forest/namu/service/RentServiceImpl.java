@@ -14,13 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.forest.namu.common.FileManager;
 import com.forest.namu.domain.Borrow;
 import com.forest.namu.domain.Member;
-import com.forest.namu.mapper.BorrowMapper;
+import com.forest.namu.domain.Rent;
+import com.forest.namu.mapper.RentMapper;
 
 @Service
-public class BorrowServiceImpl implements BorrowService {
-
+public class RentServiceImpl implements RentService {
+	
 	@Autowired
-	private BorrowMapper mapper;
+	private RentMapper mapper;
 	
 	@Autowired
 	private FileManager fileManager;
@@ -28,15 +29,12 @@ public class BorrowServiceImpl implements BorrowService {
 	final static Logger logger = LoggerFactory.getLogger(BorrowServiceImpl.class);
 
 	@Override
-	public void insertBorrow(Borrow dto, String pathname) throws Exception {
+	public void insertRent(Rent dto, String pathname) throws Exception {
 		try {
-			long seq = mapper.borrowSeq();
-			dto.setBorrowNum(seq);
+			long seq = mapper.rentSeq();
+			dto.setRentNum(seq);
 			
-			dto.setStrDate(dto.getStrDate().replace("T", " "));
-			dto.setEndDate(dto.getEndDate().replace("T", " "));
-			
-			mapper.insertBorrow(dto);
+			mapper.insertRent(dto);
 			
 			// 파일 업로드
 			if(!dto.getImage().isEmpty()) {
@@ -47,25 +45,22 @@ public class BorrowServiceImpl implements BorrowService {
 					}
 					dto.setImageFilename(imageFilename);
 					
-					mapper.insertBorrowFile(dto);
+					mapper.insertRentFile(dto);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-		}
+		}	
 	}
 
 	@Override
-	public void updateBorrow(Borrow dto, String pathname, List<Long> remainingImageNums) throws Exception {
+	public void updateRent(Rent dto, String pathname, List<Long> remainingImageNums) throws Exception {
 	    try {
-	        dto.setStrDate(dto.getStrDate().replace("T", " "));
-	        dto.setEndDate(dto.getEndDate().replace("T", " "));
-	        
-	        mapper.updateBorrow(dto);
+	        mapper.updateRent(dto);
 	        
 	        // 남아있는 이미지 번호와 일치하지 않는 이미지 삭제
-	        mapper.deleteNonMatchingImages(dto.getBorrowNum(), remainingImageNums);
+	        mapper.deleteNonMatchingImages(dto.getRentNum(), remainingImageNums);
 	        
 	        // 새 파일이 업로드된 경우 추가
 	        if(dto.getImage() != null && !dto.getImage().isEmpty()) {
@@ -76,7 +71,7 @@ public class BorrowServiceImpl implements BorrowService {
 	                }
 	                dto.setImageFilename(imageFilename);
 	                
-	                mapper.insertBorrowFile(dto);
+	                mapper.insertRentFile(dto);
 	            }
 	        }
 	    } catch (Exception e) {
@@ -86,20 +81,20 @@ public class BorrowServiceImpl implements BorrowService {
 	}
 
 	@Override
-	public void deleteBorrow(long num, String pathname) throws Exception {
+	public void deleteRent(long num, String pathname) throws Exception {
 		try {
 			// 파일 지우기
-			List<Borrow> listFile = listBorrowImage(num);
+			List<Rent> listFile = listRentImage(num);
 			if(listFile != null) {
-				for(Borrow dto : listFile) {
+				for(Rent dto : listFile) {
 					fileManager.doFileDelete(dto.getImageFilename(), pathname);
 				}
 			}
-			Borrow dto = findById(num);
+			Rent dto = findById(num);
 			
-			mapper.deleteBorrowFile(dto);
-			mapper.deleteBorrowLike2(dto);
-			mapper.deleteBorrow(dto);
+			mapper.deleteRentFile(dto);
+			mapper.deleteRentLike2(dto);
+			mapper.deleteRent(dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,15 +115,15 @@ public class BorrowServiceImpl implements BorrowService {
 	}
 
 	@Override
-	public List<Borrow> listBorrow(Map<String, Object> map) {
-		List<Borrow> list = null;
+	public List<Rent> listRent(Map<String, Object> map) {
+		List<Rent> list = null;
 		try {
-			list = mapper.listBorrow(map);
+			list = mapper.listRent(map);
 			
-			for(Borrow dto : list) {
-				map.put("num", dto.getBorrowNum());
-				dto.setUserLiked(userBorrowLiked(map));
-				dto.setLikeCount(borrowLikeCount(dto.getBorrowNum()));
+			for(Rent dto : list) {
+				map.put("num", dto.getRentNum());
+				dto.setUserLiked(userRentLiked(map));
+				dto.setLikeCount(rentLikeCount(dto.getRentNum()));
 			}
 			
 		} catch (Exception e) {
@@ -136,17 +131,41 @@ public class BorrowServiceImpl implements BorrowService {
 		}
 		return list;
 	}
-	
+
 	@Override
-	public List<Borrow> listOtherPosts(Map<String, Object> map) {
-	    List<Borrow> list = null;
+	public List<Rent> listCategory() {
+		List<Rent> category = null;
+		try {
+			category = mapper.listCategory();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return category;
+	}
+
+	@Override
+	public List<Rent> listRentImage(long num) {
+		List<Rent> listImage = null;
+		
+		try {
+			listImage = mapper.listRentImage(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listImage;
+	}
+
+	@Override
+	public List<Rent> listOtherPosts(Map<String, Object> map) {
+	    List<Rent> list = null;
 	    try {
 	        list = mapper.listOtherPosts(map);
 	        
-	        for(Borrow dto : list) {
-	            map.put("num", dto.getBorrowNum());
-	            dto.setUserLiked(userBorrowLiked(map));
-	            dto.setLikeCount(borrowLikeCount(dto.getBorrowNum()));
+	        for(Rent dto : list) {
+	            map.put("num", dto.getRentNum());
+	            dto.setUserLiked(userRentLiked(map));
+	            dto.setLikeCount(rentLikeCount(dto.getRentNum()));
 	        }
 	        
 	    } catch (Exception e) {
@@ -154,7 +173,7 @@ public class BorrowServiceImpl implements BorrowService {
 	    }
 	    return list;
 	}
-	
+
 	@Override
 	public List<Map<String, Object>> getWriterOtherPosts(String userId, long currentPostNum) {
 		try {
@@ -178,12 +197,25 @@ public class BorrowServiceImpl implements BorrowService {
 	}
 
 	@Override
-	public Borrow findById(long num) {
-		Borrow dto = null;
+	public Member rentWriter(long num) {
+		Member dto = null;
+		
+		try {
+			dto = mapper.rentWriter(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public Rent findById(long num) {
+		Rent dto = null;
 		
 		try {
 			dto = mapper.findById(num);
-			dto.setLikeCount(borrowLikeCount(num));
+			dto.setLikeCount(rentLikeCount(num));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -201,29 +233,29 @@ public class BorrowServiceImpl implements BorrowService {
 	}
 
 	@Override
-	public void insertBorrowLike(Map<String, Object> map) throws Exception {
+	public void insertRentLike(Map<String, Object> map) throws Exception {
 		try {
-			mapper.insertBorrowLike(map);
+			mapper.insertRentLike(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void deleteBorrowLike(Map<String, Object> map) throws Exception {
+	public void deleteRentLike(Map<String, Object> map) throws Exception {
 		try {
-			mapper.deleteBorrowLike(map);
+			mapper.deleteRentLike(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public int borrowLikeCount(long num) {
+	public int rentLikeCount(long num) {
 		int result = 0;
 		
 		try {
-			result = mapper.borrowLikeCount(num);
+			result = mapper.rentLikeCount(num);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -231,10 +263,10 @@ public class BorrowServiceImpl implements BorrowService {
 	}
 
 	@Override
-	public boolean userBorrowLiked(Map<String, Object> map) {
+	public boolean userRentLiked(Map<String, Object> map) {
 		boolean result = false;
 		try {
-			Borrow dto = mapper.userBorrowLiked(map);
+			Rent dto = mapper.userRentLiked(map);
 			if(dto != null) {
 				result = true;
 			}
@@ -242,43 +274,6 @@ public class BorrowServiceImpl implements BorrowService {
 			e.printStackTrace();
 		}
 		return result;
-	}
-
-	@Override
-	public List<Borrow> listCategory() {
-		List<Borrow> category = null;
-		try {
-			category = mapper.listCategory();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return category;
-	}
-
-	@Override
-	public List<Borrow> listBorrowImage(long num) {
-		List<Borrow> listImage = null;
-		
-		try {
-			listImage = mapper.listBorrowImage(num);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return listImage;
-	}
-
-	@Override
-	public Member borrowWriter(long num) {
-		Member dto = null;
-		
-		try {
-			dto = mapper.borrowWriter(num);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return dto;
 	}
 
 }

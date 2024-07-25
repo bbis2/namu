@@ -329,10 +329,10 @@ textarea:focus, input:focus { outline: none; }
 /* rent/borrow */
 .list {position: relative;}
 
-.list img{
+.list .thumbnail{
 	transition: all 0.2s linear;
 }
-.list:hover img{
+.list:hover .thumbnail{
 	transform: scale(1.11);
 }
 .list:hover a { text-decoration: none;}

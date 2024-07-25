@@ -57,6 +57,12 @@
 .form-group.duration-prices {
     min-height: 120px; /* 입력창이 나타날 공간을 확보합니다 */
 }
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>
 
 <div class="container mt-5 pt-5 mb-5 pb-2">
@@ -64,212 +70,293 @@
         <div class="mx-5 px-5">
             <h2 class="mb-4">글쓰기 - 빌려드림</h2>
             <hr>
-            <form id="postForm" action="submit_post.jsp" method="post" enctype="multipart/form-data">
-                <div class="form-group d-flex align-items-center">
-                    <label for="imageUpload" class="form-label">사진</label>
-                    <img id="imageUploadArea" src="${pageContext.request.contextPath}/resources/images/imageReg.PNG" alt="이미지 등록" class="me-3">
-                    <input type="file" class="form-control d-none" id="imageUpload" name="image" accept="image/*" multiple>
-                    <div id="imagePreviewContainer" class="image-preview-container"></div>
-                </div>
+            <form id="postForm" method="post" enctype="multipart/form-data">
+            
+				<div class="form-group d-flex align-items-center">
+					<label for="title" class="form-label">동네 선택</label>
+					<select class="form-select mb-3 border border-2 w-25" aria-label="Default select example" name="location">
+						<option value="${sessionScope.member.town1}" ${dto.location.equals(sessionScope.member.town1) ? 'selected' : ''}>${sessionScope.member.town1}</option>
+						<c:if test="${sessionScope.member.town2 != null}">
+							<option value="${sessionScope.member.town2}" ${dto.location.equals(sessionScope.member.town2) ? 'selected' : ''} ${townNum == 2 ? 'selected' : ''}> ${sessionScope.member.town2} </option>
+						</c:if>
+					</select>
+				</div>
+				
+				<div class="form-group d-flex align-items-center">
+					<label for="title" class="form-label">사진</label>
+					
+					<img id="imageUploadArea" src="${pageContext.request.contextPath}/resources/images/imageReg.PNG" alt="이미지 등록" class="me-3">
+					<input type="file" class="form-control d-none" id="imageUpload" name="image" accept="image/*" multiple>
+						
+					<div id="imagePreviewContainer" class="image-preview-container">
+						<c:if test="${mode == 'update'}">
+							<c:forEach var="image" items="${listImage}">
+						        <div class="image-preview-wrapper">
+						            <img src="${pageContext.request.contextPath}/uploads/album/${image.imageFilename}" class="image-preview" alt="기존 이미지">
+						            <button type="button" class="delete-image" data-image-num="${image.imageNum}">×</button>
+						        </div>
+						    </c:forEach>
+						</c:if>
+					</div>
+				</div>
 
-                <div class="form-group d-flex align-items-center">
-                    <label for="title" class="form-label">제목</label>
-                    <div class="flex-grow-1">
-                        <input type="text" class="form-control" id="title" name="title" placeholder="대여하시는 물건의 이름을 포함하여 작성해주세요." maxlength="40" required>
-                        <div class="char-counter">0/40</div>
-                    </div>
-                </div>
+				<div class="form-group d-flex align-items-center justify-content-between">
+					<label for="title" class="form-label">제목</label>
+					<div class="flex-grow-1">
+						<input type="text" class="form-control" id="title" name="subject" value="${dto.subject}"
+							placeholder="대여서비스를 제공하려는 물건의 이름을 포함하여 작성해주세요." maxlength="40" required>
+						<div class="char-counter">0/40</div>
+					</div>
+				</div>
 
-                <div class="form-group d-flex align-items-center">
-                    <label for="category" class="form-label me-4">카테고리</label>
-                    <select class="form-select" id="category" name="category">
-                        <option>의류</option>
-                        <option>신발</option>
-                        <option>식품</option>
-                        <option>가전</option>
-                        <option>가구</option>
-                        <option>전자기기</option>
-                        <option>아웃도어</option>
-                        <option>악세서리</option>
-                        <option>기타</option>
-                    </select>
-                </div>
+				<div class="form-group d-flex align-items-center justify-content-between mb-4">
+					<label for="category" class="form-label me-4">카테고리</label>
+					<select class="form-select" id="category" name="categoryNum">
+						<c:forEach var="dto" items="${category}">
+							<option value="${dto.categoryNum}" ${dto.categoryNum == categoryNum ? 'selected' : ''}>${dto.category}</option>
+						</c:forEach>
+					</select>
+				</div>
 
 				<div class="form-group duration-prices d-flex align-items-center">
 				    <label class="form-label">기간 별 가격</label>
 				    <div class="d-flex flex-wrap">
 				        <div class="duration-price-group">
 				            <div class="form-check">
-				                <input class="form-check-input" type="checkbox" id="hour1" name="duration" value="1hour">
+				                <input class="form-check-input" type="checkbox" id="hour1" name="duration" value="h" ${dto.hPrice != 0 ? 'checked' : ''}>
 				                <label class="form-check-label" for="hour1">1시간</label>
 				            </div>
-				            <input type="text" class="form-control price-input" name="price1hour" placeholder="가격 입력" style="display: none;">
+				            <input type="number" class="form-control price-input" name="hPrice" placeholder="가격 입력" style="display: ${dto.hPrice != 0 ? 'block' : 'none'};" value="${dto.hPrice != 0 ? dto.hPrice : ''}">
 				        </div>
 				        <div class="duration-price-group">
 				            <div class="form-check">
-				                <input class="form-check-input" type="checkbox" id="day1" name="duration" value="1day">
+				                <input class="form-check-input" type="checkbox" id="day1" name="duration" value="d" ${dto.dPrice != 0 ? 'checked' : ''}>
 				                <label class="form-check-label" for="day1">1일</label>
 				            </div>
-				            <input type="text" class="form-control price-input" name="price1day" placeholder="가격 입력" style="display: none;">
+				            <input type="number" class="form-control price-input" name="dPrice" placeholder="가격 입력" style="display: ${dto.dPrice != 0 ? 'block' : 'none'};" value="${dto.dPrice != 0 ? dto.dPrice : ''}">
 				        </div>
 				        <div class="duration-price-group">
 				            <div class="form-check">
-				                <input class="form-check-input" type="checkbox" id="week1" name="duration" value="1week">
+				                <input class="form-check-input" type="checkbox" id="week1" name="duration" value="w" ${dto.wPrice != 0 ? 'checked' : ''}>
 				                <label class="form-check-label" for="week1">1주</label>
 				            </div>
-				            <input type="text" class="form-control price-input" name="price1week" placeholder="가격 입력" style="display: none;">
+				            <input type="number" class="form-control price-input" name="wPrice" placeholder="가격 입력" style="display: ${dto.wPrice != 0 ? 'block' : 'none'};" value="${dto.wPrice != 0 ? dto.wPrice : ''}">
 				        </div>
 				        <div class="duration-price-group">
 				            <div class="form-check">
-				                <input class="form-check-input" type="checkbox" id="month1" name="duration" value="1month">
+				                <input class="form-check-input" type="checkbox" id="month1" name="duration" value="m" ${dto.mPrice != 0 ? 'checked' : ''}>
 				                <label class="form-check-label" for="month1">1달</label>
 				            </div>
-				            <input type="text" class="form-control price-input" name="price1month" placeholder="가격 입력" style="display: none;">
+				            <input type="number" class="form-control price-input" name="mPrice" placeholder="가격 입력" style="display: ${dto.mPrice != 0 ? 'block' : 'none'};" value="${dto.mPrice != 0 ? dto.mPrice : ''}">
 				        </div>
 				    </div>
 				</div>
 
-                <div class="form-group d-flex align-items-center">
-                    <label for="content" class="form-label">설명</label>
-                    <div class="flex-grow-1">
-                        <textarea class="form-control" id="content" name="content" rows="5" maxlength="2000" placeholder="대여하시는 물건에 대한 설명과 대여 관련 주의사항을 반드시 작성해 주세요." required></textarea>
-                        <div class="char-counter">0/2000</div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary float-end">등록하기</button>
+				<div class="form-group d-flex">
+					<label for="content" class="form-label">설명</label>
+					<div class="flex-grow-1">
+						<textarea class="form-control" id="content" name="content"
+							rows="5" maxlength="2000" placeholder="대여서비스를 제공하시려는 물건에 대한 설명과 대여 방법 및 위치, 주의사항 등을 작성해주세요." required>${dto.content}</textarea>
+						<div class="char-counter">0/2000</div>
+					</div>
+				</div>
+			    <!-- 기존 이미지 정보를 hidden 필드로 추가 -->
+			    <c:if test="${mode == 'update'}">
+			        <c:forEach var="image" items="${listImage}">
+			            <input type="hidden" name="existingImages" value="${image.imageFilename}">
+			        </c:forEach>
+			    </c:if>
+			
+			    <c:if test="${mode == 'update'}">
+			        <input type="hidden" name="rentNum" value="${dto.rentNum}">
+			        <c:forEach var="image" items="${listImage}">
+				        <input type="hidden" name="existingImages" value="${image.imageFilename}">
+				        <input type="hidden" name="existingImageNums" value="${image.imageNum}">
+				    </c:forEach>
+			    </c:if>			    
+			    <input type="hidden" name="page" value="${page}">
+			    <input type="hidden" name="categoryNum" value="${categoryNum}">
+			    <input type="hidden" name="kwd" value="${kwd}">
+			    <input type="hidden" name="townNum" value="${townNum}">
+			    <input type="hidden" id="mode" name="mode" value="${mode}">
+				<button type="submit" class="btn btn-primary mb-5 float-end">${mode == 'update' ? '수정하기' : '등록하기'}</button>
             </form>
         </div>
     </div>
 </div>
 
 <script>
-    let selectedFiles = []; // 선택된 파일들을 저장할 배열
-    
-    document.getElementById('imageUploadArea').addEventListener('click', function() {
-        document.getElementById('imageUpload').click();
+//$(function (){}) 시작
+$(function() {
+	
+	let selectedFiles = []; // 선택된 파일들을 저장할 배열
+
+    // 기존 이미지를 selectedFiles 배열에 추가
+    $('.image-preview-wrapper').each(function() {
+        let imageUrl = $(this).find('img').attr('src');
+        let fileName = imageUrl.split('/').pop();
+        let fakeFile = new File([new Blob()], fileName, {type: 'image/jpeg'});
+        selectedFiles.push(fakeFile);
     });
 
-    document.getElementById('imageUpload').addEventListener('change', function(e) {
-        const files = e.target.files;
-        const container = document.getElementById('imagePreviewContainer');
+    function createDeleteButton(wrapper, file) {
+        let deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-image';
+        deleteBtn.innerHTML = '×';
+        deleteBtn.onclick = function() {
+            wrapper.remove();
+            selectedFiles = selectedFiles.filter(f => f !== file);
+        };
+        return deleteBtn;
+    }
+
+    // 기존 이미지에 삭제 버튼 기능 추가
+    $('.image-preview-wrapper').each(function(index) {
+        let wrapper = $(this);
+        let deleteBtn = wrapper.find('.delete-image');
+        deleteBtn.on('click', function() {
+            wrapper.remove();
+            selectedFiles.splice(index, 1);
+        });
+    });
+
+    $('#imageUploadArea').on('click', function() {
+        $('#imageUpload').click();
+    });
+
+    $('#imageUpload').on('change', function(e) {
+        let files = e.target.files;
+        let container = $('#imagePreviewContainer');
 
         for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            selectedFiles.push(file); // 선택된 파일을 배열에 추가
-            const reader = new FileReader();
+            let file = files[i];
+            selectedFiles.push(file); // 새 파일을 배열에 추가
+            let reader = new FileReader();
 
             reader.onload = function(e) {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'image-preview-wrapper';
+                let wrapper = $('<div>').addClass('image-preview-wrapper');
+                let img = $('<img>').addClass('image-preview').attr('src', e.target.result);
+                let deleteBtn = createDeleteButton(wrapper[0], file);
 
-                const img = document.createElement('img');
-                img.className = 'image-preview';
-                img.src = e.target.result;
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-image';
-                deleteBtn.innerHTML = '×';
-                deleteBtn.onclick = function() {
-                    container.removeChild(wrapper);
-                    selectedFiles = selectedFiles.filter(f => f !== file); // 파일 배열에서 제거
-                };
-
-                wrapper.appendChild(img);
-                wrapper.appendChild(deleteBtn);
-                container.appendChild(wrapper);
+                wrapper.append(img).append(deleteBtn);
+                container.append(wrapper);
             }
 
             reader.readAsDataURL(file);
         }
     });
+    
+ 	// 가격 입력 유효성 검사 함수
+    function validatePriceInputs() {
+        let isValid = false;
 
-    // 폼 제출 이벤트 처리
-    document.getElementById('postForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // 기본 제출 동작 방지
-
-        // 사진 등록 여부 확인
-        if(selectedFiles.length == 0) {
-        	alert("최소 1장 이상의 사진을 등록해주세요.");
-        	return;
-        }
-        
-        // 가격 입력 여부 확인
-        let priceInput = document.querySelectorAll('.price-input');
-        console.log(priceInput);
-        let price = '';
-        for(let priceCheck of priceInput) {
-        	console.log(priceCheck.value)
-        	price += priceCheck.value;
-        }
-        if(price == '') {
-        	alert("최소 1개의 이상의 '기간 별 가격'을 등록하세요.");
-        	return;
-        }
-        
-        const formData = new FormData(this);
-
-        // 기존의 file input의 파일들을 제거
-        formData.delete('image');
-
-        // 선택된 파일들만 FormData에 추가
-        selectedFiles.forEach((file, index) => {
-            formData.append('image', file, file.name);
-        });
-
-        // AJAX를 사용하여 폼 데이터 제출
-        fetch('submit_post.jsp', {
-            method: 'POST',
-            body: formData
-        }).then(response => {
-            if(response.ok) {
-                alert('글이 성공적으로 등록되었습니다.');
-                // 필요한 경우 페이지 리다이렉트 등의 추가 작업
-            } else {
-                alert('글 등록에 실패했습니다.');
+        $('.form-check-input:checked').each(function() {
+            let priceInput = $('input[name="' + this.value + 'Price"]');
+            if (priceInput.val().trim() !== '') {
+                isValid = true;
+                return false;  // 각 반복 중단
             }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('오류가 발생했습니다.');
         });
-    });
 
-        // 글자 수 카운팅 기능 (이전과 동일)
-        function updateCharCount(inputElement, countElement) {
-            var maxLength = inputElement.getAttribute('maxlength');
-            var currentLength = inputElement.value.length;
-            countElement.textContent = currentLength + '/' + maxLength;
+        return isValid;
+    }
+    
+ 	// 폼 제출 이벤트 처리
+    $('#postForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // 가격 입력 유효성 검사
+        if (!validatePriceInputs()) {
+            alert('최소한 하나의 기간을 선택하고 해당 가격을 입력해주세요.');
+            return;
         }
-
-        document.getElementById('title').addEventListener('input', function() {
-            updateCharCount(this, this.nextElementSibling);
-        });
-
-        document.getElementById('content').addEventListener('input', function() {
-            updateCharCount(this, this.nextElementSibling);
-        });
         
-     // 체크박스 이벤트 리스너
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
-                var inputField = document.querySelector('input[name="price' + this.value + '"]');
-                if (this.checked) {
-                    inputField.style.display = 'block';
-                    inputField.disabled = false;
+        var formData = new FormData(this);
+        
+        // 체크된 가격 입력 필드의 값을 숫자로 변환하여 FormData에 추가
+        $('.form-check-input:checked').each(function() {
+            var priceInput = $('input[name="' + this.value + 'Price"]');
+            var priceValue = priceInput.val();
+            if (priceValue !== '') {
+                formData.set(priceInput.attr('name'), parseInt(priceValue, 10));
+            }
+        });
+
+        // 체크되지 않은 가격 입력 필드의 값을 제거
+        $('.form-check-input:not(:checked)').each(function() {
+            formData.delete(this.value + 'Price');
+        });
+
+        
+        // 기존 이미지 중 삭제되지 않은 이미지 정보 추가
+        $('.image-preview-wrapper').each(function() {
+            var imageNum = $(this).find('.delete-image').data('image-num');
+            if (imageNum) {
+                formData.append('remainingImageNums', imageNum);
+            }
+        });
+
+        // 새로 선택된 파일 추가 (순서 유지)
+        selectedFiles.forEach((file, index) => {
+            formData.append('newImages', file);
+        });
+
+        $.ajax({
+            url: '${pageContext.request.contextPath}/rent/${mode}',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if(response.status === "success") {
+                    alert(formData.get('mode') === 'update' ? '글이 성공적으로 수정되었습니다.' : '글이 성공적으로 등록되었습니다.');
+                    if(formData.get('mode') === 'update') {
+                        location.href = '${pageContext.request.contextPath}/rent/article?townNum=${townNum}&categoryNum=${categoryNum}&page=${page}&num=${dto.rentNum}';
+                    } else {
+                        location.href = '${pageContext.request.contextPath}/rent/list?townNum=${townNum}';
+                    }
                 } else {
-                    inputField.style.display = 'none';
-                    inputField.disabled = true;
-                    inputField.value = ''; // 체크 해제 시 입력값 초기화
+                    alert('오류가 발생했습니다: ' + response.message);
                 }
-            });
-        });
-        
-        // 숫자만 입력되도록 하는 이벤트 리스너 추가
-        document.querySelectorAll('.price-input').forEach(function(input) {
-            input.addEventListener('input', function() {
-                this.value = this.value.replace(/[^0-9]/g, '');
-            });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다: ' + error);
+            }
         });
     });
-    </script>
+
+	// 글자 수 카운팅 기능 (이전과 동일)
+	function updateCharCount(inputElement, countElement) {
+	    var maxLength = inputElement.getAttribute('maxlength');
+	    var currentLength = inputElement.value.length;
+	    countElement.textContent = currentLength + '/' + maxLength;
+	}
+	
+	document.getElementById('title').addEventListener('input', function() {
+	    updateCharCount(this, this.nextElementSibling);
+	});
+	
+	document.getElementById('content').addEventListener('input', function() {
+	    updateCharCount(this, this.nextElementSibling);
+	});
+	
+    // 체크박스 이벤트 리스너
+    $('.form-check-input').on('change', function() {
+        var inputField = $('input[name="' + this.value + 'Price"]');
+        if (this.checked) {
+            inputField.show().prop('disabled', false);
+        } else {
+            inputField.hide().prop('disabled', true).val('');
+        }
+    });
+
+    // 숫자만 입력되도록 하는 이벤트 리스너
+    $('.price-input').on('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+	
+});
+// $(function (){}) 끝
+
+</script>

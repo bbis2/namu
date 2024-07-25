@@ -4,16 +4,18 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class Borrow {
-	
-	// 빌림 테이블 (borrow)
-	private long borrowNum;
+public class Rent {
+
+	// 빌려드림 테이블
+	private long rentNum;
 	private String userId;
 	private String subject;
-	private int price;
-	private String strDate;
-	private String endDate;
-	private String content; // 설명글
+	private int hPrice;
+	private int dPrice;
+	private int wPrice;
+	private int mPrice;
+	private String content;
+	private int visible; // 0일때 공개, 1일때 숨김
 	private String regDate;
 	private int hitCount;
 	private String location;
@@ -36,42 +38,18 @@ public class Borrow {
 	
 	// 찜 여부
 	private boolean userLiked;
-	
 	// 찜 개수
 	private int likeCount;
 	
 	// 작성자 프로필 사진
 	private String profile;
-	
-	public String getProfile() {
-		return profile;
+
+	////////////////////////////////////////////////////////////////////
+	public long getRentNum() {
+		return rentNum;
 	}
-	public void setProfile(String profile) {
-		this.profile = profile;
-	}
-	public String getTableName() {
-		return tableName;
-	}
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-	public String getPassedTime() {
-		return passedTime;
-	}
-	public void setPassedTime(String passedTime) {
-		this.passedTime = passedTime;
-	}
-	public String getNickName() {
-		return nickName;
-	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-	public long getBorrowNum() {
-		return borrowNum;
-	}
-	public void setBorrowNum(long num) {
-		this.borrowNum = num;
+	public void setRentNum(long rentNum) {
+		this.rentNum = rentNum;
 	}
 	public String getUserId() {
 		return userId;
@@ -85,29 +63,41 @@ public class Borrow {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	public int getPrice() {
-		return price;
+	public int gethPrice() {
+		return hPrice;
 	}
-	public void setPrice(int price) {
-		this.price = price;
+	public void sethPrice(int hPrice) {
+		this.hPrice = hPrice;
 	}
-	public String getStrDate() {
-		return strDate;
+	public int getdPrice() {
+		return dPrice;
 	}
-	public void setStrDate(String strDate) {
-		this.strDate = strDate;
+	public void setdPrice(int dPrice) {
+		this.dPrice = dPrice;
 	}
-	public String getEndDate() {
-		return endDate;
+	public int getwPrice() {
+		return wPrice;
 	}
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
+	public void setwPrice(int wPrice) {
+		this.wPrice = wPrice;
+	}
+	public int getmPrice() {
+		return mPrice;
+	}
+	public void setmPrice(int mPrice) {
+		this.mPrice = mPrice;
 	}
 	public String getContent() {
 		return content;
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public int getVisible() {
+		return visible;
+	}
+	public void setVisible(int visible) {
+		this.visible = visible;
 	}
 	public String getRegDate() {
 		return regDate;
@@ -133,17 +123,29 @@ public class Borrow {
 	public void setCategoryNum(int categoryNum) {
 		this.categoryNum = categoryNum;
 	}
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+	public String getPassedTime() {
+		return passedTime;
+	}
+	public void setPassedTime(String passedTime) {
+		this.passedTime = passedTime;
+	}
 	public String getCategory() {
 		return category;
 	}
 	public void setCategory(String category) {
 		this.category = category;
-	}
-	public List<MultipartFile> getImage() {
-		return image;
-	}
-	public void setImage(List<MultipartFile> image) {
-		this.image = image;
 	}
 	public long getImageNum() {
 		return imageNum;
@@ -151,22 +153,43 @@ public class Borrow {
 	public void setImageNum(long imageNum) {
 		this.imageNum = imageNum;
 	}
+	public List<MultipartFile> getImage() {
+		return image;
+	}
+
+	public void setImage(List<MultipartFile> image) {
+		this.image = image;
+	}
+
 	public String getImageFilename() {
 		return imageFilename;
 	}
+
 	public void setImageFilename(String imageFilename) {
 		this.imageFilename = imageFilename;
 	}
+
 	public boolean isUserLiked() {
 		return userLiked;
 	}
+
 	public void setUserLiked(boolean userLiked) {
 		this.userLiked = userLiked;
 	}
+
 	public int getLikeCount() {
 		return likeCount;
 	}
+
 	public void setLikeCount(int likeCount) {
 		this.likeCount = likeCount;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 }

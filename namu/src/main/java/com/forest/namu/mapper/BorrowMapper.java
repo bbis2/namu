@@ -37,14 +37,11 @@ public interface BorrowMapper {
 	// 글쓴이의 다른 글 가져오기
 	public List<Map<String, Object>> selectWriterOtherPosts(@Param("userId") String userId, @Param("currentPostNum") long currentPostNum);
 	
-	
 	public Borrow findById(long num);						// 검색 찾기
 	public void updateHitCount(long num) throws Exception;	// 조회수
-	
 	
 	public void insertBorrowLike(Map<String, Object> map) throws SQLException;
 	public void deleteBorrowLike(Map<String, Object> map) throws SQLException;
 	public int	borrowLikeCount(long num);
 	public Borrow userBorrowLiked(Map<String, Object> map);
-
 }

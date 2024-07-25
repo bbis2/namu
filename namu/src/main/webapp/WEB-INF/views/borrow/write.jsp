@@ -45,7 +45,7 @@
 <div class="container mt-5 pt-5 mb-5 pb-2">
 	<div class="mx-5 px-5 pt-5">
 		<div class="mx-5 px-5">
-			<h2 class="mb-4">글쓰기 - 빌림</h2>
+			<h2 class="mb-4">글쓰기 - 빌려줘요</h2>
 			<hr>
 			<form id="postForm" method="post" enctype="multipart/form-data">
 				<div class="form-group d-flex align-items-center">
