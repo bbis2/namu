@@ -164,11 +164,11 @@ public class UsedServiceImpl implements UsedService {
 	}
 
 	@Override
-	public int likeCount(Map<String, Object> map) {
+	public int likeCount(long num) {
 		int result = 0;
 		
 		try {
-			result = mapper.likeCount(map);
+//			result = mapper.likeCount(num);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -261,6 +261,21 @@ public class UsedServiceImpl implements UsedService {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public boolean userUsedLiked(Map<String, Object> map) {
+		boolean result = false;
+		
+		try {
+			Used dto = mapper.userUsedLiked(map);
+			if(dto != null) {
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }

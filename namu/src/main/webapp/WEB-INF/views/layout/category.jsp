@@ -80,64 +80,49 @@
 
 <div class="category-container">
 	<div class="main-category-icon-container">
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/1'">
-			<img class="category-icon-img" src="https://image.ohou.se/i/bucketplace-v2-development/uploads/category/store_home_categories/165698403420736265.png?w=144">
-			<div class="category-icon-text">가구</div>
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/used/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/used2.png">
+			<div class="category-icon-text">중고거래</div>
 		</div>
 
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/108'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/6.webp">
-			<div class="category-icon-text">데코·식물</div>
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/auction/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/auction1.png">
+			<div class="category-icon-text">중고경매</div>
 		</div>
 
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/2'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/7.webp">
-			<div class="category-icon-text">조명</div>
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/talent/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/talent2.png">
+			<div class="category-icon-text">재능마켓</div>
 		</div>
 
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/3'">
-			<img class="category-icon-img" src="https://image.ohou.se/i/bucketplace-v2-development/uploads/category/store_home_categories/168489250261646598.png?w=144">
-			<div class="category-icon-text">가전·디지털</div>
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/borrow/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/borrow2.png">
+			<div class="category-icon-text">빌려줘요</div>
 		</div>
 
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/1'">
-			<img class="category-icon-img" src="https://image.ohou.se/i/bucketplace-v2-development/uploads/category/store_home_categories/165519431107541334.png?w=144">
-			<div class="category-icon-text">패브릭</div>
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/rent/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/rent1.png">
+			<div class="category-icon-text">빌려드림</div>
 		</div>
 
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/1'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/4.webp">
-			<div class="category-icon-text">주방용품</div>
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/daily/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/daily2.png">
+			<div class="category-icon-text">나무일상</div>
 		</div>
 
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/1'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/5.webp">
-			<div class="category-icon-text">식품</div>
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/together/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/together2.png">
+			<div class="category-icon-text">나무모임</div>
 		</div>
 
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/1'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/8.webp">
-			<div class="category-icon-text">수납·정리</div>
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/delivery/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/delivery3.png">
+			<div class="category-icon-text">배달해요</div>
 		</div>
-
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/1'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/9.webp">
-			<div class="category-icon-text">생활용품</div>
-		</div>
-
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/30'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/10.webp">
-			<div class="category-icon-text">생필품</div>
-		</div>
-
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/1'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/11.webp">
-			<div class="category-icon-text">유아·아동</div>
-		</div>
-
-		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/shop/category/1'">
-			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/picture/shop/home/icon/category/12.webp">
-			<div class="category-icon-text">반려동물</div>
+		
+		<div class="main-icon-item flex-col" onclick="location.href='${pageContext.request.contextPath}/notice/list'">
+			<img class="category-icon-img" src="${pageContext.request.contextPath}/resources/images/notice1.png">
+			<div class="category-icon-text">공지사항</div>
 		</div>
 	</div>
 

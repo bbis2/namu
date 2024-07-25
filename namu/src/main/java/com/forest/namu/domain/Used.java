@@ -24,12 +24,17 @@ public class Used {
 	
 	private int likeCount;
 	
+	private boolean userLiked;
+	
 	// 카테고리 번호, 이름
 	private String name;
 	private int cnum;
 	
 	// 주소
 	private int town;
+	
+	// 신고
+	private String tableName;
 	
 	public String getName() {
 		return name;
@@ -173,6 +178,22 @@ public class Used {
 
 	public void setTown(int town) {
 		this.town = town;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
 	}
 
 }

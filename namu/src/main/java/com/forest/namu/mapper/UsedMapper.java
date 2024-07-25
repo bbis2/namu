@@ -24,6 +24,7 @@ public interface UsedMapper {
 	public int likeCount(Map<String, Object> map);
 	public void insertUsedLike(Map<String, Object> map) throws SQLException;
 	public void deleteUsedLike(Map<String, Object> map) throws SQLException;
+	public Used userUsedLiked(Map<String, Object> map);
 	
 	// 파일 추가, 삭제만(수정없음)
 	public void insertUsedFile(Used dto) throws SQLException;

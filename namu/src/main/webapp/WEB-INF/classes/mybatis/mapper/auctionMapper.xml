@@ -18,13 +18,15 @@
 	insert into auction(aNum, subject, minBid, hitCount, state, 
 			salesStart, salesEnd, userId, content, imageFile, cnum, town, regDate)
 		values(#{aNum}, #{subject}, #{minBid}, 0, 0, 
-			#{salesStart}, #{salesEnd}, #{userId}, #{content}, #{imageFile, jdbcType=VARCHAR}, #{cnum}, #{town}, sysdate)	
+			TO_DATE(#{salesStart}, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#{salesEnd}, 'YYYY-MM-DD HH24:MI:SS'), #{userId}, #{content}, #{imageFile, jdbcType=VARCHAR}, #{cnum}, #{town}, sysdate)	
 </insert>
 
 <!-- 수정 -->
 <update id="updateAuction" parameterType="com.forest.namu.domain.Auction">
-	update auction set cnum=#{cnum}, subject=#{subject}, content=#{content}, salesStart=#{salesStart}, minBid=#{minBid},
-			state=#{state}, imageFile=#{imageFile, jdbcType=VARCHAR}, town=#{town}, salesEnd=#{salesEnd}
+	update auction set cnum=#{cnum}, subject=#{subject}, content=#{content}, 
+	        salesStart=TO_DATE(#{salesStart}, 'YYYY-MM-DD HH24:MI:SS'), minBid=#{minBid},
+			state=#{state}, imageFile=#{imageFile, jdbcType=VARCHAR}, town=#{town}, 
+			salesEnd=TO_DATE(#{salesEnd}, 'YYYY-MM-DD HH24:MI:SS')
 	where aNum = #{aNum}
 </update>
 
@@ -85,7 +87,6 @@ select nvl(count(*),0)
 	</where>
 </select>
 
-
 <select id="listCategory" resultType="com.forest.namu.domain.Auction">
   select cNum, name from auctioncategory 
 </select>
@@ -98,12 +99,14 @@ select nvl(count(*),0)
 <!-- 글보기 -->
 <select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Auction">
 	select a.aNum, a.content, a.imageFile, a.subject, a.minBid, a.state, a.hitCount, a.cnum,
-	to_char(a.salesStart,'YYYY-MM-DD') salesStart, TO_CHAR(a.salesEnd, 'YYYY-MM-DD') salesEnd, 
-	m.nickName, m.town1, a.userId, m.nickName, a.town
+	  TO_CHAR(a.salesStart,'YYYY-MM-DD HH24:MI') salesStart, TO_CHAR(a.salesEnd,'YYYY-MM-DD HH24:MI') salesEnd, 
+	  m.nickName, m.town1, a.userId, m.nickName, a.town, a.tableName
 	from auction a 
-	left outer join(select aNum, count(*)
-	from auctionlike
-	group by aNum) al on a.aNum = al.aNum
+	left outer join(
+	  select aNum, count(*)
+	  from auctionlike
+	  group by aNum) al on a.aNum = al.aNum
+	  
 	join member m on a.userId = m.userId
 	where a.aNum = #{a.aNum}
 </select>
@@ -149,5 +152,11 @@ select nvl(count(*),0)
 	from auctionFile
 	where fileNum = #{fileNum}
 </select>
+
+<!-- 입찰하기 -->
+<insert id="insertBid" parameterType="com.forest.namu.domain.Auction">
+	insert into bidDetails(bidNum, bid, bidDate, aNum, userId, apply) 
+		values(bidDetails_seq.nextval, #{bid}, sysdate, #{aNum}, #{userId}, 0)
+</insert>
 
 </mapper>

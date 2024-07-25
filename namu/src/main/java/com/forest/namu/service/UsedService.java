@@ -16,9 +16,11 @@ public interface UsedService {
 	public void updateHitCount(long num) throws Exception;
 	public Used findById(long num);
 	
-	public int likeCount(Map<String, Object> map);
+	public int likeCount(long num);
 	public void insertUsedLike(Map<String, Object> map) throws Exception;
 	public void deleteUsedLike(Map<String, Object> map) throws Exception;
+	public boolean userUsedLiked(Map<String, Object> map);
+
 	
 	// 파일 추가, 삭제만(수정없음)
 	public void insertUsedFile(Used dto) throws Exception;

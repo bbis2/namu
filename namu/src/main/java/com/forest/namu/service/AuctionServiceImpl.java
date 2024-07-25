@@ -36,6 +36,8 @@ public class AuctionServiceImpl implements AuctionService {
 				
 			} 
 			
+			dto.setSalesStart(dto.getStartDate() + " " + dto.getStartTime() + ":00");
+			dto.setSalesEnd(dto.getEndDate() + " " + dto.getEndTime() + ":00");
 			mapper.insertAuction(dto);
 			
 			// 다중파일
@@ -85,6 +87,9 @@ public class AuctionServiceImpl implements AuctionService {
 					insertAuctionFile(dto);
 				}
 			}
+			
+			dto.setSalesStart(dto.getStartDate() + " " + dto.getStartTime() + ":00");
+			dto.setSalesEnd(dto.getEndDate() + " " + dto.getEndTime() + ":00");
 			
 			mapper.updateAuction(dto);
 			
@@ -165,6 +170,13 @@ public class AuctionServiceImpl implements AuctionService {
 		
 		 try {
 	            dto = mapper.findById(num);
+	            
+				dto.setStartDate(dto.getSalesStart() .substring(0, 10));
+				dto.setStartTime(dto.getSalesStart().substring(11));
+				
+				dto.setEndDate(dto.getSalesEnd().substring(0, 10));
+				dto.setEndTime(dto.getSalesEnd().substring(11));
+				
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
@@ -249,6 +261,17 @@ public class AuctionServiceImpl implements AuctionService {
 		}
 		
 		return dto;
+	}
+
+	@Override
+	public void insertBid(Auction dto) throws Exception {
+
+		try {
+			mapper.insertBid(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 }

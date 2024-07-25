@@ -103,13 +103,15 @@
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">경매시작</td>
 				<td>
-					<input class="block" type="date" name="salesStart" value="${dto.salesStart}">
+					<input class="block" type="date" name="startDate" value="${dto.startDate}">
+					<input class="block" type="time" name="startTime" value="${dto.startTime}">
 				</td>
 			</tr>
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">경매종료</td>
 				<td>
-					<input class="block" type="date" name="salesEnd" value="${dto.salesEnd}">
+					<input class="block" type="date" name="endDate" value="${dto.endDate}">
+					<input class="block" type="time" name="endTime" value="${dto.endTime}">
 				</td>
 			</tr>
 			<c:if test="${mode=='update'}">
@@ -325,10 +327,31 @@ function check() {
 		 return false;
 	 }
 	 
-	 str = f.salesEnd.value.trim();
-	 if(! str || str === "<p><br></p>") {
-		 alert("경매종료 일자를 선택하세요. ");
-		 f.content.focus();
+	 str = f.startDate.value.trim();
+	 if(! str) {
+		 alert("시작 일자를 선택하세요. ");
+		 f.startDate.focus();
+		 return false;
+	 }
+
+	 str = f.startTime.value.trim();
+	 if(! str) {
+		 alert("시작 시간를 선택하세요. ");
+		 f.startTime.focus();
+		 return false;
+	 }
+
+	 str = f.endDate.value.trim();
+	 if(! str) {
+		 alert("종료 일자를 선택하세요. ");
+		 f.endDate.focus();
+		 return false;
+	 }
+
+	 str = f.endTime.value.trim();
+	 if(! str) {
+		 alert("종료 시간를 선택하세요. ");
+		 f.endTime.focus();
 		 return false;
 	 }
 	 

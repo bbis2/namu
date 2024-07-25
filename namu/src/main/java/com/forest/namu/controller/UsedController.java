@@ -223,36 +223,41 @@ public class UsedController {
 		return model;
 	}
 	
-	@PostMapping("usedLike")
+	@PostMapping("insertUsedLike")
 	@ResponseBody
-	public Map<String, Object> usedLike(@RequestParam int num, 
-	                                    @RequestParam boolean userLiked, HttpSession session) {
-
-	    String state = "true";
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    
-	    Map<String, Object> map = new HashMap<String, Object>();
-	    map.put("num", num);
-	    map.put("userId", info.getUserId());
-	    
-	    try {
-	        if (userLiked) {
-	            service.deleteUsedLike(map);
-	            System.out.println("삭제");
-	        } else {
-	            service.insertUsedLike(map);
-	            System.out.println("추가");
-	        }
-	    } catch (DuplicateKeyException e) {
-	        state = "liked";
-	    } catch (Exception e) {
-	        state = "false";
-	    }
-
-	    Map<String, Object> model = new HashMap<String, Object>();
-	    model.put("state", state);
-	    
-	    return model;
+	public Map<String, Object> insertLike(
+			@RequestParam long num,
+			@RequestParam boolean userLiked,
+			HttpSession session
+			) {
+		
+		String state = "true";
+		int usedLikeCount = 0;
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("num", num);
+		paramMap.put("userId", info.getUserId());
+		
+		try {
+			if(userLiked) {
+				service.insertUsedLike(paramMap);
+			} else {
+				service.deleteUsedLike(paramMap);
+			}
+		} catch (DuplicateKeyException e) {
+			state = "liked";
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		usedLikeCount = service.likeCount(num);
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("usedLikeCount", usedLikeCount);
+		
+		return model;
 	}
 	
 }

@@ -31,5 +31,7 @@ public interface AuctionMapper {
 	public List<Auction> listAuctionFile(long num);
 	public Auction findByFileId(long num) throws SQLException;
 	
+	// 입찰하기
+	public void insertBid(Auction dto) throws SQLException;
 
 }

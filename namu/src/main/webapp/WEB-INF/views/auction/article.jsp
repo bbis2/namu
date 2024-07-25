@@ -37,16 +37,23 @@
  <div class="user">
 	<img src="회원 프로필!!">
 	   <div class="user-name">${dto.nickName}</div>
-	   <div class="seller-location">${dto.town==1 ? sessionScope.member.town1:sessionScope.member.town2}</div>
+	   <div class="seller-location">${dto.town}</div>
+	   <div class="time-remaining" style="margin-left: 15px; color: blue; font-weight: 500;"></div>
 </div>
-  <hr>
+<hr>
+
 <div class="used-header">
   <div class="title">${dto.subject}</div>
   <c:if test="${dto.state == 0 }">
-    <button class="chat1">입찰하기</button>
+  	<c:if test="${sessionScope.member.userId != dto.userId}">
+   		<button class="btn-bid">입찰하기</button>
     </c:if>
+    <c:if test="${sessionScope.member.userId != dto.userId}">
+   		<button class="btn-bidclose">입찰완료</button>
+    </c:if>
+   </c:if>
 </div>
-<div class="price">현재가&nbsp;&nbsp;<fmt:formatNumber value="${dto.minBid}"/> 원</div>
+<div class="price">현재가&nbsp;&nbsp;<fmt:formatNumber value="${dto.bid}"/> 원</div>
 <div class="state">
 	<c:if test="${dto.state == 1}" >
 		<span style="color: #D24F04; font-weight: bold;">낙찰완료</span>
@@ -59,8 +66,7 @@
 </div>
   <div class="content1">${dto.content}</div>
 <div class="sale-meta">
-  <div class="views">찜 ${likeCount} &nbsp;|&nbsp; 조회수 ${dto.salesStart} &nbsp;|&nbsp; ${dto.salesEnd}</div>
-<div class="report-btn">신고하기</div>
+  <div class="views">시작가 <fmt:formatNumber value="${dto.minBid}"/> &nbsp;|&nbsp; 찜 ${likeCount} &nbsp;|&nbsp; 경매시작 ${dto.salesStart} &nbsp;|&nbsp; 경매종료 ${dto.salesEnd}</div>
  	 <div class="buttons">
  	   <c:if test="${sessionScope.member.userId == dto.userId}">
       	<button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/auction/update?aNum=${dto.aNum}';">수정</button>
@@ -70,60 +76,336 @@
         </c:if>
      </div>
         </div>
+      <button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
       <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/auction/list';">목록</button>
      </div>
   </div>
   <hr>
-  <img width="48" height="48" src="${pageContext.request.contextPath}/resources/images/icons8-q-49.png"/>
-  <table>
-	<thead>
-		<tr>
-			<th width="60">번호</th>
-			<th width="150">제목</th>
-			<th width="100">작성자</th>
-			<th width="90">작성일</th>
-			<th width="80">조회</th>
-		</tr>	
-	</thead>
-	<tbody>
-		<tr>
-		<c:forEach var="qna" items="${qnaList}" varStatus="status">
-			<td>${qna.num}</td>
-			<td>${qna.subject}</td>
-			<td class="left">
-				<c:choose>
-					<c:when test="${qna.secret==1}">
-						<c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
-							<a>문의입니다.</a>
-						</c:if>
-						<c:if test="${sessionScope.member.userId!=dto.userId && sessionScope.member.userId=='admin'}">
-							🔒비밀글
-						</c:if>
-						<i class="bi bi-file-lock2"></i>
-					</c:when>
-					<c:otherwise>
-						<a>문의입니다.</a>
-					</c:otherwise>
-				</c:choose>
-			</td>
-			<td>${qna.nickName}</td>
-			<td>${qna.regDate}</td>
-			<td>${qna.hitCount}</td>
-		</c:forEach>
-		</tr>
-	</tbody>
-  </table>
+  <div class="fs-6 fw-semibold text-success">1:1문의</div>
+  <div class="mb-2">  
+  	<button type="button" class="btn-reply mb-2 p-1" style="float: right; color: white;" onclick="location.href='${pageContext.request.contextPath}/auction/write2?aNum=${dto.aNum}&page=${page}';">문의작성</button>
+ </div>
+ 
+ <div class="qnaList pt-2"></div>
+ 
+</div>
+
+<div class="modal fade" id="bidModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="bidModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="bidModalLabel">입찰하기 &nbsp;[ 보유 포인트 : <a style="color: blue;"><fmt:formatNumber value="${sessionScope.member.point}"/></a> ]</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form name="bidForm" method="post">
+					<div class="row m-1">
+						<input type="number" name="bid" class="form-control" placeholder="입찰가를 입력하세요">
+						<input type="hidden" name="aNum" value="${dto.aNum}">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary btnBidOk">입력하기</button>
+				<button type="button" class="btn btn-secondary btnSendCancel" data-bs-dismiss="modal">취소</button>
+			</div>			
+		</div>
+	</div>
+</div>
+
+<!-- 신고 모달 -->
+<div class="modal fade" id="SinGoModal" tabindex="-1"
+	data-bs-backdrop="static" data-bs-keyboard="false"
+	aria-labelledby="SinGoModal" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="">신고하기</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="p-3">
+					<form name="SinGoForm" action="" method="post" class="row g-3">
+						<div class="mt-0">
+							<p class="form-control-plaintext">신고유형과 사유를 적어주세요</p>
+						</div>
+						<div class="mt-0">
+							<select id="reportType" name="reportType" class="form-select">
+								<option value="욕설/인신공격" selected>욕설/인신공격</option>
+									<option value="개인정보노출">개인정보노출</option>
+									<option value="불법정보">불법정보</option>
+									<option value="같은내용반복(도배)">같은내용반복(도배)</option>
+									<option value="기타">기타</option>
+							</select>
+						</div>
+						<div>
+							<input type="text" name="reportContent" autocomplete="off"
+								 class="form-control"
+								placeholder="신고사유 : ">
+						</div>
+							<input type="hidden" name="Field" value="${dto.tableName}">
+							<!-- 파라미터 num -->
+							<input type="hidden" name="postNum" value="${dto.aNum}">
+							<input type="hidden" name="banUser" value="${dto.userId}">
+						<div>
+							<button type="button" class="btn btn-primary w-100"
+								onclick="sendOk();">신고하기</button>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
 function usedDelete() {
-	if(confirm('게시글을 삭제 하시겠습니까?')){
-		let query = 'aNum=${dto.aNum}&imageFile=${dto.imageFile}';
+	if(confirm('문의를 삭제 하시겠습니까?')){
+		let query = 'aNum=${dto.aNum}';
 	    let url = '${pageContext.request.contextPath}/auction/delete?' + query;
 		location.href = url;
 	}
 }
+
+
+function SinGo(){
+	$('#SinGoModal').modal('show');
+}
+
+function sendOk() {
+	const f = document.SinGoForm;
+	let str = f.reportContent.value.trim();
+	
+    if (!confirm("정말 신고하시겠습니까?")) {
+        return;
+    }
+    
+    if(!str){
+    	alert("사유를 입력해주세요");
+    }
+    
+    f.action = "${pageContext.request.contextPath}/singo/reception";
+    f.submit();
+}
+
 </script>
+
+  
+<script type="text/javascript">
+$('.btn-bid').click(function(){
+	$('#bidModal').modal('show');
+});
+
+$('.btnBidOk').click(function(){
+	const f = document.bidForm;
+	
+	if( ! f.bid.value.trim() ) {
+		f.bid.focus();
+		return false;
+	}
+	
+	let formData = $('form[name=bidForm]').serialize();
+	let url = '${pageContext.request.contextPath}/auction/bid';
+	const fn = function(data) {
+		let state = data.state;
+        if (state === 'true') {
+       	  alert('입찰 완료 되었습니다.');
+       	  $('.bidAccept').html('신청완료');
+       	  $('.bidAccept').removeClass('bidAccept');
+        }
+	};
+	ajaxFun(url, 'post', formData, 'json', fn);
+	
+});
+
+
+	function login() {
+		location.href = '${pageContext.request.contextPath}/member/login';
+	}
+	
+	function ajaxFun(url, method, formData, dataType, fn, file = false) {
+		const settings = {
+				type: method, 
+				data: formData,
+				dataType:dataType,
+				success:function(data) {
+					fn(data);
+				},
+				beforeSend: function(jqXHR) {
+					jqXHR.setRequestHeader('AJAX', true);
+				},
+				complete: function () {
+				},
+				error: function(jqXHR) {
+					if(jqXHR.status === 403) {
+						login();
+						return false;
+					} else if(jqXHR.status === 400) {
+						alert('요청 처리가 실패 했습니다.');
+						return false;
+			    	}
+			    	
+					console.log(jqXHR.responseText);
+				}
+		};
+		
+		if(file) {
+			settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+			settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+		}
+		
+		$.ajax(url, settings);
+	}
+	
+	$(function(){
+		listQna(1);
+	});
+	
+	function listQna(page) {
+		const url = "${pageContext.request.contextPath}/auction/qnaList";
+		let formData = "aNum=${dto.aNum}&pageNo=" + page;
+		const fn = function(data) {
+			$('.qnaList').html(data);
+		};
+		
+		ajaxFun(url, "get", formData, "text", fn);
+	}
+
+    function clickContent(id) {
+    	var content = document.getElementById('content' + id);
+        var answer = document.getElementById('answer' + id);
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "table-row";
+            if (answer) answer.style.display = "none"; 
+        } else {
+            content.style.display = "none";
+        }
+    }
+    
+    function clickAnswer(id) {
+    	var answer = document.getElementById('answer' + id);
+        if (answer.style.display === "none" || answer.style.display === "") {
+            answer.style.display = "table-row";
+        } else {
+            answer.style.display = "none";
+        }
+    }
+    
+    // 답변
+    $('.qnaList').on('click', '.btnSendQnaAnswer', function(){
+	    let answer = $('.qna-answer-content').val().trim();
+	    let qNum = $(this).attr("data-qNum");
+	    // let aNum = $(this).attr("data-aNum");
+	    let page = $(this).attr("data-pageNo");
+	
+	    if(!answer) {
+	        $('.qna-answer-content').focus();
+	        alert("답변 내용을 입력하세요.");
+	        return false;
+	    };
+	
+	    answer = encodeURIComponent(answer);
+	
+	    let url = '${pageContext.request.contextPath}/auction/answer';
+	    let query = 'qNum=' + qNum + '&answer=' + answer; //
+	
+	    const fn = function(data){
+	        $('.qna-answer-content').val(''); 
+	        let state = data.state;
+	        if(state === 'true') {
+	        	listQna(1);
+	        } else if(state === 'false') {
+	            alert('답변을 추가 하지 못했습니다.');
+	        }
+	    };
+	
+	    ajaxFun(url, 'post', query, 'json', fn);
+	});
+
+    
+ // 경매 남은 시간 계산
+    function task() {
+    	let salesEnd = "${dto.salesEnd}";
+    	if(! salesEnd) {
+    		$(".time-remaining").html("경매 불가");
+    		$(".btn-bid").prop("disabled", true);
+    		return false;
+    	}
+    	
+        let y = parseInt(salesEnd.substring(0, 4));
+        let m = parseInt(salesEnd.substring(5, 7));
+        let d = parseInt(salesEnd.substring(8, 10));
+        let h = parseInt(salesEnd.substring(11, 13));
+        let mi = parseInt(salesEnd.substring(14));
+    	
+    	let now = new Date();
+    	let date = new Date(y, m-1, d, h, mi, 0);
+    	
+    	let diff = Math.floor((date.getTime() - now.getTime()) / 1000);
+    	if(diff <= 0) {
+    		$(".btn-bid").prop("disabled", true);
+    		$(".time-remaining").html("경매 종료");
+    		
+    		return false;
+    	}
+    	
+    	let days = Math.floor(diff / (24*3600));
+    	let hours = Math.floor((diff % (24*3600)) / 3600);
+    	if (hours < 10) hours = "0" + hours;
+    	let minutes = Math.floor((diff % (3600)) / 60);
+    	if (minutes < 10) minutes = "0" + minutes;
+    	let seconds = Math.floor(diff % 60);
+    	if (seconds < 10) seconds = "0" + seconds;
+
+        let s = "";
+        if(days >= 1) s = days + "일 "
+        
+        s += hours + ":" + minutes + ":" + seconds +" 남음";
+        $(".time-remaining").html(s);
+        
+        // 
+        setTimeout("task();", 1000);
+    }
+    
+    $(function(){
+    	task();
+    }); 
+</script>
+
+
+<style>
+.btn-reply, .btnSendQnaAnswer {
+	border: none;
+	background-color: #61ac2d;
+	border-radius: 10px;
+	padding: 3px;
+	margin-left: 7px;
+	color: white;
+}
+
+.btn-bidclose {
+    border-radius: 16px;
+    background: #F5F5F5	;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-left: 20px;
+    height: 80%
+}
+
+  .content, .answerlist {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+</style>
 
 <style>
   .used {
@@ -186,7 +468,7 @@ function usedDelete() {
     flex-grow: 1;
 }
 
-.chat1 {
+.btn-bid {
     border-radius: 16px;
     background: #61ac2d;
     color: white;

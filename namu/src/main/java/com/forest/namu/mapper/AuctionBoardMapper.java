@@ -10,18 +10,15 @@ import com.forest.namu.domain.AuctionBoard;
 
 @Mapper
 public interface AuctionBoardMapper {
+	// 질문
 	public void insertQuestion(AuctionBoard dto) throws SQLException;
+	// 답변
 	public void updateQuestion(AuctionBoard dto) throws SQLException;
+	// 삭제
 	public void deleteQuestion(long qNum) throws SQLException;
-	
-	public void insertAnswer(AuctionBoard dto) throws SQLException;
 	
 	public int dataCount(Map<String, Object> map);
 	public List<AuctionBoard> listQuestion(Map<String, Object> map);
 	
 	public AuctionBoard findById(long qNum);
-	public AuctionBoard findByPrev(Map<String, Object> map);
-	public AuctionBoard findByNext(Map<String, Object> map);
-	
-
 }

@@ -84,8 +84,8 @@
                         </c:otherwise>
                     </c:choose>
 				</a>
-					<button class="btn_like" title="찜">
-					    <span class="like-count">${dto.likeCount}</span>
+					<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
+						like
 					</button>
 				</div>
 
@@ -143,6 +143,43 @@ function change() {
 	f.submit();
 }
 
+
+$(function() {
+	$('.btnSendLike').click(function() {
+		
+		let $btn = $(this);
+		let userLiked = $btn.hasClass('on');
+		
+		let url = '${pageContext.request.contextPath}/used/insertLike';
+		let num = $btn.next('input').val();
+		let query = 'num=' + num + '&userLiked=' + userLiked;
+		
+		// 토스트 팝업
+		let $toast = document.querySelector('#toast_message');
+		
+		const fn = function(data) {
+			let state = data.state;
+			if(state === 'true') {
+				let count = data.usedLikeCount;
+				$btn.closest('.list').find('.usedLikeCount').html('<i class="fa-solid fa-heart"></i>&nbsp;' + count);
+				
+				// 토스트 팝업
+				if(userLiked) {
+					$toast.innerText = '찜 목록에 추가되었습니다.';
+				} else {
+					$toast.innerText = '찜 목록에서 삭제되었습니다.';
+				}
+				
+				$toast.classList.add('active');
+				setTimeout(() => {
+					$toast.classList.remove('active');
+				}, 1500);
+			}
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
 </script>
 
 <style>

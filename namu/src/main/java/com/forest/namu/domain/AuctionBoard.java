@@ -2,15 +2,16 @@ package com.forest.namu.domain;
 
 public class AuctionBoard {
 	private long qNum;
-	private String userNickName;
-	private String question;
+	private String questionId;
 	private String questionDate;
-	private String answerNickName;
-	private String answer;
+	private String subject;
+	private String content;
 	private String answerDate;
+	private String answer;
+	private String answerId;
 	private int secret;
-	private String userId;
 	private long aNum;
+	private String nickName;
 	
 	public long getqNum() {
 		return qNum;
@@ -18,35 +19,11 @@ public class AuctionBoard {
 	public void setqNum(long qNum) {
 		this.qNum = qNum;
 	}
-	public String getUserNickName() {
-		return userNickName;
+	public String getQuestionId() {
+		return questionId;
 	}
-	public void setUserNickName(String userNickName) {
-		this.userNickName = userNickName;
-	}
-	public String getQuestion() {
-		return question;
-	}
-	public void setQuestion(String question) {
-		this.question = question;
-	}
-	public String getAnswerDate() {
-		return answerDate;
-	}
-	public void setAnswerDate(String answerDate) {
-		this.answerDate = answerDate;
-	}
-	public String getAnswerNickName() {
-		return answerNickName;
-	}
-	public void setAnswerNickName(String answerNickName) {
-		this.answerNickName = answerNickName;
-	}
-	public String getAnswer() {
-		return answer;
-	}
-	public void setAnswer(String answer) {
-		this.answer = answer;
+	public void setQuestionId(String questionId) {
+		this.questionId = questionId;
 	}
 	public String getQuestionDate() {
 		return questionDate;
@@ -54,17 +31,41 @@ public class AuctionBoard {
 	public void setQuestionDate(String questionDate) {
 		this.questionDate = questionDate;
 	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getAnswerDate() {
+		return answerDate;
+	}
+	public void setAnswerDate(String answerDate) {
+		this.answerDate = answerDate;
+	}
+	public String getAnswer() {
+		return answer;
+	}
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+	public String getAnswerId() {
+		return answerId;
+	}
+	public void setAnswerId(String answerId) {
+		this.answerId = answerId;
+	}
 	public int getSecret() {
 		return secret;
 	}
 	public void setSecret(int secret) {
 		this.secret = secret;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 	public long getaNum() {
 		return aNum;
@@ -72,5 +73,11 @@ public class AuctionBoard {
 	public void setaNum(long aNum) {
 		this.aNum = aNum;
 	}
-	
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
 }

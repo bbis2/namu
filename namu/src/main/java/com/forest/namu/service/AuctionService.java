@@ -25,5 +25,8 @@ public interface AuctionService {
 	public void deleteAuctionFile(long fileNum) throws Exception;
 	public List<Auction> listAuctionFile(long num);
 	public Auction findByFileId(long num) throws Exception;
+	
+	// 입찰하기
+	public void insertBid(Auction dto) throws Exception;
 
 }

@@ -15,11 +15,26 @@ public class Auction {
 	private long bid;
 	// 입찰수
 	private long bidCount;
+	// 입찰번호
+	private long bidNum;
+	
+	private String bidDate;
+	// 낙찰자
+	private String soldId;
+	// 입찰 신청여부
+	private int apply;
 	
 	private long hitCount;
 	private int state;
+	
 	private String salesStart;
+	private String startDate;
+	private String startTime;
+	
 	private String salesEnd;
+	private String endDate;
+	private String endTime;
+	
 	private String userId;
 
 	private String nickName;
@@ -39,6 +54,9 @@ public class Auction {
 	
 	// 주소
 	private int town;
+	
+	// 신고
+	private String tableName;
 
 	public long getaNum() {
 		return aNum;
@@ -72,6 +90,14 @@ public class Auction {
 		this.minBid = minBid;
 	}
 
+	public String getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+
 	public long getBid() {
 		return bid;
 	}
@@ -86,6 +112,38 @@ public class Auction {
 
 	public void setBidCount(long bidCount) {
 		this.bidCount = bidCount;
+	}
+
+	public long getBidNum() {
+		return bidNum;
+	}
+
+	public void setBidNum(long bidNum) {
+		this.bidNum = bidNum;
+	}
+
+	public String getBidDate() {
+		return bidDate;
+	}
+
+	public void setBidDate(String bidDate) {
+		this.bidDate = bidDate;
+	}
+
+	public String getSoldId() {
+		return soldId;
+	}
+
+	public void setSoldId(String soldId) {
+		this.soldId = soldId;
+	}
+
+	public int getApply() {
+		return apply;
+	}
+
+	public void setApply(int apply) {
+		this.apply = apply;
 	}
 
 	public long getHitCount() {
@@ -112,12 +170,44 @@ public class Auction {
 		this.salesStart = salesStart;
 	}
 
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
 	public String getSalesEnd() {
 		return salesEnd;
 	}
 
 	public void setSalesEnd(String salesEnd) {
 		this.salesEnd = salesEnd;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
 	public String getUserId() {
@@ -208,12 +298,12 @@ public class Auction {
 		this.town = town;
 	}
 
-	public String getRegDate() {
-		return regDate;
+	public String getTableName() {
+		return tableName;
 	}
 
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 }

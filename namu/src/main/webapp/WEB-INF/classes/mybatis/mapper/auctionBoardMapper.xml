@@ -2,45 +2,48 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.forest.namu.mapper.AuctionBoardMapper">
 
-<!-- 질문 -->
+<!-- 
+	insert into auctionBoard(qNum, questionId, questionDate, subject, content, 
+		answerDate, answer, answerId, secret, aNum) 
+	values(auctionBoard_seq.nextval, #{questionId}, sysdate, #{subject}, #{content}, 
+		sysdate, #{answer}, #{answerId}, #{secret}, #{aNum})
+ -->
+
+<!-- 질문 추가 -->
 <insert id="insertQuestion" parameterType="com.forest.namu.domain.AuctionBoard">
-	insert into auctionBoard(qNum, userNickName, question, questionDate, secret, userId, aNum) 
-	values(auctionBoard_seq.nextval, #{userNickName}, #{question}, sysdate, #{secret}, #{userId}, #{aNum})
+	insert into auctionBoard(qNum, questionId, questionDate, subject, content, 
+		secret, aNum) 
+	values(auctionBoard_seq.nextval, #{questionId}, sysdate, #{subject}, #{content}, 
+		#{secret}, #{aNum})
 </insert>
 
-<delete id="deleteQuestion" parameterType="Long">
-
-</delete>
-
-<!-- 답변 -->
-<update id="insertAnswer" parameterType="com.forest.namu.domain.AuctionBoard">
-	update set auctionBoard answerNickName=#{answerNickName}, answer=#{answer}, answerDate=sysdate
+<!-- 답변 추가 -->
+<update id="updateQuestion" parameterType="com.forest.namu.domain.AuctionBoard">
+	update auctionBoard set answerDate=sysdate, answer=#{answer}, answerId=#{answerId}
+	WHERE qNum = #{qNum}
 </update>
 
+<!-- 삭제 -->
+<delete id="deleteQuestion" parameterType="Long">
+	delete from auctionBoard where qNum = #{qNum}
+</delete>
 
-<!-- 질문 수 -->
+<!-- 데이터 개수 -->
 <select id="dataCount" resultType="Integer" parameterType="map">
-
+	select nvl(count(*),0)
+	from auctionBoard
+	where aNum = #{aNum}
 </select>
 
 <!-- 리스트 -->
 <select id="listQuestion" resultType="com.forest.namu.domain.AuctionBoard" parameterType="map">
-
-</select>
-
-<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.AuctionBoard">
-	
-              
-</select>
-
-<select id="findByPrev" parameterType="map" resultType="com.forest.namu.domain.AuctionBoard">
-	
-
-</select>
-	
-<select id="findByNext" parameterType="map" resultType="com.forest.namu.domain.AuctionBoard">
-	
-
+	select qNum, questionId, questionDate, subject, content, answer, 
+		answerDate, answerId, secret, aNum, m.nickName
+	from auctionBoard a
+	join member m on a.questionId = m.userId
+	where aNum = #{aNum}
+	order by qNum desc
+	OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 </select>
 
 
