@@ -274,12 +274,10 @@ textarea::placeholder{
             <div>
                 <div>
                     <c:choose>
-                        <c:when test="${dto.thumbnail != null && dto.thumbnail.isEmpty()}">
-                            <c:forEach var="dto" items="${list}" varStatus="status">
+                        <c:when test="${not empty dto.thumbnail}">
                                 <div ${status.index == 0 ? 'active' : ''}>
                                     <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}">
                                 </div>
-                            </c:forEach>
                         </c:when>
                         <c:otherwise>
                             <div>
