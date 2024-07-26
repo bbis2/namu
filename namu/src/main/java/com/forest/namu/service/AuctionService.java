@@ -20,7 +20,6 @@ public interface AuctionService {
 	public void insertAuctionLike(Map<String, Object> map) throws Exception;
 	public void deleteAuctionLike(Map<String, Object> map) throws Exception;
 	
-	//이수정바보! 바보!! 매퍼 터트렸싸!
 	// 파일 추가, 삭제만(수정없음)
 	public void insertAuctionFile(Auction dto) throws Exception;
 	public void deleteAuctionFile(long fileNum) throws Exception;

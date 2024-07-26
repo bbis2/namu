@@ -53,7 +53,7 @@ $(function(){
 });
 </script>
 
-<nav class="vertical_nav">
+<nav class="vertical_nav" style="position: fixed;">
 	<ul id="js-menu" class="menu">
 		<li class="menu--item">
 			<a href="${pageContext.request.contextPath}/admin" class="menu--link" title="Home">
@@ -102,7 +102,7 @@ $(function(){
 					<a href="<c:url value='/admin/'/>" class="sub_menu--link">포인트</a>
 				</li>
 				<li class="sub_menu--item">
-					<a href="<c:url value='/admin/'/>" class="sub_menu--link">게시물</a>
+					<a href="<c:url value='/admin/analysis/page'/>" class="sub_menu--link">게시물</a>
 				</li>
 				<li class="sub_menu--item">
 					<a href="<c:url value='/admin/'/>" class="sub_menu--link">VIP</a>

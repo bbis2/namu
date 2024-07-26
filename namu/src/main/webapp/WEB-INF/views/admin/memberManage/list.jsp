@@ -1,87 +1,176 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
-.body-container {
-	max-width: 1000px;
+/* 카드 컴포넌트 */
+.card {
+    margin-bottom: 1rem;
 }
 
+.card-body {
+    padding: 1.25rem;
+}
+
+/* 테이블 스타일 */
+.table {
+    width: 100%;
+    border-collapse: collapse; /* 테두리 병합 */
+    margin-bottom: 1rem; /* 테이블 아래 여백 */
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6; /* 테두리 색상 */
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #dee2e6; /* 셀 테두리 색상 */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2; /* 홀수 행 배경색 */
+}
+
+.table thead th {
+    background-color: #f8f9fa; /* 헤더 배경색 */
+}
+
+/* 탭 네비게이션 */
 .nav-tabs .nav-link {
-	min-width: 170px;
-	background: #f3f5f7;
-	border-radius: 0;
-	border-right: 1px solid #dbdddf;
-	color: #333;
-	font-weight: 600;
+    min-width: 170px;
+    background: #f3f5f7;
+    border-radius: 0;
+    border-right: 1px solid #dbdddf;
+    color: #333;
+    font-weight: 600;
 }
-.nav-tabs .nav-link.active {
-	background: #3d3d4f;
-	color: #fff;
-}
-.tab-pane { min-height: 300px; }
 
-.hover { cursor: pointer; }
-.btn-span { cursor: pointer; 
-	border: 1px solid #dee2e6; border-radius: 5px;
-	margin:3px; padding: 5px; }
+.nav-tabs .nav-link.active {
+    background: #3d3d4f;
+    color: #fff;
+}
+
+/* 탭 콘텐츠 */
+.tab-pane {
+    min-height: 300px;
+}
+
+/* 커서 스타일 */
+.hover {
+    cursor: pointer;
+}
+
+/* 버튼 스타일 */
+.btn-span {
+    cursor: pointer;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    margin: 3px;
+    padding: 5px;
+}
+
+/* 최대 너비 설정 */
+.body-container {
+    max-width: 1000px;
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .nav-tabs .nav-link {
+        min-width: auto; /* 모바일에서는 최소 너비 제거 */
+        text-align: center;
+    }
+}
 </style>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/boot-board.css" type="text/css">
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/boot-board.css"
+	type="text/css">
 
 <div class="body-container">
-    <div class="body-title">
-		<h3><i class="bi bi-person-square"></i> 회원 관리 </h3>
-    </div>
-    
-    <div class="body-main">
+	<div class="body-title">
+		<h3>
+			<i class="bi bi-person-square"></i> 회원 관리
+		</h3>
+	</div>
+
+	<div class="body-main">
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
 			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="tab-0" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="0" aria-selected="true" data-tab="0"><i class="bi bi-person-lines-fill"></i> 회원리스트</button>
+				<button class="nav-link" id="tab-0" data-bs-toggle="tab"
+					data-bs-target="#nav-content" type="button" role="tab"
+					aria-controls="0" aria-selected="true" data-tab="0">
+					<i class="bi bi-person-lines-fill"></i> 회원리스트
+				</button>
 			</li>
 			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="1" aria-selected="true" data-tab="1"> <i class="bi bi-bar-chart-line"></i> 신고관리</button>
+				<button class="nav-link" id="tab-1" data-bs-toggle="tab"
+					data-bs-target="#nav-content" type="button" role="tab"
+					aria-controls="1" aria-selected="true" data-tab="1">
+					<i class="bi bi-bar-chart-line"></i> 신고관리
+				</button>
 			</li>
 			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="2" aria-selected="true" data-tab="2"> <i class="bi bi-bar-chart-line"></i> 회원분석</button>
+				<button class="nav-link" id="tab-2" data-bs-toggle="tab"
+					data-bs-target="#nav-content" type="button" role="tab"
+					aria-controls="2" aria-selected="true" data-tab="2">
+					<i class="bi bi-bar-chart-line"></i> 회원분석
+				</button>
 			</li>
 		</ul>
-		
+
 		<div class="tab-content pt-2" id="nav-tabContent">
-		
+
 			<table class="table table-borderless mt-2 mb-0">
 				<tr>
 					<td align="left" width="50%" valign="bottom">
 						<p class="form-control-plaintext p-0">
-							${dataCount}개(${page}/${total_page} 페이지)
-						</p>
+							${dataCount}개(${page}/${total_page} 페이지)</p>
 					</td>
-					<td align="right">
-						<select id="selectEnabled" class="form-select" style="width: 230px;" onchange="searchList();">
+					<td align="right"><select id="selectEnabled"
+						class="form-select" style="width: 230px;" onchange="searchList();">
 							<option value="" ${enabled=="" ? "selected":""}>::계정상태::</option>
 							<option value="0" ${enabled=="0" ? "selected":""}>잠금 계정</option>
 							<option value="1" ${enabled=="1" ? "selected":""}>활성 계정</option>
-						</select>
-					</td>
+					</select></td>
 				</tr>
 			</table>
-				
-			<table class="table table-hover board-list">
-				<thead class="table-light">
-					<tr> 
-						<th width="60">번호</th>
-						<th width="120">아이디</th>
-						<th width="100">이름</th>
-						<th width="220">거주지</th>
-						<th width="120">전화번호</th>
-						<th width="80">회원구분</th>
-						<th width="60">상태</th>
-						<th>이메일</th>
-					</tr>
-				</thead>
-				
-				<tbody>
+
+			<div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                        회원 테이블
+                    </div>
+                    <div class="card-body">
+                        <table id="datatablesSimple" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>유저번호</th>
+                                    <th>아이디</th>
+                                    <th>이름</th>
+                                    <th>거주지</th>
+                                    <th>전화번호</th>
+                                    <th>회원구분</th>
+                                    <th>회원상태</th>
+                                    <th>이메일</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                     <th>유저번호</th>
+                                    <th>아이디</th>
+                                    <th>이름</th>
+                                    <th>거주지</th>
+                                    <th>전화번호</th>
+                                    <th>회원구분</th>
+                                    <th>회원상태</th>
+                                    <th>이메일</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
 					<c:forEach var="dto" items="${list}" varStatus="status">
-						<tr class="hover" onclick="profile('${dto.userId}');"> 
+						<tr class="hover" onclick="profile('${dto.userId}');">
 							<td>${dataCount - (page-1) * size - status.index}</td>
 							<td>${dto.userId}</td>
 							<td>${dto.userName}</td>
@@ -93,51 +182,62 @@
 						</tr>
 					</c:forEach>
 				</tbody>
-			</table>
-					 
-			<div class="page-navigation">
-				${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+                        </table>
+                    </div>
+                </div>
+
+			<div class="page-navigation">${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 			</div>
 
 			<div class="row board-list-footer">
 				<div class="col">
-					<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/admin/memberManage/list';" title="새로고침"><i class="bi bi-arrow-counterclockwise"></i></button>
+					<button type="button" class="btn btn-light"
+						onclick="location.href='${pageContext.request.contextPath}/admin/memberManage/list';"
+						title="새로고침">
+						<i class="bi bi-arrow-counterclockwise"></i>
+					</button>
 				</div>
 				<div class="col-6 text-center">
-					<form class="row" name="searchForm" action="${pageContext.request.contextPath}/admin/memberManage/list" method="post">
+					<form class="row" name="searchForm"
+						action="${pageContext.request.contextPath}/admin/memberManage/list"
+						method="post">
 						<div class="col-auto p-1">
 							<select name="schType" class="form-select">
-								<option value="userId"     ${schType=="userId" ? "selected":""}>아이디</option>
-								<option value="userName"   ${schType=="userName" ? "selected":""}>이름</option>
-								<option value="email"      ${schType=="email" ? "selected":""}>이메일</option>
-								<option value="tel"        ${schType=="tel" ? "selected":""}>전화번호</option>
+								<option value="userId" ${schType=="userId" ? "selected":""}>아이디</option>
+								<option value="userName" ${schType=="userName" ? "selected":""}>이름</option>
+								<option value="email" ${schType=="email" ? "selected":""}>이메일</option>
+								<option value="tel" ${schType=="tel" ? "selected":""}>전화번호</option>
 							</select>
 						</div>
 						<div class="col-auto p-1">
 							<input type="text" name="kwd" value="${kwd}" class="form-control">
-							<input type="hidden" name="enabled" value="${enabled}">
-							<input type="hidden" name="page" value="1">
+							<input type="hidden" name="enabled" value="${enabled}"> <input
+								type="hidden" name="page" value="1">
 						</div>
 						<div class="col-auto p-1">
-							<button type="button" class="btn btn-light" onclick="searchList()"> <i class="bi bi-search"></i> </button>
+							<button type="button" class="btn btn-light"
+								onclick="searchList()">
+								<i class="bi bi-search"></i>
+							</button>
 						</div>
 					</form>
 				</div>
-				<div class="col text-end">
-					&nbsp;
-				</div>
+				<div class="col text-end">&nbsp;</div>
 			</div>
 		</div>
 
 	</div>
 </div>
 
-<div class="modal fade" data-bs-backdrop="static" id="myMemberDetaileDialogModal" tabindex="-1" aria-labelledby="myMemberDetaileDialogModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-backdrop="static"
+	id="myMemberDetaileDialogModal" tabindex="-1"
+	aria-labelledby="myMemberDetaileDialogModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="myMemberDetaileDialogModalLabel">회원상세정보</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
 			</div>
 			<div class="modal-body"></div>
 		</div>
@@ -289,3 +389,17 @@ function selectStateChange() {
 	f.memo.focus();
 }
 </script>
+<script type="text/javascript">
+            window.addEventListener('DOMContentLoaded', event => {
+                // Simple-DataTables
+                const datatablesSimple = document.getElementById('datatablesSimple');
+                if (datatablesSimple) {
+                    new simpleDatatables.DataTable(datatablesSimple, {
+                        perPage: 5, // 한 페이지에 표시할 행 수
+                        perPageSelect: [5, 10, 20], // 페이지당 선택 가능한 옵션
+                        sortable: true, // 열 정렬 가능
+                        searchable: true // 검색 기능
+                    });
+                }
+            });
+        </script>

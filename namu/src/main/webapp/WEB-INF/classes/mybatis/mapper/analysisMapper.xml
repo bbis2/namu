@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.admin.mapper.AnalysisMapper">
+
+<select id="selectPageCount" resultType="com.forest.namu.admin.domain.Analysis">
+SELECT 
+    (SELECT COUNT(*) FROM delievery) AS delieveryCount,
+    (SELECT COUNT(*) FROM daily) AS dailyCount,
+    (SELECT COUNT(*) FROM borrow) AS borrowCount,
+    (SELECT COUNT(*) FROM rent) AS rentCount,
+    (SELECT COUNT(*) FROM used) AS usedCount,
+    (SELECT COUNT(*) FROM talentMarket) AS talentMarketCount,
+    (SELECT COUNT(*) FROM togetherlist) AS togetherlistCount,
+    (SELECT COUNT(*) FROM auction) AS auctionCount
+FROM dual
+</select>
+
+</mapper>

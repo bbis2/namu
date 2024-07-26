@@ -27,7 +27,7 @@
   font-size: 28px; }
 
 .vertical_nav {
-  position: absolute;
+  position: fixed;
   left: -200px;
   top: 50px;
   bottom: 0px;
