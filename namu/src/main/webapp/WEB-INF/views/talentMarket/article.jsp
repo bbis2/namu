@@ -563,7 +563,7 @@ function validateAndSubmit() {
                     </div>
                 </div>
                 <div class="row my-4">
-				        <c:choose>
+          				  <c:choose>
 				            <c:when test="${dto.fileName != null && !dto.fileName.isEmpty()}">
 				                <div class="sub-images-container">
 				                    <c:forEach var="vo" items="${listFile}" varStatus="status">
@@ -580,7 +580,7 @@ function validateAndSubmit() {
 				    </div>
                 <div class="tabs">
                     <button id="detail-btn" class="active">상세 설명</button>
-                    <button id="review-btn">리뷰 <span class="badge badge-custom">${dto.reviewCount}</span></button>
+                    <button id="review-btn">리뷰 <span class="badge badge-custom ">${reviewCount}</span></button>
                     <button id="inquiry-btn">상품 문의</button>
                     <button id="exchange-btn">교환/환불</button>
                 </div>
@@ -807,7 +807,7 @@ function validateAndSubmit() {
 	                            </div>
 	                            <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>
 	                            <div class="seller"><i class="bi bi-person-circle"></i>${dto.nickName}</div>
-	                            <div class="price">${dto.price}원</div>
+	                            <div class="price"><fmt:formatNumber value="${dto.price}"/>원</div>
 	                            <form name="option" method="get" action="${pageContext.request.contextPath}/talent/buy">
 	                            <div class="details">
 	                                		<c:if test="${dto.optionCount > 0}">
@@ -864,7 +864,14 @@ function validateAndSubmit() {
 						                <div class="profile-subtitle">일반회원</div>
 						                <h2>${dto.nickName}</h2>
 						            </div>
-						            <img src="${pageContext.request.contextPath}/resources/images/noimage.png" alt="Profile Image">
+						            <c:choose>
+						                        <c:when test="${profile.photo != null && !profile.photo.isEmpty()}">
+						                            <img src="${pageContext.request.contextPath}/uploads/photo/${profile.photo}" class="card-img-top mb-3 main-image" alt="프로필 사진">
+						                        </c:when>
+						                        <c:otherwise>
+						                            <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="card-img-top mb-3 main-image">
+						                        </c:otherwise>
+						                    </c:choose>
 						        </div>
 						        <div class="profile-card-body">
 						            <p><i class="bi bi-clock"></i> 연락가능시간: 9:00-23:00</p>
@@ -889,7 +896,10 @@ function validateAndSubmit() {
 						        </div>
 						        <div class="profile-card-footer">
 						            <h3>소개</h3>
-						            <p>그림 짱잘그림</p>
+						            <p>${profile.ment}</p>
+						            <c:if test="${profile.ment==null}">
+						            <p>소개가 없습니다.</p>
+						            </c:if>
 						        </div>
 						    </div>
             </div>
@@ -913,6 +923,8 @@ function validateAndSubmit() {
    
     <script type="text/javascript">
     $(document).ready(function() {
+    	
+    	
         $('.tabs button').click(function() {
             var target = $(this).attr('id').replace('-btn', '-content');
             $('.tab-content').removeClass('active');

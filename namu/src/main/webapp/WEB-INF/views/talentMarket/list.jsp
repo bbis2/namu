@@ -173,6 +173,19 @@ $(function() {
     cursor: pointer;
 }
 
+.categoryName{
+margin : 0; 
+display: flex;
+color: #8B00FF;
+}
+
+.price{
+margin : 0;
+display: flex;  
+color: black;
+font-weight: bold;
+font-size: 25px;
+}
 .btn-category.active {
     background-color: #e0e0e0;
 }
@@ -185,6 +198,12 @@ $(function() {
 .highlighted-text {
     color: #8B00FF;
     font-weight: bold;
+}
+
+.flex{
+margin : 0;
+display: flex;
+justify-content: space-between;
 }
 </style>
 
@@ -369,6 +388,7 @@ $(function() {
 
   <script type="text/javascript">
   $(document).ready(function() {
+	  
 	    var currentCategory = ${categoryNum};
 
 	    function showCategoryContent(category) {
@@ -414,7 +434,7 @@ $(function() {
 	<div class="row align-items-start mb-3">
 	
 		  <c:forEach var="dto" items="${list}" varStatus="status">
-		<div class="col-lg-20 col-md-3 col-sm-6 list">
+		<div class="mt-4 col-lg-20 col-md-3 col-sm-6 list">
 			<div>
 				<div class="overflow-hidden border mb-2 ratio ratio-1x1">
 				 <c:choose>
@@ -433,12 +453,12 @@ $(function() {
 				</c:if>
 				</div>
 				
-				<a href="${articleUrl}&num=${dto.tboardNum}" class="listTitle" style="display: flex;"> <h5 class="bd"> ${dto.subject} </h5></a>
+				<a href="${articleUrl}&num=${dto.tboardNum}" class="listTitle" style="display: flex;"> <h5> ${dto.subject} </h5></a>
                
-               
-                <c:if test="${categoryNum == 0}">
+               			<div class="flex">
+                		<p class="price" ><fmt:formatNumber value="${dto.price}"/>원</p>
                         <p class="categoryName" style="margin-left: auto; display: flex; align-items: center; color: #8B00FF;"><i class="bi bi-bookmark-star-fill"></i>${dto.categoryName}</p>
-                    </c:if>
+                   		</div>
                 
 				<a href="${pageContext.request.contextPath}/talent/profile?nickname=${dto.nickName}"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
 				<div class="float-end"><i class="bi bi-clipboard-heart" style="color: red;"></i>&nbsp;${dto.type}</div> 

@@ -23,11 +23,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Member;
+import com.forest.namu.domain.Profile;
 import com.forest.namu.domain.SessionInfo;
+import com.forest.namu.domain.Summary;
 import com.forest.namu.domain.TalentMarket;
 import com.forest.namu.domain.TmOrder;
+import com.forest.namu.service.MypageService;
 import com.forest.namu.service.TalentMarketService;
 import com.forest.namu.service.TmOrderService;
+import com.forest.namu.service.TmReviewService;
 
 
 
@@ -46,6 +50,11 @@ public class TalentMarketController {
 	@Autowired
 	private MyUtil myUtil;
 	
+	@Autowired
+	private MypageService mypageService;
+	
+	@Autowired
+	private TmReviewService reviewService;
 	
 	
 	@RequestMapping("list")
@@ -254,6 +263,8 @@ public class TalentMarketController {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		kwd = URLDecoder.decode(kwd, "utf-8");
 		
+		
+		
 		String query = "page=" + page;
 		if(kwd.length() != 0) {
 			query += "schType=" + schType + 
@@ -272,6 +283,17 @@ public class TalentMarketController {
 			}
 		
 		dto.setUserLiked(service.userTalentLiked(map));
+		
+		Profile profile = mypageService.selectProfile(dto.getUserId());
+		
+		int reviewCount = 0;
+		Summary summary = reviewService.findByReviewSummary(map);
+		
+		if(summary != null) {
+			reviewCount = summary.getCount();
+		}
+		
+		
 		
 		List<TmOrder> orderList =null;
 		if(info!=null) {
@@ -299,7 +321,10 @@ public class TalentMarketController {
 		
 		service.updateHitCount(num);
 		
+	
+		model.addAttribute("profile",profile);
 		model.addAttribute("dto",dto);
+		model.addAttribute("reviewCount",reviewCount);
 		model.addAttribute("page",page);
 		model.addAttribute("listOption", listOption);
 		model.addAttribute("listOptionDetail", listOptionDetail);
