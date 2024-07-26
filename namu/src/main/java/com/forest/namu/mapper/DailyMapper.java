@@ -16,7 +16,7 @@ public interface DailyMapper {
     public void updateDaily(Daily dto) throws SQLException; // 수정
     public void deleteDaily(long num) throws SQLException; // 삭제
     
-    public int dataCount(Map<String, Object> map);            // 갯수 
+    public int dataCount(Map<String, Object> map);            // 개수 
     public List<Daily> listDaily(Map<String, Object>map);    // daily 게시판 리스트
 
     public Daily findById(long num);                          // 검색 찾기

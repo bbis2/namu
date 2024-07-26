@@ -376,4 +376,10 @@ public class TogetherController {
 			return model;
 	}
 	
+	   @GetMapping("togetherNotice")
+	   public String article() {
+	     
+	       return ".together.togetherNotice";
+	   }
+	
 }

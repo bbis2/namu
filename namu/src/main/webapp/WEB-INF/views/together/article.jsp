@@ -100,6 +100,13 @@ textarea.form-control {
     display: block;
 	padding: 40px 10px;
 }
+
+.thumb img {
+	height: 400px;
+	widows: 400px;
+	border-radius: 30px;
+}
+
 .together-info {
     padding: 40px 40px 20px 20px;
     flex-grow: 1;
@@ -172,7 +179,7 @@ textarea.form-control {
 .apply{
     border-radius: 30px;
 	height: 50px;
-	width: 620px;
+	width: 450px;
 	border: none;
 	background-color: #A4B974;
 	color: #fff;
@@ -185,7 +192,9 @@ textarea::placeholder{
 	text-align: center;
 	line-height: 80px;
 }
-
+.applybutton{
+	padding-top: 10px;
+}
 /*togetherBoard*/
 
 #myTab {
@@ -286,7 +295,7 @@ textarea::placeholder{
                         </c:otherwise>
                     </c:choose>
 				
-	                    <div>
+	                    <div class="applybutton">
 	                    	<c:if test="${sessionScope.member.userId != dto.userId}">
 		                    	<c:if test="${dto.acceptance == -1}">
 		                        	<button type="button" class="apply applyAccept">참가신청</button>
@@ -349,16 +358,13 @@ textarea::placeholder{
     <!--  여기서 부터 게시판  -->
 	<ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
 		<li class="nav-item" role="presentation">
-			<button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" type="button" role="tab" aria-controls="1" aria-selected="true">모임정보</button>
+			<button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" type="button" role="tab" aria-controls="1" aria-selected="true">모임소개</button>
 		</li>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#tab-pane-2" type="button" role="tab" aria-controls="2" aria-selected="false">공지사항<span class="title-reviewCount"></span></button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">앨범<span class="title-qnaCount"></span></button>
-		</li>
-		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="tab-4" data-bs-toggle="tab" data-bs-target="#tab-pane-4" type="button" role="tab" aria-controls="4" aria-selected="false">방명록</button>
+			<button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">게시판<span class="title-qnaCount"></span></button>
 		</li>
 	</ul>
 
@@ -374,7 +380,11 @@ textarea::placeholder{
 				</div>
 				<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
 					<div class="mt-3 pt-3 border-bottom">
-						<p class="fs-4 fw-semibold">공지사항</p> 
+						<p class="fs-4 fw-semibold">공지사항</p>
+					</div>
+
+					<div class="mt-3 p-2 text-end">
+						<button type="button" class="btnQuestion btn " ${empty sessionScope.member ? "disabled":""}> 공지사항 작성 </button>
 					</div>
 					
 					<div class="mt-2 list-review"></div>
@@ -382,28 +392,19 @@ textarea::placeholder{
 				
 				<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
 					<div class="mt-3 pt-3 border-bottom">
-						<p class="fs-4 fw-semibold">앨범</p> 
+						<p class="fs-4 fw-semibold">게시판</p> 
 					</div>
 			
 					<div class="mt-3 p-2 text-end">
-						<button type="button" class="btnMyQuestion btn btn-dark" ${empty sessionScope.member ? "disabled":""}> 내 Q&amp;A 보기  </button>
-						<button type="button" class="btnQuestion btn btn-dark" ${empty sessionScope.member ? "disabled":""}> 상품 Q&amp;A 작성 </button>
+						<button type="button" class="btnMyQuestion btn " ${empty sessionScope.member ? "disabled":""}> 내 글 보기  </button>
+						<button type="button" class="btnQuestion btn " ${empty sessionScope.member ? "disabled":""}> 글 작성 </button>
 					</div>
 					<div class="mt-1 p-2 list-question"></div>
 										
 				</div>
-				
-				<div class="tab-pane fade" id="tab-pane-4" role="tabpanel" aria-labelledby="tab-4" tabindex="0">
-					<div class="mt-3 pt-3 border-bottom">
-						<p class="fs-4 fw-semibold">방명록</p> 
-					</div>
-					<div class="mt-3">
-						<p> 배송 및 환불 정책 입니다. </p>
-					</div>				
-				</div>
 			</div>
-
 </div>
+
 <div class="modal fade" id="myApplyModal" tabindex="-1" 
 		data-bs-backdrop="static" data-bs-keyboard="false"
 		aria-labelledby="myApplyModalLabel" aria-hidden="true">

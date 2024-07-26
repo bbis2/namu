@@ -27,6 +27,7 @@ public interface DailyService {
     public void insertCategory(Daily dto) throws Exception;
     public List<Daily> listDailyCategory ();
     
+    // 댓글
     public void insertReply(Reply dto) throws Exception;
     public List<Reply> listReply (Map<String, Object> map);
     public int replyCount(Map<String, Object> map);
