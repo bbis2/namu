@@ -39,7 +39,10 @@
     margin-bottom: 5px;
 }
 
-.form-group input,
+.form-group input{
+    width: 70%;
+    padding: 10px;
+}
 .form-group textarea {
     width: 100%;
     padding: 10px;
@@ -204,7 +207,6 @@ textarea::placeholder{
 .nav-tabs .nav-link {
 	min-width: 300px;
 	background: #fff;
-	font-color:white;
 	border: none;
 	border-bottom: 2px solid #dbdddf;
 	border-radius: 0;
@@ -253,63 +255,61 @@ textarea::placeholder{
 	border: 1px solid #c2c2c2;
 	cursor: pointer;
 }
-
 </style>
 
+
+<!-- 공지사항 lsit -->
 <style>
-<style>
-/* 공지사항 */
-.form-container {
+.post-list {
+    margin-bottom: 20px;
+    padding-top: 30px;
+}
+
+.post-item {
+	width: 100%;
     background-color: white;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    padding: 20px;
-}
-.form-header {
     display: flex;
-    align-items: center;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.user-name {
-    margin-left: 10px;
+
+.post-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    font-size: 1.2em;
+    color: #666;
+}
+
+.post-date .day {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+.post-date .month-year {
+    margin-top: 5px;
+    font-size: 1.1em;
     font-weight: bold;
 }
-.form-body textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    resize: none;
+
+.post-content h2 {
+    margin: 0 0 10px;
+    font-size: 1.5em;
 }
-.form-footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 10px;
+
+.post-content p {
+    margin: 0 0 10px;
+    color: #333;
 }
-.char-counter {
+
+.post-meta {
     font-size: 0.9em;
     color: #999;
-}
-.subject input{
-    width: 80%;
-    height: 40px;
-    padding: 5px;;
-    border: none;
-    resize: none;
-}
-.submit-btn {
-    background-color: #ffcc00;
-    color: white;
-    border: none;
-    padding: 10px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    justify-content: right;
-}
-.submit-btn:hover {
-    background-color: #ff9900;
 }
 </style>
 
@@ -426,93 +426,90 @@ textarea::placeholder{
 			<button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#tab-pane-2" type="button" role="tab" aria-controls="2" aria-selected="false">공지사항<span class="title-reviewCount"></span></button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">게시판<span class="title-qnaCount"></span></button>
+			<button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">함께해요<span class="title-qnaCount"></span></button>
 		</li>
 	</ul>
 
-	
 	<div class="tab-content pt-2" id="myTabContent">
 		<!-- 모임소개 -->
 		<div class="tab-pane fade show active" id="tab-pane-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
 			<div class="mt-3 pt-3">
-				<p class="fs-4 fw-semibold"></p> 
+				<p class="fs-4 fw-semibold">상세정보</p> 
 			</div>
 			<div class="mt-3 product-content">
 				${dto.content}
 			</div>
 		</div>
-	</div>
-		
-	<!-- #1 공지사항 -->
-	<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
-		<div class="mt-3 pt-3">
-			<p class="fs-4 fw-semibold">공지사항</p>
-		</div>
-
-	<!-- 공지사항 쓰기 -->
-	<c:if test="${sessionScope.member.userId == dto.userId}">	
-    <div class="form-container">
-        <div class="form-header">
-            <div class="user-name"> 모임장 : ${dto.nickName }</div>
+	
+		<!-- #1 공지사항 -->
+		<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
+			<div class="mt-3 pt-3">
+				<p class="fs-4 fw-semibold">공지사항</p>
+			</div>
+	
+			<!-- 공지사항 쓰기 -->
+				<c:if test="${sessionScope.member.userId == dto.userId}">	
+				    <div class="form-container">
+				        <div class="form-header">
+				            <div class="profile-pic"></div>
+				            <div class="user-name">모임장 : ${sessionScope.member.nickName}</div>
+				            <input type="hidden" name="tNum" value="${tNum}">    
+				        </div>
+				        <form action="submitForm.jsp" method="POST">			        
+				            <div class="form-body">
+				            <div class="subject" style="font-weight: bold;"> 제목 :
+				            	<input name="subject" placeholder=" 제목을 입력해 주세요 :)"></input>
+				            </div>	
+				                <textarea name="content" placeholder="글을 작성해 주세요 :)"></textarea>
+				            </div>
+				            <div class="form-footer">
+				                <button type="submit"  class="btn btnSendReply">등록</button>
+				            </div>
+				        </form>
+				    </div>				
+				</c:if>	
+    <div class="post-list">
+        <div class="post-item">
+            <div class="post-date">
+            [공지글]
+                <div class="month-year">${dto.regDate}</div>
+            </div>
+            <div class="post-content">
+                <h2>${dto.subject}</h2>
+                <div class="post-meta">
+                    작성자: ${dto.nickName}
+                </div>
+            </div>
         </div>
-	        <form action="submitForm.jsp" method="POST" enctype="multipart/form-data">
-	            <div class="form-body">
-	                <div class="textarea-container">
-	                    <div class="subject" style="font-weight: bold;">
-	                        제목 : <input type="text" name="subject" placeholder="제목을 입력해 주세요 :)">
-	                    </div>
-		               	<div>
-		               	<div class="img-container">
-		                    <textarea name="content" placeholder="글을 작성해 주세요 :)"></textarea>
-		                </div>
-		                
-		                </div>
-	                </div>
-	            </div>
-	            <div class="form-footer">
-	                <button type="submit" class="submit-btn">등록</button>
-	            </div>
-	        </form>
- 			 </div>		
-	</c:if>	
-		<div class="mt-2 listNotice"></div>
-	</div>
-			
-	<!-- #2 게시판 글쓰기 -->
-	<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
-		<div class="mt-3 pt-3">
-			<p class="fs-4 fw-semibold">함께해요</p>
+    </div>			
+			<div class="mt-2 listNotice"></div>
+		</div>		
+	
+	
+		<!-- #2 함께해요 글쓰기 -->
+		<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
+			<div class="mt-3 pt-3">
+				<p class="fs-4 fw-semibold">함께해요</p>
+			</div>
+	
+			<!-- 함께해요 쓰기 -->
+			<div class="border p-2">
+			    <div class="post-header">
+			        <div style="font-weight: bold;">작성자 : ${dto.nickName}</div>
+			    </div>
+			    <form action="submitForm.jsp" method="POST" enctype="multipart/form-data">
+			        <div class="comment-box">
+			            <textarea class="form-control" placeholder="글을 작성해 주세요 :)" id="commentInput"></textarea>
+			            <div>
+			            	<button type="button" class="btn add-button">+</button>
+			                <button type="button" class="submit-button" disabled>등록</button>
+			            </div>		            
+			        </div>
+			    </form>
+			</div>		
+			<div class="mt-2 listBoard"></div>
 		</div>
-
-	<!-- 개시판 쓰기 -->
-    <div class="post-container">
-        <div class="post-header">
-            <div class="user-name"> 작성자 : ${dto.nickName }</div>
-        </div>
-	        <form action="submitForm.jsp" method="POST" enctype="multipart/form-data">
-	            <div class="post-body">
-	                <div class="textarea-container">
-	                    <div class="subject" style="font-weight: bold;">
-	                        제목 : <input type="text" name="subject" placeholder="제목을 입력해 주세요 :)">
-	                    </div>
-		               	<div>
-		               	<div class="img-container">
-		                    <textarea name="content" placeholder="글을 작성해 주세요 :)"></textarea>
-		                    <input id="img" type="file" name="selectFile" accept="image/*" class="form-control" style="display: none;">
-		                </div>
-		             
-		                
-		                </div>
-	                </div>
-	            </div>
-	            <div class="post-footer">
-	                <button type="submit" class="submit-btn">등록</button>
-	            </div>
-	        </form>
- 			 </div>		
-		<div class="mt-2 listBoard"></div>
-	</div>				
-			
+	</div>		
 </div>
 
 <div class="modal fade" id="myApplyModal" tabindex="-1" 
@@ -634,6 +631,12 @@ $(function() {
         ajaxFun(url, 'post', query, 'json', fn);
     });
 });
+
+
+// #1 공지사항 등록
+// 댓글 등록
+
+
 
 $(function(){
 	$('.btnInsertForm').on('click', function(){
