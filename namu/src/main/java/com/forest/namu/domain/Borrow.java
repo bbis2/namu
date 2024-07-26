@@ -18,6 +18,7 @@ public class Borrow {
 	private int hitCount;
 	private String location;
 	private int categoryNum;
+	private String tableName;
 	
 	// member join해서 가져오는 데이터
 	private String nickName;
@@ -39,6 +40,21 @@ public class Borrow {
 	// 찜 개수
 	private int likeCount;
 	
+	// 작성자 프로필 사진
+	private String profile;
+	
+	public String getProfile() {
+		return profile;
+	}
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
 	public String getPassedTime() {
 		return passedTime;
 	}

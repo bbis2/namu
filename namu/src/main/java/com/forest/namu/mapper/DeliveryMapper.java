@@ -29,4 +29,5 @@ public interface DeliveryMapper {
 	
 	public void updateAuthor(Delivery dto)throws Exception;
 	public void riderState(Delivery dto)throws Exception;
+	public Delivery selectAddr(long num)throws Exception;
 }

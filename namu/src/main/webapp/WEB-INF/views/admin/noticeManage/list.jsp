@@ -217,7 +217,7 @@ function searchCategory(categoryNum) {
                 <input type="text" class="search-input border border-2"  name="kwd" value="${kwd}" placeholder="검색어를 입력하세요"/>
 				<input type="hidden" name="categoryNum" value="${categoryNum}">
                 <button type="button" class="search-button" onclick="searchList()" title="검색" ><i class="fa-solid fa-magnifying-glass"></i></button>
-				<button class="btn reset" style="background-color: white; color:#74634F;"  type="button" onclick="location.href='${pageContext.request.contextPath}/noticeManage/list';">
+				<button class="btn reset" style="background-color: white; color:#74634F;"  type="button" onclick="location.href='${pageContext.request.contextPath}/admin/noticeManage/list';">
 					<i class="fa-solid fa-rotate-right"></i>
 				</button>
                 <button type="button" class="search-button" onclick="location.href='${pageContext.request.contextPath}/admin/noticeManage/write';">글올리기</button>

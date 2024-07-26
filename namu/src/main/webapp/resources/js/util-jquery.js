@@ -1,3 +1,47 @@
+const ajaxRequest = function(url, method, formData, dataType, fn, file = false, contentType = 'urlencoded') {
+	const sentinelNode = document.querySelector('.sentinel');
+	
+	const settings = {
+			type: method, 
+			data: formData,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+				
+				if(sentinelNode) {
+					sentinelNode.setAttribute('data-loading', 'true');
+				}
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					alert('권한이 필요 합니다.');
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+	}
+	
+	// 전송방식 : json 으로 전송하는 경우
+	if(contentType.toLowerCase() === 'json') {
+		settings.contentType = 'application/json; charset=utf-8';
+	}
+	
+	$.ajax(url, settings);
+};
+
 // AJAX 시작과 종료
 $(function(){
 	$(document)

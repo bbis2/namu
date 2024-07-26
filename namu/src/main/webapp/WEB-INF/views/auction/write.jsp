@@ -118,12 +118,14 @@
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">상태</td>
 				<td>
-				  <input type="radio" name="state" value="0" 
-                <c:if test="${dto.state == 0}">checked</c:if>>&nbsp;판매중
 				  <input type="radio" name="state" value="1" 
-                <c:if test="${dto.state == 1}">checked</c:if>>&nbsp;낙찰완료
+                <c:if test="${dto.state == 1}">checked</c:if>>&nbsp;유찰
 				  <input type="radio" name="state" value="2" 
-                <c:if test="${dto.state == 2}">checked</c:if>>&nbsp;유찰
+                <c:if test="${dto.state == 2}">checked</c:if>>&nbsp;경매취소
+				  <input type="radio" name="state" value="3" 
+                <c:if test="${dto.state == 3}">checked</c:if>>&nbsp;경매완료
+                  <input type="radio" name="state" value="0" 
+                <c:if test="${dto.state == 0}">checked</c:if>>&nbsp;경매중
 				</td>
 			</tr>
 			</c:if>

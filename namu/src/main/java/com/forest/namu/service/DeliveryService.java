@@ -23,5 +23,6 @@ public interface DeliveryService {
 	public long countOk(Delivery dto)throws Exception;
 	
 	public void updateAuthor(Delivery dto,String path)throws Exception;
+	public Delivery selectAddr(long num)throws Exception;
 
 }

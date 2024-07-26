@@ -120,7 +120,7 @@ textarea.form-control {
 		<tbody>
 			<tr style="font-size: 17px;">
 				<td width="50%" style="font-weight: bold;">${dto.nickname}</td>
-				<td align="right">${dto.regDate}|조회 ${dto.hitCount}</td>
+				<td align="right">${dto.regDate}|조회${dto.hitCount}</td>
 			</tr>
 
 			<tr>
@@ -165,13 +165,14 @@ textarea.form-control {
 					<c:otherwise>
 						<button type="button" class="btn btn-light" disabled>삭제</button>
 					</c:otherwise>
-				</c:choose>
-			<c:if test="${count == 0}">
-				<button type="button" class="btn btn-light" onclick="itsMe();">신청</button>
-			</c:if>	
-			<c:if test="${count != 0}">
-			<button type="button" class="btn btn-light" onclick="itsMe();" disabled>신청</button>
-			</c:if>
+				</c:choose> <c:if test="${count == 0}">
+					<button type="button" class="btn btn-light" onclick="itsMe();">신청</button>
+				</c:if> <c:if test="${count != 0}">
+					<button type="button" class="btn btn-light" onclick="itsMe();"
+						disabled>신청</button>
+				</c:if>
+				<button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
+				<button type="button" class="btn btn-light" onclick="mapOk();">지도보기</button>
 			</td>
 			<td class="text-end">
 				<button type="button" class="btn btn-light"
@@ -183,17 +184,19 @@ textarea.form-control {
 	<span class="bold">😊</span><span> 안타 안타 날려버려라 키움의 히어로 이정후 ❣️</span>
 	<div class="reply" style="display: none;">
 		<form name="answerForm" method="post" enctype="multipart/form-data">
-			<textarea class='form-control' name="" readonly style="height: 300px;">${dto.author}</textarea>
-			<img src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename1}">
-			<img src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename2}">
+			<textarea class='form-control' name="" readonly
+				style="height: 300px;">${dto.author}</textarea>
+			<img
+				src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename1}">
+			<img
+				src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename2}">
 			<table class="table table-borderless reply-form">
 				<tr>
 					<td><textarea class='form-control' name="author"></textarea>
-					<div class="img-viewer"></div> <input type="file"
-							name="selectFile1" accept="image/*">
-							<div class="img-viewer"></div> <input type="file"
-							name="selectFile2" accept="image/*">
-					</td>
+						<div class="img-viewer"></div> <input type="file"
+						name="selectFile1" accept="image/*">
+						<div class="img-viewer"></div> <input type="file"
+						name="selectFile2" accept="image/*"></td>
 				</tr>
 				<tr>
 					<td align='right'><input type="hidden" name="num"
@@ -208,7 +211,8 @@ textarea.form-control {
 </div>
 
 
-<c:if test="${sessionScope.member.membership>98 || (dstart > 1 && dstart != 2)}">
+<c:if
+	test="${sessionScope.member.membership>98 || (dstart >= 1 && dstart != 2)}">
 	<script type="text/javascript">
 	console.log(${dstart});
 		$(function() {
@@ -285,6 +289,81 @@ textarea.form-control {
 	</div>
 </div>
 
+<div class="modal fade" id="map2" tabindex="-1"
+	data-bs-backdrop="static" data-bs-keyboard="false"
+	aria-labelledby="map2" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<!-- 여기서 modal-sm을 modal-lg로 변경 -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">지도로 보기</h5>
+				&nbsp;&nbsp;
+				<button type="button" class="btn btn-primary"
+					onclick="getDistanceFromLatLonInKm();">거리계산</button>
+				<!-- id 속성 제거 -->
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<div id="mapContent" style="width: 100%; height: 350px;"></div>
+				<!-- id 수정 -->
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+
+
+
+<!-- 신고 모달 -->
+<div class="modal fade" id="SinGoModal" tabindex="-1"
+	data-bs-backdrop="static" data-bs-keyboard="false"
+	aria-labelledby="SinGoModal" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="">신고하기</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="p-3">
+					<form name="SinGoForm" action="" method="post" class="row g-3">
+						<div class="mt-0">
+							<p class="form-control-plaintext">신고유형과 사유를 적어주세요</p>
+						</div>
+						<div class="mt-0">
+							<select id="reportType" name="reportType" class="form-select">
+								<option value="욕설/인신공격" selected>욕설/인신공격</option>
+								<option value="개인정보노출">개인정보노출</option>
+								<option value="불법정보">불법정보</option>
+								<option value="같은내용반복(도배)">같은내용반복(도배)</option>
+								<option value="기타">기타</option>
+							</select>
+						</div>
+						<div>
+							<input type="text" name="reportContent" autocomplete="off"
+								class="form-control" placeholder="신고사유 : ">
+						</div>
+						<input type="hidden" name="Field" value="${dto.tableName}">
+						<!-- 파라미터 num -->
+						<input type="hidden" name="postNum" value="${dto.num}"> <input
+							type="hidden" name="banUser" value="${dto.userId}"> <input
+							type="hidden" name="subject" value="${dto.subject}">
+						<div>
+							<button type="button" class="btn btn-primary w-100"
+								onclick="sendOk();">신고하기</button>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
 	function login() {
 		location.href = '${pageContext.request.contextPath}/member/login';
@@ -398,4 +477,107 @@ textarea.form-control {
 		f.submit();
 
 	}
+	
+	function mapOk(){
+		$('#map2').modal('show');
+	}
+	
+	
+	 function getDistanceFromLatLonInKm() {
+		 let lat1 = ${latitude1};
+		let lng1 = ${longitude1};
+		let lat2 = ${latitude2};
+		let lng2 = ${longitude2};
+		
+		 function deg2rad(deg) {
+		        return deg * (Math.PI/180)
+		    }
+		    var r = 6371; //지구의 반지름(km)
+		    var dLat = deg2rad(lat2-lat1);
+		    var dLon = deg2rad(lng2-lng1);
+		    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+		    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		    
+		    var d = r * c; // Distance in km
+		    alert(Math.round(d*1000)+'m 입니다');
+		    return Math.round(d*1000);
+		
+	    }
+	
+	
+	//신고관련
+	
+	function SinGo(){
+		$('#SinGoModal').modal('show');
+	}
+	
+	function sendOk() {
+		const f = document.SinGoForm;
+		let str = f.reportContent.value.trim();
+		
+	    if (!confirm("정말 신고하시겠습니까?")) {
+	        return;
+	    }
+	    
+	    if(!str){
+	    	alert("사유를 입력해주세요");
+	    }
+	    
+	    f.action = "${pageContext.request.contextPath}/singo/reception";
+	    f.submit();
+	}
+
+
+</script>
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bd17f1bf688c4db20bc89158d76400a0&libraries=services"></script>
+<script>
+$('#map2').on('shown.bs.modal', function () {
+    let lat1 = ${latitude1};
+    let lng1 = ${longitude1};
+    let lat2 = ${latitude2};
+    let lng2 = ${longitude2};
+    
+    var mapContainer = document.getElementById('mapContent');
+    var centerCoords = new kakao.maps.LatLng(lat1, lng1); // 출발지 좌표
+    var centerCoords2 = new kakao.maps.LatLng(lat2, lng2); // 도착지 좌표
+
+    var map = new kakao.maps.Map(mapContainer, {
+        center: centerCoords,
+        level: 2
+    });
+
+    // 출발지 마커 생성
+    var marker = new kakao.maps.Marker({
+        position: centerCoords
+    });
+    
+    // 도착지 마커 생성
+    var marker2 = new kakao.maps.Marker({
+        position: centerCoords2
+    });
+
+    // 출발지 정보 창 생성
+    var infowindow = new kakao.maps.InfoWindow({
+        content: '<div style="padding:3px; text-align:center;">출발지</div>'
+    });
+
+    // 도착지 정보 창 생성
+    var infowindow2 = new kakao.maps.InfoWindow({
+        content: '<div style="padding:3px; text-align:center;">도착지</div>'
+    });
+
+    // 마커를 지도에 추가
+    marker.setMap(map);
+    marker2.setMap(map);
+
+    // 정보 창을 마커와 지도에 연결
+    infowindow.open(map, marker);
+    infowindow2.open(map, marker2);
+
+    // 지도 컨테이너 크기 변경 시 지도 크기 조절
+    map.relayout();
+});
+
+
 </script>

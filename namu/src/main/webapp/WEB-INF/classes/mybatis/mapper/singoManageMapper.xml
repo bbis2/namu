@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.forest.namu.admin.mapper.SingoManageMapper">
+	<select id="listReport" parameterType="map"
+		resultType="com.forest.namu.admin.domain.Singo">
+		SELECT
+		reportNum,postNum,Field,ReportDate,ReportType,ReportContent,UserId,BanUser,subject
+		FROM report r
+		<where>
+			<if test="kwd!=null and kwd!='' ">
+				<include refid="where-list" />
+			</if>
+			AND processresult = #{processresult1}
+
+		</where>
+
+	</select>
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT COUNT(*)
+		FROM report r
+		<where>
+			<if test="kwd!=null and kwd!='' ">
+				<include refid="where-list" />
+			</if>
+			AND r.processresult = #{processresult1}
+
+		</where>
+	</select>
+
+	<sql id="where-list">
+		<choose>
+			<when test="schType=='userId'">
+				INSTR(r.BanUser, #{kwd}) &gt;= 1
+			</when>
+			<otherwise>
+				INSTR(${schType}, #{kwd}) &gt;= 1
+			</otherwise>
+		</choose>
+	</sql>
+
+	<update id="updateUser"
+		parameterType="com.forest.namu.admin.domain.Singo">
+		UPDATE report
+		SET processresult = 1,
+		banDate = SYSDATE +
+		#{banDate},
+		resulttype = #{resulttype}
+		WHERE banUser = #{banUser} AND
+		reportNum = #{reportNum}
+	</update>
+	<update id="updateMember" parameterType="String">
+		UPDATE member SET
+		enabled = 0 WHERE userId = #{userId}
+	</update>
+
+	<select id="selectUser"
+		resultType="com.forest.namu.admin.domain.Singo">
+		SELECT resultType, banUser, banDate ,
+		reportNum,processresult,reportNum
+		FROM report
+		WHERE processresult = 1
+		ORDER BY banDate ASC
+	</select>
+
+	<update id="releaseUser">
+		UPDATE report r
+		SET
+		r.resultType = NULL,
+		r.processresult = -1,
+		r.banDate = NULL
+		WHERE
+		r.processresult = 1
+		AND banDate &lt; SYSDATE
+	</update>
+	
+	<update id="releaseMember">
+		UPDATE member m
+		SET m.enabled = 1
+		WHERE m.userId = #{userId}
+	</update>
+
+	<update id="releaseUser2" parameterType="String">
+		UPDATE report r
+		SET
+		r.resultType = NULL,
+		r.processresult = -1,
+		r.banDate = NULL
+		WHERE
+		r.processresult = 1
+		AND r.banUser = #{userId}
+	</update>
+
+	<update id="releaseUserMember2" parameterType="String">
+		UPDATE member m
+		SET m.enabled = 1
+		WHERE m.userId = #{userId}
+	</update>
+
+	<delete id="deleteChadan" parameterType="long">
+		DELETE FROM report WHERE
+		reportNum = #{reportNum}
+	</delete>
+
+	<update id="updateEnabled" parameterType="String">
+		UPDATE member set
+		enabled = 1 WHERE userId = #{userId}
+	</update>
+
+
+</mapper>

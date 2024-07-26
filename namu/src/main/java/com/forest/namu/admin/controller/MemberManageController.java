@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.admin.domain.AnalysisManage;
 import com.forest.namu.admin.domain.MemberManage;
+import com.forest.namu.admin.domain.Singo;
 import com.forest.namu.admin.service.MemberManageService;
+import com.forest.namu.admin.service.SingoManageService;
 import com.forest.namu.common.MyUtil;
 
 @Controller
@@ -28,7 +30,10 @@ import com.forest.namu.common.MyUtil;
 public class MemberManageController {
 	@Autowired
 	private MemberManageService service;
-
+	
+	@Autowired
+	private SingoManageService sservice;
+	
 	@Autowired
 	@Qualifier("myUtilGeneral")
 	private MyUtil myUtil;
@@ -114,11 +119,9 @@ public class MemberManageController {
 	@GetMapping("profile")
 	public String detaileMember(@RequestParam String userId, Model model) throws Exception {
 		MemberManage dto = service.findById(userId);
-		MemberManage memberState = service.findByState(userId);
 		List<MemberManage> listState = service.listMemberState(userId);
 
 		model.addAttribute("dto", dto);
-		model.addAttribute("memberState", memberState);
 		model.addAttribute("listState", listState);
 
 		return "admin/memberManage/profile";
@@ -162,6 +165,78 @@ public class MemberManageController {
 
 		return ".admin.memberManage.analysis";
 	}
+	
+	@RequestMapping("singo")
+	public String singo(@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(value = "processresult1", defaultValue = "0")int processresult1,
+			@RequestParam(defaultValue = "") String kwd,
+			@RequestParam(defaultValue = "userId") String schType,
+			@RequestParam(defaultValue = "") String enabled,
+			HttpServletRequest req,
+			Model model) throws Exception {
+		// 회원 신고
+		
+		int size = 10;
+		int total_page = 0;
+		int dataCount = 0;
+		
+		String cp = req.getContextPath();
+
+		System.out.println("processresult1"+processresult1);
+		if (req.getMethod().equalsIgnoreCase("GET")) {
+			kwd = URLDecoder.decode(kwd, "utf-8");
+		}
+
+		// 전체 페이지 수
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("schType", schType);
+		map.put("kwd", kwd);
+		map.put("processresult1", processresult1);
+
+		dataCount = sservice.dataCount(map);
+		if (dataCount != 0) {
+			total_page = myUtil.pageCount(dataCount, size);
+		}
+
+		// 다른 사람이 자료를 삭제하여 전체 페이지수가 변화 된 경우
+		if (total_page < current_page) {
+			current_page = total_page;
+		}
+
+		// 리스트에 출력할 데이터를 가져오기
+		int offset = (current_page - 1) * size;
+		if(offset < 0) offset = 0;
+
+		map.put("offset", offset);
+		map.put("size", size);
+
+		String query = "";
+		String listUrl = cp + "/admin/memberManage/singo";
+
+		if (kwd.length() != 0) {
+			query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+		}
+		
+		if (query.length() != 0) {
+			listUrl = listUrl + "?" + query;
+		}
+
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+		
+		List<Singo> list = sservice.listReport(map);
+		
+		model.addAttribute("processresult1",processresult1);
+		model.addAttribute("list",list);
+		model.addAttribute("page", current_page);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("size", size);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+		model.addAttribute("enabled", enabled);
+		model.addAttribute("schType", schType);
+		model.addAttribute("kwd", kwd);
+		return ".admin.memberManage.singo";
+	}
 
 	// 회원 연령대별 인원수 : AJAX-JSON 응답
 	@GetMapping("ageAnalysis")
@@ -176,4 +251,44 @@ public class MemberManageController {
 
 		return model;
 	}
+	
+	@PostMapping("chadan")
+	public String updateUser(Singo dto
+			) throws Exception {
+		try {
+			
+			sservice.updateUser(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:/admin/memberManage/singo";
+	}
+	
+	@GetMapping("endUser")
+	public String deleteChadan(@RequestParam long reportNum,
+			@RequestParam String userId) {
+		try {
+			sservice.deleteChadan(reportNum,userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:/admin/memberManage/singo";
+	}
+	
+	@GetMapping("freeUser")
+	public String freeUser(@RequestParam long reportNum,
+			@RequestParam String userId) {
+		try {
+			sservice.releaseUser2(userId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:/admin/memberManage/singo";
+	}
+	
+	
 }

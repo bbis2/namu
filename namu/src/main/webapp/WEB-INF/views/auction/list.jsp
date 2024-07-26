@@ -94,10 +94,13 @@
 				<div>현재 입찰가 : <fmt:formatNumber value="${dto.bid}"/>원
 					<div style="float: right;">
 						<c:if test="${dto.state == 1}" >
-							<span style="color: #D24F04; font-weight: bold;">낙찰완료</span>
+							<span style="color: #D24F04; font-weight: bold;">유찰</span>
 						</c:if>	
 						<c:if test="${dto.state == 2}">
-							<span style="color: #2E8B1F; font-weight: bold;">유찰</span>
+							<span style="color: #8B0000; font-weight: bold;">경매취소</span>
+						</c:if>	
+						<c:if test="${dto.state == 3}">
+							<span style="color: #2E8B1F; font-weight: bold;">경매완료</span>
 						</c:if>	
 						<c:if test="${dto.state == 0}">
 						</c:if>				

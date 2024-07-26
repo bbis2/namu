@@ -53,129 +53,81 @@ $(function(){
 });
 </script>
 
-<header class="header clearfix">
-	<button type="button" id="toggleMenu" class="toggle_menu">
-		<i class="fa-solid fa-bars"></i>
-	</button>
-	
-	<div class="header-container">
-		<div class="header-left">
-			<h1>관리자 페이지</h1>
-		</div>
-		<div class="header-right">
-			<span class="img" style="background-image: url('${pageContext.request.contextPath}/resources/images/person.png');"></span>
-			<span class="roll-user">
-				<label class="roll">관리자</label>
-				<label class="user">
-					<span class="name">관리자 님</span>
-					<a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
-				</label>
-			</span>
-		</div>
-	</div>
-
-</header>
-
 <nav class="vertical_nav">
 	<ul id="js-menu" class="menu">
-	
 		<li class="menu--item">
 			<a href="${pageContext.request.contextPath}/admin" class="menu--link" title="Home">
-				<i class="menu--icon  fa-fw fa-solid fa-house"></i>
+				<i class="menu--icon bi bi-h-square"></i>
 				<span class="menu--label">Home</span>
 			</a>
 		</li>
-
+	
 		<li class="menu--item">
-	        <a href="#" class="menu--link" title="회원 관리">
-				<i class="menu--icon  fa-fw fa-solid fa-user-group"></i>
-				<span class="menu--label">회원 관리</span>
+	        <a href="<c:url value='/admin/memberManage/list'/>" class="menu--link" title="회원관리">
+				<i class="menu--icon bi bi-person-square"></i>
+				<span class="menu--label">회원관리</span>
 			</a>
 		</li>
 	
 		<li class="menu--item menu--item__has_sub_menu">
 			<label class="menu--link" title="고객센터관리">
-				<i class="menu--icon  fa-fw fa-solid fa-person-circle-question"></i>
+				<i class="menu--icon bi bi-question-square"></i>
 				<span class="menu--label">고객센터관리</span>
 			</label>
-
+	
 			<ul class="sub_menu">
 				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">자주하는 질문</a>
+					<a href="<c:url value='/admin/noticeManage/list'/>" class="sub_menu--link">공지사항</a>
 				</li>
 				<li class="sub_menu--item">
-					<a href="${pageContext.request.contextPath}/admin/noticeManage/list" class="sub_menu--link">공지사항</a>
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">1:1문의</a>
 				</li>
 				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">1:1문의</a>
-				</li>
-				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">이벤트</a>
-				</li>
-				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">신고</a>
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">이벤트</a>
 				</li>
 			</ul>
-		</li>
-
-		<li class="menu--item menu--item__has_sub_menu">
-			<label class="menu--link" title="강좌관리">
-				<i class="menu--icon  fa-fw fa-solid fa-graduation-cap"></i>
-				<span class="menu--label">강좌관리</span>
-			</label>
-
-			<ul class="sub_menu">
-				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">카테고리</a>
-				</li>
-				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">강좌</a>
-				</li>
-				<li class="sub_menu--item">
-					<a href="#" class="sub_menu--link">강사</a>
-				</li>
-			</ul>
-		</li>
-
-		<li class="menu--item">
-			<a href="#" class="menu--link" title="일정관리">
-				<i class="menu--icon  fa-fw fa-regular fa-calendar"></i>
-				<span class="menu--label">일정관리</span>
-			</a>
 		</li>
 		
-		<li class="menu--item">
-			<a href="#" class="menu--link" title="지역명소관리">
-				<i class="menu--icon  fa-fw fa-solid fa-location-dot"></i>
-				<span class="menu--label">지역명소관리</span>
-			</a>
+		<li class="menu--item menu--item__has_sub_menu">
+			<label class="menu--link" title="통계">
+				<i class="menu--icon bi bi-question-square"></i>
+				<span class="menu--label">목차별 통계 확인</span>
+			</label>
+	
+			<ul class="sub_menu">
+				<li class="sub_menu--item">
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">접속자</a>
+				</li>
+				<li class="sub_menu--item">
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">포인트</a>
+				</li>
+				<li class="sub_menu--item">
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">게시물</a>
+				</li>
+				<li class="sub_menu--item">
+					<a href="<c:url value='/admin/'/>" class="sub_menu--link">VIP</a>
+				</li>
+			</ul>
 		</li>
 
+	
 		<li class="menu--item">
-			<a href="#" class="menu--link" title="메인화면 설정">
-				<i class="menu--icon  fa-fw fa-solid fa-gear"></i>
-				<span class="menu--label">메인화면 설정</span>
-			</a>
-		</li>
-
-		<li class="menu--item">
-			<a href="#" class="menu--link" title="GroupWare">
-				<i class="menu--icon  fa-fw fa-solid fa-id-card"></i>
+	        <a href="#" class="menu--link" title="GroupWare">
+				<i class="menu--icon bi bi-c-square"></i>
 				<span class="menu--label">GroupWare</span>
 			</a>
 		</li>
-
+	
 		<li class="menu--item">
-			<a href="${pageContext.request.contextPath}/member/logout" class="menu--link" title="Logout">
-				<i class="menu--icon fa-fw fa-solid fa-lock-open"></i>
+	        <a href="${pageContext.request.contextPath}/member/logout" class="menu--link" title="Logout">
+				<i class="menu--icon bi bi-unlock"></i>
 				<span class="menu--label">Logout</span>
 			</a>
 		</li>
 	</ul>
-
+	
 	<button id="collapse_menu" class="collapse_menu">
-		<i class="collapse_menu--icon fa fa-fw"></i>
+		<i class="collapse_menu--icon bi bi-chevron-left"></i>
 		<span class="menu--label">Menu</span>
-	</button>
-
+	</button>	
 </nav>

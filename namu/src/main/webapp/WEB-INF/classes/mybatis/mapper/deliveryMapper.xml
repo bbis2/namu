@@ -33,7 +33,7 @@
 	<select id="listDelivery" parameterType="map"
 		resultType="com.forest.namu.domain.Delivery">
 		SELECT d.num, d.state, d.subject, d.hitCount, d.point,
-		TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
+		TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,d.tableName,
 		m.nickname, d.content, d.town
 		FROM delievery d
 		JOIN member m ON d.userId = m.userId
@@ -86,7 +86,7 @@
 
 	<select id="findById" parameterType="Long"
 		resultType="com.forest.namu.domain.Delivery">
-		SELECT d.num, d.userId, m.nickname, d.subject,
+		SELECT d.num, d.userId, m.nickname, d.subject,d.tableName,
 		d.content,d.author,d.imageFilename1,d.imageFilename2,
 		d.hitCount,
 		d.regDate, d.receive, d.receive2, d.saddr, d.saddr2, d.point
@@ -170,5 +170,9 @@
 		UPDATE rider SET dstart = 3 WHERE userId = #{userId} AND
 		num2 = #{num2}
 	</update>
+	
+	<select id="selectAddr" parameterType="long" resultType="com.forest.namu.domain.Delivery">
+	select saddr,receive from delievery where num = #{num}
+	</select>
 
 </mapper>

@@ -32,6 +32,13 @@ public interface AuctionMapper {
 	public Auction findByFileId(long num) throws SQLException;
 	
 	// 입찰하기
-	public void insertBid(Auction dto) throws SQLException;
-
+	public void insertBid(Map<String, Object> map) throws SQLException;
+	// 유저별 경매 참여 금액
+	public List<Auction> listBid(Map<String, Object> map);
+	// 경매 입찰 최고가
+	public Auction findByMaxBid(Map<String, Object> map);
+	// 유저의 마지막 경매 내역
+	public Auction findByUserBid(Map<String, Object> map);
+	// 경매완료
+	public void auctionSold(Auction dto) throws SQLException;
 }

@@ -250,7 +250,7 @@ public class BorrowServiceImpl implements BorrowService {
 		try {
 			category = mapper.listCategory();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return category;
 	}

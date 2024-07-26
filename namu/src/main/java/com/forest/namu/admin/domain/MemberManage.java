@@ -41,6 +41,9 @@ public class MemberManage {
 	private int stateCode;
 	private long reportNum; // 신고 번호
 	
+	private String resultType;
+	private String banDate;
+	
 	
 	public long getMemberIdx() {
 		return memberIdx;
@@ -233,5 +236,17 @@ public class MemberManage {
 	}
 	public void setReportNum(long reportNum) {
 		this.reportNum = reportNum;
+	}
+	public String getResultType() {
+		return resultType;
+	}
+	public void setResultType(String resultType) {
+		this.resultType = resultType;
+	}
+	public String getBanDate() {
+		return banDate;
+	}
+	public void setBanDate(String banDate) {
+		this.banDate = banDate;
 	}
 }
