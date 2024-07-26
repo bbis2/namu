@@ -5,6 +5,7 @@
         display: flex;
         flex-direction: row;
 		transition: 0.2s;
+		justify-content: space-between;
     }
 
     .main-category-icon-container:hover {
@@ -37,44 +38,7 @@
 		position: relative;
         overflow-x: hidden;
     }
-
-    .category-btn {
-        background-color: white;
-        width: 48px;
-        height: 48px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-    }
-	
-	.category-btn:hover {
-        cursor: pointer;
-    }
-
-	.category-btn-container {
-        position: absolute;
-        display: flex;
-        top: 0;
-        width: 120px;
-        height: 120px;
-		align-items: center;
-	}
-
-    .category-right-btn-container {
-        right: 0;
-        justify-content: right;
-        background: linear-gradient(to left, #ffffff 30%, rgba(255, 0, 0, 0));
-        padding-right: 10px;
-
-    }
-
-    .category-left-btn-container {
-        left: -5px;
-        justify-content: left;
-        background: linear-gradient(to right, #ffffff 10%, rgba(255, 0, 0, 0));
-        padding-left: 10px;
-    }
+    
 </style>
 
 
@@ -126,40 +90,5 @@
 		</div>
 	</div>
 
-	<div class="category-left-btn-container category-btn-container">
-		<div id="category-left-btn" class="category-btn shadow-sm">
-			<i class="bi bi-chevron-left"></i>
-		</div>
-	</div>
-
-	<div class="category-right-btn-container category-btn-container">
-		<div id="category-right-btn" class="category-btn shadow-sm">
-			<i class="bi bi-chevron-right"></i>
-		</div>
-	</div>
 </div>
-
-<script>
-    let $categoryLeft = $('#category-left-btn');
-    let $categoryRight = $('#category-right-btn');
-    let $categoryLeftContainer = $('.category-left-btn-container');
-    let $categoryRightContainer = $('.category-right-btn-container');
-
-    $(function () {
-        $categoryLeftContainer.hide()
-    });
-
-    $categoryRight.click(function () {
-        document.getElementsByClassName('main-category-icon-container')[0].style.transform = 'translateX(-25%)';
-        $categoryRightContainer.hide()
-        $categoryLeftContainer.show()
-    });
-
-    $categoryLeft.click(function () {
-        document.getElementsByClassName('main-category-icon-container')[0].style.transform = 'translateX(0)';
-        $categoryLeftContainer.hide()
-        $categoryRightContainer.show()
-    });
-</script>
-
 

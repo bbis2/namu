@@ -15,23 +15,33 @@
     <tbody>
             <c:forEach var="qna" items="${qnalist}" varStatus="status">
                 <tr>
-                    <td>${qna.qNum}</td>
-                    <c:if test="${qna.secret == 1}">
-                        <td style="text-align: left; cursor: pointer;" onclick="clickContent(${qna.qNum})">🔒 ${qna.subject}</td>
-                    </c:if>
-                    <c:if test="${qna.secret == 0}">
+                <td>${qna.qNum}</td>
+                <c:choose>
+                    <c:when test="${qna.secret == 1}">
+                        <c:if test="${qna.nickName == sessionScope.member.nickName || sessionScope.member.nickName == '관리자'}">
+                            <td style="text-align: left; cursor: pointer;" onclick="clickContent(${qna.qNum})">🔒 ${qna.subject}</td>
+                        </c:if>
+                        <c:if test="${qna.nickName != sessionScope.member.nickName}">
+                            <td style="text-align: left;">🔒 ${qna.subject}</td>
+                        </c:if>
+                    </c:when>
+                    <c:when test="${qna.secret == 0}">
                         <td style="text-align: left; cursor: pointer;" onclick="clickContent(${qna.qNum})">${qna.subject}</td>
-                    </c:if>
-                    <td>${qna.nickName}</td>
-                    <td>${qna.questionDate}</td>
-                </tr>
+                    </c:when>
+                </c:choose>
+                <td>${qna.nickName}</td>
+                <td>${qna.questionDate}</td>
+            </tr>
                 <tr id="content${qna.qNum}" class="content">
                     <td colspan="4">
                     	<div class="p-1">
                           	<div class="px-3" style="text-align: left; white-space: pre;"> &lt; ${qna.nickName} &gt; 님 문의 내용</div>
 	                        <div class="fs-6 p-3" style="text-align: left; white-space: pre; ">${qna.content}</div>
 	                        <div class="pe-3" style="text-align: right;">
-	                        	<button class="btn-reply" onclick="clickAnswer(${qna.qNum})">${empty qna.answer ? "답변하기" : "답변보기"}</button>
+	                        	<button class="btn-reply" onclick="clickAnswer(${qna.qNum})">${empty qna.answer ? "답변하기" : ""}</button>
+	                        </div>
+	                        <div class="pe-3" style="text-align: right;">
+	                        	<button class="btn-reply" onclick="clickAnswer(${qna.qNum})">${not empty qna.answer ? "답변보기" : ""}</button>
 	                        </div>
                         </div>
                     </td>
@@ -64,5 +74,5 @@
         </tbody>
 </table>
 <div class="page-navigation">
-	${dataCount==0? "등록된 게시글이 없습니다." : paging }
+	${dataCount==0? "등록된 문의가 없습니다." : paging }
 </div>
