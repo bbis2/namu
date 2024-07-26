@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Member;
@@ -29,6 +30,7 @@ import com.forest.namu.domain.Summary;
 import com.forest.namu.domain.TalentMarket;
 import com.forest.namu.domain.TmOrder;
 import com.forest.namu.service.MypageService;
+import com.forest.namu.service.PointService;
 import com.forest.namu.service.TalentMarketService;
 import com.forest.namu.service.TmOrderService;
 import com.forest.namu.service.TmReviewService;
@@ -56,6 +58,8 @@ public class TalentMarketController {
 	@Autowired
 	private TmReviewService reviewService;
 	
+	@Autowired
+	private PointService pointService;
 	
 	@RequestMapping("list")
 	public String list(Member member,TalentMarket dto, HttpSession session,
@@ -397,10 +401,23 @@ public class TalentMarketController {
 	}
 	
 	@GetMapping("order")
-	public String order(Member member, HttpSession session, Model model,
+	public String order(Member member, HttpSession session, HttpServletRequest request, Model model,
 			@RequestParam Optional<String> option1,
             @RequestParam Optional<String> option2,
 			@RequestParam long tboardNum) {
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String referer = request.getHeader("Referer");	
+		if (info==null) {
+			 return "redirect:"+ referer;
+		}
+		int userPoint = 0;
+		try {
+			userPoint = pointService.selectPoint(info.getUserId());
+		} catch (Exception e) {
+		}
+		
 		
 		
 		TalentMarket dto=service.findById(tboardNum);
@@ -409,12 +426,53 @@ public class TalentMarketController {
 		String opt1 = option1.orElse("0");
 	    String opt2 = option2.orElse("0");
 		
+	    model.addAttribute("userPoint",userPoint);
 		model.addAttribute("dto",dto);
 		model.addAttribute("listOption",listOption);
 		model.addAttribute("option1",opt1);
 		model.addAttribute("option2",opt2);
 		
 		return ".talentMarket.order";
+	}
+	
+	@PostMapping("order")
+	public String orderSubmit(HttpSession session,
+			final RedirectAttributes reAttr,
+			@RequestParam long tboardNum,
+			@RequestParam int usePoint,
+			@RequestParam String option1,
+            @RequestParam String option2,
+            @RequestParam int quantity
+			) {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		TmOrder dto = new TmOrder();
+		dto.setTboardNum(tboardNum);
+		dto.setUserId(info.getUserId());
+		dto.setOptionValue(option1);
+		dto.setOptionValue2(option2);
+		dto.setQuantity(quantity);
+		try {
+		 orderService.insertTmOrder(dto);
+		} catch (Exception e) {
+		}
+		
+		TalentMarket talentdto = service.findById(tboardNum);
+		
+		int userPoint = 0;
+		try {
+			userPoint = pointService.selectPoint(info.getUserId());
+		} catch (Exception e) {
+		}
+		
+		
+		
+		reAttr.addFlashAttribute("talentdto",talentdto);
+		reAttr.addFlashAttribute("userPoint",userPoint);
+		reAttr.addFlashAttribute("option1", option1);
+		reAttr.addFlashAttribute("option2",option2);
+		
+		return "redirect:/talent/ordercomplete";
 	}
 	
 	@GetMapping("ordercomplete")

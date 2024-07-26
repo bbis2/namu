@@ -11,6 +11,7 @@ public class TmOrder {
 	private String subject;
 	private String thumbnail;
 	private int price;
+	private int quantity;
 	
 	private String nickName;
 	
@@ -32,6 +33,13 @@ public class TmOrder {
 	private List<String> optionValues2;
 	
 	
+	
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 	public long getApplNum() {
 		return applNum;
 	}

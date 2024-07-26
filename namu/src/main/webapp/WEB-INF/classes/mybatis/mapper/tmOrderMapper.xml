@@ -3,8 +3,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.forest.namu.mapper.TmOrderMapper">
 	<insert id="insertTmOrder" parameterType="com.forest.namu.domain.TmOrder">
-		INSERT INTO tmOrder(applNum,applDate,state,userId,tboardNum) 
-		VALUES(tmorder_seq.NEXTVAL,SYSDATE,0,#{userId},#{tboardNum})
+		INSERT INTO tmOrder(applNum,applDate,state,userId,tboardNum,optionValue,optionValue2,quantity) 
+		VALUES(tmorder_seq.NEXTVAL,SYSDATE,0,#{userId},#{tboardNum},#{optionValue},#{optionValue2},${quantity})
 	</insert>
 	
 	<select id="listTmOrder" parameterType="long" resultType="com.forest.namu.domain.TmOrder">

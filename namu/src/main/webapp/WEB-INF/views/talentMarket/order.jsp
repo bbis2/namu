@@ -177,7 +177,7 @@ function updateOrderPrice() {
     const pricePerItem = ${dto.price};
     const quantity = document.getElementById('quantity').value;
     const orderAmount = pricePerItem * quantity;
-	const userPoint = ${sessionScope.member.point==null?'0':sessionScope.member.point};
+	const userPoint = ${userPoint==null?'0':userPoint};
 	
     document.getElementById('orderAmount').textContent = orderAmount + '원';
     if(orderAmount>userPoint){
@@ -231,7 +231,9 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
         <div class="one">
             <h1>결제하기</h1>
         </div>
+        <form name="orderForm" action="${pageContext.request.contextPath}/talent/ordercomplete" method="post">
         <div class="order-summary">
+        	
 			    <div class="order-details">
 			        <h2>주문내역</h2>
 			        <div class="order-item">
@@ -282,23 +284,24 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 			            </tr>
 			            <tr>
 			                <td>보유 포인트</td>
-			                <td>${sessionScope.member.point==null?"0":sessionScope.member.point}원</td>
+			                <td>${userPoint==null?"0":userPoint}원</td>
 			            </tr>
 			           
 			            <tr>
 			                <td>총 결제금액</td>
-			                <td id="totalAmount">${(dto.price - sessionScope.member.point)<0?'0':(dto.price - sessionScope.member.point)} 원</td>
+			                <td id="totalAmount">${(dto.price - userPoint)<0?'0':(dto.price - userPoint)} 원</td>
 			            </tr>
 			             <tr>
 			                <td>결제시 남는 포인트</td>
-			                <td id="totalPoint">${(sessionScope.member.point)-dto.price<0?'0':(sessionScope.member.point)-dto.price}원</td>
+			                <td id="totalPoint">${(userPoint)-dto.price<0?'0':(userPoint)-dto.price}원</td>
 			            </tr>
 			        </table>
 			    </div>
 			</div>
 			<div class="total-price">
-			    <p>총 결제금액: <span id="totalAmountText">${(dto.price - sessionScope.member.point)<0?'0':(dto.price - sessionScope.member.point)}원</span></p>
+			    <p>총 결제금액: <span id="totalAmountText">${(dto.price - userPoint)<0?'0':(dto.price - userPoint)}원</span></p>
 			</div>
+			</form>
         
         <div class="footer-notes">
               <div class="accordion" id="accordionExample">
@@ -358,6 +361,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
     <script type="text/javascript">
     
     function sendOk() {
+    	 const f = document.orderForm;
     	 var totalAmountElement = document.getElementById("totalAmount");
 
  	    // 요소의 텍스트 값 가져오기
@@ -368,10 +372,15 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
         var money =numericValue;
         if (money ==0) {
         	location.href='${pageContext.request.contextPath}/talent/ordercomplete';
-            
+        	 f.submit;
         } else {
             selectSeq(function(sequence) {
                 requestPay(money, sequence);
+                if (requestPay==true) {
+					f.submit();
+				}else if (requestPay==false) {
+					return false;
+				}
             });
         }
     }
@@ -394,7 +403,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 
     	function pointCharge(sequence,money) {
     	    let url = "${pageContext.request.contextPath}/mypage/pointCharge";
-    	    let currentPoint = "${sessionScope.member.point}";
+    	    let currentPoint = "${userPoint}";
     	    let pointVar = money;
     	    
     	    
@@ -437,10 +446,12 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 				
 				pointCharge(sequence,money);
 				alert('결제가 완료되었습니다...');
-				
+				location.href='${pageContext.request.contextPath}/talent/ordercomplete';
+				return true;
 			} else {
 				alert('fail...');
 				console.log(resp);
+				return false;
 			}
 		});
 	}
