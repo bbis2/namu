@@ -299,43 +299,7 @@
 		</div>
 		
 
-		<div style="margin-top: 50px">
-			<div class="flex-row" style="justify-content: space-between; align-items: center">
-				<div class="main-label">재능마켓🧑‍💻</div>
-					
-				<div class="more-view-btn"onclick="location.href='${pageContext.request.contextPath}/talent/list';">더보기</div>
-			</div>
-			
-			<div style="margin-top: 50px;">
-				<jsp:include page="/WEB-INF/views/layout/category.jsp"/>
-			</div>		
-			
-			<div class="main-best-board-container">
-				  <c:forEach var="talent" items="${list3}" varStatus="status">
-				<div class="flex-col banner-card-container">
-				  <div class="flex-col">
-					<div class="home-img-container">
-						<a href="${pageContext.request.contextPath}/talent/article?page=${page}&num=${talent.tboardNum}">
-					<c:choose>	
-                        <c:when test="${talent.thumbnail != null && !talent.thumbnail.isEmpty()}">
-                            <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" 
-                                 src="${pageContext.request.contextPath}/uploads/photo/${talent.thumbnail}">
-                        </c:when>
-                        <c:otherwise>
-                            <img style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px" 
-                                 src="${pageContext.request.contextPath}/resources/images/noimage.png">
-                        </c:otherwise>
-                    </c:choose>
-
-						</a>
-					</div>
-					<div style="font-weight: 700; color: #65C2EC; margin-top: 10px">${talent.subject}</div>
-					<div>${talent.content}</div>
-				</div>
-				</div>
-				</c:forEach>
-			</div>
-		</div>
+		
 </div>
 
 <script type="text/javascript">
