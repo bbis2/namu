@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.RentMapper">
+
+	<!-- insert 트렌젝션 -->
+	<select id="rentSeq" resultType="Long">
+		SELECT rent_seq.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertRent" parameterType="com.forest.namu.domain.Rent">
+		INSERT INTO rent 
+			(rentNum, userId, subject, hPrice, dPrice, wPrice, mPrice, content, visible, regDate, hitCount, location, categoryNum) 
+			values 
+			(#{rentNum}, #{userId}, #{subject}, #{hPrice}, #{dPrice}, #{wPrice}, #{mPrice}, #{content}, 1, SYSDATE, 0, #{location}, #{categoryNum})
+	</insert>
+	
+	<insert id="insertRentFile" parameterType="com.forest.namu.domain.Rent">
+		INSERT INTO rbImage(imageNum, imageFilename, borrowNum, rentNum)
+			values (rbImage_SEQ.NEXTVAL, #{imageFilename}, null, #{rentNum})
+	</insert>
+	
+	<!-- update 쿼리 -->
+	<update id="updateRent" parameterType="com.forest.namu.domain.Rent">
+	    UPDATE rent SET
+	        subject = #{subject},
+	        hPrice = #{hPrice},
+	        dPrice = #{dPrice},
+	        wPrice = #{wPrice},
+	        mPrice = #{mPrice},
+	        content = #{content},
+	        location = #{location},
+	        categoryNum = #{categoryNum}
+	    WHERE rentNum = #{rentNum} AND userId = #{userId}
+	</update>
+	
+	<!-- 파일 update -->
+	<update id="updateRentFile" parameterType="com.forest.namu.domain.Rent">
+	    UPDATE rbImage SET
+	        imageFilename = #{imageFilename}
+	    WHERE rentNum = #{rentNum} AND imageNum = #{imageNum}
+	</update>
+	
+	<!-- 데이터 DELETE -->	
+	<delete id="deleteRent" parameterType="com.forest.namu.domain.Rent">
+		DELETE FROM rent WHERE rentNum = #{rentNum}
+	</delete>
+	
+	<!-- rbImage 테이블에서 삭제 -->
+	<delete id="deleteRentFile" parameterType="com.forest.namu.domain.Rent">
+	    DELETE FROM rbImage WHERE rentNum = #{rentNum}
+	</delete>
+	
+	<!-- rentLike 테이블에서 삭제 -->
+	<delete id="deleteRentLike2" parameterType="com.forest.namu.domain.Rent">
+	    DELETE FROM rentLike WHERE num = #{rentNum}
+	</delete>
+	
+	<delete id="deleteNonMatchingImages">
+	    DELETE FROM rbImage 
+	    WHERE rentNum = #{rentNum} 
+	    AND imageNum NOT IN 
+	    <foreach item="imageNum" collection="remainingImageNums" open="(" separator="," close=")">
+	        #{imageNum}
+	    </foreach>
+	</delete>
+	
+	<!-- 데이터 개수 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM rent
+		<where>
+			location = #{location} 
+			<if test="categoryNum > 0">
+				AND categoryNum = #{categoryNum}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND INSTR(subject, #{kwd}) &gt; 0
+			</if>
+		</where>
+	</select>
+	
+	<!-- list -->
+	<select id="listRent" parameterType="map" resultType="com.forest.namu.domain.Rent">
+		SELECT r.rentNum, r.userId, nickName, subject, hitCount, r.regDate, r.hPrice, location, imageFilename, NVL(likeCount, 0) likeCount, photo AS profile
+		FROM rent r
+		LEFT OUTER JOIN (
+			SELECT imageNum, rentNum, imageFilename FROM (
+				SELECT imageNum, rentNum, imageFilename, 
+					ROW_NUMBER() OVER(PARTITION BY rentNum ORDER BY imageNum ASC) rank
+				FROM rbImage
+			) WHERE rank = 1
+		) i ON r.rentNum = i.rentNum
+		JOIN member m ON r.userId = m.userId
+		LEFT OUTER JOIN (
+			SELECT COUNT(*) likeCount, num as rentNum
+			FROM rentLike
+			GROUP BY num
+		) rl ON r.rentNum = rl.rentNum
+		JOIN profile p ON r.userId = p.userId
+		<where>
+			location = #{location} 
+			<if test="categoryNum > 0">
+				AND categoryNum = #{categoryNum}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND INSTR(subject, #{kwd}) &gt; 0
+			</if>
+		</where>
+		<if test="sortNum == 0">
+			ORDER BY r.rentNum DESC
+		</if>
+		<if test="sortNum == 1">
+			ORDER BY r.rentNum ASC
+		</if>
+		<if test="sortNum == 2">
+			ORDER BY hitCount DESC
+		</if>
+		<if test="sortNum == 3">
+			ORDER BY likeCount DESC, r.rentNum DESC
+		</if>
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 카테고리 목록 반환 -->
+	<select id="listCategory" parameterType="map" resultType="com.forest.namu.domain.Rent">
+		SELECT categoryNum, category from rbCategory
+	</select>
+	
+	<!-- 작성자 정보 -->
+	<select id="rentWriter" parameterType="Long" resultType="com.forest.namu.domain.Member">
+		SELECT r.userId, m.regDate, userManner, ment, photo as profile
+		FROM rent r
+		JOIN member m ON r.userId = m.userId
+		JOIN memberDetail md ON  r.userId = md.userId
+		JOIN profile p ON r.userId = p.userId
+		WHERE rentNum = #{num}
+	</select>
+	
+	<!-- article 에서 다른글 -->
+	<select id="listOtherPosts" parameterType="map" resultType="com.forest.namu.domain.Rent">
+	    SELECT r.rentNum, r.userId, r.subject, r.content, r.hitCount, r.regDate, 
+	           r.location, r.categoryNum, hPrice, dPrice, wPrice, mPrice,
+	           m.nickName, NVL(f.imageFilename, 'default.png') imageFilename, photo AS profile
+	    FROM rent r
+	    JOIN member m ON r.userId = m.userId
+	    LEFT OUTER JOIN (
+	        SELECT rentNum, MIN(imageFilename) imageFilename
+	        FROM rbImage
+	        GROUP BY rentNum
+	    ) f ON r.rentNum = f.rentNum
+	    JOIN profile p ON r.userId = p.userId
+	    WHERE r.location = #{location} AND r.categoryNum = #{categoryNum} AND r.rentNum != #{rentNum}
+	    ORDER BY r.regDate DESC
+	    FETCH FIRST 15 ROWS ONLY
+	</select>
+	
+	<!-- 글쓴이의 다른 글 가져오기 -->
+	<select id="selectWriterOtherPosts" resultType="java.util.Map">
+	    SELECT tablename, num, subject, regDate, location, categorynum
+	    FROM (
+	        SELECT tablename, num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM delievery
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM daily
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, tnum AS num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM togetherlist
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, tboardnum AS num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM talentMarket
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM used
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, anum AS num, subject, regDate, NULL AS location, NULL AS categorynum
+	        FROM auction
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, borrownum AS num, subject, regDate, location, categorynum
+	        FROM borrow
+	        WHERE userId = #{userId}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, rentNum AS num, subject, regDate, location, categoryNum
+	        FROM rent
+	        WHERE userId = #{userId} AND rentNum != #{currentPostNum}
+	    ) combined_data
+	    ORDER BY regDate DESC
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE rent SET hitCount = hitCount + 1 WHERE rentNum = #{num}
+	</update>
+	
+	<!-- 글보기 -->
+	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Rent">
+		SELECT rentNum, nickName, subject, content, hPrice, dPrice, wPrice, mPrice, r.regDate, hitCount, location, r.categoryNum, rbc.category, r.tableName
+		FROM rent r
+		JOIN member m ON r.userId = m.userId
+		JOIN rbCategory rbc On r.categoryNum = rbc.categoryNum
+		WHERE rentNum = #{num}
+	</select>
+	
+	<!-- 파일 리스트 -->
+	<select id="listRentImage" parameterType="Long" resultType="com.forest.namu.domain.Rent">
+		SELECT imageNum, imageFilename, rentNum
+		FROM rbImage
+		WHERE rentNum = #{num}
+		ORDER BY imageNum ASC
+	</select>
+	
+	<!-- 찜 추가 -->
+	<insert id="insertRentLike" parameterType="map">
+		INSERT INTO rentLike(num, userId) VALUES (#{num}, #{userId})
+	</insert>
+	
+	<!-- 찜 삭제 -->
+	<delete id="deleteRentLike" parameterType="map">
+		DELETE FROM rentLike WHERE num = #{num} AND userId = #{userId}
+	</delete>
+	
+	<!-- 찜 개수 -->
+	<select id="rentLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*) FROM rentLike WHERE num = #{num}
+	</select>
+	
+	<!-- 찜 여부 -->
+	<select id="userRentLiked" parameterType="map" resultType="com.forest.namu.domain.Rent">
+		SELECT num as rentNum, userId FROM rentLike WHERE num = #{num} AND userId = #{userId}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

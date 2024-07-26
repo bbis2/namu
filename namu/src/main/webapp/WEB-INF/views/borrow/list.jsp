@@ -2,6 +2,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<style type="text/css">
+.sortMethod { }
+.sortSelected { color: tomato;}
+</style>
 
 <script type="text/javascript">
 function searchList() {
@@ -33,16 +37,7 @@ $(function() {
 	});
 	
 });
-
 </script>
-
-<style type="text/css">
-
-.sortMethod { }
-
-.sortSelected { color: tomato;}
-
-</style>
 
 <div class="container">
 
@@ -132,7 +127,7 @@ $(function() {
 						<div>
 							<div class="overflow-hidden border mb-2 ratio ratio-1x1">
 								<a href="${articleUrl}&num=${dto.borrowNum}" class="listTitle">
-									<img class="img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/album/${dto.imageFilename}">
+									<img class="thumbnail img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/album/${dto.imageFilename}">
 								</a>
 								<c:if test="${!dto.nickName.equals(sessionScope.member.nickName)}">
 									<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
@@ -142,9 +137,23 @@ $(function() {
 								</c:if>
 							</div>
 							<a href="${articleUrl}&num=${dto.borrowNum}" class="listTitle"> <h5 class="bd">${dto.subject}</h5> </a>
-							<a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
-							<div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.location}</div>	
-							<div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">
+							<div class="d-flex justify-content-between" style="height: 35px;">
+								<div class="d-flex align-items-center">
+									<c:choose>
+										<c:when test="${dto.profile != null}">
+								    		<img class="mt-2" style="width: 20px; height: 20px; margin-bottom: 20px; border-radius: 50%; object-fit: cover;" 
+										         alt="" src="${pageContext.request.contextPath}/uploads/photo/${dto.profile}"> 
+										</c:when>
+										<c:otherwise>
+								    		<img class="mt-2" style="width: 20px; height: 20px; margin-bottom: 20px; border-radius: 50%; object-fit: cover;" 
+										         alt="" src="${pageContext.request.contextPath}/resources/images/default_profile.png"> 
+										</c:otherwise>
+									</c:choose>
+						    		<h6 class="ms-2">${dto.nickName}</h6>
+								</div>
+								<div style="margin-top: 4px;"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.location}</div>	
+							</div>
+							<div class="d-flex justify-content-between" style="color: #bfbfbf;">
 								<p class="borrowLikeCount"><i class="fa-solid fa-heart"></i>&nbsp;${dto.likeCount}</p>
 								<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
 								<p><i class="fa-solid fa-clock"></i>&nbsp;${dto.passedTime}</p>

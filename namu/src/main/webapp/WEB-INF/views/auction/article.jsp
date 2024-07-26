@@ -48,7 +48,7 @@
  			</div>
  		</div>
  		<div class="col-auto text-end  align-self-center">
- 			<label class="time-remaining" style="color: blue; font-weight: 500;"></label>
+ 			<label class="time-remaining" style="color: blue; font-weight: bold;"></label>
  		</div>
  	</div>
 
@@ -60,8 +60,8 @@
   	<c:if test="${sessionScope.member.userId != dto.userId}">
    		<button type="button" class="btn-bid">입찰하기</button>
     </c:if>
-    <c:if test="${sessionScope.member.userId != dto.userId && dto.bidNum > 0}">
-   		<button type="button" class="btn-bidclose">입찰완료</button>
+    <c:if test="${dto.state != 0}">
+   		<button type="button" class="btn-bidclose">입찰종료</button>
     </c:if>
    </c:if>
 </div>
@@ -181,8 +181,8 @@
 
 <script type="text/javascript">
 function usedDelete() {
-	if(confirm('문의를 삭제 하시겠습니까?')){
-		let query = 'aNum=${dto.aNum}';
+	if(confirm('게시글을 삭제 하시겠습니까?')){
+		let query = 'aNum=${dto.aNum}&imageFile=${dto.imageFile}';
 	    let url = '${pageContext.request.contextPath}/auction/delete?' + query;
 		location.href = url;
 	}
@@ -449,6 +449,14 @@ $('.btnBidOk').click(function(){
 	padding: 3px;
 	margin-left: 7px;
 	color: white;
+}
+
+.btn-delete {
+	border: none;
+	padding: 3px;
+	margin-left: 7px;
+	color: red;
+	background-color: transparent;
 }
 
 .btn-bidclose {

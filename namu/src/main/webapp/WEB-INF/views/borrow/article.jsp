@@ -156,6 +156,26 @@ document.addEventListener('DOMContentLoaded', function() {
 	    });
 	  });
 	});
+	
+function SinGo(){
+	$('#SinGoModal').modal('show');
+}
+
+function sendOk() {
+	const f = document.SinGoForm;
+	let str = f.reportContent.value.trim();
+	
+    if (!confirm("정말 신고하시겠습니까?")) {
+        return;
+    }
+    
+    if(!str){
+    	alert("사유를 입력해주세요");
+    }
+    
+    f.action = "${pageContext.request.contextPath}/singo/reception";
+    f.submit();
+}
 </script>
 
 
@@ -281,9 +301,31 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		<div class="col-md-8">
 			<div class="ms-5 mb-4 me-4">
-				<h3 class="bd">${dto.subject}</h3>
 				<div class="d-flex justify-content-between">
-					<h5><a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a></h5>
+					<h3 class="bd">${dto.subject}</h3>
+					<c:if test="${!dto.nickName.equals(sessionScope.member.nickName)}">
+						<button type="button" style="border: none; width: 50px; height: 30px; color: gray;" class="btn-light" onclick="SinGo();">신고</button>
+					</c:if>
+				</div>
+				<div class="d-flex justify-content-between">
+					<c:choose>
+						<c:when test="${writer.profile != null}">
+							<div class="d-flex align-items-center">
+							    <img style="width: 30px; height: 30px; margin-bottom: 20px; border-radius: 50%; object-fit: cover; cursor: pointer;" 
+							         alt="" src="${pageContext.request.contextPath}/uploads/photo/${writer.profile}" 
+							         data-bs-toggle="modal" data-bs-target="#profileImageModal"> 
+							    <h5 class="ms-2">${dto.nickName}</h5>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="d-flex align-items-center">
+							    <img style="width: 30px; height: 30px; margin-bottom: 20px; border-radius: 50%; object-fit: cover; cursor: pointer;" 
+							         alt="" src="${pageContext.request.contextPath}/resources/images/default_profile.png" 
+							         data-bs-toggle="modal" data-bs-target="#profileImageModal"> 
+							    <h5 class="ms-2">${dto.nickName}</h5>
+							</div>
+						</c:otherwise>
+					</c:choose>
 					<div class="d-flex gap-3 justify-content-end" style="color: #bfbfbf;">
 						<p class="borrowLikeCount"><i class="fa-solid fa-heart"></i>&nbsp;<span id="likeCount">${dto.likeCount}</span></p>
 						<p>|</p>
@@ -349,13 +391,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     	<div class="d-flex justify-content-between mb-1">
                     		<div class="mt-3">
 								<div class="d-flex align-items-center">
-								    <img style="width: 50px; height: 50px; margin-bottom: 20px; border-radius: 50%; object-fit: cover; cursor: pointer;" 
-								         alt="" src="${pageContext.request.contextPath}/uploads/photo/${writer.profile}" 
-								         data-bs-toggle="modal" data-bs-target="#profileImageModal"> 
-								    <h3 class="ms-2">${dto.nickName}</h3>
+									<c:choose>
+										<c:when test="${writer.profile != null}">
+										    <img style="width: 50px; height: 50px; margin-bottom: 20px; border-radius: 50%; object-fit: cover; cursor: pointer;" 
+										         alt="" src="${pageContext.request.contextPath}/uploads/photo/${writer.profile}" 
+										         data-bs-toggle="modal" data-bs-target="#profileImageModal"> 
+										    <h3 class="ms-2">${dto.nickName}</h3>
+										</c:when>
+										<c:otherwise>
+										    <img style="width: 50px; height: 50px; margin-bottom: 20px; border-radius: 50%; object-fit: cover; cursor: pointer;" 
+										         alt="" src="${pageContext.request.contextPath}/resources/images/default_profile.png" 
+										         data-bs-toggle="modal" data-bs-target="#profileImageModal"> 
+										    <h3 class="ms-2">${dto.nickName}</h3>
+										</c:otherwise>
+									</c:choose>
 								</div>
 			                    <div class="d-flex">
-				                    한마디: <p class="bd ms-1">${writer.ment}</p>
+			                    	<c:if test="${writer.ment != null}">
+					                    한마디: <p class="bd ms-1">${writer.ment}</p>
+			                    	</c:if>
 			                    </div>
                     		</div>
 		                    <div>
@@ -374,15 +428,22 @@ document.addEventListener('DOMContentLoaded', function() {
 						<div class="writer-other-posts">
 						    <h5 class="bd mb-3">${dto.nickName}님의 다른 글</h5>
 						    <ul class="list-unstyled">
-						        <c:forEach var="post" items="${writerOtherPosts}" varStatus="status">
-						            <c:if test="${status.index < 8}">
-						                <li class="d-flex">
-											<a href="${pageContext.request.contextPath}/${post.TABLENAME}/article?num=${post.NUM}" class="text-decoration-none">
-											    <span class="bd">[${post.boardName}]</span> ${post.SUBJECT}
-											</a>
-						                </li>
-						            </c:if>
-						        </c:forEach>
+						    	<c:choose>
+						    		<c:when test="${writerOtherPosts.size() != 0}">
+								        <c:forEach var="post" items="${writerOtherPosts}" varStatus="status">
+								            <c:if test="${status.index < 8}">
+								                <li class="d-flex">
+													<a href="${pageContext.request.contextPath}/${post.TABLENAME}/article?num=${post.NUM}" class="text-decoration-none">
+													    <span class="bd">[${post.boardName}]</span> ${post.SUBJECT}
+													</a>
+								                </li>
+								            </c:if>
+								        </c:forEach>
+						    		</c:when>
+						    		<c:otherwise>
+						    			<li>등록된 다른 글이 없습니다.</li>
+						    		</c:otherwise>
+						    	</c:choose>
 						    </ul>
 						    <c:if test="${writerOtherPosts.size() > 8}">
 						        <button type="button" style="border: none; text-decoration: none;" class="btn-link mb-2" data-bs-toggle="modal" data-bs-target="#writerPostsModal">
@@ -438,6 +499,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		    </div>
 		    <hr>
 		</div>
+		<!-- 캐러샐 시작 -->
 		<div class="row align-items-start">
 			<c:choose>
 			    <c:when test="${otherPosts.size() == 0}">
@@ -460,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				                                    <div>
 				                                        <div class="overflow-hidden border mb-2 ratio ratio-1x1">
 				                                            <a href="${pageContext.request.contextPath}/borrow/article?num=${post.borrowNum}&${query}" class="listTitle">
-				                                                <img class="img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/album/${post.imageFilename}">
+				                                                <img class="thumbnail img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/album/${post.imageFilename}">
 				                                            </a>
 				                                            <c:if test="${!post.nickName.equals(sessionScope.member.nickName)}">
 				                                                <button type="button" class="btn_like ${post.userLiked ? 'on' : ''}" title="찜하기">
@@ -470,9 +532,23 @@ document.addEventListener('DOMContentLoaded', function() {
 				                                            </c:if>
 				                                        </div>
 				                                        <a href="${pageContext.request.contextPath}/borrow/article?num=${post.borrowNum}&${query}" class="listTitle"><h5 class="bd">${post.subject}</h5></a>
-				                                        <a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${post.nickName}</a>
-				                                        <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${post.location}</div>	
-				                                        <div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">
+														<div class="d-flex justify-content-between" style="height: 35px;">
+															<div class="d-flex align-items-center">
+																<c:choose>
+																	<c:when test="${post.profile != null}">
+															    		<img class="mt-2" style="width: 20px; height: 20px; margin-bottom: 20px; border-radius: 50%; object-fit: cover;" 
+																	         alt="" src="${pageContext.request.contextPath}/uploads/photo/${post.profile}"> 
+																	</c:when>
+																	<c:otherwise>
+															    		<img class="mt-2" style="width: 20px; height: 20px; margin-bottom: 20px; border-radius: 50%; object-fit: cover;" 
+																	         alt="" src="${pageContext.request.contextPath}/resources/images/default_profile.png"> 
+																	</c:otherwise>
+																</c:choose>
+													    		<h6 class="ms-2">${post.nickName}</h6>
+															</div>
+															<div style="margin-top: 4px;"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.location}</div>	
+														</div>
+				                                        <div class="d-flex justify-content-between" style="color: #bfbfbf;">
 				                                            <p class="borrowLikeCount"><i class="fa-solid fa-heart"></i>&nbsp;${post.likeCount}</p>
 				                                            <p><i class="fa-solid fa-eye"></i>&nbsp;${post.hitCount}</p>
 				                                            <p><i class="fa-solid fa-clock"></i>&nbsp;${post.passedTime}</p>
@@ -512,11 +588,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img src="${pageContext.request.contextPath}/uploads/photo/${writer.profile}" 
-                     class="img-fluid" alt="프로필 사진">
+	      		<c:choose>
+					<c:when test="${writer.profile != null}">
+		                <img src="${pageContext.request.contextPath}/uploads/photo/${writer.profile}" class="img-fluid" alt="프로필 사진">
+					</c:when>
+					<c:otherwise>
+		                <img src="${pageContext.request.contextPath}/resources/images/default_profile.png" class="img-fluid" alt="프로필 사진">
+					</c:otherwise>
+				</c:choose>
             </div>
         </div>
     </div>
+</div>
+
+<!-- 신고 모달 -->
+<div class="modal fade" id="SinGoModal" tabindex="-1"
+	data-bs-keyboard="false"
+	aria-labelledby="SinGoModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="">신고하기</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="p-3">
+					<form name="SinGoForm" action="" method="post" class="row g-3">
+						<div class="mt-0">
+							<p class="form-control-plaintext">신고유형과 사유를 적어주세요</p>
+						</div>
+						<div class="mt-0">
+							<select id="reportType" name="reportType" class="form-select">
+								<option value="욕설/인신공격" selected>욕설/인신공격</option>
+									<option value="개인정보노출">개인정보노출</option>
+									<option value="불법정보">불법정보</option>
+									<option value="같은내용반복(도배)">같은내용반복(도배)</option>
+									<option value="기타">기타</option>
+							</select>
+						</div>
+						<div>
+							<input type="text" name="reportContent" autocomplete="off"
+								 class="form-control"
+								placeholder="신고사유 : ">
+						</div>
+							<input type="hidden" name="Field" value="${dto.tableName}">
+							<!-- 파라미터 num -->
+							<input type="hidden" name="postNum" value="${dto.borrowNum}">
+							<input type="hidden" name="banUser" value="${writer.userId}">
+						<div>
+							<button type="button" class="btn btn-primary w-100"
+								onclick="sendOk();">신고하기</button>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -670,7 +799,7 @@ $(function() {
 	        'used': '중고거래',
 	        'auction': '경매',
 	        'rent': '빌려드림',
-	        'borrow': '빌림',
+	        'borrow': '빌려줘요',
 	        'talent': '재능마켓',
 	        'daily': '일상',
 	        'togetherlist': '함께해요',

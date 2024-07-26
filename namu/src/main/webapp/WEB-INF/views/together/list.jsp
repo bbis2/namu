@@ -46,6 +46,7 @@
 
 .card-body {
     padding: 20px;
+    text-align: center;
 }
 
 .card-title {
@@ -140,25 +141,24 @@
     justify-content: flex-start; /* 가운데 정렬 추가 */
     gap: 21px; /* 항목 간의 간격 조정 */
     max-height: 80%; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
-    margin-bottom: 450px; /* footer와 겹치지 않도록 하단 여백 추가 */
+    margin-bottom:100px; /* footer와 겹치지 않도록 하단 여백 추가 */
     
 }
 
 .togetherlist .list {
     flex: 1 1 30%;
-    max-width: 30%;
+    max-width: 40%;
     box-sizing: border-box;
-    height: 300px; /* 고정된 높이 추가 */
+    height: 250px; /* 고정된 높이 추가 */
     display: flex;
     flex-direction: column;
-    margin-bottom: 100px;
+    margin-bottom: 150px;
 }
 
 .togetherlist .list img {
     width: 100%;
-    height: 200px; /* 고정된 이미지 높이 */
-    object-fit: cover;
-    border-radius: 10px;
+    height: 280px; /* 고정된 이미지 높이 */
+    object-fit: fill;
     padding-bottom: 20px;
 }
 
@@ -215,7 +215,7 @@ function filterByTown() {
 
 			<div class="d-flex">
 				<h5 style="font-weight: bold;">${town}</h5>
-				<h5>&nbsp;동네의 전체 모임</h5>
+				<h5>&nbsp;모임</h5>
 				<h5 style="color: #b3b3b3;" class="bd">&nbsp;${dataCount}개</h5>
 			</div>
 			
@@ -236,8 +236,8 @@ function filterByTown() {
         
 			<div class="card mb-4">
 				<div class="card-body">
-					<h5 class="card-title">${sessionScope.member.nickName}</h5>
-				    <h6 class="bd">나의 동네</h6>
+					<h5 class="card-title">${sessionScope.member.userId}</h5>
+   				    <h6 class="bd">[<a style="color: green">${sessionScope.member.nickName}</a>]님의 동네</h6>
 						<select id="townFilter" class="form-select border-2" aria-label="Default select example" onchange="filterByTown()">
 							
 							<option value="${sessionScope.member.town1}" <c:if test="${town == sessionScope.member.town1}">selected</c:if>>${sessionScope.member.town1}</option>
@@ -247,7 +247,7 @@ function filterByTown() {
 						</select>
 				   		<br>
 						<div>
-							<span><i class="fa-solid fa-heart"></i> </span>
+							<span ><i class="fa-solid fa-heart"></i> </span>
 							<span><i class="bi bi-bell-fill"></i></span>
 						</div>
 				</div>
@@ -255,8 +255,8 @@ function filterByTown() {
             
 		    <div class="card mb-4">
 				<div class="list-group">
-					<a class="list-group-item list-subject" type="button"  onclick="location.href='${pageContext.request.contextPath}/daily/list';">일상</a>
-					<a class="list-group-item list-subject" type="button"  onclick="location.href='${pageContext.request.contextPath}/together/list';">모임</a>
+					<a class="list-group-item list-subject" type="button" style="text-align: center; font-weight: bold;" onclick="location.href='${pageContext.request.contextPath}/daily/list';">일상</a>
+					<a class="list-group-item list-subject" type="button" style="text-align: center; font-weight: bold;"  onclick="location.href='${pageContext.request.contextPath}/together/list';">모임</a>
 				</div>
 			</div>              
 
@@ -286,7 +286,7 @@ function filterByTown() {
 					        <!-- 이미지 -->
 					            <c:choose>
 					                <c:when test="${dto.thumbnail != null && !dto.thumbnail.isEmpty()}">
-					                    <img class="img-fluid object-fit-cover h-100" src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" onclick="location.href='${articleUrl}&tNum=${dto.tNum}';">
+					                    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.thumbnail}" onclick="location.href='${articleUrl}&tNum=${dto.tNum}';">
 					                </c:when>
 					                <c:otherwise>
 					                    <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="img-fluid object-fit-cover h-100" onclick="location.href='${articleUrl}&tNum=${dto.tNum}';">

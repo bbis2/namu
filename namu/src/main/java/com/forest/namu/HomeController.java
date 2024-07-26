@@ -46,12 +46,12 @@ public class HomeController {
     	// 빌려줘요
     	Map<String, Object> map2 = new HashMap<String, Object>();
     	map2.put("categoryNum", 0);
-    	map2.put("location", "1");
+    	map2.put("location", "");
     	map2.put("offset", 0);
     	map2.put("size", 4);
     	List<Borrow> list2 = service2.listBorrow(map2);
     	
-    	
+    	/*
     	// 재능마켓
     	Map<String, Object> map3 = new HashMap<String, Object>();
     	map3.put("categoryNum", 0);
@@ -60,11 +60,11 @@ public class HomeController {
     	map3.put("offset", 0);
     	map3.put("size", 4);
     	List<TalentMarket> list3 = service3.listTalentMarket(map3);
-    	
+    	*/
     	
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
-		model.addAttribute("list3", list3);
+		//model.addAttribute("list3", list3);
 		
 		System.out.println("빌려줘요"+list2); // list2에 값이 안넣어짐.. -> 빌려줘요[]
 		

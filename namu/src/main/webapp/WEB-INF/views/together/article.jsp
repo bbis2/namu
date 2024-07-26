@@ -100,6 +100,13 @@ textarea.form-control {
     display: block;
 	padding: 40px 10px;
 }
+
+.thumb img {
+	height: 400px;
+	widows: 400px;
+	border-radius: 30px;
+}
+
 .together-info {
     padding: 40px 40px 20px 20px;
     flex-grow: 1;
@@ -172,7 +179,7 @@ textarea.form-control {
 .apply{
     border-radius: 30px;
 	height: 50px;
-	width: 620px;
+	width: 450px;
 	border: none;
 	background-color: #A4B974;
 	color: #fff;
@@ -185,28 +192,34 @@ textarea::placeholder{
 	text-align: center;
 	line-height: 80px;
 }
-
+.applybutton{
+	padding-top: 10px;
+}
 /*togetherBoard*/
 
 #myTab {
-    padding: 50px 50px 0px 0px ;
-    border-bottom: none;
-    display: flex;
-    justify-content: center;
+	padding-top: 150px;
 }
+
 .nav-tabs .nav-link {
 	min-width: 300px;
-	background: #5d4734;
+	background: #fff;
 	font-color:white;
+	border: none;
+	border-bottom: 2px solid #dbdddf;
 	border-radius: 0;
-	color: #fff;
+	color: #4B3B29;
 	font-weight: 600;
+	font-size: 18px;
 }
 .nav-tabs .nav-link.active {
-	background: #A4B974;
-	color: #fff;
+	background: #fff;
+	color: #4B3B29;
+	border-bottom: 2px solid ;
 }
-.tab-pane { min-height: 300px; }
+.tab-pane { 
+	min-height: 300px;
+	padding-bottom: 10px;}
 
 .score-star { font-size: 0; letter-spacing: -4px; }
 .score-star .item {
@@ -242,6 +255,64 @@ textarea::placeholder{
 }
 
 </style>
+
+<style>
+<style>
+/* 공지사항 */
+.form-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 20px;
+}
+.form-header {
+    display: flex;
+    align-items: center;
+}
+.user-name {
+    margin-left: 10px;
+    font-weight: bold;
+}
+.form-body textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+}
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+}
+.char-counter {
+    font-size: 0.9em;
+    color: #999;
+}
+.subject input{
+    width: 80%;
+    height: 40px;
+    padding: 5px;;
+    border: none;
+    resize: none;
+}
+.submit-btn {
+    background-color: #ffcc00;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: right;
+}
+.submit-btn:hover {
+    background-color: #ff9900;
+}
+</style>
+
 
 <script type="text/javascript">
     function deleteTogether() {
@@ -286,7 +357,7 @@ textarea::placeholder{
                         </c:otherwise>
                     </c:choose>
 				
-	                    <div>
+	                    <div class="applybutton">
 	                    	<c:if test="${sessionScope.member.userId != dto.userId}">
 		                    	<c:if test="${dto.acceptance == -1}">
 		                        	<button type="button" class="apply applyAccept">참가신청</button>
@@ -346,64 +417,104 @@ textarea::placeholder{
         </div>
     </div>
     
-    <!--  여기서 부터 게시판  -->
+    <!-- # 여기서 부터 게시판  -->
 	<ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
 		<li class="nav-item" role="presentation">
-			<button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" type="button" role="tab" aria-controls="1" aria-selected="true">모임정보</button>
+			<button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" type="button" role="tab" aria-controls="1" aria-selected="true">모임소개</button>
 		</li>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#tab-pane-2" type="button" role="tab" aria-controls="2" aria-selected="false">공지사항<span class="title-reviewCount"></span></button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">앨범<span class="title-qnaCount"></span></button>
-		</li>
-		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="tab-4" data-bs-toggle="tab" data-bs-target="#tab-pane-4" type="button" role="tab" aria-controls="4" aria-selected="false">방명록</button>
+			<button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">게시판<span class="title-qnaCount"></span></button>
 		</li>
 	</ul>
 
 	
-			<div class="tab-content pt-2" id="myTabContent">
-				<div class="tab-pane fade show active" id="tab-pane-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
-					<div class="mt-3 pt-3 border-bottom">
-						<p class="fs-4 fw-semibold"></p> 
-					</div>
-					<div class="mt-3 product-content">
-						${dto.content}
-					</div>
-				</div>
-				<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
-					<div class="mt-3 pt-3 border-bottom">
-						<p class="fs-4 fw-semibold">공지사항</p> 
-					</div>
-					
-					<div class="mt-2 list-review"></div>
-				</div>
-				
-				<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
-					<div class="mt-3 pt-3 border-bottom">
-						<p class="fs-4 fw-semibold">앨범</p> 
-					</div>
-			
-					<div class="mt-3 p-2 text-end">
-						<button type="button" class="btnMyQuestion btn btn-dark" ${empty sessionScope.member ? "disabled":""}> 내 Q&amp;A 보기  </button>
-						<button type="button" class="btnQuestion btn btn-dark" ${empty sessionScope.member ? "disabled":""}> 상품 Q&amp;A 작성 </button>
-					</div>
-					<div class="mt-1 p-2 list-question"></div>
-										
-				</div>
-				
-				<div class="tab-pane fade" id="tab-pane-4" role="tabpanel" aria-labelledby="tab-4" tabindex="0">
-					<div class="mt-3 pt-3 border-bottom">
-						<p class="fs-4 fw-semibold">방명록</p> 
-					</div>
-					<div class="mt-3">
-						<p> 배송 및 환불 정책 입니다. </p>
-					</div>				
-				</div>
+	<div class="tab-content pt-2" id="myTabContent">
+		<!-- 모임소개 -->
+		<div class="tab-pane fade show active" id="tab-pane-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
+			<div class="mt-3 pt-3">
+				<p class="fs-4 fw-semibold"></p> 
 			</div>
+			<div class="mt-3 product-content">
+				${dto.content}
+			</div>
+		</div>
+	</div>
+		
+	<!-- #1 공지사항 -->
+	<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
+		<div class="mt-3 pt-3">
+			<p class="fs-4 fw-semibold">공지사항</p>
+		</div>
 
+	<!-- 공지사항 쓰기 -->
+	<c:if test="${sessionScope.member.userId == dto.userId}">	
+    <div class="form-container">
+        <div class="form-header">
+            <div class="user-name"> 모임장 : ${dto.nickName }</div>
+        </div>
+	        <form action="submitForm.jsp" method="POST" enctype="multipart/form-data">
+	            <div class="form-body">
+	                <div class="textarea-container">
+	                    <div class="subject" style="font-weight: bold;">
+	                        제목 : <input type="text" name="subject" placeholder="제목을 입력해 주세요 :)">
+	                    </div>
+		               	<div>
+		               	<div class="img-container">
+		                    <textarea name="content" placeholder="글을 작성해 주세요 :)"></textarea>
+		                </div>
+		                
+		                </div>
+	                </div>
+	            </div>
+	            <div class="form-footer">
+	                <button type="submit" class="submit-btn">등록</button>
+	            </div>
+	        </form>
+ 			 </div>		
+	</c:if>	
+		<div class="mt-2 listNotice"></div>
+	</div>
+			
+	<!-- #2 게시판 글쓰기 -->
+	<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
+		<div class="mt-3 pt-3">
+			<p class="fs-4 fw-semibold">함께해요</p>
+		</div>
+
+	<!-- 개시판 쓰기 -->
+    <div class="post-container">
+        <div class="post-header">
+            <div class="user-name"> 작성자 : ${dto.nickName }</div>
+        </div>
+	        <form action="submitForm.jsp" method="POST" enctype="multipart/form-data">
+	            <div class="post-body">
+	                <div class="textarea-container">
+	                    <div class="subject" style="font-weight: bold;">
+	                        제목 : <input type="text" name="subject" placeholder="제목을 입력해 주세요 :)">
+	                    </div>
+		               	<div>
+		               	<div class="img-container">
+		                    <textarea name="content" placeholder="글을 작성해 주세요 :)"></textarea>
+		                    <input id="img" type="file" name="selectFile" accept="image/*" class="form-control" style="display: none;">
+		                </div>
+		             
+		                
+		                </div>
+	                </div>
+	            </div>
+	            <div class="post-footer">
+	                <button type="submit" class="submit-btn">등록</button>
+	            </div>
+	        </form>
+ 			 </div>		
+		<div class="mt-2 listBoard"></div>
+	</div>				
+			
 </div>
+
 <div class="modal fade" id="myApplyModal" tabindex="-1" 
 		data-bs-backdrop="static" data-bs-keyboard="false"
 		aria-labelledby="myApplyModalLabel" aria-hidden="true">

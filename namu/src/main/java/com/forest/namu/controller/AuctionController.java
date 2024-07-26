@@ -297,6 +297,7 @@ public class AuctionController {
 		map.put("size", size);
 		
 		List<AuctionBoard> qnalist = bService.listQuestion(map);
+
 		String paging = myUtil.pagingMethod(current_page, total_page, "listQna");
 		
 		model.addAttribute("qnalist", qnalist);
@@ -347,7 +348,7 @@ public class AuctionController {
 			@RequestParam String imageFile,
 			@RequestParam(defaultValue = "") String kwd,
 			HttpSession session) throws Exception {
-		
+
 		String root = session.getServletContext().getRealPath("/");
 		String pathname = root + "uploads" + File.separator + "auctionPhoto" + File.separator + imageFile;
 
@@ -448,6 +449,7 @@ public class AuctionController {
 		
 		String state = "false";
 		try {
+			
 			dto.setAnswerId(info.getUserId());
 			bService.updateQuestion(dto);
 			
@@ -459,5 +461,21 @@ public class AuctionController {
 		model.put("state", state);
 		return model;
 	}
+	
+	@GetMapping("answerdelete")
+	public String answerdelete(@RequestParam long qNum,
+			AuctionBoard dto, @RequestParam(value = "page", defaultValue = "1") int page,
+			HttpSession session) throws Exception {
+		
+		try {
+			bService.deleteQuestion(qNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+		return "redirect:/auction/article?aNum=" + dto.getaNum() + "&page=" + page;
+	}
+	
 
 }

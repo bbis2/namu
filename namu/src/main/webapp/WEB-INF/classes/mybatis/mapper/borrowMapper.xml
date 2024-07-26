@@ -89,7 +89,7 @@
 	
 	<!-- list -->
 	<select id="listBorrow" parameterType="map" resultType="com.forest.namu.domain.Borrow">
-		SELECT b.borrowNum, b.userId, nickName, subject, hitCount, b.regDate, location, imageFilename, NVL(likeCount, 0) likeCount
+		SELECT b.borrowNum, b.userId, nickName, subject, hitCount, b.regDate, location, imageFilename, NVL(likeCount, 0) likeCount, photo AS profile
 		FROM borrow b
 		LEFT OUTER JOIN (
 			SELECT imageNum, borrowNum, imageFilename FROM (
@@ -104,6 +104,7 @@
 			FROM borrowLike
 			GROUP BY borrowNum
 		) bl ON b.borrowNum = bl.borrowNum
+		JOIN profile p ON b.userId = p.userId
 		<where>
 			location = #{location} 
 			<if test="categoryNum > 0">
@@ -137,7 +138,7 @@
 	<select id="listOtherPosts" parameterType="map" resultType="com.forest.namu.domain.Borrow">
 	    SELECT b.borrowNum, b.userId, b.subject, b.content, b.hitCount, b.regDate, 
 	           b.location, b.categoryNum, b.price, b.strDate, b.endDate,
-	           m.nickName, NVL(f.imageFilename, 'default.png') imageFilename
+	           m.nickName, NVL(f.imageFilename, 'default.png') imageFilename, photo AS profile
 	    FROM borrow b
 	    JOIN member m ON b.userId = m.userId
 	    LEFT OUTER JOIN (
@@ -145,6 +146,7 @@
 	        FROM rbImage
 	        GROUP BY borrowNum
 	    ) f ON b.borrowNum = f.borrowNum
+	    JOIN profile p ON b.userId = p.userId
 	    WHERE b.location = #{location} AND b.categoryNum = #{categoryNum} AND b.borrowNum != #{borrowNum}
 	    ORDER BY b.regDate DESC
 	    FETCH FIRST 15 ROWS ONLY
@@ -193,6 +195,12 @@
 	        SELECT tablename, borrownum AS num, subject, regDate, location, categorynum
 	        FROM borrow
 	        WHERE userId = #{userId} AND borrownum != #{currentPostNum}
+	        
+	        UNION ALL
+	        
+	        SELECT tablename, rentNum AS num, subject, regDate, location, categoryNum
+	        FROM rent
+	        WHERE userId = #{userId}
 	    ) combined_data
 	    ORDER BY regDate DESC
 	</select>
@@ -204,7 +212,7 @@
 	
 	<!-- 글보기 -->
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Borrow">
-		SELECT borrowNum, nickName, subject, content, price, strDate, endDate, b.regDate, hitCount, location, b.categoryNum, rbc.category
+		SELECT borrowNum, nickName, subject, content, price, strDate, endDate, b.regDate, hitCount, location, b.categoryNum, rbc.category, b.tableName
 		FROM borrow b
 		JOIN member m ON b.userId = m.userId
 		JOIN rbCategory rbc On b.categoryNum = rbc.categoryNum
@@ -216,6 +224,7 @@
 		SELECT imageNum, imageFilename, borrowNum
 		FROM rbImage
 		WHERE borrowNum = #{num}
+		ORDER BY imageNum ASC
 	</select>
 	
 	<!-- 작성자 정보 -->
