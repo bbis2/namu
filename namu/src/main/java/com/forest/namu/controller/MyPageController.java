@@ -264,7 +264,7 @@ public class MyPageController {
 			pto.setCurrentPoint(current);
 			pto.setUserId(info.getUserId());
 			pto.setPointVar(point);
-
+			pto.setDescription("배달 적립");
 			service.insertPoint2(pto);
 		} catch (Exception e) {
 			e.printStackTrace();
