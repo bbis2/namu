@@ -381,5 +381,12 @@ public class TogetherController {
 	     
 	       return ".together.togetherNotice";
 	   }
+	   
+		
+	   @GetMapping("togetherBoard")
+	   public String write() {
+	     
+	       return ".together.togetherBoard";
+	   }
 	
 }
