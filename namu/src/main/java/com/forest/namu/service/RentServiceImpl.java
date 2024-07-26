@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.forest.namu.common.FileManager;
-import com.forest.namu.domain.Borrow;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Rent;
 import com.forest.namu.mapper.RentMapper;
@@ -26,7 +25,7 @@ public class RentServiceImpl implements RentService {
 	@Autowired
 	private FileManager fileManager;
 	
-	final static Logger logger = LoggerFactory.getLogger(BorrowServiceImpl.class);
+	final static Logger logger = LoggerFactory.getLogger(RentServiceImpl.class);
 
 	@Override
 	public void insertRent(Rent dto, String pathname) throws Exception {

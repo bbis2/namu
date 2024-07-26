@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.forest.namu.common.MyUtil;
-import com.forest.namu.domain.Borrow;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Rent;
 import com.forest.namu.domain.SessionInfo;

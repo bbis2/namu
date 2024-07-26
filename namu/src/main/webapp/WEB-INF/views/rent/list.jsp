@@ -137,7 +137,7 @@ $(function() {
 									<input type="hidden" value="${dto.rentNum}" class="likeBorrowNum">
 								</c:if>
 							</div>
-							<a href="${articleUrl}&num=${dto.rentNum}" class="listTitle"> <h5 class="bd">${dto.subject}</h5> </a>
+							<a href="${articleUrl}&num=${dto.rentNum}" class="listTitle" title="${dto.subject}"> <h5 class="bd">${dto.subject}</h5> </a>
 							<div class="d-flex justify-content-between" style="height: 35px;">
 								<div class="d-flex align-items-center">
 									<c:choose>

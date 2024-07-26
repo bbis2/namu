@@ -636,6 +636,7 @@ function sendOk() {
 							<!-- 파라미터 num -->
 							<input type="hidden" name="postNum" value="${dto.borrowNum}">
 							<input type="hidden" name="banUser" value="${writer.userId}">
+							<input type="hidden" name="subject" value="${dto.subject}">
 						<div>
 							<button type="button" class="btn btn-primary w-100"
 								onclick="sendOk();">신고하기</button>

@@ -341,50 +341,57 @@ function sendOk() {
 						<c:if test="${dto.hPrice != 0}">
 							<div class="d-flex my-2">
 								<h6 style="width: 130px; color: #ababab;">• 1시간</h6>
-								<h6 class="bd">${dto.hPrice}원</h6>
+								<h6 class="bd"><fmt:formatNumber value="${dto.hPrice}" pattern="#,###"/>원</h6>
 							</div>
 						</c:if>
 						<c:if test="${dto.dPrice != 0}">
 							<div class="d-flex my-2">
 								<h6 style="width: 130px; color: #ababab;">• 1일</h6>
-								<h6 class="bd">${dto.dPrice}원</h6>
+								<h6 class="bd"><fmt:formatNumber value="${dto.dPrice}" pattern="#,###"/>원</h6>
 							</div>
 						</c:if>
 						<c:if test="${dto.wPrice != 0}">
 							<div class="d-flex my-2">
 								<h6 style="width: 130px; color: #ababab;">• 1주</h6>
-								<h6 class="bd">${dto.wPrice}원</h6>
+								<h6 class="bd"><fmt:formatNumber value="${dto.wPrice}" pattern="#,###"/>원</h6>
 							</div>
 						</c:if>
 						<c:if test="${dto.mPrice != 0}">
 							<div class="d-flex my-2">
 								<h6 style="width: 130px; color: #ababab;">• 30일</h6>
-								<h6 class="bd">${dto.mPrice}원</h6>
+								<h6 class="bd"><fmt:formatNumber value="${dto.mPrice}" pattern="#,###"/>원</h6>
 							</div>
 						</c:if>
 					</div>
-					<div class="w-50">
-						<h6 class="bd">대여 시간 선택</h6>
-						<div>
-							<h6 class="mt-3 me-2">시작</h6>
-							<input type="datetime-local" id="strDate" name="strDate" class="form-control" required>
-						</div>
-						<div id="endDateContainer" style="display: none;">
-							<h6 class="mt-3 me-2">종료</h6>
-							<input type="datetime-local" id="endDate" name="endDate" class="form-control" required>
-						</div>
-						<div class="d-flex justify-content-between">
-							<h6 class="mt-3 bd">총 대여 시간</h6>
-							<h6 class="float-end mt-3">~~일 ~~시간 ~~분</h6>
-						</div>
-						<div class="d-flex justify-content-between mt-3" style="color: blue;">
-							<h4 class="mt-3 bd">총 금액</h4>
-							<h4 class="float-end mt-3">100,000원</h4>
-						</div>
-					</div>
+					<c:choose>
+						<c:when test="${dto.nickName.equals(sessionScope.member.nickName)}">
+						
+						</c:when>
+						<c:otherwise>
+							<div class="w-50">
+								<h6 class="bd">대여 시간 선택</h6>
+								<div>
+								    <h6 class="mt-3 me-2">시작</h6>
+								    <input type="datetime-local" id="strDate" name="strDate" class="form-control" step="3600" required>
+								</div>
+								<div id="endDateContainer" style="display: none;">
+								    <h6 class="mt-3 me-2">종료</h6>
+								    <input type="datetime-local" id="endDate" name="endDate" class="form-control" step="3600" required>
+								</div>
+								<div class="d-flex justify-content-between">
+								    <h6 class="mt-3 bd">총 대여 시간</h6>
+								    <h6 class="float-end mt-3" id="totalRentalTime">~~일 ~~시간</h6>
+								</div>
+								<div class="d-flex justify-content-between mt-3" style="color: blue;">
+								    <h4 class="mt-3 bd" id="totalPrice2" style="display: none;">총 금액</h4>
+								    <h4 class="float-end mt-3" id="totalPrice" style="display: none;">계산 중...</h4>
+								</div>
+							</div>
+						</c:otherwise>
+					</c:choose>
 				</div>
 				
-				<div class="mt-5 pt-3">
+				<div class="mt-3">
 					<div class="d-flex justify-content-end gap-3">
 						<c:choose>
 							<c:when test="${dto.nickName.equals(sessionScope.member.nickName)}">
@@ -393,8 +400,7 @@ function sendOk() {
 							</c:when>
 							<c:otherwise>
 								<button class="ajaxLike btnSendLike ${dto.userLiked ? 'on' : ''}">${dto.userLiked ? '찜삭제' : '찜하기'}</button>
-								<button class="btnChat">채팅하기</button>
-								<input type="hidden" value="${dto.rentNum}" class="likeRentNum">
+								<button class="btnChat">신청하기</button>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -673,6 +679,7 @@ function sendOk() {
 							<!-- 파라미터 num -->
 							<input type="hidden" name="postNum" value="${dto.rentNum}">
 							<input type="hidden" name="banUser" value="${writer.userId}">
+							<input type="hidden" name="subject" value="${dto.subject}">
 						<div>
 							<button type="button" class="btn btn-primary w-100"
 								onclick="sendOk();">신고하기</button>
@@ -721,6 +728,60 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 }
 
 $(function() {
+	
+	$('.btnChat').click(function(e) {
+        e.preventDefault();
+        
+        let strDate = new Date($('#strDate').val());
+        let endDate = new Date($('#endDate').val());
+        let currentDateTime = new Date();
+        let rentNum = ${dto.rentNum};
+        
+        // 현재 시간 이전의 시작 날짜를 선택했는지 확인
+        if (strDate < currentDateTime) {
+            alert("시작 시간은 현재 시간 이후로 선택해주세요.");
+            return;
+        }
+        
+        // h4 태그에서 totalPrice 텍스트를 가져오고 숫자로 변환
+        let totalPrice = parseInt($('#totalPrice').text().replace(/[^0-9]/g, ''));
+        let deposit = Math.round(totalPrice * 0.2); // 총 금액의 20%
+
+        // 날짜가 선택되지 않았거나 총 금액이 없을 경우
+        if (isNaN(strDate.getTime()) || isNaN(endDate.getTime()) || isNaN(totalPrice)) {
+            alert("대여 기간과 금액을 확인해주세요.");
+            return;
+        }
+        
+        // 보유 포인트가 부족한경우
+        if(${sessionScope.member.point} < deposit) {
+        	if (confirm("보유한 포인트가 부족합니다. 포인트를 결제하시겠습니까?")) {
+				
+			}
+        	return;
+        }
+
+        let url = '${pageContext.request.contextPath}/rentcr/rentConfirm';
+        let query = {
+            strDate: $('#strDate').val(),
+            endDate: $('#endDate').val(),
+            rentNum: rentNum,
+            deposit: deposit,
+            totalPrice: totalPrice
+        };
+
+        const fn = function(data) {
+            if(data.state === "success") {
+                alert("대여 신청이 완료되었습니다.");
+                location.href = '${pageContext.request.contextPath}/rent/list';
+            } else {
+                alert("대여 신청 중 오류가 발생했습니다.");
+            }
+        };
+
+        ajaxFun(url, "post", query, "json", fn);
+	});
+	
 	$('.ajaxLike').click(function() {
 		
 		let $btn = $(this);
@@ -737,7 +798,7 @@ $(function() {
 		const fn = function(data) {
 			let state = data.state;
 			if(state === 'true') {
-				let count = data.LikeCount;
+				let count = data.rentLikeCount;
 				// $btn.closest('.list').find('.LikeCount').html('<i class="fa-solid fa-heart"></i>&nbsp;' + count);
 				$likeCount.innerText = count;
 				
@@ -829,26 +890,178 @@ $(function() {
 	    }
 	});
     
- 	// 현재 날짜와 시간을 YYYY-MM-DDTHH:mm 형식으로 반환하는 함수
-    function getCurrentDateTime() {
-        var now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        return now.toISOString().slice(0,16);
+	// 현재 날짜와 시간을 YYYY-MM-DDTHH:00 형식으로 반환하는 함수
+	function getCurrentDateTime() {
+	    var now = new Date();
+	    return now.getFullYear() + '-' +
+	           String(now.getMonth() + 1).padStart(2, '0') + '-' +
+	           String(now.getDate()).padStart(2, '0') + 'T' +
+	           String(now.getHours()).padStart(2, '0') + ':' +
+	           String(now.getMinutes()).padStart(2, '0');
+	}
+    
+	function updateMinDateTime() {
+	    var currentDateTime = getCurrentDateTime();
+	    $('#strDate').attr('min', currentDateTime);
+	    
+	    var selectedDateTime = $('#strDate').val();
+	    if (selectedDateTime && selectedDateTime < currentDateTime) {
+	        $('#strDate').val(currentDateTime);
+	    }
+	}
+
+	// 날짜를 YYYY-MM-DDTHH:00 형식으로 변환하는 함수
+	function formatDateToHourString(date) {
+	    return date.getFullYear() + '-' +
+	           String(date.getMonth() + 1).padStart(2, '0') + '-' +
+	           String(date.getDate()).padStart(2, '0') + 'T' +
+	           String(date.getHours()).padStart(2, '0') + ':00';
+	}
+
+	// 시작 날짜의 최소값을 현재 시간으로 설정
+    $('#strDate').attr('min', getCurrentDateTime());
+
+    // 총 대여 시간과 금액을 계산하는 함수
+    function calculateTotalTimeAndPrice() {
+        var startDate = new Date($('#strDate').val());
+        var endDate = new Date($('#endDate').val());
+        if (startDate && endDate && endDate > startDate) {
+            var diff = endDate - startDate;
+            var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var timeString = "";
+            if (days > 0) {
+                timeString += days + "일 ";
+            }
+            timeString += hours + "시간";
+            $('#totalRentalTime').text(timeString);
+
+            // 총 금액 계산
+            var totalPrice = calculatePrice(days, hours);
+            if (totalPrice !== null) {
+                $('#totalPrice').text(totalPrice.toLocaleString() + '원').show();
+                $('#totalPrice2').show();
+            } else {
+                $('#totalPrice').hide();
+                $('#totalPrice2').hide();
+            }
+        } else {
+            $('#totalRentalTime').text("~~일 ~~시간");
+            $('#totalPrice').hide();
+            $('#totalPrice2').hide();
+        }
     }
 
-    // 시작 날짜의 최소값을 현재 시간으로 설정
-    var currentDateTime = getCurrentDateTime();
-    $('#strDate').attr('min', currentDateTime);
+    function calculatePrice(days, hours) {
+        var mPrice = ${dto.mPrice};
+        var wPrice = ${dto.wPrice};
+        var dPrice = ${dto.dPrice};
+        var hPrice = ${dto.hPrice};
 
-    // 시작 날짜가 변경될 때 종료 날짜 입력 필드를 표시하고 최소값을 시작 날짜로 설정
+        var totalPrice = 0;
+        var totalHours = days * 24 + hours;
+
+        // 최소 대여 기간 체크
+        var minRentalPeriod = getMinRentalPeriod();
+        if (totalHours < minRentalPeriod) {
+            var minPeriodMessage = formatMinRentalPeriod(minRentalPeriod);
+            alert("최소 대여 기간은 " + minPeriodMessage + " 입니다.");
+            return null;
+        }
+
+        // 30일(월) 단위 계산
+        if (mPrice > 0 && totalHours >= 30 * 24) {
+            var monthCount = Math.floor(totalHours / (30 * 24));
+            totalPrice += monthCount * mPrice;
+            totalHours %= (30 * 24);
+        }
+
+        // 주 단위 계산
+        if (wPrice > 0 && totalHours >= 7 * 24) {
+            var weekCount = Math.floor(totalHours / (7 * 24));
+            totalPrice += weekCount * wPrice;
+            totalHours %= (7 * 24);
+        }
+
+        // 일 단위 계산
+        if (dPrice > 0 && totalHours >= 24) {
+            var dayCount = Math.floor(totalHours / 24);
+            totalPrice += dayCount * dPrice;
+            totalHours %= 24;
+        }
+
+        // 남은 시간에 대한 계산
+        if (totalHours > 0) {
+            if (hPrice > 0) {
+                totalPrice += totalHours * hPrice;
+            } else if (dPrice > 0) {
+                totalPrice += (totalHours * (dPrice / 24));
+            } else if (wPrice > 0) {
+                totalPrice += (totalHours * (wPrice / (7 * 24)));
+            } else if (mPrice > 0) {
+                totalPrice += (totalHours * (mPrice / (30 * 24)));
+            }
+        }
+
+        return Math.round(totalPrice);
+    }
+
+    function getMinRentalPeriod() {
+        if (${dto.hPrice} > 0) return 1;
+        if (${dto.dPrice} > 0) return 24;
+        if (${dto.wPrice} > 0) return 7 * 24;
+        if (${dto.mPrice} > 0) return 30 * 24;
+        return 0;
+    }
+
+    function formatMinRentalPeriod(hours) {
+        if (hours >= 30 * 24) return "30일";
+        if (hours >= 7 * 24) return "7일";
+        if (hours >= 24) return "1일";
+        return hours + "시간";
+    }
+    
+    updateMinDateTime();
+    setInterval(updateMinDateTime, 60000);
+
     $('#strDate').on('change', function() {
-        var selectedStartDate = $(this).val();
+        var selectedStartDate = new Date($(this).val());
+        var currentDateTime = new Date();
+        
+        if (selectedStartDate < currentDateTime) {
+            // 선택된 시간이 현재 시간보다 이전이면 현재 시간으로 설정
+            $(this).val(getCurrentDateTime());
+            selectedStartDate = new Date($(this).val());
+        } else {
+            // 선택된 시간이 현재 시간 이후면 분을 00으로 설정
+            $(this).val(formatDateToHourString(selectedStartDate));
+            selectedStartDate = new Date($(this).val());
+        }
+
         if(selectedStartDate) {
             $('#endDateContainer').show();
-            $('#endDate').attr('min', selectedStartDate);
+            $('#endDate').attr('min', formatDateToHourString(new Date(selectedStartDate.getTime() + 60 * 60 * 1000)));
+            calculateTotalTimeAndPrice();
         } else {
             $('#endDateContainer').hide();
+            $('#totalPrice').hide();
         }
+    });
+    
+ 	// 날짜를 YYYY-MM-DDTHH:mm 형식으로 변환하는 함수
+    function formatDateToMinuteString(date) {
+        return date.getFullYear() + '-' +
+               String(date.getMonth() + 1).padStart(2, '0') + '-' +
+               String(date.getDate()).padStart(2, '0') + 'T' +
+               String(date.getHours()).padStart(2, '0') + ':' +
+               String(date.getMinutes()).padStart(2, '0');
+    }
+
+    // 종료 날짜가 변경될 때 이벤트
+    $('#endDate').on('change', function() {
+        var selectedEndDate = new Date($(this).val());
+        $(this).val(formatDateToHourString(selectedEndDate));
+        calculateTotalTimeAndPrice();
     });
     
 	$('#writerPostsModal').on('show.bs.modal', function (e) {

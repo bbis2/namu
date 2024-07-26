@@ -4,7 +4,7 @@ public class RentCR {
 
 	// 빌려드림 예약신청 (rentConfirm 테이블)
 	private long reqNum;
-	private long num; 		// 빌려드림 글번호
+	private long rentNum; 	// 빌려드림 글번호
 	private String userId;	// 신청자 아이디
 	private String reqDate; // 신청일자
 	private String strDate; // 대여시작일자
@@ -13,6 +13,7 @@ public class RentCR {
 	private int deposit;	// 보증금
 	private int state;		// 신청 상태 (1-신청완료(대기중), 2-수락, 3-거절, 4-취소, 5-완료)
 	private String reject; 	// 거절사유
+	private int totalPrice; // 총 금액
 	
 	// 빌려드림 후기 (rentReview)
 	private long rentReviewNum;
@@ -25,12 +26,6 @@ public class RentCR {
 	}
 	public void setReqNum(long reqNum) {
 		this.reqNum = reqNum;
-	}
-	public long getNum() {
-		return num;
-	}
-	public void setNum(long num) {
-		this.num = num;
 	}
 	public String getUserId() {
 		return userId;
@@ -97,5 +92,17 @@ public class RentCR {
 	}
 	public void setWasGood(int wasGood) {
 		this.wasGood = wasGood;
+	}
+	public long getRentNum() {
+		return rentNum;
+	}
+	public void setRentNum(long rentNum) {
+		this.rentNum = rentNum;
+	}
+	public int getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 }
