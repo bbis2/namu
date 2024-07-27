@@ -21,6 +21,13 @@
 	transition: 0.2s;
 	
 }
+.btnSendLike:hover {
+	background: #8a8a8a;
+}
+.btnSendLike.on {
+	background: #8a8a8a;
+}
+
 .btnChat {
 	background: #ec433d;
 	color: white;
@@ -32,14 +39,37 @@
 	transition: 0.2s;
 }
 
-.btnSendLike:hover {
-	background: #8a8a8a;
-}
-.btnSendLike.on {
-	background: #8a8a8a;
-}
 .btnChat:hover {
 	background: #ff2600;
+}
+.btnWaiting {
+    background: #ffa500;  /* 노란색(주황색) */
+    color: white;
+    width: 150px;
+    height: 50px;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.btnWaiting:hover {
+    background: #ff8c00;
+}
+
+.btnAccept {
+    background: #4169e1;  /* 파란색 */
+    color: white;
+    width: 150px;
+    height: 50px;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.btnAccept:hover {
+    background: #1e90ff;
 }
 
 a:hover {text-decoration: none;}
@@ -235,14 +265,7 @@ function sendOk() {
 		<div class="col-md-4">
 		
 			<div id="carouselExampleIndicators" class="carousel slide border">
-				<div class="carousel-indicators">
-		            <c:forEach var="i" items="${listImage}" varStatus="status">
-		                <button type="button" data-bs-target="#carouselExampleIndicators"
-		                    data-bs-slide-to="${status.index}" class="${status.first ? 'active' : ''}" 
-		                    aria-current="${status.first ? 'true' : 'false'}" 
-		                    aria-label="Slide ${status.index + 1}"></button>
-		            </c:forEach>
-		        </div>
+
 		        <div class="carousel-inner ratio ratio-1x1">
 		            <c:forEach var="i" items="${listImage}" varStatus="status">
 		                <div class="carousel-item ${status.first ? 'active' : ''}">
@@ -262,6 +285,17 @@ function sendOk() {
 					<span class="carousel-control-next-icon" aria-hidden="true"></span>
 					<span class="visually-hidden">Next</span>
 				</button>
+			</div>
+			
+			<div class="mt-2 d-flex justify-content-center">
+			    <c:forEach var="i" items="${listImage}" varStatus="status">
+			        <div class="mx-1">
+			            <img src="${pageContext.request.contextPath}/uploads/album/${i.imageFilename}" 
+			                 class="img-thumbnail thumbnail-image" alt="썸네일" 
+			                 style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
+			                 data-slide-to="${status.index}">
+			        </div>
+			    </c:forEach>
 			</div>
 
 		</div>
@@ -379,8 +413,8 @@ function sendOk() {
 								    <input type="datetime-local" id="endDate" name="endDate" class="form-control" step="3600" required>
 								</div>
 								<div class="d-flex justify-content-between">
-								    <h6 class="mt-3 bd">총 대여 시간</h6>
-								    <h6 class="float-end mt-3" id="totalRentalTime">~~일 ~~시간</h6>
+								    <h6 class="mt-3 bd" id="totalRentalTime2" style="display: none;">총 대여 시간</h6>
+								    <h6 class="float-end mt-3" id="totalRentalTime" style="display: none;">~~일 ~~시간</h6>
 								</div>
 								<div class="d-flex justify-content-between mt-3" style="color: blue;">
 								    <h4 class="mt-3 bd" id="totalPrice2" style="display: none;">총 금액</h4>
@@ -400,7 +434,7 @@ function sendOk() {
 							</c:when>
 							<c:otherwise>
 								<button class="ajaxLike btnSendLike ${dto.userLiked ? 'on' : ''}">${dto.userLiked ? '찜삭제' : '찜하기'}</button>
-								<button class="btnChat">신청하기</button>
+								<button id="rentalActionButton" class="rental-action-btn" style="border: none;">신청하기</button>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -692,6 +726,62 @@ function sendOk() {
 	</div>
 </div>
 
+<!-- 신청 모달 -->
+<div class="modal fade" id="rentalConfirmModal" tabindex="-1" aria-labelledby="rentalConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rentalConfirmModalLabel">대여 신청 확인</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="accordion" id="rentalAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                대여 정보
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#rentalAccordion">
+              <div class="accordion-body">
+                <p><strong>시작 날짜:</strong> <span id="modalStartDate"></span></p>
+                <p><strong>종료 날짜:</strong> <span id="modalEndDate"></span></p>
+                <p><strong>총 대여 시간:</strong> <span id="modalTotalTime"></span></p>
+                <p><strong>총 금액:</strong> <span id="modalTotalPrice"></span></p>
+                <p><strong>보증금:</strong> <span id="modalDeposit"></span></p>
+                <p><strong>나무머니 잔액:</strong> <span id="modalPoint"></span></p>
+                <p>보증금은 총 금액의 20%로 산정되었으며, 대여 종료 후 물품 상태 확인 후 반환됩니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                약관 동의
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#rentalAccordion">
+              <div class="accordion-body">
+                <p>본 거래의 모든 책임은 거래 당사자들에게 있습니다. 물품의 상태, 반환, 손상 등에 대한 모든 사항은 대여자와 차용자 간의 합의에 따릅니다.</p>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="agreeTerms">
+                  <label class="form-check-label" for="agreeTerms">
+                    위 약관에 동의합니다.
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" id="confirmRental" disabled>대여 신청</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
 function ajaxFun(url, method, formData, dataType, fn, file = false) {
 	const settings = {
@@ -729,8 +819,128 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 
 $(function() {
 	
-	$('.btnChat').click(function(e) {
+	
+	// 토스트 팝업
+	const $toast = document.querySelector('#toast_message');
+	
+	function moveToSlide(index) {
+	    $('#carouselExampleIndicators').carousel(index);
+	}
+	
+    var carouselElement = document.querySelector('#carouselExampleIndicators');
+    var carousel = new bootstrap.Carousel(carouselElement, {
+        interval: false // 자동 슬라이드 비활성화
+    });
+    
+    $(document).ready(function() {
+        
+        function numberWithCommas(x) {
+        	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    	}
+        
+        // rentCR 상태에 따라 버튼 변경 및 대여 정보 표시
+        var $rentalButton = $('#rentalActionButton');
+        
+        if (${rentCR == null}) {
+            $rentalButton.text('신청하기').removeClass('btnWaiting btnAccept').addClass('btnChat');
+            enableRentalInputs();
+        } else if (${rentCR.state == 1}) {
+            $rentalButton.text('대기중(취소하기)').removeClass('btnChat btnAccept').addClass('btnWaiting');
+            displayRentalInfo();
+        } else if (${rentCR.state == 2}) {
+            $rentalButton.text('대여 확정').removeClass('btnChat btnWaiting').addClass('btnAccept').prop('disabled', true);
+            displayRentalInfo();
+        } else {
+            $rentalButton.text('신청하기').removeClass('btnWaiting btnAccept').addClass('btnChat');
+            enableRentalInputs();
+        }
+
+        // 대여 정보 표시 함수
+        function displayRentalInfo() {
+            var startDate = new Date('${rentCR.strDate}');
+            var endDate = new Date('${rentCR.endDate}');
+            
+            $('#strDate').val(formatDateToString(startDate)).prop('disabled', true);
+            $('#endDate').val(formatDateToString(endDate)).prop('disabled', true);
+            $('#endDateContainer').show();
+            
+            var totalTime = calculateTotalTime(startDate, endDate);
+            $('#totalRentalTime').text(totalTime).show();
+            $('#totalRentalTime2').show();
+            
+            if (${rentCR.totalPrice != null && rentCR.totalPrice > 0}) {
+                $('#totalPrice').text(numberWithCommas(${rentCR.totalPrice}) + '원').show();
+                $('#totalPrice2').show();
+            } else {
+                console.log("Total Price is null or 0");
+                $('#totalPrice').text('가격 정보 없음').show();
+                $('#totalPrice2').show();
+            }
+            
+            disableRentalInputs();
+        }
+
+        // 날짜를 YYYY-MM-DDTHH:00 형식의 문자열로 변환
+        function formatDateToString(date) {
+            return date.getFullYear() + '-' +
+                   String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                   String(date.getDate()).padStart(2, '0') + 'T' +
+                   String(date.getHours()).padStart(2, '0') + ':00';
+        }
+
+        // 총 대여 시간 계산 함수
+        function calculateTotalTime(startDate, endDate) {
+            var diff = endDate.getTime() - startDate.getTime();
+            var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var timeString = "";
+            if (days > 0) {
+                timeString += days + "일 ";
+            }
+            timeString += hours + "시간";
+            return timeString;
+        }
+
+        // 대여 입력 필드 비활성화 함수
+        function disableRentalInputs() {
+            $('#strDate, #endDate').prop('disabled', true);
+            $('#totalRentalTime, #totalPrice').css('color', '#888');
+        }
+
+        // 대여 입력 필드 활성화 함수
+        function enableRentalInputs() {
+            $('#strDate, #endDate').prop('disabled', false).val('');
+            $('#totalRentalTime, #totalPrice').css('color', '').text('');
+            $('#totalRentalTime2, #totalPrice2, #endDateContainer').hide();
+        }
+
+        // 숫자에 쉼표 추가 함수 (jQuery 확장 메서드)
+        $.numberWithCommas = function(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+    });
+
+    // 썸네일 클릭 시 해당 슬라이드로 이동
+    $('.thumbnail-image').click(function() {
+        var slideIndex = $(this).data('slide-to');
+        carousel.to(slideIndex);
+    });
+
+    // 이미지 클릭 시 모달 표시
+    $('#carouselExampleIndicators img').click(function() {
+        let slideIndex = $(this).closest('.carousel-item').index();
+        let modalCarousel = new bootstrap.Carousel('#modalCarousel');
+        $('#modalCarousel').carousel(slideIndex);
+        $('#imageModal').modal('show');
+    });
+    
+    function formatDate(date) {
+        return date.toISOString().slice(0, 19).replace('T', ' ');
+    }
+	
+    $(document).on('click', '.btnChat', function(e) {
         e.preventDefault();
+        console.log("btnChat clicked");
         
         let strDate = new Date($('#strDate').val());
         let endDate = new Date($('#endDate').val());
@@ -739,7 +949,11 @@ $(function() {
         
         // 현재 시간 이전의 시작 날짜를 선택했는지 확인
         if (strDate < currentDateTime) {
-            alert("시작 시간은 현재 시간 이후로 선택해주세요.");
+			$toast.innerText = '시작 시간은 현재 시간 이후로 선택해주세요.';
+			$toast.classList.add('active');
+			setTimeout(() => {
+				$toast.classList.remove('active');
+			}, 2500);
             return;
         }
         
@@ -749,38 +963,187 @@ $(function() {
 
         // 날짜가 선택되지 않았거나 총 금액이 없을 경우
         if (isNaN(strDate.getTime()) || isNaN(endDate.getTime()) || isNaN(totalPrice)) {
-            alert("대여 기간과 금액을 확인해주세요.");
+			$toast.innerText = '대여 기간과 금액을 확인해주세요.';
+			$toast.classList.add('active');
+			setTimeout(() => {
+				$toast.classList.remove('active');
+			}, 2500);
             return;
         }
         
-        // 보유 포인트가 부족한경우
-        if(${sessionScope.member.point} < deposit) {
-        	if (confirm("보유한 포인트가 부족합니다. 포인트를 결제하시겠습니까?")) {
-				
-			}
-        	return;
-        }
+        // 서버에 중복 검사 요청
+        $.ajax({
+            url: '${pageContext.request.contextPath}/rentcr/checkOverlap',
+            type: 'POST',
+            data: {
+                strDate: formatDate(strDate),
+                endDate: formatDate(endDate),
+                rentNum: rentNum
+            },
+            success: function(response) {
+            	console.log("AJAX response:", response);
+                if (response.overlap) {
+    				$toast.innerText = '선택한 시간대에 이미 대여 신청이 있습니다. 다른 시간을 선택해주세요.';
+    				$toast.classList.add('active');
+    				setTimeout(() => {
+    					$toast.classList.remove('active');
+    				}, 2500);
+                } else {
+                    proceedWithRental(strDate, endDate, totalPrice, deposit);
+                }
+            },
+            error: function() {
+                alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
+            }
+        });
+    });
 
-        let url = '${pageContext.request.contextPath}/rentcr/rentConfirm';
+    function proceedWithRental(strDate, endDate, totalPrice, deposit) {
+    	console.log("proceedWithRental called");
+        // 보유 포인트가 부족한 경우
+        if(${point} < deposit) {
+            let needPoint = deposit - ${point};
+            if (confirm("보유한 나무머니가 부족합니다.(나무머니 잔액: ${point})" + needPoint + "나무머니를 결제하시겠습니까?")) {
+                // 포인트 결제 로직 구현
+                // 여기에 포인트 충전 페이지로 이동하는 코드를 추가하세요
+            } else {
+				$toast.innerText = '대여신청을 취소합니다.';
+				$toast.classList.add('active');
+				setTimeout(() => {
+					$toast.classList.remove('active');
+				}, 2500);
+                return;
+            }
+        }
+        
+        // 날짜를 년월일시 형식으로 변환하는 함수
+        function formatDateTime(date) {
+            return date.getFullYear() + '년 ' + 
+                   (date.getMonth() + 1).toString().padStart(2, '0') + '월 ' + 
+                   date.getDate().toString().padStart(2, '0') + '일 ' + 
+                   date.getHours().toString().padStart(2, '0') + '시';
+        }
+        // 모달에 정보 표시
+        let point = ${point};
+        $('#modalStartDate').text(formatDateTime(strDate));
+        $('#modalEndDate').text(formatDateTime(endDate));
+        $('#modalTotalTime').text($('#totalRentalTime').text());
+        $('#modalTotalPrice').text(totalPrice.toLocaleString() + '원');
+        $('#modalDeposit').text(deposit.toLocaleString() + '원');
+        $('#modalPoint').text(point.toLocaleString() + '원');
+
+        // 모달 열기
+        $('#rentalConfirmModal').modal('show');
+    }
+
+    $('#agreeTerms').change(function() {
+        $('#confirmRental').prop('disabled', !this.checked);
+    });
+
+    $('#confirmRental').click(function() {
+        if($('#agreeTerms').is(':checked')) {
+            let url = '${pageContext.request.contextPath}/rentcr/rentConfirm';
+            let query = {
+                strDate: $('#strDate').val(),
+                endDate: $('#endDate').val(),
+                rentNum: ${dto.rentNum},
+                deposit: parseInt($('#modalDeposit').text().replace(/[^0-9]/g, '')),
+                totalPrice: parseInt($('#modalTotalPrice').text().replace(/[^0-9]/g, ''))
+            };
+
+            const fn = function(data) {
+                if(data.state === "success") {
+                    $toast.innerText = '대여 신청이 완료되었습니다.';
+                    $toast.classList.add('active');
+                    setTimeout(() => {
+                        $toast.classList.remove('active');
+                    }, 2500);
+
+                    // 버튼 변경
+                    $('.btnChat')
+                        .text('대기중(취소하기)')
+                        .removeClass('btnChat')
+                        .addClass('btnWaiting')
+                        .css({
+                            'background-color': '#FFA500',  // 노란색 (주황색)
+                            'color': 'white'
+                        })
+                        .prop('disabled', false);  // 버튼 활성화
+
+                    // 대여 신청 완료 후 추가 작업
+                    disableRentalInputs();
+                } else {
+                    $toast.innerText = '대여 신청 중 오류가 발생했습니다.';
+                    $toast.classList.add('active');
+                    setTimeout(() => {
+                        $toast.classList.remove('active');
+                    }, 2500);
+                }
+            };
+
+            ajaxFun(url, "post", query, "json", fn);
+            $('#rentalConfirmModal').modal('hide');
+        }
+    });
+
+    // 대여 입력 필드 비활성화 함수
+    function disableRentalInputs() {
+        $('#strDate, #endDate').prop('disabled', true);
+        $('#totalRentalTime, #totalPrice').css('color', '#888');  // 회색으로 변경
+    }
+
+    // 대기중(취소하기) 버튼 클릭 이벤트
+    $(document).on('click', '.btnWaiting', function() {
+        if (confirm('대여 신청을 취소하시겠습니까?')) {
+            // 여기에 대여 신청 취소 로직 추가
+            cancelRental();
+        }
+    });
+
+    // 대여 신청 취소 함수
+    function cancelRental() {
+        let url = '${pageContext.request.contextPath}/rentcr/cancelRent';
         let query = {
-            strDate: $('#strDate').val(),
-            endDate: $('#endDate').val(),
-            rentNum: rentNum,
-            deposit: deposit,
-            totalPrice: totalPrice
+            rentNum: ${dto.rentNum}
         };
 
         const fn = function(data) {
             if(data.state === "success") {
-                alert("대여 신청이 완료되었습니다.");
-                location.href = '${pageContext.request.contextPath}/rent/list';
+                $toast.innerText = '대여 신청이 취소되었습니다.';
+                $toast.classList.add('active');
+                setTimeout(() => {
+                    $toast.classList.remove('active');
+                }, 2500);
+
+                // 버튼을 원래대로 되돌리기
+                $('.btnWaiting')
+                    .text('신청하기')
+                    .removeClass('btnWaiting')
+                    .addClass('btnChat')
+                    .css({
+                        'background': '#ec433d',
+                        'color': 'white'
+                    });
+
+                // 대여 입력 필드 활성화
+                enableRentalInputs();
             } else {
-                alert("대여 신청 중 오류가 발생했습니다.");
+                $toast.innerText = '대여 신청 취소 중 오류가 발생했습니다.';
+                $toast.classList.add('active');
+                setTimeout(() => {
+                    $toast.classList.remove('active');
+                }, 2500);
             }
         };
 
         ajaxFun(url, "post", query, "json", fn);
-	});
+    }
+
+    // 대여 입력 필드 활성화 함수
+    function enableRentalInputs() {
+        $('#strDate, #endDate').prop('disabled', false);
+        $('#totalRentalTime, #totalPrice').css('color', '');  // 원래 색상으로 변경
+    }
 	
 	$('.ajaxLike').click(function() {
 		
@@ -817,7 +1180,7 @@ $(function() {
 				$toast.classList.add('active');
 				setTimeout(() => {
 					$toast.classList.remove('active');
-				}, 1500);
+				}, 2500);
 			}
 		};
 		
@@ -833,9 +1196,6 @@ $(function() {
 			let url = '${pageContext.request.contextPath}/rent/insertLike';
 			let num = $btn.next('input').val();
 			let query = 'num=' + num + '&userLiked=' + userLiked;
-			
-			// 토스트 팝업
-			let $toast = document.querySelector('#toast_message');
 			
 			const fn = function(data) {
 				let state = data.state;
@@ -853,7 +1213,7 @@ $(function() {
 					$toast.classList.add('active');
 					setTimeout(() => {
 						$toast.classList.remove('active');
-					}, 1500);
+					}, 2500);
 				}
 			};
 			
@@ -921,10 +1281,12 @@ $(function() {
 	// 시작 날짜의 최소값을 현재 시간으로 설정
     $('#strDate').attr('min', getCurrentDateTime());
 
-    // 총 대여 시간과 금액을 계산하는 함수
+ 	// 총 대여 시간과 금액을 계산하는 함수
     function calculateTotalTimeAndPrice() {
         var startDate = new Date($('#strDate').val());
         var endDate = new Date($('#endDate').val());
+        
+        // 시작 날짜와 종료 날짜가 모두 선택되었고, 종료 날짜가 시작 날짜보다 나중일 때만 계산 진행
         if (startDate && endDate && endDate > startDate) {
             var diff = endDate - startDate;
             var days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -934,22 +1296,28 @@ $(function() {
                 timeString += days + "일 ";
             }
             timeString += hours + "시간";
-            $('#totalRentalTime').text(timeString);
+            $('#totalRentalTime').text(timeString).show();
 
             // 총 금액 계산
             var totalPrice = calculatePrice(days, hours);
             if (totalPrice !== null) {
                 $('#totalPrice').text(totalPrice.toLocaleString() + '원').show();
                 $('#totalPrice2').show();
+                $('#totalRentalTime2').show();
             } else {
-                $('#totalPrice').hide();
-                $('#totalPrice2').hide();
+                hideAllPriceElements();
             }
         } else {
-            $('#totalRentalTime').text("~~일 ~~시간");
-            $('#totalPrice').hide();
-            $('#totalPrice2').hide();
+            hideAllPriceElements();
         }
+    }
+
+    // 모든 가격 관련 요소를 숨기는 함수
+    function hideAllPriceElements() {
+        $('#totalRentalTime').hide();
+        $('#totalRentalTime2').hide();
+        $('#totalPrice').hide();
+        $('#totalPrice2').hide();
     }
 
     function calculatePrice(days, hours) {
@@ -966,40 +1334,41 @@ $(function() {
         if (totalHours < minRentalPeriod) {
             var minPeriodMessage = formatMinRentalPeriod(minRentalPeriod);
             alert("최소 대여 기간은 " + minPeriodMessage + " 입니다.");
+            $('#endDate').val("");
             return null;
         }
+        
+        var monthCount;
+        var weekCount;
+        var dayCount;
 
         // 30일(월) 단위 계산
         if (mPrice > 0 && totalHours >= 30 * 24) {
-            var monthCount = Math.floor(totalHours / (30 * 24));
+            monthCount = Math.floor(totalHours / (30 * 24));
             totalPrice += monthCount * mPrice;
             totalHours %= (30 * 24);
-        }
-
-        // 주 단위 계산
-        if (wPrice > 0 && totalHours >= 7 * 24) {
-            var weekCount = Math.floor(totalHours / (7 * 24));
+        } else if (wPrice > 0 && totalHours >= 7 * 24) {
+        	// 주단위 계산
+            weekCount = Math.floor(totalHours / (7 * 24));
             totalPrice += weekCount * wPrice;
             totalHours %= (7 * 24);
-        }
-
-        // 일 단위 계산
-        if (dPrice > 0 && totalHours >= 24) {
-            var dayCount = Math.floor(totalHours / 24);
+        } else if (dPrice > 0 && totalHours >= 24) {
+        	// 일단위 계산
+            dayCount = Math.floor(totalHours / 24);
             totalPrice += dayCount * dPrice;
             totalHours %= 24;
         }
-
+        
         // 남은 시간에 대한 계산
         if (totalHours > 0) {
-            if (hPrice > 0) {
-                totalPrice += totalHours * hPrice;
-            } else if (dPrice > 0) {
-                totalPrice += (totalHours * (dPrice / 24));
-            } else if (wPrice > 0) {
+            if (mPrice > 0 && monthCount > 0) {
+            	totalPrice += (totalHours * (mPrice / (30 * 24)));
+            } else if (wPrice > 0 && weekCount > 0) {
                 totalPrice += (totalHours * (wPrice / (7 * 24)));
-            } else if (mPrice > 0) {
-                totalPrice += (totalHours * (mPrice / (30 * 24)));
+            } else if (dPrice > 0 && dayCount > 0) {
+                totalPrice += (totalHours * (dPrice / 24));
+            } else if (hPrice > 0) {
+            	totalPrice += totalHours * hPrice;
             }
         }
 
@@ -1027,13 +1396,12 @@ $(function() {
     $('#strDate').on('change', function() {
         var selectedStartDate = new Date($(this).val());
         var currentDateTime = new Date();
+        var selectedEndDate = new Date($('#endDate').val());
         
         if (selectedStartDate < currentDateTime) {
-            // 선택된 시간이 현재 시간보다 이전이면 현재 시간으로 설정
             $(this).val(getCurrentDateTime());
             selectedStartDate = new Date($(this).val());
         } else {
-            // 선택된 시간이 현재 시간 이후면 분을 00으로 설정
             $(this).val(formatDateToHourString(selectedStartDate));
             selectedStartDate = new Date($(this).val());
         }
@@ -1041,10 +1409,22 @@ $(function() {
         if(selectedStartDate) {
             $('#endDateContainer').show();
             $('#endDate').attr('min', formatDateToHourString(new Date(selectedStartDate.getTime() + 60 * 60 * 1000)));
+            
+            // 시작 시간이 종료 시간 이후인 경우 종료 시간을 초기화
+            if (selectedEndDate && selectedStartDate >= selectedEndDate) {
+                $('#endDate').val('');
+                
+				$toast.innerText = '종료 시간을 다시 설정해주세요.';
+				$toast.classList.add('active');
+				setTimeout(() => {
+					$toast.classList.remove('active');
+				}, 2500);
+            }
+            
             calculateTotalTimeAndPrice();
         } else {
             $('#endDateContainer').hide();
-            $('#totalPrice').hide();
+            hideAllPriceElements();
         }
     });
     

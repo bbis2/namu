@@ -236,14 +236,7 @@ function sendOk() {
 		<div class="col-md-4">
 		
 			<div id="carouselExampleIndicators" class="carousel slide border">
-				<div class="carousel-indicators">
-		            <c:forEach var="i" items="${listImage}" varStatus="status">
-		                <button type="button" data-bs-target="#carouselExampleIndicators"
-		                    data-bs-slide-to="${status.index}" class="${status.first ? 'active' : ''}" 
-		                    aria-current="${status.first ? 'true' : 'false'}" 
-		                    aria-label="Slide ${status.index + 1}"></button>
-		            </c:forEach>
-		        </div>
+
 		        <div class="carousel-inner ratio ratio-1x1">
 		            <c:forEach var="i" items="${listImage}" varStatus="status">
 		                <div class="carousel-item ${status.first ? 'active' : ''}">
@@ -263,6 +256,17 @@ function sendOk() {
 					<span class="carousel-control-next-icon" aria-hidden="true"></span>
 					<span class="visually-hidden">Next</span>
 				</button>
+			</div>
+			
+			<div class="mt-2 d-flex justify-content-center">
+			    <c:forEach var="i" items="${listImage}" varStatus="status">
+			        <div class="mx-1">
+			            <img src="${pageContext.request.contextPath}/uploads/album/${i.imageFilename}" 
+			                 class="img-thumbnail thumbnail-image" alt="썸네일" 
+			                 style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
+			                 data-slide-to="${status.index}">
+			        </div>
+			    </c:forEach>
 			</div>
 
 		</div>
@@ -685,6 +689,30 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 }
 
 $(function() {
+	
+	function moveToSlide(index) {
+	    $('#carouselExampleIndicators').carousel(index);
+	}
+	
+    var carouselElement = document.querySelector('#carouselExampleIndicators');
+    var carousel = new bootstrap.Carousel(carouselElement, {
+        interval: false // 자동 슬라이드 비활성화
+    });
+
+    // 썸네일 클릭 시 해당 슬라이드로 이동
+    $('.thumbnail-image').click(function() {
+        var slideIndex = $(this).data('slide-to');
+        carousel.to(slideIndex);
+    });
+
+    // 이미지 클릭 시 모달 표시
+    $('#carouselExampleIndicators img').click(function() {
+        let slideIndex = $(this).closest('.carousel-item').index();
+        let modalCarousel = new bootstrap.Carousel('#modalCarousel');
+        $('#modalCarousel').carousel(slideIndex);
+        $('#imageModal').modal('show');
+    });
+	
 	$('.ajaxLike').click(function() {
 		
 		let $btn = $(this);

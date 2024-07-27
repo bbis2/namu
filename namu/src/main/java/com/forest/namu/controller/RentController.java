@@ -27,7 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Rent;
+import com.forest.namu.domain.RentCR;
 import com.forest.namu.domain.SessionInfo;
+import com.forest.namu.service.PointService;
+import com.forest.namu.service.RentCRService;
 import com.forest.namu.service.RentService;
 
 @Controller
@@ -36,6 +39,12 @@ public class RentController {
 	
 	@Autowired
 	private RentService service;
+	
+	@Autowired
+	private RentCRService crService;
+	
+	@Autowired
+	private PointService pService;
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -162,6 +171,9 @@ public class RentController {
 			map.put("userId", info.getUserId());
 			map.put("num", num);
 			dto.setUserLiked(service.userRentLiked(map)); 
+			RentCR rentCR = crService.checkState(map);
+			
+			long point = pService.selectPoint(info.getUserId());
 			
 			kwd = URLDecoder.decode(kwd, "utf-8");
 			
@@ -218,7 +230,9 @@ public class RentController {
 		    model.addAttribute("otherPosts", otherPosts);
 		    model.addAttribute("totalPages", totalPages);
 	
-			model.addAttribute("dto", dto);
+		    model.addAttribute("dto", dto);
+			model.addAttribute("point", point);
+			model.addAttribute("rentCR", rentCR);
 			model.addAttribute("writer", writer);
 			model.addAttribute("listImage", listImage);
 			model.addAttribute("category", category);

@@ -15,6 +15,10 @@ public class RentCR {
 	private String reject; 	// 거절사유
 	private int totalPrice; // 총 금액
 	
+	private String subject; // 글제목
+	private String borrowName; // 대여 요청자 닉네임
+	private String rentName; // 대여 제공자 닉네임
+	
 	// 빌려드림 후기 (rentReview)
 	private long rentReviewNum;
 	private String content;
@@ -104,5 +108,23 @@ public class RentCR {
 	}
 	public void setTotalPrice(int totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getBorrowName() {
+		return borrowName;
+	}
+	public void setBorrowName(String borrowName) {
+		this.borrowName = borrowName;
+	}
+	public String getRentName() {
+		return rentName;
+	}
+	public void setRentName(String rentName) {
+		this.rentName = rentName;
 	}
 }

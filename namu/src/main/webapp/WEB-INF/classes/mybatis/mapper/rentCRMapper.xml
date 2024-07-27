@@ -3,6 +3,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.forest.namu.mapper.RentCRMapper">
 	
+    <!-- 1: 대기중, 2: 수락 상태만 체크 -->
+    <select id="checkRentOverlap" parameterType="map" resultType="int">
+	    <![CDATA[
+		    SELECT COUNT(*) FROM rentConfirm
+		    WHERE rentNum = #{rentNum}
+			    AND ((strDate BETWEEN TO_DATE(#{strDate}, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
+			    OR (endDate BETWEEN TO_DATE(#{strDate}, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
+			    OR (strDate <= TO_DATE(#{strDate}, 'YYYY-MM-DD HH24:MI:SS') AND endDate >= TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS')))
+			    AND state IN (1, 2)
+	    ]]>
+    </select>
+    
 	<select id="rentConfirmSeq" resultType="Long">
 		SELECT rentConfirm_seq.NEXTVAL FROM dual
 	</select>
@@ -18,5 +30,71 @@
             #{agree}, #{deposit}, #{state}, #{totalPrice}
         )
     </insert>
+    
+    <select id="getDeposit" parameterType="map" resultType="Long">
+    	SELECT deposit
+    	FROM rentConfirm
+    	WHERE userId = #{userId} AND rentNum = #{rentNum}
+    	ORDER BY reqNum DESC
+    	FETCH FIRST 1 ROWS ONLY
+    </select>
+    
+    <select id="getPoint" parameterType="Long" resultType="com.forest.namu.domain.Point">
+	    SELECT p.userId, r.deposit as pointVar, p.lastMoney as currentPoint
+	    FROM rentConfirm r
+	    JOIN point p ON r.userId = p.userId
+	    WHERE r.reqNum = #{reqNum}
+	    ORDER BY pointNum DESC
+	    FETCH FIRST 1 ROWS ONLY
+    </select>
+    
+    <insert id="depositProcess" parameterType="com.forest.namu.domain.Point">
+		INSERT INTO point
+			(pointNum, userId, description, regDate, currentPoint, pointVar, pointCate, lastMoney)
+		VALUES
+			(point_seq.nextval, #{userId}, #{description}, SYSDATE, #{currentPoint}, #{pointVar}, #{pointCate}, #{lastMoney})
+	</insert>
+    
 
+	
+    <update id="cancelRent" parameterType="map">
+        UPDATE rentConfirm
+        SET state = 4  <!-- 4: 취소 상태 -->
+        WHERE rentNum = #{rentNum} AND userId = #{userId} AND state = 1  <!-- 1: 대기중 상태만 취소 가능 -->
+    </update>
+    
+    <update id="rejectRentRequest" parameterType="map">
+        UPDATE rentConfirm
+        SET state = 3, reject = #{reject}
+        WHERE reqNum = #{reqNum} AND state = 1  <!-- 1: 대기중 상태만 취소 가능 -->
+    </update>
+    
+    <select id="checkState" parameterType="map" resultType="com.forest.namu.domain.RentCR">
+    	SELECT state, strDate, endDate, totalPrice
+    	FROM rentConfirm
+    	WHERE rentNum = #{num} AND userId = #{userId} AND state IN (1, 2)
+    </select>
+	
+	<select id="selectMyApplications" parameterType="String" resultType="com.forest.namu.domain.RentCR">
+        SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName,
+        	  r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject
+        FROM rentConfirm rc
+        JOIN rent r ON rc.rentNum = r.rentNum
+        JOIN member borrow ON rc.userId = borrow.userId
+        JOIN member rent ON r.userId = rent.userId
+        WHERE rc.userId = #{userId}
+        ORDER BY rc.reqDate DESC
+    </select>
+
+    <select id="selectReceivedRequests" parameterType="String" resultType="com.forest.namu.domain.RentCR">
+        SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName,
+        	  r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject
+        FROM rentConfirm rc
+        JOIN rent r ON rc.rentNum = r.rentNum
+        JOIN member borrow ON rc.userId = borrow.userId
+        JOIN member rent ON r.userId = rent.userId
+        WHERE r.userId = #{userId}
+        ORDER BY rc.reqDate DESC
+    </select>
+	
 </mapper>
