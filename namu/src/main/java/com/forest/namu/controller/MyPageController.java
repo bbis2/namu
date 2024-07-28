@@ -24,6 +24,7 @@ import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Point;
 import com.forest.namu.domain.Profile;
 import com.forest.namu.domain.SessionInfo;
+import com.forest.namu.domain.TmOrder;
 import com.forest.namu.domain.TmQuestion;
 import com.forest.namu.domain.TmReview;
 import com.forest.namu.domain.Url;
@@ -32,6 +33,7 @@ import com.forest.namu.service.DeliveryService;
 import com.forest.namu.service.MypageService;
 import com.forest.namu.service.PointService;
 import com.forest.namu.service.ScheduleService;
+import com.forest.namu.service.TmOrderService;
 import com.forest.namu.service.TmQuestionService;
 import com.forest.namu.service.TmReviewService;
 
@@ -59,6 +61,9 @@ public class MyPageController {
 	
 	@Autowired
 	private TmQuestionService tmQuestionService;
+	
+	@Autowired
+	private TmOrderService tmOderService;
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -355,6 +360,24 @@ public class MyPageController {
 		return model;
 	}
 	
-	
+	@GetMapping("mytalent")
+	@ResponseBody
+	public Map<String, Object> talentList(HttpSession session) throws Exception {
+
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		List<TmOrder> tmoderList = tmOderService.listTmOrderByUserIdAll(info.getUserId());
+
+		if (tmoderList.isEmpty()) {
+			state = "false";
+		}
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("tmoderList", tmoderList);
+
+		return model;
+	}
 
 }

@@ -468,7 +468,7 @@ h1 {
 					style="display: flex; border: none;">
 					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
 						<!-- 왼쪽 영역 -->
-						 <a href="#" class="link-block" onclick="openQuestionModal();"> <img
+						 <a href="#" class="link-block" onclick="purchaseListModal();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;나의 구매목록
@@ -497,7 +497,37 @@ h1 {
 	</div>
 
 </div>
-
+<!--  재능마켓 구매목록 모달 -->
+<div class="modal fade" id="purchaseListModal" tabindex="-1" aria-labelledby="purchaseListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="purchaseListModalLabel">나의 구매목록</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="purchaseListTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>구매번호</th>
+                            <th>제목</th>
+                            <th>구매일</th>
+                            <th>구매 확정 상태</th>
+                            <th>리뷰 등록 상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 데이터가 동적으로 추가됩니다 -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 재능마켓 리뷰/질문모달 -->
 <div class="modal fade" id="contentModal" tabindex="-1" aria-labelledby="contentModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -942,6 +972,62 @@ $(function() {
 	});
 });
 
+function purchaseListModal() {
+    // AJAX 요청을 사용하여 구매 목록 데이터를 가져옵니다.
+    let url = '${pageContext.request.contextPath}/mypage/mytalent';
+    let method = 'GET';
+    let formData = {};
+    let dataType = 'json';
+
+    ajaxFun(url, method, formData, dataType, function(response) {
+        let htmlContent = '';
+
+        if (response.state === "true") {
+            let tmoderList = response.tmoderList;
+
+            for (let order of tmoderList) {
+                htmlContent += '<tr>';
+                htmlContent += '<td>' + order.applNum + '</td>';
+                htmlContent += '<td>' + order.subject + '</td>';
+                htmlContent += '<td>' + order.applDate + '</td>';
+
+                if (order.completionDate === null) {
+                    htmlContent += '<td><button class="btn btn-primary" onclick="confirmPurchase(' + order.applNum + ')">구매확정</button></td>';
+                } else {
+                    htmlContent += '<td>' + order.completionDate + '</td>';
+                }
+
+                if (order.reviewState === 0 && order.completionDate !== null) {
+                    htmlContent += '<td><button class="btn btn-secondary" onclick="registerReview(' + order.applNum + ')">리뷰 등록</button></td>';
+                } else if (order.reviewState === 1) {
+                    htmlContent += '<td>리뷰 등록 완료</td>';
+                } else {
+                    htmlContent += '<td></td>'; // 리뷰 상태가 정의되지 않은 경우 빈 칸
+                }
+
+                htmlContent += '</tr>';
+            }
+        } else {
+            htmlContent = '<tr><td colspan="5">구매 목록이 없습니다.</td></tr>';
+        }
+
+        document.querySelector('#purchaseListTable tbody').innerHTML = htmlContent;
+
+        // 데이터를 로드한 후 모달을 엽니다.
+        $('#purchaseListModal').modal('show');
+    });
+}
+
+// 구매확정 버튼 클릭 시 호출되는 함수
+function confirmPurchase(applNum) {
+    alert("구매번호 " + applNum + " 구매를 확정합니다.");
+}
+
+// 리뷰 등록 버튼 클릭 시 호출되는 함수
+function registerReview(applNum) {
+    alert("구매번호 " + applNum + " 리뷰를 등록합니다.");
+}
+
 function photoInsert(){
 	const f = document.photoForm;
 	
@@ -959,6 +1045,7 @@ function photoInsert(){
 
 function opentalentModal() {
 	$('#contentModal').modal('show');
+	
 }
 
 function changePhoto(){

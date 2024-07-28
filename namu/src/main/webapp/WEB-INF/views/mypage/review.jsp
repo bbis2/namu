@@ -105,16 +105,23 @@
 
 <script type="text/javascript">
 $(function(){
+    // 기본적으로 리뷰 탭을 활성화
+    $('#tab-1').addClass('active');
+    $('#tab-pane-1').addClass('active show');
+
+    // 리뷰 리스트를 기본으로 로드
+    listReview(1);
+
     $("button[role='tab']").on('click', function(){
         const tab = $(this).attr("aria-controls");
-        
+
         if(tab === "1") {
             listReview(1);
         } else if(tab === "2"){
             listQuestion(1);
         }
     });
-    
+
     let mode = "${mode}";
     if(mode === "qna") {
         listQuestion(1);

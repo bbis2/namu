@@ -120,4 +120,15 @@ public class TmOrderServiceImpl implements TmOrderService{
 		
 	}
 
+	@Override
+	public List<TmOrder> listTmOrderByUserIdAll(String userId) {
+		List<TmOrder> list=null;
+		try {
+			list=mapper.listTmOrderByUserIdAll(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 }
