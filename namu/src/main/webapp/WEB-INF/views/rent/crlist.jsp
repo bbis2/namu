@@ -2,6 +2,30 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<style type="text/css">
+.btn {border: none;}
+
+.custom-tabs .nav-link {
+    font-size: 1.2rem;  /* 글자 크기 키우기 */
+    color: #333;  /* 탭 글자 색상 */
+    transition: all 0.3s ease;  /* 부드러운 전환 효과 */
+}
+
+.custom-tabs .nav-link.active {
+    font-weight: bold;  /* 활성화된 탭 bold 처리 */
+    color: #000;  /* 활성화된 탭 글자 색상 더 진하게 */
+    border-bottom: 2px solid #000;  /* 활성화된 탭 아래 선 추가 */
+}
+
+.custom-tabs .nav-link:hover {
+    color: #000;  /* 호버 시 글자 색상 변경 */
+}
+
+#myTabContent {
+    padding: 20px 0;  /* 탭 내용과 탭 사이에 여백 추가 */
+}
+</style>
+
 
 <div class="container mt-5 mb-5 pb-5">
 
@@ -12,163 +36,259 @@
 		<div class="cover-image"></div>
 	</section>
 
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="applicant-tab" data-bs-toggle="tab" data-bs-target="#applicant" type="button" role="tab" aria-controls="applicant" aria-selected="true">내 신청 목록</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="provider-tab" data-bs-toggle="tab" data-bs-target="#provider" type="button" role="tab" aria-controls="provider" aria-selected="false">받은 신청 목록</button>
-        </li>
-    </ul>
+	<ul class="nav nav-tabs custom-tabs" id="myTab" role="tablist">
+	    <li class="nav-item" role="presentation">
+	        <button class="nav-link active" id="applicant-tab" data-bs-toggle="tab" data-bs-target="#applicant" type="button" role="tab" aria-controls="applicant" aria-selected="true">내 신청 목록</button>
+	    </li>
+	    <li class="nav-item" role="presentation">
+	        <button class="nav-link" id="provider-tab" data-bs-toggle="tab" data-bs-target="#provider" type="button" role="tab" aria-controls="provider" aria-selected="false">받은 신청 목록</button>
+	    </li>
+	</ul>
 
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="applicant" role="tabpanel" aria-labelledby="applicant-tab">
             <h3 class="mt-4">내 신청 목록</h3>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>신청 번호</th>
-                        <th>글제목</th>
-                        <th>제공자</th>
-                        <th>신청 일자</th>
-                        <th>대여 기간</th>
-                        <th>총 금액</th>
-                        <th>보증금</th>
-                        <th>상태</th>
-                        <th>액션</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="dto" items="${myApplications}">
-                        <tr>
-                            <td>${dto.reqNum}</td>
-                            <td>${dto.subject}</td>
-                            <td>${dto.rentName}</td>
-                            <td>${dto.reqDate}</td>
-                            <td>${dto.strDate} ~ ${dto.endDate}</td>
-                            <td><fmt:formatNumber value="${dto.totalPrice}" pattern="#,###"/>원</td>
-                            <td><fmt:formatNumber value="${dto.deposit}" pattern="#,###"/>원</td>
-                            <td>
-                            	<c:choose>
-                            		<c:when test="${dto.state == 1}"><span class="bd">대기</span></c:when>
-                            		<c:when test="${dto.state == 2}"><span class="bd">수락</span></c:when>
-                            		<c:when test="${dto.state == 3}"><span class="bd">거절</span><span>(보증금 반환 완료)</span></c:when>
-                            		<c:when test="${dto.state == 4}"><span class="bd">취소</span><span>(보증금 반환 완료)</span></c:when>
-                            		<c:when test="${dto.state == 5}"><span class="bd">완료</span><span>(보증금 반환 완료)</span></c:when>
-                            	</c:choose>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${dto.state == 1}">
-                                        <button class="btn btn-sm btn-danger cancel-btn" data-id="${dto.rentNum}">취소</button>
-                                    </c:when>
-                                    <c:when test="${dto.state == 2}">
-                                        <button class="btn btn-sm btn-danger chat-btn" data-id="${dto.reqNum}">채팅하기</button>
-                                    </c:when>
-                                    <c:when test="${dto.state == 3}">
-                                        <button class="btn btn-sm btn-danger rejectReason-btn" data-id="${dto.reject}">거절사유</button>
-                                    </c:when>
-                                    <c:when test="${dto.state == 5}">
-                                        <button class="btn btn-sm btn-primary review-btn" data-id="${dto.reqNum}">후기 작성</button>
-                                    </c:when>
-                                </c:choose>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
+            <c:choose>
+            	<c:when test="${myApplications.size() == 0}">
+            		<div class="d-flex justify-content-center mt-5 pt-5">
+						<h3 class="bd">신청 내역이 없어요.</h3>
+					</div>
+					<div class="d-flex justify-content-center mb-5 pb-5">
+						<a href="${pageContext.request.contextPath}/rent/list"><h5 class="bd" style="color: #61ac2d;"> > 눌러서 대여 신청하러 가기 < </h5></a>
+					</div>
+            	</c:when>
+            	<c:otherwise>
+            		<div class="float-end" style="background: lightgray;">
+            			<span class="bd">취소</span>, <span class="bd" style="color: red;">거절</span>, <span class="bd" style="color: green;">완료</span> 상태에서 자동으로 보증금이 반환됩니다.
+            		</div>
+		            <table class="table table-hover">
+		                <thead>
+		                    <tr>
+		                        <th>신청 번호</th>
+		                        <th>글제목</th>
+		                        <th>제공자</th>
+		                        <th>신청 일자</th>
+		                        <th>대여 기간</th>
+		                        <th>총 금액</th>
+		                        <th>보증금</th>
+		                        <th>상태</th>
+		                        <th>액션</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <c:forEach var="dto" items="${myApplications}">
+		                        <tr>
+		                            <td>${dto.reqNum}</td>
+		                            <td>
+		                            	<a href="${pageContext.request.contextPath}/rent/article?num=${dto.rentNum}">${dto.subject}</a>
+		                            </td>
+		                            <td>${dto.rentName}</td>
+		                            <td>${dto.reqDate}</td>
+		                            <td>${dto.strDate} ~ ${dto.endDate}</td>
+		                            <td><fmt:formatNumber value="${dto.totalPrice}" pattern="#,###"/>원</td>
+		                            <td><fmt:formatNumber value="${dto.deposit}" pattern="#,###"/>원</td>
+		                            <td>
+		                            	<c:choose>
+		                            		<c:when test="${dto.state == 1}"><span class="bd" style="color: orange;">대기</span></c:when>
+		                            		<c:when test="${dto.state == 2}"><span class="bd" style="color: blue;">수락</span></c:when>
+		                            		<c:when test="${dto.state == 3}"><span class="bd" style="color: red;">거절</span><span></span></c:when>
+		                            		<c:when test="${dto.state == 4}"><span class="bd">취소</span><span></span></c:when>
+		                            		<c:when test="${dto.state == 5}"><span class="bd" style="color: green;">완료</span><span></span></c:when>
+		                            	</c:choose>
+		                            </td>
+		                            <td>
+		                                <c:choose>
+		                                    <c:when test="${dto.state == 1}">
+		                                        <button class="btn btn-sm btn-danger cancel-btn" data-id="${dto.rentNum}">취소</button>
+		                                    </c:when>
+		                                    <c:when test="${dto.state == 2}">
+		                                        <button class="btn btn-sm btn-danger chat-btn" data-id="${dto.reqNum}">채팅하기</button>
+		                                    </c:when>
+		                                    <c:when test="${dto.state == 3}">
+		                                        <button class="btn btn-sm btn-danger rejectReason-btn" data-id="${dto.reject}">거절사유</button>
+		                                    </c:when>
+		                                    <c:when test="${dto.state == 5}">
+		                                    	<c:choose>
+		                                    		<c:when test="${dto.userReview == 0 && dto.rentReview == 0}">
+													    <button class="btn btn-sm btn-primary review-btn" data-id="${dto.reqNum}" data-target-user="${dto.rentId}" data-writeUser="borrower">제공자 후기</button>
+													    <button class="btn btn-sm btn-success rent-review-btn" data-id="${dto.reqNum}">물품 후기</button>
+		                                    		</c:when>
+		                                    		<c:when test="${dto.userReview == 1 && dto.rentReview == 0}">
+													    <div>제공자 후기 작성 완료</div>
+													    <button class="btn btn-sm btn-success rent-review-btn" data-id="${dto.reqNum}">물품 후기</button>
+		                                    		</c:when>
+		                                    		<c:when test="${dto.userReview == 0 && dto.rentReview == 1}">
+													    <button class="btn btn-sm btn-primary review-btn" data-id="${dto.reqNum}" data-target-user="${dto.rentId}" data-writeUser="borrower">제공자 후기</button>
+													    <div>물품 후기 작성 완료</div>
+		                                    		</c:when>
+		                                    		<c:otherwise>
+													    <div>제공자 후기 작성 완료</div>
+													    <div>물품 후기 작성 완료</div>
+		                                    		</c:otherwise>
+		                                    	</c:choose>
+		                                    </c:when>
+		                                </c:choose>
+		                            </td>
+		                        </tr>
+		                    </c:forEach>
+		                </tbody>
+		            </table>
+            	</c:otherwise>
+            </c:choose>
         </div>
         
         <div class="tab-pane fade" id="provider" role="tabpanel" aria-labelledby="provider-tab">
             <h3 class="mt-4">받은 신청 목록</h3>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>신청번호</th>
-                        <th>글제목</th>
-                        <th>신청자</th>
-                        <th>신청 일자</th>
-                        <th>대여 기간</th>
-                        <th>총 금액</th>
-                        <th>상태</th>
-                        <th>액션</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="dto" items="${receivedRequests}">
-                        <tr>
-                            <td>${dto.reqNum}</td>
-                            <td>${dto.subject}</td>
-                            <td>${dto.borrowName}</td>
-                            <td>${dto.reqDate}</td>
-                            <td>${dto.strDate} ~ ${dto.endDate}</td>
-                            <td><fmt:formatNumber value="${dto.totalPrice}" pattern="#,###"/>원</td>
-                            <td>
-                            	<c:choose>
-                            		<c:when test="${dto.state == 1}"><span class="bd">대기</span></c:when>
-                            		<c:when test="${dto.state == 2}"><span class="bd">수락</span></c:when>
-                            		<c:when test="${dto.state == 3}"><span class="bd">거절</span></c:when>
-                            		<c:when test="${dto.state == 4}"><span class="bd">취소</span></c:when>
-                            		<c:when test="${dto.state == 5}"><span class="bd">완료</span></c:when>
-                            	</c:choose>
-							</td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${dto.state == 1}">
-                                        <button class="btn btn-sm btn-success accept-btn" data-id="${dto.reqNum}">수락</button>
-                                        <button class="btn btn-sm btn-danger reject-btn" data-id="${dto.reqNum}">거절</button>
-                                    </c:when>
-                                    <c:when test="${dto.state == 2}">
-                                        <button class="btn btn-sm btn-primary chat-btn" data-id="${dto.reqNum}">채팅하기</button>
-                                    </c:when>
-                                    <c:when test="${dto.state == 5}">
-                                        <button class="btn btn-sm btn-primary evaluate-btn" data-id="${dto.reqNum}">평가</button>
-                                    </c:when>
-                                </c:choose>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
+            <c:choose>
+            	<c:when test="${receivedRequests.size() == 0}">
+            		<div class="d-flex justify-content-center mt-5 pt-5">
+						<h3 class="bd">받은 신청이 없어요.</h3>
+					</div>
+					<div class="d-flex justify-content-center mb-5 pb-5">
+						<a href="${pageContext.request.contextPath}/rent/write?townNum=1"><h5 class="bd" style="color: #61ac2d;"> > 눌러서 글쓰러 가기 < </h5></a>
+					</div>
+            	</c:when>
+            	<c:otherwise>
+		            <table class="table table-hover">
+		                <thead>
+		                    <tr>
+		                        <th>신청번호</th>
+		                        <th>글제목</th>
+		                        <th>신청자</th>
+		                        <th>신청 일자</th>
+		                        <th>대여 기간</th>
+		                        <th>총 금액</th>
+		                        <th>상태</th>
+		                        <th>액션</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <c:forEach var="dto" items="${receivedRequests}">
+		                        <tr>
+		                            <td>${dto.reqNum}</td>
+		                            <td>
+		                            	<a href="${pageContext.request.contextPath}/rent/article?num=${dto.rentNum}">${dto.subject}</a>
+		                            </td>
+		                            <td>${dto.borrowName}</td>
+		                            <td>${dto.reqDate}</td>
+		                            <td>${dto.strDate} ~ ${dto.endDate}</td>
+		                            <td><fmt:formatNumber value="${dto.totalPrice}" pattern="#,###"/>원</td>
+		                            <td>
+		                            	<c:choose>
+		                            		<c:when test="${dto.state == 1}"><span class="bd" style="color: orange;">대기</span></c:when>
+		                            		<c:when test="${dto.state == 2}"><span class="bd" style="color: blue;">수락</span></c:when>
+		                            		<c:when test="${dto.state == 3}"><span class="bd" style="color: red;">거절</span></c:when>
+		                            		<c:when test="${dto.state == 4}"><span class="bd">취소</span></c:when>
+		                            		<c:when test="${dto.state == 5}"><span class="bd" style="color: green;;">완료</span></c:when>
+		                            	</c:choose>
+									</td>
+		                            <td>
+		                                <c:choose>
+		                                    <c:when test="${dto.state == 1}">
+		                                        <button class="btn btn-sm btn-success accept-btn" data-id="${dto.reqNum}">수락</button>
+		                                        <button class="btn btn-sm btn-danger reject-btn" data-id="${dto.reqNum}">거절</button>
+		                                    </c:when>
+		                                    <c:when test="${dto.state == 2}">
+		                                        <button class="btn btn-sm btn-primary chat-btn" data-id="${dto.reqNum}">채팅하기</button>
+		                                        <button class="btn btn-sm btn-primary finish-btn" data-id="${dto.reqNum}">반납완료</button>
+		                                    </c:when>
+		                                    <c:when test="${dto.state == 5}">
+		                                    	<c:choose>
+		                                    		<c:when test="${dto.borrowerReview == 0}">
+				                                        <button class="btn btn-sm btn-primary evaluate-btn" data-id="${dto.reqNum}" data-target-user="${dto.rentId}" data-write-user="renter">대여자 후기</button>
+		                                    		</c:when>
+		                                    		<c:otherwise>
+		                                    			<div>대여자 후기 작성 완료</div>
+		                                    		</c:otherwise>
+		                                    	</c:choose>
+		                                    </c:when>
+		                                </c:choose>
+		                            </td>
+		                        </tr>
+		                    </c:forEach>
+		                </tbody>
+		            </table>
+            	</c:otherwise>
+            </c:choose>
         </div>
     </div>
 </div>
 
 <!-- 모달 영역 -->
-<!-- 리뷰 -->
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reviewModalLabel">후기 작성</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+<!-- 사용자 후기 모달 -->
+<div class="modal fade" id="userReviewModal" tabindex="-1" aria-labelledby="userReviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userReviewModalLabel">사용자 후기</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="userReviewForm">
+          <input type="hidden" id="userReviewReqNum" name="reqNum">
+          <input type="hidden" id="userReviewTargetUserId" name="targetUserId">
+          <input type="hidden" id="userReviewWriter" name="writeUser">
+          <div class="mb-3">
+            <label class="form-label">전체 평가</label>
+            <div class="btn-group" role="group">
+              <input type="radio" class="btn-check" name="overallRating" id="btnradio1" value="best" autocomplete="off">
+              <label class="btn btn-outline-primary" for="btnradio1">최고였어요</label>
+              <input type="radio" class="btn-check" name="overallRating" id="btnradio2" value="good" autocomplete="off">
+              <label class="btn btn-outline-primary" for="btnradio2">좋았어요</label>
+              <input type="radio" class="btn-check" name="overallRating" id="btnradio3" value="bad" autocomplete="off">
+              <label class="btn btn-outline-primary" for="btnradio3">별로였어요</label>
             </div>
-            <div class="modal-body">
-                <form id="reviewForm">
-                    <input type="hidden" id="reviewApplicationId" name="applicationId">
-                    <div class="mb-3">
-                        <label for="reviewContent" class="form-label">후기 내용</label>
-                        <textarea class="form-control" id="reviewContent" name="content" rows="3" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="reviewRating" class="form-label">평점</label>
-                        <select class="form-select" id="reviewRating" name="rating" required>
-                            <option value="">선택하세요</option>
-                            <option value="5">5점</option>
-                            <option value="4">4점</option>
-                            <option value="3">3점</option>
-                            <option value="2">2점</option>
-                            <option value="1">1점</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary" id="submitReview">제출</button>
-            </div>
-        </div>
+          </div>
+          <div id="subRatingOptions" class="mb-3">
+            <!-- 하위 평가 옵션은 JavaScript로 동적 생성 -->
+          </div>
+          <div class="mb-3">
+            <label for="userReviewContent" class="form-label">상세 후기</label>
+            <textarea class="form-control" id="userReviewContent" name="content" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary" id="submitUserReview">제출</button>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- 대여 물품 후기 모달 -->
+<div class="modal fade" id="rentReviewModal" tabindex="-1" aria-labelledby="rentReviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rentReviewModalLabel">대여 물품 후기</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="rentReviewForm">
+          <input type="hidden" id="rentReviewReqNum" name="reqNum">
+          <div class="mb-3">
+            <label class="form-label">평가</label>
+            <div class="btn-group" role="group">
+              <input type="radio" class="btn-check" name="wasGood" id="rentGood" value="1" autocomplete="off">
+              <label class="btn btn-outline-primary" for="rentGood">좋았어요</label>
+              <input type="radio" class="btn-check" name="wasGood" id="rentBad" value="0" autocomplete="off">
+              <label class="btn btn-outline-primary" for="rentBad">별로였어요</label>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="rentReviewContent" class="form-label">상세 후기</label>
+            <textarea class="form-control" id="rentReviewContent" name="content" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary" id="submitRentReview">제출</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- 거절 사유 제출 -->
@@ -218,6 +338,23 @@
 </div>
 
 <script>
+
+$(document).ready(function() {
+    // 탭 클릭 이벤트
+    $('.nav-link').on('click', function (e) {
+        // 클릭한 탭의 id를 로컬 스토리지에 저장
+        localStorage.setItem('activeTab', $(e.target).attr('id'));
+    });
+
+    // 페이지 로드 시 저장된 탭 확인
+    var activeTab = localStorage.getItem('activeTab');
+
+    // 저장된 탭이 있으면 해당 탭 활성화
+    if(activeTab){
+        $('#' + activeTab).tab('show');
+    }
+});
+
 $(document).ready(function() {
     // 취소 버튼 클릭 이벤트
     $('.cancel-btn').click(function() {
@@ -240,52 +377,159 @@ $(document).ready(function() {
         }
     });
 
-    // 후기 작성 버튼 클릭 이벤트
+    // 사용자 후기 버튼 클릭 이벤트 (대여 요청자)
     $('.review-btn').click(function() {
-        var applicationId = $(this).data('id');
-        $('#reviewApplicationId').val(applicationId);
-        $('#reviewModal').modal('show');
+        var reqNum = $(this).data('id');
+        var targetUserId = $(this).data('target-user');
+        var writeUser = $(this).data('writeUser');
+        $('#userReviewReqNum').val(reqNum);
+        $('#userReviewTargetUserId').val(targetUserId);
+        $('#userReviewWriter').val(writeUser);
+        $('#userReviewModal').modal('show');
     });
 
-    // 후기 제출 버튼 클릭 이벤트
-    $('#submitReview').click(function() {
-        if($('#reviewForm')[0].checkValidity()) {
-            var formData = $('#reviewForm').serialize();
-            $.ajax({
-                url: '${pageContext.request.contextPath}/rental/review',
-                type: 'POST',
-                data: formData,
-                success: function(result) {
-                    alert('후기가 등록되었습니다.');
-                    $('#reviewModal').modal('hide');
-                    location.reload();
-                },
-                error: function(xhr, status, error) {
-                    alert('후기 등록 중 오류가 발생했습니다.');
-                }
-            });
-        } else {
-            $('#reviewForm')[0].reportValidity();
-        }
+    // 대여 물품 후기 버튼 클릭 이벤트 (대여 요청자)
+    $('.rent-review-btn').click(function() {
+        var reqNum = $(this).data('id');
+        $('#rentReviewReqNum').val(reqNum);
+        $('#rentReviewModal').modal('show');
     });
+    
+    // 평가 버튼 클릭 이벤트 (대여 제공자)
+    $('.evaluate-btn').click(function() {
+        var reqNum = $(this).data('id');
+        var targetUserId = $(this).data('target-user');
+        var writeUser = $(this).data('write-user');
+        $('#userReviewReqNum').val(reqNum);
+        $('#userReviewTargetUserId').val(targetUserId);
+        $('#userReviewWriter').val(writeUser);
+        $('#userReviewModal').modal('show');
+    });
+    
+    // 사용자 후기 전체 평가 변경 시 하위 옵션 업데이트
+    $('input[name="overallRating"]').change(function() {
+        updateSubRatingOptions($(this).val());
+    });
+
+    // 사용자 후기 제출
+    $('#submitUserReview').click(function() {
+        submitUserReview();
+    });
+
+    // 대여 물품 후기 제출
+    $('#submitRentReview').click(function() {
+        submitRentReview();
+    });
+    
+    function updateSubRatingOptions(rating) {
+        var options = {
+            best: [
+                {name: 'good1', label: '시간 약속을 잘 지켜요'},
+                {name: 'good2', label: '친절하고 매너가 좋아요'},
+                {name: 'good3', label: '응답이 빨라요'}
+            ],
+            good: [
+                {name: 'soso1', label: '시간 약속을 대체로 지켜요'},
+                {name: 'soso2', label: '친절하고 매너가 괜찮아요'},
+                {name: 'soso3', label: '응답이 빨라요'}
+            ],
+            bad: [
+                {name: 'bad1', label: '시간 약속을 지키지 않아요'},
+                {name: 'bad2', label: '불친절하고 매너가 좋지 않아요'},
+                {name: 'bad3', label: '응답이 느려요'}
+            ]
+        };
+
+        var html = '';
+        options[rating].forEach(function(option) {
+            html += '<div class="form-check">';
+            html += '<input class="form-check-input" type="checkbox" name="' + option.name + '" id="' + option.name + '" value="1">';
+            html += '<label class="form-check-label" for="' + option.name + '">' + option.label + '</label>';
+            html += '</div>';
+        });
+
+        $('#subRatingOptions').html(html);
+    }
+
+    function submitUserReview() {
+        var formData = $('#userReviewForm').serializeArray();
+        var reviewData = {};
+        
+        // 모든 체크박스에 대해 0 또는 1 값 설정
+        ['good1', 'good2', 'good3', 'soso1', 'soso2', 'soso3', 'bad1', 'bad2', 'bad3'].forEach(function(name) {
+            reviewData[name] = '0';
+        });
+
+        formData.forEach(function(item) {
+            if (item.name.startsWith('good') || item.name.startsWith('soso') || item.name.startsWith('bad')) {
+                reviewData[item.name] = item.value;
+            } else {
+                reviewData[item.name] = item.value;
+            }
+        });
+        
+        $.ajax({
+            url: '${pageContext.request.contextPath}/rentcr/submitUserReview',
+            type: 'POST',
+            data: reviewData,
+            success: function(response) {
+                if(response.state === "success") {
+                    alert('후기가 성공적으로 제출되었습니다.');
+                    $('#userReviewModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('후기 제출에 실패했습니다: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('후기 제출 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    function submitRentReview() {
+        var formData = $('#rentReviewForm').serialize();
+        $.ajax({
+            url: '${pageContext.request.contextPath}/rentcr/submitRentReview',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                if(response.state === "success") {
+                    alert('후기가 성공적으로 제출되었습니다.');
+                    $('#rentReviewModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('후기 제출에 실패했습니다: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('후기 제출 중 오류가 발생했습니다.');
+            }
+        });
+    }
 
     // 수락 버튼 클릭 이벤트
-    $('.accept-btn').click(function() {
-        if(confirm('신청을 수락하시겠습니까?')) {
-            var applicationId = $(this).data('id');
-            $.ajax({
-                url: '${pageContext.request.contextPath}/rental/accept/' + applicationId,
-                type: 'POST',
-                success: function(result) {
-                    alert('신청이 수락되었습니다.');
-                    location.reload();
-                },
-                error: function(xhr, status, error) {
-                    alert('수락 처리 중 오류가 발생했습니다.');
-                }
-            });
-        }
-    });
+	$('.accept-btn').click(function() {
+	    if(confirm('신청을 수락하시겠습니까?')) {
+	        var reqNum = $(this).data('id');
+	        $.ajax({
+	            url: '${pageContext.request.contextPath}/rentcr/accept',
+	            type: 'POST',
+	            data: { reqNum: reqNum },
+	            success: function(result) {
+	                if(result.state === "success") {
+	                    alert(result.message);
+	                    location.reload();
+	                } else {
+	                    alert(result.message);
+	                }
+	            },
+	            error: function(xhr, status, error) {
+	                alert('수락 처리 중 오류가 발생했습니다.');
+	            }
+	        });
+	    }
+	});
 
     // 거절 사유 버튼 클릭 이벤트
     $('.rejectReason-btn').click(function() {
@@ -320,6 +564,29 @@ $(document).ready(function() {
             });
         } else {
             $('#rejectForm')[0].reportValidity();
+        }
+    });
+    
+ 	// 반납완료 버튼 클릭 이벤트
+    $('.finish-btn').click(function() {
+        if(confirm('대여를 완료 처리하시겠습니까? 보증금이 반환됩니다.')) {
+            var reqNum = $(this).data('id');
+            $.ajax({
+                url: '${pageContext.request.contextPath}/rentcr/finishRent',
+                type: 'POST',
+                data: { reqNum: reqNum },
+                success: function(result) {
+                    if(result.state === "success") {
+                        alert(result.message);
+                        location.reload();
+                    } else {
+                        alert(result.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('완료 처리 중 오류가 발생했습니다.');
+                }
+            });
         }
     });
 

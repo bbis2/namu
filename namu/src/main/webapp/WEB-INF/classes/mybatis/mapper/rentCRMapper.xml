@@ -54,8 +54,63 @@
 		VALUES
 			(point_seq.nextval, #{userId}, #{description}, SYSDATE, #{currentPoint}, #{pointVar}, #{pointCate}, #{lastMoney})
 	</insert>
+	
+	<select id="selectRentReviewCount" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM rentreview r
+        JOIN rentconfirm rc ON r.reqnum = rc.reqnum
+        WHERE rc.rentnum = #{rentNum}
+    </select>
+	
+    <select id="selectRentReviews" resultType="map">
+	    SELECT r.rentreviewnum, r.content, r.wasgood, r.reqnum, 
+	           m.nickname, rc.userid
+	    FROM rentreview r
+	    JOIN rentconfirm rc ON r.reqnum = rc.reqnum
+	    JOIN member m ON rc.userid = m.userid
+	    WHERE rc.rentnum = #{rentNum}
+	    ORDER BY r.rentreviewnum DESC
+	    OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
     
+	<insert id="insertUserReview" parameterType="map">
+        INSERT INTO userReview (
+            key, identify, userId2, userId1, content,
+            good1, good2, good3, soso1, soso2, soso3, bad1, bad2, bad3
+        ) VALUES (
+            userReview_seq.NextVal, 'rent',  #{userId}, #{targetUserId}, #{content},
+            #{good1}, #{good2}, #{good3}, #{soso1}, #{soso2}, #{soso3}, #{bad1}, #{bad2}, #{bad3}
+        )
+    </insert>
+    
+    <update id="updateUserReviewed" parameterType="map">
+    	UPDATE rentConfirm SET userReview = 1
+    	where reqNum = #{reqNum}
+    </update>
+    
+    <update id="updateRentReviewed" parameterType="map">
+    	UPDATE rentConfirm SET rentReview = 1
+    	where reqNum = #{reqNum}
+    </update>
+    
+    <update id="updateBorrowerReviewed" parameterType="map">
+    	UPDATE rentConfirm SET borrowerReview = 1
+    	where reqNum = #{reqNum}
+    </update>
 
+    <insert id="insertRentReview" parameterType="map">
+        INSERT INTO rentReview (
+            rentReviewNum, content, wasGood, reqNum
+        ) VALUES (
+            rentReview_seq.NextVal, #{content}, #{wasGood}, #{reqNum}
+        )
+    </insert>
+
+    <update id="updateUserManner" parameterType="map">
+        UPDATE memberDetail
+        SET userManner = userManner + #{mannerChange}
+        WHERE userId = #{userId}
+    </update>
 	
     <update id="cancelRent" parameterType="map">
         UPDATE rentConfirm
@@ -63,10 +118,14 @@
         WHERE rentNum = #{rentNum} AND userId = #{userId} AND state = 1  <!-- 1: 대기중 상태만 취소 가능 -->
     </update>
     
-    <update id="rejectRentRequest" parameterType="map">
-        UPDATE rentConfirm
-        SET state = 3, reject = #{reject}
-        WHERE reqNum = #{reqNum} AND state = 1  <!-- 1: 대기중 상태만 취소 가능 -->
+    <select id="findByReqNum" parameterType="Long" resultType="com.forest.namu.domain.RentCR">
+        SELECT * FROM rentConfirm WHERE reqNum = #{reqNum}
+    </select>
+    
+    <update id="updateRentCRState" parameterType="map">
+        UPDATE rentConfirm SET
+        state = #{state}, reject = #{reject, jdbcType = VARCHAR}
+        WHERE reqNum = #{reqNum}
     </update>
     
     <select id="checkState" parameterType="map" resultType="com.forest.namu.domain.RentCR">
@@ -76,8 +135,8 @@
     </select>
 	
 	<select id="selectMyApplications" parameterType="String" resultType="com.forest.namu.domain.RentCR">
-        SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName,
-        	  r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject
+        SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName, r.userId AS rentId,
+        	  r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject, rc.userReview, rc.rentReview, rc.borrowerReview
         FROM rentConfirm rc
         JOIN rent r ON rc.rentNum = r.rentNum
         JOIN member borrow ON rc.userId = borrow.userId
@@ -87,8 +146,8 @@
     </select>
 
     <select id="selectReceivedRequests" parameterType="String" resultType="com.forest.namu.domain.RentCR">
-        SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName,
-        	  r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject
+        SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName, rc.userId AS rentId,
+        	  r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject, rc.userReview, rc.rentReview, rc.borrowerReview
         FROM rentConfirm rc
         JOIN rent r ON rc.rentNum = r.rentNum
         JOIN member borrow ON rc.userId = borrow.userId

@@ -161,6 +161,40 @@ a:hover {text-decoration: none;}
   opacity: 1;
 }
 
+.custom-tabs .nav-link {
+    font-size: 1.2rem;  /* 글자 크기 키우기 */
+    color: #333;  /* 탭 글자 색상 */
+    transition: all 0.3s ease;  /* 부드러운 전환 효과 */
+}
+
+.custom-tabs .nav-link.active {
+    font-weight: bold;  /* 활성화된 탭 bold 처리 */
+    color: #000;  /* 활성화된 탭 글자 색상 더 진하게 */
+    border-bottom: 2px solid #000;  /* 활성화된 탭 아래 선 추가 */
+}
+
+.custom-tabs .nav-link:hover {
+    color: #000;  /* 호버 시 글자 색상 변경 */
+}
+
+#myTabContent {
+    padding: 20px 0;  /* 탭 내용과 탭 사이에 여백 추가 */
+}
+
+.positive-review {
+    background-color: #e6ffe6;
+    border-left: 5px solid #4CAF50;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.negative-review {
+    background-color: #ffebeb;
+    border-left: 5px solid #f44336;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -450,15 +484,32 @@ function sendOk() {
 		</div>
 
 		<div class="row mb-2">
-	        <div class="col-md-8">
-	            <div class="mt-3">
-	                <h5 class="bd">본문</h5>
-	                <hr class="mt-0 mb-2">
-	                <div>
-	                	${dto.content}
-	                </div>
-	            </div>
-	        </div>
+		    <div class="col-md-8">
+		        <div class="mt-3">
+		            <ul class="nav nav-tabs custom-tabs" id="myTab" role="tablist">
+		                <li class="nav-item" role="presentation">
+		                    <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="true">본문</button>
+		                </li>
+		                <li class="nav-item" role="presentation">
+		                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">후기</button>
+		                </li>
+		            </ul>
+		            <div class="tab-content" id="myTabContent">
+		                <div class="tab-pane fade show active" id="content" role="tabpanel" aria-labelledby="content-tab">
+		                    <div class="mt-3">
+		                        ${dto.content}
+		                    </div>
+		                </div>
+		                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+		                    <div class="mt-3">
+		                        <div id="reviewsContainer">
+		                            <!-- 여기에 후기 내용을 동적으로 로드합니다 -->
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
 	        
 			<div class="col-md-4 profile card text-bg-light mb-4">
                 <div class="mt-3">
@@ -833,6 +884,77 @@ $(function() {
     });
     
     $(document).ready(function() {
+    	
+    	// 후기 개수 로드
+        function loadReviewCount() {
+            $.ajax({
+                url: '${pageContext.request.contextPath}/rentcr/reviewCount',
+                type: 'GET',
+                data: { rentNum: ${dto.rentNum} },
+                success: function(data) {
+                    $('#reviews-tab').text('후기(' + data.count + ')');
+                }
+            });
+        }
+
+        // 페이지 로드 시 후기 개수 로드
+        loadReviewCount();
+    	
+        // 리뷰 탭 클릭 이벤트
+        $('#reviews-tab').on('click', function (e) {
+            e.preventDefault();  // 기본 동작 방지
+            $(this).tab('show');  // 탭 활성화
+            loadReviews();  // 리뷰 로드 함수 호출
+        });
+
+        $('#loadMoreReviews').on('click', function() {
+            loadReviews(currentPage + 1);
+        });
+
+        let currentPage = 1;
+
+        function loadReviews(page = 1) {
+            $.ajax({
+                url: '${pageContext.request.contextPath}/rentcr/reviews',
+                type: 'GET',
+                data: { rentNum: ${dto.rentNum}, page: page },
+                success: function(data) {
+                    var reviewsHtml = '';
+                    if (data.reviews.length > 0) {
+                        data.reviews.forEach(function(review) {
+                            var reviewClass = review.WASGOOD == 1 ? 'positive-review' : 'negative-review';
+                            reviewsHtml += '<div class="review-item ' + reviewClass + '">';
+                            reviewsHtml += '<p><strong>' + review.NICKNAME + '</strong> - ' + (review.WASGOOD == 1 ? '긍정적인 후기' : '부정적인 후기') + '</p>';
+                            reviewsHtml += '<p>' + review.CONTENT + '</p>';
+                            reviewsHtml += '</div>';
+                        });
+                        
+                        if (page === 1) {
+                            $('#reviewsContainer').html(reviewsHtml);
+                        } else {
+                            $('#reviewsContainer').append(reviewsHtml);
+                        }
+                        
+                        currentPage = data.currentPage;
+                        
+                        if (currentPage < data.totalPages) {
+                            $('#loadMoreReviews').show();
+                        } else {
+                            $('#loadMoreReviews').hide();
+                        }
+                    } else {
+                        if (page === 1) {
+                            $('#reviewsContainer').html('<p>아직 후기가 없습니다.</p>');
+                        }
+                        $('#loadMoreReviews').hide();
+                    }
+                },
+                error: function() {
+                    $('#reviewsContainer').html('<p>후기를 불러오는 데 실패했습니다.</p>');
+                }
+            });
+        }
+
         
         function numberWithCommas(x) {
         	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -848,7 +970,7 @@ $(function() {
             $rentalButton.text('대기중(취소하기)').removeClass('btnChat btnAccept').addClass('btnWaiting');
             displayRentalInfo();
         } else if (${rentCR.state == 2}) {
-            $rentalButton.text('대여 확정').removeClass('btnChat btnWaiting').addClass('btnAccept').prop('disabled', true);
+            $rentalButton.text('대여 확정(채팅하기)').removeClass('btnChat btnWaiting').addClass('btnAccept').prop('disabled', true);
             displayRentalInfo();
         } else {
             $rentalButton.text('신청하기').removeClass('btnWaiting btnAccept').addClass('btnChat');

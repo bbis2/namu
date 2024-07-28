@@ -194,6 +194,32 @@ public class RentCRController {
 	    return result;
 	}
 	
+	@PostMapping("accept")
+	@ResponseBody
+	public Map<String, Object> acceptRentRequest(
+	        @RequestParam long reqNum,
+	        HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("reqNum", reqNum);
+	        map.put("userId", info.getUserId());
+	        
+	        crService.acceptRentRequest(map);
+	        
+	        result.put("state", "success");
+	        result.put("message", "신청이 수락되었습니다.");
+	        
+	    } catch (Exception e) {
+	        result.put("state", "error");
+	        result.put("message", "수락 처리 중 오류가 발생했습니다.");
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	
 	@PostMapping("reject")
 	@ResponseBody
 	public Map<String, Object> rejectRentRequest(
@@ -218,6 +244,112 @@ public class RentCRController {
 	        result.put("state", "error");
 	        result.put("message", "거절 처리 중 오류가 발생했습니다.");
 	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	
+	@PostMapping("finishRent")
+	@ResponseBody
+	public Map<String, Object> finishRentRequest(
+	        @RequestParam long reqNum,
+	        HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("reqNum", reqNum);
+	        map.put("userId", info.getUserId());
+	        
+	        crService.finishRentRequest(map);
+	        
+	        result.put("state", "success");
+	        result.put("message", "대여가 완료되었습니다. 보증금이 반환되었습니다.");
+	        
+	    } catch (Exception e) {
+	        result.put("state", "error");
+	        result.put("message", "완료 처리 중 오류가 발생했습니다.");
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	
+	@GetMapping("reviews")
+	@ResponseBody
+	public Map<String, Object> getReviews(@RequestParam long rentNum, @RequestParam(defaultValue = "1") int page) throws Exception {
+	    int pageSize = 5; // 한 페이지에 표시할 후기 수
+	    Map<String, Object> result = new HashMap<>();
+	    
+	    try {
+	    	List<Map<String, Object>> reviews = crService.getRentReviews(rentNum, page, pageSize);
+	    	int totalReviews = crService.getRentReviewCount(rentNum);
+	    	
+	    	result.put("reviews", reviews);
+	    	result.put("currentPage", page);
+	    	result.put("totalPages", (totalReviews + pageSize - 1) / pageSize);
+	    	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	    return result;
+	}
+	
+	@GetMapping("reviewCount")
+	@ResponseBody
+	public Map<String, Integer> getReviewCount(@RequestParam long rentNum) throws Exception {
+		Map<String, Integer> map = null;
+		try {
+			
+			int count = crService.getRentReviewCount(rentNum);
+			map = new HashMap<>();
+			map.put("count", count);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	    return map;
+	}
+	
+	@PostMapping("submitUserReview")
+	@ResponseBody
+	public Map<String, Object> submitUserReview(
+	        @RequestParam Map<String, String> reviewData,
+	        HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    try {
+	        reviewData.put("userId", info.getUserId());
+	        crService.submitUserReview(reviewData);
+	        
+	        result.put("state", "success");
+	        result.put("message", "사용자 후기가 성공적으로 제출되었습니다.");
+	    } catch (Exception e) {
+	        result.put("state", "error");
+	        result.put("message", e.getMessage());
+	    }
+	    return result;
+	}
+
+	@PostMapping("submitRentReview")
+	@ResponseBody
+	public Map<String, Object> submitRentReview(
+	        @RequestParam Map<String, String> reviewData,
+	        HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    try {
+	        reviewData.put("userId", info.getUserId());
+	        crService.submitRentReview(reviewData);
+	        
+	        result.put("state", "success");
+	        result.put("message", "대여 물품 후기가 성공적으로 제출되었습니다.");
+	    } catch (Exception e) {
+	        result.put("state", "error");
+	        result.put("message", e.getMessage());
 	    }
 	    return result;
 	}
