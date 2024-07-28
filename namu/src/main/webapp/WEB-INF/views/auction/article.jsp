@@ -4,6 +4,7 @@
 
 <div class="container body-container">
 <div class="used">
+    <div class="btn-list" onclick="location.href='${pageContext.request.contextPath}/auction/list';"> &gt; 목록 </div>
 <div class="thumb">
    <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="1000">
       <div class="carousel-inner">
@@ -65,11 +66,11 @@
     </c:if>
    </c:if>
 </div>
-<div class="bid">현재가&nbsp;&nbsp;<span class="div-bid" data-bid="${dto.bid}"><fmt:formatNumber value="${dto.bid}"/></span> 원</div>
+<div class="bid">현재가&nbsp;&nbsp;<span class="div-bid" data-bid="${dto.bid}"><fmt:formatNumber value="${dto.bid}"/></span></div>
 <div class="min-bid">시작가&nbsp;&nbsp;<fmt:formatNumber value="${dto.minBid}"/> 원</div>
 <div class="state">
 	<c:if test="${dto.state == 1}" >
-		<span style="color: #D24F04; font-weight: bold;">유찰</span>
+		<span style="color: #D24F04; font-weight: bold;">경매종료</span>
 	</c:if>	
 	<c:if test="${dto.state == 2}">
 		<span style="color: #8B0000; font-weight: bold;">경매취소</span>
@@ -78,22 +79,49 @@
 		<span style="color: #2E8B1F; font-weight: bold;">경매완료</span>
 	</c:if>	
 	<c:if test="${dto.state == 0}">
+		<span style="color: blue; font-weight: bold;">경매 진행중</span>
 	</c:if>		
 </div>
   <div class="content1">${dto.content}</div>
 <div class="sale-meta">
   <div class="views">시작가 <fmt:formatNumber value="${dto.minBid}"/> &nbsp;|&nbsp; 찜 ${likeCount} &nbsp;|&nbsp; 경매시작 ${dto.salesStart} &nbsp;|&nbsp; 경매종료 ${dto.salesEnd}</div>
  	 <div class="buttons">
- 	   <c:if test="${sessionScope.member.userId == dto.userId}">
-      	<button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/auction/update?aNum=${dto.aNum}';">수정</button>
-       </c:if>
-       <c:if test="${sessionScope.member.userId == dto.userId || sessionScope.member.userId == 'admin'}">
-        <button class="delete-btn" onclick="usedDelete()">삭제</button>
+ 	   <c:if test="${sessionScope.member.userId == dto.userId && not empty maxAuction}">
+      	  <button class="update-btn" onclick="auctionOk()">낙찰완료</button>
+          <button class="delete-btn" onclick="auctionCancel();">입찰취소</button>
+        </c:if>
+ 	   <c:if test="${sessionScope.member.userId == dto.userId && empty maxAuction}">
+      	  <button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/auction/update?aNum=${dto.aNum}';">수정</button>
+          <button class="delete-btn" onclick="usedDelete()">삭제</button>
         </c:if>
      </div>
         </div>
-      <button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
-      <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/auction/list';">목록</button>
+        	<c:if test="${sessionScope.member.userId != dto.userId && dto.state == 0}">
+	        	<div class="row">
+	        		<div class="col">
+	        			<p>${sessionScope.member.nickName}님의 입찰내역 : 
+	        				<label class="saved-userAction-bid">
+	        					<c:if test="${not empty userAuction}">
+	        						${userAuction.bid} 원
+	        					</c:if>
+	        					<c:if test="${empty userAuction}">
+	        						없음
+	        					</c:if>
+	        				</label>
+	        		</div>
+	        		
+	        		<div class="col-auto text-end">
+						<button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
+	        		</div>
+	        	</div>
+        	</c:if>
+        	<div class="auction-bid-ok">
+	        	<c:if test="${dto.state == 3}">
+	        		<label>낙찰유저 : ${maxAuction.nickName}</label>
+	        		<label>낙찰금액 : ${maxAuction.bid}</label>
+	        	</c:if>
+        	</div>
+        	
      </div>
   </div>
   <hr>
@@ -167,6 +195,7 @@
 							<!-- 파라미터 num -->
 							<input type="hidden" name="postNum" value="${dto.aNum}">
 							<input type="hidden" name="banUser" value="${dto.userId}">
+							<input type="hidden" name="subject" value="${dto.subject}">
 						<div>
 							<button type="button" class="btn btn-primary w-100"
 								onclick="sendOk();">신고하기</button>
@@ -275,6 +304,7 @@ $('.btnBidOk').click(function(){
         	alert('입찰 완료 되었습니다.');
 			$('.bidAccept').html('신청완료');
 			$('.bidAccept').removeClass('bidAccept');
+			$('.saved-userAction-bid').html(a);
 			
 			$('#bidModal').modal('hide');
         }
@@ -391,7 +421,8 @@ $('.btnBidOk').click(function(){
  // 경매 남은 시간 계산
     function task() {
     	let salesEnd = "${dto.salesEnd}";
-    	if(! salesEnd) {
+    	let state = "${dto.state}";
+    	if(! salesEnd || state != '0') {
     		$(".time-remaining").html("경매 불가");
     		$(".btn-bid").prop("disabled", true);
     		return false;
@@ -410,6 +441,9 @@ $('.btnBidOk').click(function(){
     	if(diff <= 0) {
     		$(".btn-bid").prop("disabled", true);
     		$(".time-remaining").html("경매 종료");
+    		$(".state").html("");
+
+            return false;
     		
     		return false;
     	}
@@ -438,10 +472,49 @@ $('.btnBidOk').click(function(){
     		task();
     	}
     }); 
+    
+    // 경매자-경매 취소
+    function auctionCancel() {
+    	let url = '${pageContext.request.contextPath}/auction/auctionCancel';
+	    let query = 'aNum=${dto.aNum}';
+	    
+	    const fn = function(data){
+	       location.href =  '${pageContext.request.contextPath}/auction/article?aNum=${dto.aNum}';
+	    };
+	
+	    ajaxFun(url, 'post', query, 'json', fn);
+	    
+    }
+    
+    // 경매자-경매 완료
+    function auctionOk() {
+    	let url = '${pageContext.request.contextPath}/auction/auctionOk';
+    	let query = 'aNum=${dto.aNum}';
+    	
+	    const fn = function(data){
+	    	location.href =  '${pageContext.request.contextPath}/auction/article?aNum=${dto.aNum}';
+	    };
+	
+	    ajaxFun(url, 'post', query, 'json', fn);    	
+    }    
 </script>
 
 
 <style>
+.btn-ok {
+border: none;
+background-color: #DCDA00;
+border-radius: 3px;
+padding: 5px;
+}
+
+.btn-cc {
+border: none;
+background-color: #97D95D;
+border-radius: 3px;
+padding: 5px;
+}
+
 .btn-reply, .btnSendQnaAnswer {
 	border: none;
 	background-color: #61ac2d;
@@ -595,10 +668,16 @@ $('.btnBidOk').click(function(){
 }
 
 .btn-list {
-background-color: white;
-padding: 5px 10px;
-border: none;
-float: right;
+background-color: transparent;
+font-size: 20px;
+color: #A9A9A9;
+white-space: nowrap;
 }
+
+@media (max-width: 768px) {
+  .used {
+    flex-direction: column;
+    align-items: center;
+  }
 
 </style>

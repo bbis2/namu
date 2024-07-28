@@ -84,9 +84,12 @@
                         </c:otherwise>
                     </c:choose>
 				</a>
-					<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
-						like
-					</button>
+					<c:if test="${dto.userId != sessionScope.member.userId}">
+						<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
+							like
+						</button>
+						<input type="hidden" value="${dto.num}" class="likeUsedNum">
+					</c:if>
 				</div>
 
 				<div class="list-subject" style="color: navy; margin-top: 10px; font-weight: bold;">${dto.subject}</div>
@@ -109,12 +112,46 @@
 		</div>
 		
 	</div>
-	
+	<div id="toast_message"></div>
 	<div class="page-navigation">
 		${dataCount==0? "등록된 게시글이 없습니다." : paging }
 	</div>
 
 <script type="text/javascript">
+function ajaxFun(url, method, formData, dataType, fn, file = false) {
+	const settings = {
+			type: method, 
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+	}
+	
+	$.ajax(url, settings);
+}
+
 $(document).ready(function () {
     $('.search-btn').click(function () {
         let kwd = $('.searchInput').val().trim().toLowerCase();
@@ -160,8 +197,6 @@ $(function() {
 		const fn = function(data) {
 			let state = data.state;
 			if(state === 'true') {
-				let count = data.usedLikeCount;
-				$btn.closest('.list').find('.usedLikeCount').html('<i class="fa-solid fa-heart"></i>&nbsp;' + count);
 				
 				// 토스트 팝업
 				if(userLiked) {
@@ -174,7 +209,9 @@ $(function() {
 				setTimeout(() => {
 					$toast.classList.remove('active');
 				}, 1500);
+				
 			}
+			
 		};
 		
 		ajaxFun(url, 'post', query, 'json', fn);

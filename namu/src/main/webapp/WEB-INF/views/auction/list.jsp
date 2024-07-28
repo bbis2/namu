@@ -84,9 +84,12 @@
                         </c:otherwise>
                     </c:choose>
 				</a>
-					<button class="btn_like" title="찜">
-					    <span class="like-count">${dto.likeCount}</span>
-					</button>
+					<c:if test="${dto.userId != sessionScope.member.userId}">
+						<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
+							like
+						</button>
+						<input type="hidden" value="${dto.aNum}" class="likeAuctionNum">
+					</c:if>
 				</div>
 
 				<div class="list-subject" style="color: navy; margin-top: 10px; font-weight: bold;">${dto.subject}</div>
@@ -94,7 +97,7 @@
 				<div>현재 입찰가 : <fmt:formatNumber value="${dto.bid}"/>원
 					<div style="float: right;">
 						<c:if test="${dto.state == 1}" >
-							<span style="color: #D24F04; font-weight: bold;">유찰</span>
+							<span style="color: #D24F04; font-weight: bold;">경매종료</span>
 						</c:if>	
 						<c:if test="${dto.state == 2}">
 							<span style="color: #8B0000; font-weight: bold;">경매취소</span>
@@ -103,7 +106,8 @@
 							<span style="color: #2E8B1F; font-weight: bold;">경매완료</span>
 						</c:if>	
 						<c:if test="${dto.state == 0}">
-						</c:if>				
+							<span style="color: blue; font-weight: bold;">경매 진행중</span>
+						</c:if>		
 					</div>
 				</div>
 				<div class="half">입찰수 ${dto.bidCount} &nbsp;|&nbsp;종료일 ${dto.salesEnd}</div>
@@ -112,12 +116,46 @@
 		</div>
 		
 	</div>
-	
+	<div id="toast_message"></div>
 	<div class="page-navigation">
 		${dataCount==0? "등록된 게시글이 없습니다." : paging }
 	</div>
 
 <script type="text/javascript">
+function ajaxFun(url, method, formData, dataType, fn, file = false) {
+	const settings = {
+			type: method, 
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+	}
+	
+	$.ajax(url, settings);
+}
+
 $(document).ready(function () {
     $('.search-btn').click(function () {
         let kwd = $('.searchInput').val().trim().toLowerCase();
@@ -146,6 +184,41 @@ function change() {
 	f.submit();
 }
 
+$(function() {
+	$('.btnSendLike').click(function() {
+		
+		let $btn = $(this);
+		let userLiked = $btn.hasClass('on');
+		let url = '${pageContext.request.contextPath}/auction/insertLike';
+		let num = $btn.next('input').val();
+		let query = 'aNum=' + num + '&userLiked=' + userLiked;
+		
+		// 토스트 팝업
+		let $toast = document.querySelector('#toast_message');
+		
+		const fn = function(data) {
+			let state = data.state;
+			if(state === 'true') {
+				
+				// 토스트 팝업
+				if(userLiked) {
+					$toast.innerText = '찜 목록에 추가되었습니다.';
+				} else {
+					$toast.innerText = '찜 목록에서 삭제되었습니다.';
+				}
+				
+				$toast.classList.add('active');
+				setTimeout(() => {
+					$toast.classList.remove('active');
+				}, 1500);
+				
+			}
+			
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
 </script>
 
 <style>

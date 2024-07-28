@@ -163,12 +163,17 @@ public class AuctionController {
 		} catch (Exception e) {
 		}
 		
+		// 최고 입찰가
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("aNum", aNum);
 		Auction maxAuction = service.findByMaxBid(map);
 		if(maxAuction != null) {
 			dto.setBid(maxAuction.getBid());
 		}
+		
+		// 로그인 유저의 입찰가
+		map.put("userId", info.getUserId());
+		Auction userAuction = service.findByUserBid(map);
 		
 		List<Auction> listFile = service.listAuctionFile(aNum);
 		dto.setUploadFile(dto.getImageFile());
@@ -179,6 +184,8 @@ public class AuctionController {
 		model.addAttribute("dto", dto);
 		model.addAttribute("kwd", kwd);
 		model.addAttribute("userPoint", userPoint);
+		model.addAttribute("maxAuction", maxAuction);
+		model.addAttribute("userAuction", userAuction);
 		model.addAttribute("listFile", listFile);
 
 		return ".auction.article";
@@ -267,8 +274,6 @@ public class AuctionController {
 		return model;
 	}
 	
-	
-	
 	@GetMapping("qnaList")
 	public String qnaList(@RequestParam long aNum,
 			@RequestParam(value = "pageNo", defaultValue = "1") int current_page,
@@ -297,11 +302,14 @@ public class AuctionController {
 		map.put("size", size);
 		
 		List<AuctionBoard> qnalist = bService.listQuestion(map);
+		
+		Auction dto = (Auction)service.findById(aNum); 
 
 		String paging = myUtil.pagingMethod(current_page, total_page, "listQna");
 		
 		model.addAttribute("qnalist", qnalist);
-		
+		model.addAttribute("dto", dto.getUserId());
+
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("size", size);
 		model.addAttribute("total_page", total_page);
@@ -376,7 +384,7 @@ public class AuctionController {
 		return model;
 	}
 	
-	@PostMapping("auctionLike")
+	@PostMapping("insertLike")
 	@ResponseBody
 	public Map<String, Object> usedLike(@RequestParam int aNum, 
 	                                    @RequestParam boolean userLiked, HttpSession session) {
@@ -390,11 +398,9 @@ public class AuctionController {
 	    
 	    try {
 	        if (userLiked) {
-	            service.deleteAuctionLike(map);
-	            System.out.println("삭제");
+	        	service.insertAuctionLike(map);
 	        } else {
-	            service.insertAuctionLike(map);
-	            System.out.println("추가");
+	            service.deleteAuctionLike(map);
 	        }
 	    } catch (DuplicateKeyException e) {
 	        state = "liked";
@@ -405,6 +411,56 @@ public class AuctionController {
 	    Map<String, Object> model = new HashMap<String, Object>();
 	    model.put("state", state);
 	    
+	    return model;
+	}
+	
+	// 경매자 - 경매취소
+	@PostMapping("auctionCancel")
+	@ResponseBody
+	public Map<String, Object> auctionCancel(@RequestParam Map<String, Object> paramMap,
+			HttpSession session){
+	    Map<String, Object> model = new HashMap<String, Object>();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    try {
+	    	paramMap.put("state", 2);
+	    	paramMap.put("soldId", "");
+	    	paramMap.put("userId", info.getUserId());
+			service.updateAuctionState(paramMap);
+			model.put("state", "true");
+		} catch (Exception e) {
+			model.put("state", "false");
+			e.printStackTrace();
+		}
+	
+	    return model;
+	}
+	
+	// 경매자 - 낙찰완료
+	@PostMapping("auctionOk")
+	@ResponseBody
+	public Map<String, Object> auctionOk(@RequestParam Map<String, Object> paramMap,
+			HttpSession session){
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		Map<String, Object> model = new HashMap<String, Object>();
+	
+	    try {
+	    	paramMap.put("state", 3);
+	    	paramMap.put("soldId", info.getUserId());
+	    	paramMap.put("apply", 1);
+	    	
+	    	Auction dto = service.findByMaxBid(paramMap);
+	    	paramMap.put("bidNum", dto.getBid());
+	    	
+			service.updateAuctionState(paramMap);	    	
+	    	service.updateBiddetailsApply(paramMap);
+	    	
+	    	model.put("state", "true");
+	    } catch (Exception e) {
+	    	model.put("state", "false");
+			e.printStackTrace();
+		}
+	
 	    return model;
 	}
 	

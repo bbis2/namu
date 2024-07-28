@@ -75,7 +75,7 @@
 									<a href="#" title="마이페이지"><i class="bi bi-person-circle"></i></a>
 								</div>				
 								<div class="p-2">
-									<a href="#" title="알림"><i class="bi bi-bell"></i></a>
+									<a href="${pageContext.request.contextPath}/alarm/list" title="알림"><i class="bi bi-bell"></i></a>
 								</div>
 								<c:if test="${sessionScope.member.membership>50}">
 									<div class="p-2">

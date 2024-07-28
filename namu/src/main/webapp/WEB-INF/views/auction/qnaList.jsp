@@ -37,12 +37,19 @@
                     	<div class="p-1">
                           	<div class="px-3" style="text-align: left; white-space: pre;"> &lt; ${qna.nickName} &gt; 님 문의 내용</div>
 	                        <div class="fs-6 p-3" style="text-align: left; white-space: pre; ">${qna.content}</div>
+	                        
+	                        <c:if test="${empty qna.answer && sessionScope.member.userId == dto}">
 	                        <div class="pe-3" style="text-align: right;">
 	                        	<button class="btn-reply" onclick="clickAnswer(${qna.qNum})">${empty qna.answer ? "답변하기" : ""}</button>
 	                        </div>
+	                       </c:if>
+	                       
+	                       <c:if test="${not empty qna.answer}">
 	                        <div class="pe-3" style="text-align: right;">
-	                        	<button class="btn-reply" onclick="clickAnswer(${qna.qNum})">${not empty qna.answer ? "답변보기" : ""}</button>
+	                        	<button class="btn-reply" onclick="clickAnswer(${qna.qNum})">답변보기</button>
 	                        </div>
+	                        </c:if>
+	                        
                         </div>
                     </td>
                 </tr>

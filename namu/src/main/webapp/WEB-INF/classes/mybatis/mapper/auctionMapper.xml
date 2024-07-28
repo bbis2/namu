@@ -175,8 +175,9 @@ select nvl(count(*),0)
 
 <!-- 경매 입찰 최고가 -->
 <select id="findByMaxBid" parameterType="map" resultType="com.forest.namu.domain.Auction">
-	SELECT bidNum, bid, bidDate, aNum, userId, apply
-	FROM bidDetails
+	SELECT bidNum, bid, bidDate, aNum, b.userId, apply, nickName
+	FROM bidDetails b
+	JOIN member m ON b.userId = m.userId
 	WHERE aNum = #{aNum}
 	ORDER BY bid DESC
 	FETCH FIRST 1 ROWS ONLY
@@ -191,10 +192,16 @@ select nvl(count(*),0)
 	FETCH FIRST 1 ROWS ONLY
 </select>
 
-<!-- 경매 완료 -->
-<update id="auctionSold" parameterType="com.forest.namu.domain.Auction">
-	UPDATE auction SET state = 3, soldId = #{soldId}
+<!-- state:0 경매등록, state:1 경매종료(기간), state:2 경매취소 state:3 경매완료-->
+<update id="updateAuctionState" parameterType="map">
+	UPDATE auction SET state = #{state}, soldId = #{soldId}
 	WHERE aNum = #{aNum}
 </update>
+
+<update id="updateBiddetailsApply" parameterType="map">
+	UPDATE biddetails SET apply = #{apply}
+	WHERE bidNum = #{bidNum}
+</update>
+
 
 </mapper>
