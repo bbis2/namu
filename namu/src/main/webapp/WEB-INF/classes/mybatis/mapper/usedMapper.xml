@@ -32,7 +32,7 @@
 	
 <!-- 리스트 -->
 <select id="listUsed" parameterType="map" resultType="com.forest.namu.domain.Used">
-	select u.num, u.content, u.subject, imageFile, u.state, u.price, u.hitCount, 
+	select u.num, u.content, u.subject, imageFile, u.state, u.price, u.hitCount, u.userId,
    TO_CHAR(u.regDate, 'YYYY-MM-DD') regDate, m.town1, nvl(likeCount, 0)likeCount, u.cnum, c.name, u.town
    from used u
     join usedcategory c on u.cnum = c.cnum

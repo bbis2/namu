@@ -389,7 +389,7 @@ function sendOk() {
 	        
 	        <div class="col-md-4 profile card text-bg-light mb-4">
                 <div class="mt-3">
-                    <h5 class="bd">프로필</h5>
+                    <h5 class="bd">작성자 프로필</h5>
 	                <hr class="mt-0 mb-2">
                     <div class="mx-3">
                     	<div class="d-flex justify-content-between mb-1">

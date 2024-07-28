@@ -39,6 +39,9 @@ public interface AuctionMapper {
 	public Auction findByMaxBid(Map<String, Object> map);
 	// 유저의 마지막 경매 내역
 	public Auction findByUserBid(Map<String, Object> map);
-	// 경매완료
-	public void auctionSold(Auction dto) throws SQLException;
+	
+	// 경매 상태변경
+	public void updateAuctionState(Map<String, Object> map);
+	// 낙찰자 
+	public void updateBiddetailsApply(Map<String, Object> map);
 }

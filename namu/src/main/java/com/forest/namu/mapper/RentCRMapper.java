@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.forest.namu.domain.Point;
 import com.forest.namu.domain.RentCR;
@@ -26,6 +27,19 @@ public interface RentCRMapper {
 	
     public List<RentCR> selectMyApplications(String userId); // 보낸 신청 가져오기
     public List<RentCR> selectReceivedRequests(String userId); // 받은 신청 가져오기
+    
+    public RentCR findByReqNum(Long reqNum);
+    public void updateRentCRState(Map<String, Object> map) throws SQLException; // 받은 신청 수락하기
+    
+    public void insertUserReview(Map<String, String> reviewData) throws SQLException; // 사용자 후기 추가
+    public void insertRentReview(Map<String, String> reviewData) throws SQLException; // 대여 물품 후기 추가
+    public void updateUserManner(@Param("userId") String userId, @Param("mannerChange") int mannerChange) throws SQLException; // 나무매너 변경
 
-    public void rejectRentRequest(Map<String, Object> map) throws SQLException; // 받은 신청 거절하기
+	public void updateUserReviewed(Map<String, String> map);
+	public void updateRentReviewed(Map<String, String> map);
+	public void updateBorrowerReviewed(Map<String, String> map);
+
+	public int selectRentReviewCount(long rentNum); // 리뷰 개수 가져오기
+	// 리뷰 가져오기
+	public List<Map<String, Object>> selectRentReviews(@Param("rentNum") long rentNum, @Param("offset") int offset, @Param("pageSize") int pageSize);
 }

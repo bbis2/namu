@@ -16,6 +16,14 @@ public interface RentCRService {
     public List<RentCR> getMyApplications(String userId) throws Exception; 			// 보낸 신청 가져오기
     public List<RentCR> getReceivedRequests(String userId) throws Exception; 		// 받은 신청 가져오기
     
+    public void acceptRentRequest(Map<String, Object> map) throws Exception; // 신청 수락하기
 	public void rejectRentRequest(Map<String, Object> map) throws Exception; // 받은 신청 거절하기
+	public void finishRentRequest(Map<String, Object> map) throws Exception; // 대여 완료
 
+	public void submitUserReview(Map<String, String> reviewData) throws Exception; // 사용자 후기
+	public void submitRentReview(Map<String, String> reviewData) throws Exception; // 대여 물품 후기
+	
+    public int getRentReviewCount(long rentNum) throws Exception; // 리뷰 개수 불러오기
+	public List<Map<String, Object>> getRentReviews(long rentNum, int page, int pageSize) throws Exception; // 리뷰 불러오기 (article)
+	
 }

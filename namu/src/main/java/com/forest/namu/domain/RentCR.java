@@ -14,10 +14,14 @@ public class RentCR {
 	private int state;		// 신청 상태 (1-신청완료(대기중), 2-수락, 3-거절, 4-취소, 5-완료)
 	private String reject; 	// 거절사유
 	private int totalPrice; // 총 금액
+	private int userReview; // 사용자 리뷰 여부
+	private int rentReview; // 대여 물품 리뷰 여부
+	private int borrowerReview; // 제공자 리뷰 여부
 	
 	private String subject; // 글제목
 	private String borrowName; // 대여 요청자 닉네임
 	private String rentName; // 대여 제공자 닉네임
+	private String rentId; // 대여 제공자 아이디
 	
 	// 빌려드림 후기 (rentReview)
 	private long rentReviewNum;
@@ -126,5 +130,29 @@ public class RentCR {
 	}
 	public void setRentName(String rentName) {
 		this.rentName = rentName;
+	}
+	public String getRentId() {
+		return rentId;
+	}
+	public void setRentId(String rentId) {
+		this.rentId = rentId;
+	}
+	public int getUserReview() {
+		return userReview;
+	}
+	public void setUserReview(int userReview) {
+		this.userReview = userReview;
+	}
+	public int getRentReview() {
+		return rentReview;
+	}
+	public void setRentReview(int rentReview) {
+		this.rentReview = rentReview;
+	}
+	public int getBorrowerReview() {
+		return borrowerReview;
+	}
+	public void setBorrowerReview(int borrowerReview) {
+		this.borrowerReview = borrowerReview;
 	}
 }

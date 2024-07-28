@@ -4,6 +4,7 @@
 
 <div class="container body-container">
 <div class="used">
+    <div class="btn-list" onclick="location.href='${pageContext.request.contextPath}/used/list';"> &gt; 목록 </div>
 <div class="thumb">
    <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="1000">
       <div class="carousel-inner">
@@ -70,7 +71,6 @@
      </div>
         </div>
 	<button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
-      <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/used/list';">목록</button>
      </div>
   </div>
 </div>
@@ -110,6 +110,7 @@
 							<!-- 파라미터 num -->
 							<input type="hidden" name="postNum" value="${dto.num}">
 							<input type="hidden" name="banUser" value="${dto.userId}">
+							<input type="hidden" name="subject" value="${dto.subject}">
 						<div>
 							<button type="button" class="btn btn-primary w-100"
 								onclick="sendOk();">신고하기</button>
@@ -155,6 +156,13 @@ function sendOk() {
 </script>
 
 <style>
+.btn-list {
+background-color: transparent;
+font-size: 20px;
+color: #A9A9A9;
+white-space: nowrap;
+}
+
   .used {
     display: flex;
     overflow: hidden;

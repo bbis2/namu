@@ -47,8 +47,7 @@ $(function() {
 		<h1 class="cover-title htext bd">
 			빌려드릴게요<br>동네사람들
 		</h1>
-		<span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>
-		<span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
+		<h6 style="margin: 0px; margin-left: 100px; margin-top: 20px;">내가 가진 물건으로 동네주민들과 소통해봐요!</h6>
 		<div class="cover-image"></div>
 	</section>
 

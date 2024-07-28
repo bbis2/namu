@@ -35,6 +35,8 @@
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/borrow/list">빌려줘요</a></li>
 								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/rent/list">빌려드림</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/rentcr/list">빌려드림 신청 관리</a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
@@ -75,7 +77,7 @@
 									<a href="#" title="마이페이지"><i class="bi bi-person-circle"></i></a>
 								</div>				
 								<div class="p-2">
-									<a href="#" title="알림"><i class="bi bi-bell"></i></a>
+									<a href="${pageContext.request.contextPath}/alarm/list" title="알림"><i class="bi bi-bell"></i></a>
 								</div>
 								<c:if test="${sessionScope.member.membership>50}">
 									<div class="p-2">

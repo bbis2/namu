@@ -292,7 +292,7 @@ public class AuctionServiceImpl implements AuctionService {
 				// 다른 유저는 환불
 				pdto = new Point();
 				pdto.setUserId(maxAuction.getUserId());
-				pdto.setDescription("경매 취소");
+				pdto.setDescription("경매 환뷸");
 				pdto.setCurrentPoint(userPoint);
 				pdto.setPointVar(maxAuction.getBid());
 				pdto.setPointCate(1);
@@ -317,17 +317,6 @@ public class AuctionServiceImpl implements AuctionService {
 		return list;
 	}
 
-
-	@Override
-	public void auctionSold(Auction dto) throws Exception {
-
-		try {
-			mapper.auctionSold(dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	public Auction findByMaxBid(Map<String, Object> map) {
 		Auction dto = null;
@@ -346,12 +335,51 @@ public class AuctionServiceImpl implements AuctionService {
 		Auction dto = null;
 		
 		try {
-			mapper.findByUserBid(map);
+			dto = mapper.findByUserBid(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return dto;
+	}
+
+	@Override
+	public void updateAuctionState(Map<String, Object> map) {
+
+		try {
+			int state = (Integer)map.get("state");
+			if(state == 2) {
+				// 경매 금액 환불처리
+				Auction dto = findByMaxBid(map);
+				long userPoint = 0;
+				try {
+					userPoint = pointService.selectPoint(dto.getUserId());		
+				} catch (Exception e) {
+				}				
+				
+				Point pdto = new Point();
+				pdto.setUserId(dto.getUserId());
+				pdto.setDescription("경매 취소");
+				pdto.setCurrentPoint(userPoint);
+				pdto.setPointVar(dto.getBid());
+				pdto.setPointCate(1);
+				pointService.insertPoint2(pdto);
+			}
+			
+			mapper.updateAuctionState(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updateBiddetailsApply(Map<String, Object> map) {
+
+		try {
+			mapper.updateBiddetailsApply(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

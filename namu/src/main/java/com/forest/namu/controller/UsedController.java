@@ -209,7 +209,7 @@ public class UsedController {
 	public Map<String, Object> deleteFile(@RequestParam long fileNum, 
 			@RequestParam String filename,
 			HttpSession session) throws Exception {
-
+		
 		String state = "true";
 		try {
 				
@@ -223,7 +223,7 @@ public class UsedController {
 		return model;
 	}
 	
-	@PostMapping("insertUsedLike")
+	@PostMapping("insertLike")
 	@ResponseBody
 	public Map<String, Object> insertLike(
 			@RequestParam long num,
@@ -232,7 +232,6 @@ public class UsedController {
 			) {
 		
 		String state = "true";
-		int usedLikeCount = 0;
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -251,11 +250,8 @@ public class UsedController {
 			state = "false";
 		}
 		
-		usedLikeCount = service.likeCount(num);
-		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("state", state);
-		model.put("usedLikeCount", usedLikeCount);
 		
 		return model;
 	}

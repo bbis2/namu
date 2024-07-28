@@ -46,6 +46,9 @@ public class Auction {
 	private String uploadFile;
 	private long fileNum;
 	
+	// 찜 여부
+	private boolean userLiked;
+	
 	private int likeCount;
 	
 	// 카테고리 번호, 이름
@@ -304,6 +307,14 @@ public class Auction {
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
+	}
+
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
 	}
 
 }
