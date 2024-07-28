@@ -551,6 +551,8 @@ $(function(){
 	});
 });
 
+
+
 </script>
 </head>
 <body>
@@ -892,14 +894,64 @@ $(function(){
 		                        
 	                            </form>
 	                        </div>
+	                        <div class="modifydelete-button">
 	                        <c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50}">
-	                        	<div class="modifydelete-button">
+	                        	
 	                        	<c:if test="${sessionScope.member.userId==dto.userId}">
 								<button type="button" class="btn custom-button" onclick="location.href='${pageContext.request.contextPath}/talent/update?tboardNum=${dto.tboardNum}&page=${page}';">수정</button><p>&nbsp;</p>
 								</c:if>
-								<button type="button" class="btn custom-button" onclick="deleteBoard();">삭제</button></div>
+								<button type="button" class="btn custom-button" onclick="deleteBoard();">삭제</button>
 							</c:if>
+							<button type="button" class="btn custom-button" onclick="SinGo();">신고</button>
+							</div>
 							
+							<!-- 신고 모달 -->
+							<div class="modal fade" id="SinGoModal" tabindex="-1"
+								data-bs-backdrop="static" data-bs-keyboard="false"
+								aria-labelledby="SinGoModal" aria-hidden="true">
+								<div class="modal-dialog modal-sm">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="">신고하기</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal"
+												aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<div class="p-3">
+												<form name="SinGoForm" action="" method="post" class="row g-3">
+													<div class="mt-0">
+														<p class="form-control-plaintext">신고유형과 사유를 적어주세요</p>
+													</div>
+													<div class="mt-0">
+														<select id="reportType" name="reportType" class="form-select">
+															<option value="욕설/인신공격" selected>욕설/인신공격</option>
+																<option value="개인정보노출">개인정보노출</option>
+																<option value="불법정보">불법정보</option>
+																<option value="같은내용반복(도배)">같은내용반복(도배)</option>
+																<option value="기타">기타</option>
+														</select>
+													</div>
+													<div>
+														<input type="text" name="reportContent" autocomplete="off"
+															 class="form-control"
+															placeholder="신고사유 : ">
+													</div>
+														<input type="hidden" name="Field" value="${dto.tableName}">
+														<!-- 파라미터 num -->
+														<input type="hidden" name="postNum" value="${dto.tboardNum}">
+														<input type="hidden" name="banUser" value="${dto.userId}">
+														<input type="hidden" name="subject" value="${dto.subject}">
+													<div>
+														<button type="button" class="btn custom-button w-100"
+															onclick="singoOk();">신고하기</button>
+													</div>
+												</form>
+											</div>
+							
+										</div>
+									</div>
+								</div>
+							</div>
 						
                       <div class="profile-card">
 						        <div class="profile-card-header">
@@ -965,6 +1017,8 @@ $(function(){
 	</c:if>
    
     <script type="text/javascript">
+    
+    
     $(document).ready(function() {
     	
     	
@@ -1339,6 +1393,41 @@ $(function(){
         		location.href = '${pageContext.request.contextPath}/myPage/review?mode=qna';
         	});
         });
+        
+        function updateOrderList(orderList) {
+            let selectElement = $('select[name="num"]');
+            selectElement.empty(); // 기존 옵션 비우기
+            $.each(orderList, function(index, vo) {
+                if (vo.reviewState === 0 && vo.completionDate != null) {
+                    let optionValue = vo.optionValue != null ? vo.optionValue : '';
+                    optionValue += vo.optionValue2 != null ? ", " + vo.optionValue2 : '';
+                    selectElement.append($('<option>', {
+                        value: vo.applNum,
+                        text: `구매번호 : ${vo.applNum} 구매수량 : ${vo.quantity} 선택옵션 : ${optionValue}`
+                    }));
+                }
+            });
+        }
+        
+        function SinGo(){
+        	$('#SinGoModal').modal('show');
+        }
+
+        function singoOk() {
+        	const f = document.SinGoForm;
+        	let str = f.reportContent.value.trim();
+        	
+            if (!confirm("정말 신고하시겠습니까?")) {
+                return;
+            }
+            
+            if(!str){
+            	alert("사유를 입력해주세요");
+            }
+            
+            f.action = "${pageContext.request.contextPath}/singo/reception";
+            f.submit();
+        }
     </script>
 
 </body>

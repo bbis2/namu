@@ -62,8 +62,16 @@ public class TalentMarket {
 	private long prevOptionNum;
 	private long prevOptionNum2;
 	
+	private String tableName;
 	
 	
+	
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
 	public boolean isUserLiked() {
 		return userLiked;
 	}

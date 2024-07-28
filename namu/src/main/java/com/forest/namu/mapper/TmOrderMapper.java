@@ -20,4 +20,5 @@ public interface TmOrderMapper {
 	public void updateComplete(long applNum)throws SQLException;
 	public void deleteTmOrder(long applNum) throws SQLException;
 	public void updateReviewState(long applNum) throws SQLException;
+	public void updateReviewState0(long applNum) throws SQLException;
 }

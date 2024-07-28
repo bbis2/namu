@@ -1,6 +1,5 @@
 package com.forest.namu.controller;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,5 +147,61 @@ public class TmQuestionController {
 		
 		return model;
 	}
+	
+	  // AJAX - JSON : 질문 삭제
+    @PostMapping("delete")
+    public Map<String, Object> deleteQuestion(@RequestParam long num, HttpSession session) {
+        String state = "true";
+        String message = "삭제 성공"; // 성공 시의 메시지
+        List<TmQuestion> list = null;
+        int dataCount = 0;
+        int total_page = 0;
+        int current_page = 1; // 기본 페이지는 1로 설정
+
+        try {
+            SessionInfo info = (SessionInfo) session.getAttribute("member");
+            if (info == null) {
+                state = "false";
+                message = "로그인 정보가 없습니다.";
+                throw new Exception(message);
+            }
+
+            // 질문 삭제 서비스 호출
+            service.deleteQuestion(num);
+
+            // 질문 삭제 후 최신 질문 목록을 다시 가져옴
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", info.getUserId());
+
+            dataCount = service.dataCount2(map);
+            total_page = myUtil.pageCount(dataCount, 5); // 5는 한 페이지당 질문 수
+            if (current_page > total_page) {
+                current_page = total_page;
+            }
+
+            int offset = (current_page - 1) * 5;
+            if(offset < 0) offset = 0;
+
+            map.put("offset", offset);
+            map.put("size", 5);
+
+            list = service.listQuestion2(map);
+
+        } catch (Exception e) {
+            state = "false";
+            message = e.getMessage();
+            e.printStackTrace();
+        }
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("state", state);
+        model.put("message", message);
+        model.put("list", list);
+        model.put("dataCount", dataCount);
+        model.put("total_page", total_page);
+        model.put("current_page", current_page);
+        return model;
+    }
+
 
 }

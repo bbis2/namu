@@ -50,9 +50,9 @@
 			questionDate, answerDate
 		FROM talentQna q
 		JOIN talentMarket p ON q.tboardNum = p.tboardNum 
-		JOIN member1 m ON q.userId = m.userId
+		JOIN member m ON q.userId = m.userId
 		
-		LEFT OUTER JOIN member1 m2 ON answerId = m2.userId
+		LEFT OUTER JOIN member m2 ON answerId = m2.userId
 		<where>
 			<if test="userId != null">
 				q.userId = #{userId}

@@ -15,7 +15,7 @@ public class TmReview {
 	private int showReview;
 	private int locked;
 	
-	private String productName;
+	private String subject;
 	private String optionValue;
 	private String optionValue2;
 	
@@ -96,12 +96,6 @@ public class TmReview {
 		this.locked = locked;
 	}
 	
-	public String getProductName() {
-		return productName;
-	}
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
 	public String getOptionValue() {
 		return optionValue;
 	}
@@ -114,4 +108,11 @@ public class TmReview {
 	public void setOptionValue2(String optionValue2) {
 		this.optionValue2 = optionValue2;
 	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	
 }
