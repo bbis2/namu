@@ -180,6 +180,7 @@ function updateOrderPrice() {
 	const userPoint = ${userPoint==null?'0':userPoint};
 	
     document.getElementById('orderAmount').textContent = orderAmount + '원';
+    document.getElementById('usePoint').value = orderAmount;
     if(orderAmount>userPoint){
     document.getElementById('totalAmount').textContent = orderAmount- userPoint + '원';
     document.getElementById('totalAmountText').textContent = orderAmount- userPoint + '원';
@@ -259,7 +260,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 			                                없음
 			                            </c:when>
 			                            <c:otherwise>
-			                                ${listOption[0].optionName} : ${option1}
+			                                 ${listOption[0].optionName} : ${option1}
 			                            </c:otherwise>
 			                        </c:choose>
 			                    </label>
@@ -353,8 +354,12 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
         <div>
 			<button type="button" class="btn-pay" onclick="sendOk();">결제하기</button>
 		</div>
+		<input type="hidden" name="option1" value="${option1 }">
+		<input type="hidden" name="option1" value="${option2 }">
+		<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
+		<input type="hidden" name="usePoint"  id="usePoint" value="${dto.price}">
         <form name="orderForm" method="post">
-        </form>
+        </form>	
     </div>
     </div>
     
@@ -413,10 +418,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
     	    const fn = function(data) {
     	        let state = data.state;
     	        if (state === "true") {
-    	            alert("저장 성공");
-    	            location.href = "${pageContext.request.contextPath}/mypage/list";
     	        } else {
-    	            alert("저장 실패");
     	        }
     	    };
     	    ajaxFun(url, "post", formData, "json", fn);

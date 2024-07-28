@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Member;
+import com.forest.namu.domain.Point;
 import com.forest.namu.domain.Profile;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.Summary;
@@ -466,7 +467,19 @@ public class TalentMarketController {
 		}
 		
 		
+		Point pto = new Point();
+		pto.setPointVar(usePoint);
+		pto.setCurrentPoint(userPoint);
+		pto.setDescription("결제완료(재능마켓)");
 		
+		try {
+			pointService.insertPoint2(pto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	
 		reAttr.addFlashAttribute("talentdto",talentdto);
 		reAttr.addFlashAttribute("userPoint",userPoint);
 		reAttr.addFlashAttribute("option1", option1);
