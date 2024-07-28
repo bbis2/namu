@@ -30,9 +30,8 @@
 <div class="container mt-5 mb-5 pb-5">
 
 	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">대여 신청 관리</h1>
-		<span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>
-		<span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
+		<h1 class="cover-title htext bd">빌려드림 신청 관리</h1>
+		<span class="cover-description htext">나의 신청 내역과 받은 신청 내역을 관리해요.</span>
 		<div class="cover-image"></div>
 	</section>
 

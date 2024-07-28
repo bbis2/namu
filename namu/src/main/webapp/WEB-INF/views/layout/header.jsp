@@ -35,6 +35,8 @@
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/borrow/list">빌려줘요</a></li>
 								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/rent/list">빌려드림</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="${pageContext.request.contextPath}/rentcr/list">빌려드림 신청 관리</a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
