@@ -10,7 +10,7 @@ public class SessionInfo {
 	private int enabled;
 	private String town1;
 	private String town2;
-	
+	private String userName;
 	
 	public int getPoint() {
 		return point;
@@ -59,5 +59,11 @@ public class SessionInfo {
 	}
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

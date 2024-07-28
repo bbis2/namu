@@ -40,9 +40,10 @@
     </update>
 	
 	<select id="findById" parameterType="String" resultType="com.forest.namu.domain.Member">
-		SELECT memberIdx,userId, nickName,userPwd,regDate, modifyDate, loginFail, lastLogin, post, town1, addr, town2, enabled, membership
-		FROM member
-		WHERE userId = #{userId}
+		SELECT m.memberIdx,m.userId, m.nickName,m.userPwd,m.regDate, m.modifyDate, m.loginFail, m.lastLogin, m.post, m.town1, m.addr, m.town2, m.enabled, m.membership,md.userName
+		FROM member m
+		JOIN memberdetail md on m.userId=md.userId
+		WHERE m.userId = #{userId}
 	</select>
 	
 	<select id="findByNickName" parameterType="String" resultType="com.forest.namu.domain.Member">

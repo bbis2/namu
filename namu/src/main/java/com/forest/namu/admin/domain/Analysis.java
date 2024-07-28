@@ -10,7 +10,89 @@ public class Analysis {
 	private long talentMarketCount;
 	private long togetherlistCount;
 	private long auctionCount;
+	private String day;
+	private String source_table;
+	private long num;
+	private String subject;
+	private long hitCount;
+	private long postCount;
+	private String week;
+	private String month;
+	private String week_start_date;
+	private String month_start_date;
+	private String tablename;
+	private String nickname;
+	private long total_count;
 	
+	public String getTablename() {
+		return tablename;
+	}
+	public void setTablename(String tablename) {
+		this.tablename = tablename;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public long getPostCount() {
+		return postCount;
+	}
+	public void setPostCount(long postCount) {
+		this.postCount = postCount;
+	}
+	public String getWeek() {
+		return week;
+	}
+	public void setWeek(String week) {
+		this.week = week;
+	}
+	public String getMonth() {
+		return month;
+	}
+	public void setMonth(String month) {
+		this.month = month;
+	}
+	public String getSource_table() {
+		return source_table;
+	}
+	public void setSource_table(String source_table) {
+		this.source_table = source_table;
+	}
+	public long getNum() {
+		return num;
+	}
+	public void setNum(long num) {
+		this.num = num;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public long getHitCount() {
+		return hitCount;
+	}
+	public void setHitCount(long hitCount) {
+		this.hitCount = hitCount;
+	}
+	private String reg_date;
+	private long totalCount;
+	
+	public String getReg_date() {
+		return reg_date;
+	}
+	public void setReg_date(String reg_date) {
+		this.reg_date = reg_date;
+	}
+	public long getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(long totalCount) {
+		this.totalCount = totalCount;
+	}
 	public long getDelieveryCount() {
 		return delieveryCount;
 	}
@@ -58,6 +140,30 @@ public class Analysis {
 	}
 	public void setAuctionCount(long auctionCount) {
 		this.auctionCount = auctionCount;
+	}
+	public String getDay() {
+		return day;
+	}
+	public void setDay(String day) {
+		this.day = day;
+	}
+	public String getWeek_start_date() {
+		return week_start_date;
+	}
+	public void setWeek_start_date(String week_start_date) {
+		this.week_start_date = week_start_date;
+	}
+	public String getMonth_start_date() {
+		return month_start_date;
+	}
+	public void setMonth_start_date(String month_start_date) {
+		this.month_start_date = month_start_date;
+	}
+	public long getTotal_count() {
+		return total_count;
+	}
+	public void setTotal_count(long total_count) {
+		this.total_count = total_count;
 	}
 	
 }

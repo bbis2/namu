@@ -3,8 +3,39 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
+.card {
+    margin-bottom: 1rem;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* 테이블 스타일 */
+.table {
+    width: 100%;
+    border-collapse: collapse; /* 테두리 병합 */
+    margin-bottom: 1rem; /* 테이블 아래 여백 */
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6; /* 테두리 색상 */
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #dee2e6; /* 셀 테두리 색상 */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2; /* 홀수 행 배경색 */
+}
+
+.table thead th {
+    background-color: #f8f9fa; /* 헤더 배경색 */
+}
 .body-container {
 	max-width: 1200px;
+	 margin: 0 auto;
 }
 
 .nav-tabs .nav-link {
@@ -102,13 +133,15 @@
 							<form id="FilterForm"
 								action="${pageContext.request.contextPath}/admin/memberManage/singo"
 								method="get" style="margin: 0;">
-								<select name="processresult1" class="form-select mb-4 border border-2"
-									aria-label="Default select example" onchange="filterByprocessresult()"
+								<select name="processresult1"
+									class="form-select mb-4 border border-2"
+									aria-label="Default select example"
+									onchange="filterByprocessresult()"
 									style="display: inline-block;">
 									<option value="0" ${processresult1==0?'selected':''}>처리대기</option>
-									
+
 									<option value="1" ${processresult1==1?'selected':''}>차단중</option>
-									
+
 								</select>
 							</form>
 						</div>
@@ -118,57 +151,66 @@
 
 
 
+			<div class="card mb-4">
+				<div class="card-header">
+					<i class="fas fa-table me-1"></i> 신고 테이블
+				</div>
+				<div class="card-body">
+					<table id="datatablesSimple"
+						class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>피신고인</th>
+								<th>신고글</th>
+								<th>신고유형</th>
+								<th>신고사유</th>
+								<th>신고날짜</th>
+								<th>신고유저</th>
+								<th>이동하기</th>
+								<th>신고처리</th>
+							</tr>
+						</thead>
 
-			<table class="table table-hover board-list">
-				<thead class="table-light">
-					<tr>
-						<th width="60">번호</th>
-						<th width="120">피신고인</th>
-						<th width="120">신고글</th>
-						<th width="120">신고유형</th>
-						<th width="120">신고사유</th>
-						<th width="120">신고날짜</th>
-						<th width="120">신고유저</th>
-						<th width="120">이동하기</th>
-						<th width="120">신고처리</th>
-					</tr>
-				</thead>
+						<tbody>
+							<c:forEach var="dto" items="${list}" varStatus="status">
+								<tr>
+									<td>${dataCount - (page-1) * size - status.index}</td>
+									<td>${dto.banUser}</td>
+									<td>${dto.subject}</td>
+									<td>${dto.reportType}</td>
+									<td>${dto.reportContent}</td>
+									<td>${dto.reportDate}</td>
+									<td>${dto.userId}</td>
+									<td>
+										<!-- 버튼을 새로운 <td> 안에 포함시킴 -->
+										<button type="button" class="btn btn-primary"
+											onclick="send('${dto.field}', ${dto.postNum});">글 보기</button>
+									</td>
+									<td>
+										<div class="button-container">
+											<c:if test="${processresult1 == 0}">
+												<button type="button" class="btn btn-primary btn-chadan"
+													data-banUser="${dto.banUser}"
+													data-reportNum="${dto.reportNum}">차단</button>
+												<button type="button" class="btn btn-primary btn-release"
+													data-userId="${dto.banUser}"
+													data-reportNum="${dto.reportNum}">해제</button>
+											</c:if>
+											<c:if test="${processresult1 > 0}">
+												<button type="button" class="btn btn-primary btn-freeUser"
+													data-userId="${dto.banUser}"
+													data-reportNum="${dto.reportNum}">차단풀기</button>
+											</c:if>
+										</div>
+									</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
+			</div>
 
-				<tbody>
-					<c:forEach var="dto" items="${list}" varStatus="status">
-						<tr>
-							<td>${dataCount - (page-1) * size - status.index}</td>
-							<td>${dto.banUser}</td>
-							<td>${dto.subject}</td>
-							<td>${dto.reportType}</td>
-							<td>${dto.reportContent}</td>
-							<td>${dto.reportDate}</td>
-							<td>${dto.userId}</td>
-							<td>
-								<!-- 버튼을 새로운 <td> 안에 포함시킴 -->
-								<button type="button" class="btn btn-primary"
-									onclick="send('${dto.field}', ${dto.postNum});">글 보기</button>
-							</td>
-							<td>
-								<div class="button-container">
-								<c:if test="${processresult1 == 0}">
-									<button type="button" class="btn btn-primary btn-chadan"
-										data-banUser="${dto.banUser}"
-										data-reportNum="${dto.reportNum}">차단</button>
-									<button type="button" class="btn btn-primary btn-release" data-userId="${dto.banUser}"
-										data-reportNum="${dto.reportNum}">해제</button>
-								</c:if>
-								<c:if test="${processresult1 > 0}">
-									<button type="button" class="btn btn-primary btn-freeUser" data-userId="${dto.banUser}"
-										data-reportNum="${dto.reportNum}">차단풀기</button>
-								</c:if>
-								</div>
-							</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-
-			</table>
 
 			<div class="page-navigation">${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 			</div>
@@ -188,7 +230,8 @@
 						<div class="col-auto p-1">
 							<select name="schType" class="form-select">
 								<option value="userId" ${schType=="userId" ? "selected":""}>아이디</option>
-								<option value="reportType" ${schType=="reportType" ? "selected":""}>신고사유</option>
+								<option value="reportType"
+									${schType=="reportType" ? "selected":""}>신고사유</option>
 							</select>
 						</div>
 						<div class="col-auto p-1">
@@ -443,4 +486,18 @@ function selectStateChange() {
 	
 	f.memo.focus();
 }
+</script>
+<script type="text/javascript">
+            window.addEventListener('DOMContentLoaded', event => {
+                // Simple-DataTables
+                const datatablesSimple = document.getElementById('datatablesSimple');
+                if (datatablesSimple) {
+                    new simpleDatatables.DataTable(datatablesSimple, {
+                        perPage: 5, // 한 페이지에 표시할 행 수
+                        perPageSelect: [5, 10, 20], // 페이지당 선택 가능한 옵션
+                        sortable: true, // 열 정렬 가능
+                        searchable: true // 검색 기능
+                    });
+                }
+            });
 </script>

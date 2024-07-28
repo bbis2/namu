@@ -80,10 +80,7 @@ $(function(){
 					<a href="<c:url value='/admin/noticeManage/list'/>" class="sub_menu--link">공지사항</a>
 				</li>
 				<li class="sub_menu--item">
-					<a href="<c:url value='/admin/'/>" class="sub_menu--link">1:1문의</a>
-				</li>
-				<li class="sub_menu--item">
-					<a href="<c:url value='/admin/'/>" class="sub_menu--link">이벤트</a>
+					<a href="<c:url value='/admin/inquiryManage/list'/>" class="sub_menu--link">1:1문의</a>
 				</li>
 			</ul>
 		</li>

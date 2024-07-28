@@ -5,6 +5,7 @@
 <style type="text/css">
 .body-container {
 	max-width: 1200px;
+	 margin: 0 auto;
 }
 
 .nav-tabs .nav-link {
@@ -95,13 +96,6 @@
 				</button>
 			</li>
 			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="tab-2" data-bs-toggle="tab"
-					data-bs-target="#nav-content" type="button" role="tab"
-					aria-controls="2" aria-selected="true" data-tab="2">
-					<i class="bi bi-bar-chart-line"></i> 인기 게시물
-				</button>
-			</li>
-			<li class="nav-item" role="presentation">
 				<button class="nav-link" id="tab-3" data-bs-toggle="tab"
 					data-bs-target="#nav-content" type="button" role="tab"
 					aria-controls="3" aria-selected="true" data-tab="3">
@@ -121,8 +115,9 @@
 				</div>
 			</div>
 		</div>
-		
-		
+
+
+
 		<div class="tab-content pt-2" id="nav-tabContent">
 			<div class="card-container">
 				<div class="card">
@@ -148,19 +143,42 @@
 	</div>
 </div>
 
+<c:forEach var="dto2" items="${list }">
+	<input type="hidden" class="totalCount" value="${dto2.totalCount }">
+	<input type="hidden" class="reg_date" value="${dto2.reg_date }">
+</c:forEach>
+
 <script type="text/javascript">
 $(function(){
-	$("#tab-0").addClass("active");
+    // 기본적으로 첫 번째 탭을 활성화
+    $("#tab-0").addClass("active");
+
     $("button[role='tab']").on("click", function(e){
-    	const tab = $(this).attr("aria-controls");
-    	if(tab === "0") {
-    		return;
-    	}
-    	
-		let url = "${pageContext.request.contextPath}/admin/analysis/page";
-		location.href = url;
-    });	
+        // 클릭한 탭의 aria-controls 속성 값을 가져옴
+        const tab = $(this).attr("data-tab");
+        
+        // 각 탭에 맞는 URL을 설정
+        let url;
+        switch(tab) {
+            case "0":
+                url = "${pageContext.request.contextPath}/admin/analysis/page";
+                break;
+            case "1":
+                url = "${pageContext.request.contextPath}/admin/analysis/page2";
+                break;
+            case "3":
+                url = "${pageContext.request.contextPath}/admin/analysis/page3";
+                break;
+            default:
+                url = "${pageContext.request.contextPath}/admin/analysis/default";
+                break;
+        }
+
+        // 지정된 URL로 이동
+        location.href = url;
+    });
 });
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
@@ -301,69 +319,28 @@ option && myChart.setOption(option);
 </script>
 <script>
 
+const hiddenInputs = document.querySelectorAll('input.totalCount');
+const hiddenInputs2 = document.querySelectorAll('input.reg_date');
+
+const totalCounts = Array.from(hiddenInputs).map(input => input.value);
+const reg_dates = Array.from(hiddenInputs2).map(input => input.value);
+
 var chartDom = document.getElementById('main3');
 var myChart = echarts.init(chartDom);
 var option;
 
 option = {
-  title: {
-    text: '요일별 게시판 추이'
-  },
-  tooltip: {
-    trigger: 'axis'
-  },
-  legend: {
-    data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
-  },
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '3%',
-    containLabel: true
-  },
-  toolbox: {
-    feature: {
-      saveAsImage: {}
-    }
-  },
   xAxis: {
     type: 'category',
-    boundaryGap: false,
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: reg_dates
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      name: 'Email',
-      type: 'line',
-      stack: 'Total',
-      data: [120, 132, 101, 134, 90, 230, 210]
-    },
-    {
-      name: 'Union Ads',
-      type: 'line',
-      stack: 'Total',
-      data: [220, 182, 191, 234, 290, 330, 310]
-    },
-    {
-      name: 'Video Ads',
-      type: 'line',
-      stack: 'Total',
-      data: [150, 232, 201, 154, 190, 330, 410]
-    },
-    {
-      name: 'Direct',
-      type: 'line',
-      stack: 'Total',
-      data: [320, 332, 301, 334, 390, 330, 320]
-    },
-    {
-      name: 'Search Engine',
-      type: 'line',
-      stack: 'Total',
-      data: [820, 932, 901, 934, 1290, 1330, 1320]
+      data: totalCounts,
+      type: 'line'
     }
   ]
 };

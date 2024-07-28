@@ -10,6 +10,7 @@
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <style>
         /* 카드 컴포넌트 */
         .card {
@@ -156,18 +157,18 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="${pagecontext.request.contextPath}/resources/js2/datatables-simple-demo.js"></script>
         <script type="text/javascript">
-            window.addEventListener('DOMContentLoaded', event => {
-                // Simple-DataTables
-                const datatablesSimple = document.getElementById('datatablesSimple');
-                if (datatablesSimple) {
-                    new simpleDatatables.DataTable(datatablesSimple, {
-                        perPage: 5, // 한 페이지에 표시할 행 수
-                        perPageSelect: [5, 10, 20], // 페이지당 선택 가능한 옵션
-                        sortable: true, // 열 정렬 가능
-                        searchable: true // 검색 기능
-                    });
-                }
-            });
+        window.addEventListener('DOMContentLoaded', event => {
+            const datatablesSimple = document.getElementById('datatablesSimple');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple, {
+                    perPage: 5, // 한 페이지에 표시할 행 수
+                    perPageSelect: [5, 10, 20], // 페이지당 선택 가능한 옵션
+                    sortable: true, // 열 정렬 가능
+                    searchable: true // 검색 기능
+                });
+            }
+        });
+
         </script>
     </div>
 </body>

@@ -3,17 +3,23 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
-<style type="text/css">
 .fleamarket-cover {
     background-color: #E3F1C5;
 }
 
-.htext{
-	padding-top: 100px;
-	padding-left : 100px;
+.introduce {
+    width: 80%; /* Set this to match your desired width */
+    max-width: 800px; /* Ensure it doesn't exceed a specific width */
+    margin: 0 auto;
 }
+
+.htext{
+    padding-top: 100px;
+    padding-left: 100px;
+}
+
 .cover-content {
-	padding: 50px;
+    padding: 50px;
     position: relative;
     height: 100%;
     box-sizing: border-box;
@@ -23,12 +29,11 @@
 @media (min-width: 768px) {
     .fleamarket-cover {
         height: 315px;
-        padding: 0 16px 0 16px;
+        padding: 0 16px;
         margin-top: 60px;
         margin-bottom: 60px;
+    }
 }
-/* 전체 배경색 */
-
 
 .cover-description {
     font-size: 1.2rem;
@@ -57,7 +62,6 @@
     width: 500px;
     height: 40px;
 }
-
 
 .search-button {
     background-color: #74634F;
@@ -161,6 +165,9 @@
     color: #fff;
 }
 
+.col-md-9{
+	width: 100%;
+}
 </style>
 
 
@@ -225,7 +232,7 @@ function searchCategory(categoryNum) {
         </form>		
 	</div>
 	
-        <div class="row introduce">
+        <div class="row introduce" >
 
             <div class="col-md-9">
               <div class="categories">

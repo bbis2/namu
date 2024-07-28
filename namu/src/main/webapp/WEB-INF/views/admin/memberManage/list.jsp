@@ -71,7 +71,7 @@
 
 /* 최대 너비 설정 */
 .body-container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto; /* 중앙 정렬 */
 }
 

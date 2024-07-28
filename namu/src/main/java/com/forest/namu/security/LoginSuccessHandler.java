@@ -64,7 +64,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		info.setNickName(member.getNickName());
 		info.setTown1(member.getTown1());
 		info.setTown2(member.getTown2());
-		
+		info.setUserName(member.getUserName());
 		try {
 			info.setPoint(pointService.selectPoint(info.getUserId()));
 		} catch (Exception e1) {

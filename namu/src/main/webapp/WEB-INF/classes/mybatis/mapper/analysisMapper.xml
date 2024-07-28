@@ -16,4 +16,1303 @@ SELECT
 FROM dual
 </select>
 
+
+<select id="selectDayPageCount" resultType="com.forest.namu.admin.domain.Analysis">
+SELECT 
+    TO_CHAR(reg_date, 'DAY', 'NLS_DATE_LANGUAGE=ENGLISH') AS day,
+    SUM(delieveryCount) AS delieveryCount,
+    SUM(dailyCount) AS dailyCount,
+    SUM(borrowCount) AS borrowCount,
+    SUM(rentCount) AS rentCount,
+    SUM(usedCount) AS usedCount,
+    SUM(talentMarketCount) AS talentMarketCount,
+    SUM(togetherlistCount) AS togetherlistCount,
+    SUM(auctionCount) AS auctionCount
+FROM (
+    SELECT 
+        TRUNC(regDate) AS reg_date,
+        COUNT(*) AS delieveryCount,
+        0 AS dailyCount,
+        0 AS borrowCount,
+        0 AS rentCount,
+        0 AS usedCount,
+        0 AS talentMarketCount,
+        0 AS togetherlistCount,
+        0 AS auctionCount
+    FROM delievery
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT 
+        TRUNC(regDate) AS reg_date,
+        0 AS delieveryCount,
+        COUNT(*) AS dailyCount,
+        0 AS borrowCount,
+        0 AS rentCount,
+        0 AS usedCount,
+        0 AS talentMarketCount,
+        0 AS togetherlistCount,
+        0 AS auctionCount
+    FROM daily
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT 
+        TRUNC(regDate) AS reg_date,
+        0 AS delieveryCount,
+        0 AS dailyCount,
+        COUNT(*) AS borrowCount,
+        0 AS rentCount,
+        0 AS usedCount,
+        0 AS talentMarketCount,
+        0 AS togetherlistCount,
+        0 AS auctionCount
+    FROM borrow
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT 
+        TRUNC(regDate) AS reg_date,
+        0 AS delieveryCount,
+        0 AS dailyCount,
+        0 AS borrowCount,
+        COUNT(*) AS rentCount,
+        0 AS usedCount,
+        0 AS talentMarketCount,
+        0 AS togetherlistCount,
+        0 AS auctionCount
+    FROM rent
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT 
+        TRUNC(regDate) AS reg_date,
+        0 AS delieveryCount,
+        0 AS dailyCount,
+        0 AS borrowCount,
+        0 AS rentCount,
+        COUNT(*) AS usedCount,
+        0 AS talentMarketCount,
+        0 AS togetherlistCount,
+        0 AS auctionCount
+    FROM used
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT 
+        TRUNC(regDate) AS reg_date,
+        0 AS delieveryCount,
+        0 AS dailyCount,
+        0 AS borrowCount,
+        0 AS rentCount,
+        0 AS usedCount,
+        COUNT(*) AS talentMarketCount,
+        0 AS togetherlistCount,
+        0 AS auctionCount
+    FROM talentMarket
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT 
+        TRUNC(regDate) AS reg_date,
+        0 AS delieveryCount,
+        0 AS dailyCount,
+        0 AS borrowCount,
+        0 AS rentCount,
+        0 AS usedCount,
+        0 AS talentMarketCount,
+        COUNT(*) AS togetherlistCount,
+        0 AS auctionCount
+    FROM togetherlist
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT 
+        TRUNC(regDate) AS reg_date,
+        0 AS delieveryCount,
+        0 AS dailyCount,
+        0 AS borrowCount,
+        0 AS rentCount,
+        0 AS usedCount,
+        0 AS talentMarketCount,
+        0 AS togetherlistCount,
+        COUNT(*) AS auctionCount
+    FROM auction
+    GROUP BY TRUNC(regDate)
+)
+GROUP BY TO_CHAR(reg_date, 'DAY', 'NLS_DATE_LANGUAGE=ENGLISH'), TO_CHAR(reg_date, 'D', 'NLS_DATE_LANGUAGE=ENGLISH')
+ORDER BY TO_CHAR(reg_date, 'D', 'NLS_DATE_LANGUAGE=ENGLISH')
+</select>
+
+
+<select id="selectAlldayCount" resultType="com.forest.namu.admin.domain.Analysis">
+WITH combined_counts AS (
+    SELECT TRUNC(regDate) AS reg_date, COUNT(*) AS counts
+    FROM delievery
+    WHERE regDate BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND SYSDATE
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT TRUNC(regDate) AS reg_date, COUNT(*) AS counts
+    FROM daily
+    WHERE regDate BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND SYSDATE
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT TRUNC(regDate) AS reg_date, COUNT(*) AS counts
+    FROM borrow
+    WHERE regDate BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND SYSDATE
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT TRUNC(regDate) AS reg_date, COUNT(*) AS counts
+    FROM rent
+    WHERE regDate BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND SYSDATE
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT TRUNC(regDate) AS reg_date, COUNT(*) AS counts
+    FROM used
+    WHERE regDate BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND SYSDATE
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT TRUNC(regDate) AS reg_date, COUNT(*) AS counts
+    FROM talentMarket
+    WHERE regDate BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND SYSDATE
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT TRUNC(regDate) AS reg_date, COUNT(*) AS counts
+    FROM togetherlist
+    WHERE regDate BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND SYSDATE
+    GROUP BY TRUNC(regDate)
+    UNION ALL
+    SELECT TRUNC(regDate) AS reg_date, COUNT(*) AS counts
+    FROM auction
+    WHERE regDate BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND SYSDATE
+    GROUP BY TRUNC(regDate)
+),
+daily_totals AS (
+    SELECT reg_date,
+           SUM(counts) AS daily_count
+    FROM combined_counts
+    GROUP BY reg_date
+),
+cumulative_counts AS (
+    SELECT reg_date,
+           daily_count,
+           SUM(daily_count) OVER (ORDER BY reg_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS totalCount
+    FROM daily_totals
+)
+SELECT TO_CHAR(reg_date, 'YYYYMMDD') AS reg_date,
+       totalCount
+FROM cumulative_counts
+ORDER BY reg_date
+
+</select>
+
+<select id="selectHitpage" resultType="com.forest.namu.admin.domain.Analysis">
+    WITH RankedData AS (
+    SELECT tablename, num, subject, hitCount, nickname
+    FROM (
+        SELECT 'delievery' AS tablename, num, subject, hitCount, nickname,
+               ROW_NUMBER() OVER (PARTITION BY 'delievery' ORDER BY hitCount DESC) AS rn
+        FROM delievery d
+        JOIN member m ON m.userId = d.userId
+        UNION ALL
+        SELECT 'daily' AS tablename, num, subject, hitCount, nickname,
+               ROW_NUMBER() OVER (PARTITION BY 'daily' ORDER BY hitCount DESC) AS rn
+        FROM daily dy
+        JOIN member m ON m.userId = dy.userId
+        UNION ALL
+        SELECT 'borrow' AS tablename, borrownum AS num, subject, hitCount, nickname,
+               ROW_NUMBER() OVER (PARTITION BY 'borrow' ORDER BY hitCount DESC) AS rn
+        FROM borrow b
+        JOIN member m ON m.userId = b.userId
+        UNION ALL
+        SELECT 'rent' AS tablename, rentnum AS num, subject, hitCount, nickname,
+               ROW_NUMBER() OVER (PARTITION BY 'rent' ORDER BY hitCount DESC) AS rn
+        FROM rent r
+        JOIN member m ON m.userId = r.userId
+        UNION ALL
+        SELECT 'used' AS tablename, num, subject, hitCount, nickname,
+               ROW_NUMBER() OVER (PARTITION BY 'used' ORDER BY hitCount DESC) AS rn
+        FROM used u
+        JOIN member m ON m.userId = u.userId
+        UNION ALL
+        SELECT 'talentMarket' AS tablename, tboardnum AS num, subject, hitCount, nickname,
+               ROW_NUMBER() OVER (PARTITION BY 'talentMarket' ORDER BY hitCount DESC) AS rn
+        FROM talentMarket t
+        JOIN member m ON m.userId = t.userId
+        UNION ALL
+       SELECT 'togetherlist' AS tablename, tnum AS num, subject, hitCount, nickname,
+               ROW_NUMBER() OVER (PARTITION BY 'togetherlist' ORDER BY hitCount DESC) AS rn
+        FROM togetherlist tl  -- 수정: here, to 대신 tl 사용
+        JOIN member m ON m.userId = tl.userId
+        UNION ALL
+        SELECT 'auction' AS tablename, anum AS num, subject, hitCount, nickname,
+               ROW_NUMBER() OVER (PARTITION BY 'auction' ORDER BY hitCount DESC) AS rn
+        FROM auction a
+        JOIN member m ON m.userId = a.userId
+    ) subquery
+    WHERE rn &lt;= 2
+)
+SELECT tablename, num, subject, hitCount, nickname
+FROM RankedData
+ORDER BY tablename, hitCount DESC
+</select>
+
+<select id="selectWeekPageCount" resultType="com.forest.namu.admin.domain.Analysis">
+WITH weeks AS (
+    SELECT TO_CHAR(TRUNC(SYSDATE, 'IW') - (LEVEL - 1) * 7, 'yyyymmdd') AS week_start_date
+    FROM dual
+    CONNECT BY LEVEL &lt;= 7
+),
+delivery_counts AS (
+    SELECT
+        TO_CHAR(TRUNC(regDate, 'IW'), 'yyyymmdd') AS week_start_date,
+        COUNT(*) AS delieveryCount
+    FROM delievery
+    WHERE regDate &gt;= TRUNC(SYSDATE, 'IW') - INTERVAL '6' MONTH
+    GROUP BY TRUNC(regDate, 'IW')
+),
+daily_counts AS (
+    SELECT
+        TO_CHAR(TRUNC(regDate, 'IW'), 'yyyymmdd') AS week_start_date,
+        COUNT(*) AS dailyCount
+    FROM daily
+    WHERE regDate &gt;= TRUNC(SYSDATE, 'IW') - INTERVAL '6' MONTH
+    GROUP BY TRUNC(regDate, 'IW')
+),
+borrow_counts AS (
+    SELECT
+        TO_CHAR(TRUNC(regDate, 'IW'), 'yyyymmdd') AS week_start_date,
+        COUNT(*) AS borrowCount
+    FROM borrow
+    WHERE regDate &gt;= TRUNC(SYSDATE, 'IW') - INTERVAL '6' MONTH
+    GROUP BY TRUNC(regDate, 'IW')
+),
+rent_counts AS (
+    SELECT
+        TO_CHAR(TRUNC(regDate, 'IW'), 'yyyymmdd') AS week_start_date,
+        COUNT(*) AS rentCount
+    FROM rent
+    WHERE regDate &gt;= TRUNC(SYSDATE, 'IW') - INTERVAL '6' MONTH
+    GROUP BY TRUNC(regDate, 'IW')
+),
+used_counts AS (
+    SELECT
+        TO_CHAR(TRUNC(regDate, 'IW'), 'yyyymmdd') AS week_start_date,
+        COUNT(*) AS usedCount
+    FROM used
+    WHERE regDate &gt;= TRUNC(SYSDATE, 'IW') - INTERVAL '6' MONTH
+    GROUP BY TRUNC(regDate, 'IW')
+),
+talentMarket_counts AS (
+    SELECT
+        TO_CHAR(TRUNC(regDate, 'IW'), 'yyyymmdd') AS week_start_date,
+        COUNT(*) AS talentMarketCount
+    FROM talentMarket
+    WHERE regDate &gt;= TRUNC(SYSDATE, 'IW') - INTERVAL '6' MONTH
+    GROUP BY TRUNC(regDate, 'IW')
+),
+togetherlist_counts AS (
+    SELECT
+        TO_CHAR(TRUNC(regDate, 'IW'), 'yyyymmdd') AS week_start_date,
+        COUNT(*) AS togetherlistCount
+    FROM togetherlist
+    WHERE regDate &gt;= TRUNC(SYSDATE, 'IW') - INTERVAL '6' MONTH
+    GROUP BY TRUNC(regDate, 'IW')
+),
+auction_counts AS (
+    SELECT
+        TO_CHAR(TRUNC(regDate, 'IW'), 'yyyymmdd') AS week_start_date,
+        COUNT(*) AS auctionCount
+    FROM auction
+    WHERE regDate &gt;= TRUNC(SYSDATE, 'IW') - INTERVAL '6' MONTH
+    GROUP BY TRUNC(regDate, 'IW')
+)
+SELECT
+    w.week_start_date,
+    NVL(dc.delieveryCount, 0) AS delieveryCount,
+    NVL(dailyc.dailyCount, 0) AS dailyCount,
+    NVL(bc.borrowCount, 0) AS borrowCount,
+    NVL(rc.rentCount, 0) AS rentCount,
+    NVL(uc.usedCount, 0) AS usedCount,
+    NVL(tmc.talentMarketCount, 0) AS talentMarketCount,
+    NVL(tlc.togetherlistCount, 0) AS togetherlistCount,
+    NVL(ac.auctionCount, 0) AS auctionCount
+FROM weeks w
+LEFT JOIN delivery_counts dc ON w.week_start_date = dc.week_start_date
+LEFT JOIN daily_counts dailyc ON w.week_start_date = dailyc.week_start_date
+LEFT JOIN borrow_counts bc ON w.week_start_date = bc.week_start_date
+LEFT JOIN rent_counts rc ON w.week_start_date = rc.week_start_date
+LEFT JOIN used_counts uc ON w.week_start_date = uc.week_start_date
+LEFT JOIN talentMarket_counts tmc ON w.week_start_date = tmc.week_start_date
+LEFT JOIN togetherlist_counts tlc ON w.week_start_date = tlc.week_start_date
+LEFT JOIN auction_counts ac ON w.week_start_date = ac.week_start_date
+ORDER BY w.week_start_date
+
+</select>
+
+<select id="selectMonthPageCount" resultType="com.forest.namu.admin.domain.Analysis">
+WITH months AS (
+  SELECT TO_CHAR(TRUNC(SYSDATE, 'MM') - (LEVEL - 1) * INTERVAL '1' MONTH, 'yyyymm') AS month_start_date
+  FROM dual
+  CONNECT BY LEVEL &lt;= 6
+),
+delivery_counts AS (
+  SELECT
+    TO_CHAR(TRUNC(regDate, 'MM'), 'yyyymm') AS month_start_date,
+    COUNT(*) AS delieveryCount
+  FROM delievery
+  WHERE regDate &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '6' MONTH
+  GROUP BY TRUNC(regDate, 'MM')
+),
+daily_counts AS (
+  SELECT
+    TO_CHAR(TRUNC(regDate, 'MM'), 'yyyymm') AS month_start_date,
+    COUNT(*) AS dailyCount
+  FROM daily
+  WHERE regDate &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '6' MONTH
+  GROUP BY TRUNC(regDate, 'MM')
+),
+borrow_counts AS (
+  SELECT
+    TO_CHAR(TRUNC(regDate, 'MM'), 'yyyymm') AS month_start_date,
+    COUNT(*) AS borrowCount
+  FROM borrow
+  WHERE regDate &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '6' MONTH
+  GROUP BY TRUNC(regDate, 'MM')
+),
+rent_counts AS (
+  SELECT
+    TO_CHAR(TRUNC(regDate, 'MM'), 'yyyymm') AS month_start_date,
+    COUNT(*) AS rentCount
+  FROM rent
+  WHERE regDate &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '6' MONTH
+  GROUP BY TRUNC(regDate, 'MM')
+),
+used_counts AS (
+  SELECT
+    TO_CHAR(TRUNC(regDate, 'MM'), 'yyyymm') AS month_start_date,
+    COUNT(*) AS usedCount
+  FROM used
+  WHERE regDate &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '6' MONTH
+  GROUP BY TRUNC(regDate, 'MM')
+),
+talentMarket_counts AS (
+  SELECT
+    TO_CHAR(TRUNC(regDate, 'MM'), 'yyyymm') AS month_start_date,
+    COUNT(*) AS talentMarketCount
+  FROM talentMarket
+  WHERE regDate &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '6' MONTH
+  GROUP BY TRUNC(regDate, 'MM')
+),
+togetherlist_counts AS (
+  SELECT
+    TO_CHAR(TRUNC(regDate, 'MM'), 'yyyymm') AS month_start_date,
+    COUNT(*) AS togetherlistCount
+  FROM togetherlist
+  WHERE regDate &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '6' MONTH
+  GROUP BY TRUNC(regDate, 'MM')
+),
+auction_counts AS (
+  SELECT
+    TO_CHAR(TRUNC(regDate, 'MM'), 'yyyymm') AS month_start_date,
+    COUNT(*) AS auctionCount
+  FROM auction
+  WHERE regDate &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '6' MONTH
+  GROUP BY TRUNC(regDate, 'MM')
+)
+SELECT
+  m.month_start_date,
+  NVL(dc.delieveryCount, 0) AS delieveryCount,
+  NVL(dailyc.dailyCount, 0) AS dailyCount,
+  NVL(bc.borrowCount, 0) AS borrowCount,
+  NVL(rc.rentCount, 0) AS rentCount,
+  NVL(uc.usedCount, 0) AS usedCount,
+  NVL(tmc.talentMarketCount, 0) AS talentMarketCount,
+  NVL(tlc.togetherlistCount, 0) AS togetherlistCount,
+  NVL(ac.auctionCount, 0) AS auctionCount
+FROM months m
+LEFT JOIN delivery_counts dc ON m.month_start_date = dc.month_start_date
+LEFT JOIN daily_counts dailyc ON m.month_start_date = dailyc.month_start_date
+LEFT JOIN borrow_counts bc ON m.month_start_date = bc.month_start_date
+LEFT JOIN rent_counts rc ON m.month_start_date = rc.month_start_date
+LEFT JOIN used_counts uc ON m.month_start_date = uc.month_start_date
+LEFT JOIN talentMarket_counts tmc ON m.month_start_date = tmc.month_start_date
+LEFT JOIN togetherlist_counts tlc ON m.month_start_date = tlc.month_start_date
+LEFT JOIN auction_counts ac ON m.month_start_date = ac.month_start_date
+ORDER BY m.month_start_date
+</select>
+
+<select id="selectSeoul" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '서울'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '서울'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '서울'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '서울'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '서울'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '서울'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '서울'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '서울'
+)
+</select>
+
+<select id="selectBusan" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '부산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '부산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '부산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '부산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '부산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '부산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '부산'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '부산'
+)
+</select>
+
+<select id="selectDaegu" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '대구'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '대구'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '대구'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '대구'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '대구'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '대구'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '대구'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '대구'
+)
+</select>
+
+<select id="selectInchoen" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '인천'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '인천'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '인천'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '인천'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '인천'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '인천'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '인천'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '인천'
+)
+</select>
+
+<select id="selectGwangju" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '광주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '광주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '광주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '광주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '광주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '광주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '광주'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '광주'
+)
+</select>
+
+<select id="selectDaejoen" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '대전'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '대전'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '대전'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '대전'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '대전'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '대전'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '대전'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '대전'
+)
+</select>
+
+<select id="selectUlsan" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '울산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '울산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '울산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '울산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '울산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '울산'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '울산'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '울산'
+)
+</select>
+
+<select id="selectSejong" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '세종'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '세종'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '세종'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '세종'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '세종'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '세종'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '세종'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '세종'
+)
+</select>
+
+<select id="selectGyeongGi" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '경기'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '경기'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '경기'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '경기'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '경기'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '경기'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '경기'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '경기'
+)
+</select>
+<select id="selectGwanhwon" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '강원'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '강원'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '강원'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '강원'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '강원'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '강원'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '강원'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '강원'
+)
+</select>
+<select id="selectChungbuk" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '충북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '충북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '충북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '충북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '충북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '충북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '충북'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '충북'
+)
+</select>
+
+<select id="selectChungnam" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '충남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '충남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '충남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '충남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '충남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '충남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '충남'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '충남'
+)
+</select>
+<select id="selectJeonbuk" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '전북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '전북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '전북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '전북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '전북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '전북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '전북'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '전북'
+)
+</select>
+
+<select id="selectJeonnam" resultType="long">
+SELECT 
+    SUM(count) AS total_count_jeonnam
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '전남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '전남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '전남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '전남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '전남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '전남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '전남'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '전남'
+)
+</select>
+
+<select id="selectGyeongbuk" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '경북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '경북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '경북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '경북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '경북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '경북'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '경북'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '경북'
+)
+</select>
+
+<select id="selectGyeongnam" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '경남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '경남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '경남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '경남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '경남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '경남'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '경남'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '경남'
+)
+</select>
+
+<select id="selectJeju" resultType="long">
+SELECT 
+    SUM(count) AS total_count
+FROM (
+    SELECT COUNT(*) AS count
+    FROM daily
+    WHERE SUBSTR(town, 1, 2) = '제주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM talentMarket
+    WHERE SUBSTR(town, 1, 2) = '제주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM togetherlist
+    WHERE SUBSTR(town, 1, 2) = '제주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM borrow
+    WHERE SUBSTR(location, 1, 2) = '제주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM rent
+    WHERE SUBSTR(location, 1, 2) = '제주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM auction
+    WHERE SUBSTR(town, 1, 2) = '제주'
+
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM used
+    WHERE SUBSTR(town, 1, 2) = '제주'
+    
+    UNION ALL
+
+    SELECT COUNT(*) AS count
+    FROM delievery
+    WHERE SUBSTR(town, 1, 2) = '제주'
+)
+</select>
 </mapper>
