@@ -14,7 +14,7 @@
 	</select>
 	
 	<select id="listTmOrderByUserId" parameterType="map" resultType="com.forest.namu.domain.TmOrder">
-		SELECT applNum,applDate,state,userId,tboardNum,completionDate,reviewState
+		SELECT applNum,applDate,state,userId,tboardNum,completionDate,reviewState,optionValue,optionValue2,quantity,reviewState,completionDate
 		FROM tmOrder
 		WHERE tboardNum = #{tboardNum} and userId = #{userId}
 	</select>

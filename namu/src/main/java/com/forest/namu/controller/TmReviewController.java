@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.Summary;
+import com.forest.namu.domain.TmOrder;
 import com.forest.namu.domain.TmReview;
+import com.forest.namu.service.TmOrderService;
 import com.forest.namu.service.TmReviewService;
 
 @RestController // @Controller + @ResponseBody
@@ -28,25 +30,35 @@ public class TmReviewController {
 	@Autowired
 	private MyUtil myUtil;
 	
+	@Autowired
+	private TmOrderService orderService;
+	
 	// AJAX - JSON
 	@PostMapping("write")
 	public Map<String, Object> writeSubmit(TmReview dto,
-			HttpSession session) throws Exception {
-		
-		
-		String state = "true";
-		try {
-			SessionInfo info = (SessionInfo)session.getAttribute("member");
-			dto.setUserId(info.getUserId());
-			
-			service.insertReview(dto);
-		} catch (Exception e) {
-			state = "false";
-		}
-		
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("state", state);
-		return model;
+	        HttpSession session) throws Exception {
+	    
+	    String state = "true";
+	    List<TmOrder> orderList = null;
+	    try {
+	        SessionInfo info = (SessionInfo)session.getAttribute("member");
+	        dto.setUserId(info.getUserId());
+	        
+	        service.insertReview(dto);
+	        
+	        // 리뷰 등록 후 갱신된 orderList 가져오기
+	        Map<String, Object> ordermap = new HashMap<>();
+	        ordermap.put("userId", info.getUserId());
+	        ordermap.put("tboardNum", dto.getTboardNum());
+	        orderList = orderService.listTmOrderByUserId(ordermap);
+	    } catch (Exception e) {
+	        state = "false";
+	    }
+	    
+	    Map<String, Object> model = new HashMap<>();
+	    model.put("state", state);
+	    model.put("orderList", orderList); // 갱신된 orderList 반환
+	    return model;
 	}
 	
 	// AJAX - JSON

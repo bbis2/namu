@@ -232,7 +232,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
         <div class="one">
             <h1>결제하기</h1>
         </div>
-        <form name="orderForm" action="${pageContext.request.contextPath}/talent/ordercomplete" method="post">
+        <form name="orderForm" method="post">
         <div class="order-summary">
         	
 			    <div class="order-details">
@@ -243,7 +243,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 			                <p>${dto.subject}</p>
 			                <p>${dto.nickName}</p>
 			                <div class="quantity-select">
-			                    <label for="quantity">수량 선택 :</label>
+			                  <label for="quantity">수량 선택 :</label>
 			                    <select id="quantity" name="quantity" onchange="updateOrderPrice()">
 			                        <option value="1">1</option>
 			                        <option value="2">2</option>
@@ -302,7 +302,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 			<div class="total-price">
 			    <p>총 결제금액: <span id="totalAmountText">${(dto.price - userPoint)<0?'0':(dto.price - userPoint)}원</span></p>
 			</div>
-			</form>
+			
         
         <div class="footer-notes">
               <div class="accordion" id="accordionExample">
@@ -351,17 +351,17 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
                     </div>
                 </div>
         </div>
+        </div>
         <div>
 			<button type="button" class="btn-pay" onclick="sendOk();">결제하기</button>
 		</div>
-		<input type="hidden" name="option1" value="${option1 }">
-		<input type="hidden" name="option1" value="${option2 }">
+		<input type="hidden" name="optionValue" value="${option1}">
+		<input type="hidden" name="optionValue2" value="${option2}">
 		<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
 		<input type="hidden" name="usePoint"  id="usePoint" value="${dto.price}">
-        <form name="orderForm" method="post">
         </form>	
     </div>
-    </div>
+  
     
     <script type="text/javascript">
     
@@ -376,8 +376,8 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
  	    var numericValue = totalAmountText.replace(/[^0-9.-]+/g, "");
         var money =numericValue;
         if (money ==0) {
-        	location.href='${pageContext.request.contextPath}/talent/ordercomplete';
-        	 f.submit;
+        	 f.action = "${pageContext.request.contextPath}/talent/order";
+        	 f.submit();
         } else {
             selectSeq(function(sequence) {
                 requestPay(money, sequence);
@@ -445,13 +445,14 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 			buyer_postcode : '123-456',
 		}, function(resp) { // callback
 			if (resp.success) {
-				
+				 const f = document.orderForm;
 				pointCharge(sequence,money);
 				alert('결제가 완료되었습니다...');
-				location.href='${pageContext.request.contextPath}/talent/ordercomplete';
+				f.action='${pageContext.request.contextPath}/talent/order';
+				f.submit();
 				return true;
 			} else {
-				alert('fail...');
+				alert('결제 실패');
 				console.log(resp);
 				return false;
 			}

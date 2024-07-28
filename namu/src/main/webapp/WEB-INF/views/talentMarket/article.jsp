@@ -375,6 +375,14 @@ a{
  flex:1;
 }
 
+.review-form .star { font-size: 0; letter-spacing: -4px; }
+.review-form .star a {
+	font-size: 22px; letter-spacing: 1px; display: inline-block;
+	 color: #ccc; text-decoration: none;
+}
+.review-form .star a:first-child { margin-left: 0; }
+.star a.on { color: #FFBB00; }
+
 .deleteReview, .notifyReview { cursor: pointer; padding-left: 5px; }
 .deleteReview:hover, .notifyReview:hover { font-weight: 500; color: #2478FF; }
 
@@ -524,6 +532,24 @@ function validateAndSubmit() {
             
     window.location.href = url;
 }
+
+$(function(){
+	$(".review-form .star a").click(function(e){
+		let b = $(this).hasClass("on");
+		$(this).parent().children("a").removeClass("on");
+		$(this).addClass("on").prevAll("a").addClass("on");
+		
+		if( b ) {
+			$(this).removeClass("on");
+		}
+		
+		let s = $(this).closest(".review-form").find(".star .on").length;
+		$(this).closest(".review-form").find("input[name=score").val(s);
+		
+		// e.preventDefault(); // 화면 위로 이동 안되게
+		return false;
+	});
+});
 
 </script>
 </head>
@@ -690,10 +716,27 @@ function validateAndSubmit() {
 							<h5 class="modal-title" id="reviewDialogModalLabel" >상품 평점남기기 </h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
-						<div class="modal-body">
-			
+						<div class="modal-body review-form">
+						<form name="reviewForm">
+						<select name="num" class="form-select">
+						<c:forEach var="vo" items="${orderList}">
+						<c:if test="${vo.reviewState==0 && vo.completionDate!=null}">
+						<option value="${vo.applNum}"> 구매번호 : ${vo.applNum} 구매수량 : ${vo.quantity} 선택옵션 : ${vo.optionValue!=null?vo.optionValue:""}${vo.optionValue2!=null?", ":""}${vo.optionValue2}</option>
+						</c:if>
+						</c:forEach>
+						</select>
+							<div class="p-1">
+								<p class="star">
+									<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+									<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+									<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+									<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+									<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+									<input type="hidden" name="score" value="5">
+								</p>
+							</div>
 							<div class="qna-form p-2">
-								<form name="reviewForm">
+								
 									<div class="row">
 										<div class="col">
 											<span class="fw-bold">리뷰 쓰기</span><span> - 상품 및 상품 구매 과정과 관련없는 글은 삭제 될 수 있습니다.</span>
@@ -703,9 +746,9 @@ function validateAndSubmit() {
 										<input type="hidden" name="tboardNum" value="${dto.tboardNum}">
 										<textarea name="review" id="review" class="form-control"></textarea>
 									</div>					
-								</form>
+								
 							</div>
-			
+							</form>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn custom-button2 btnReviewSendOk">리뷰등록 <i class="bi bi-check2"></i> </button>
@@ -1207,35 +1250,31 @@ function validateAndSubmit() {
         	});
 
         	$('.btnReviewSendOk').click(function(){
-        		const f = document.reviewForm;
-        		let s;
-        		
-        		s = f.review.value.trim();
-        		if( ! s ) {
-        			alert("문의 사항을 입력하세요.")	;
-        			f.question.focus();
-        			return false;
+        	    const f = document.reviewForm;
+        	    let url = "${pageContext.request.contextPath}/tmreview/write";
+        	    let query = new FormData(f); 
+        	    
+        	    if(f.num.value ==0) {
+        			alert("리뷰를 등록할 물품이 없습니다.")	;
+            		f.reset();
+            	
+            		$("#reviewDialogModal").modal("hide");
+            		return false;
         		}
-        		
-       
-        		
-        		let url = "${pageContext.request.contextPath}/tmreview/write";
-        	
-        		let query = new FormData(f); 
-        		
-        		const fn = function(data) {
-        			if(data.state === "true") {
-        				f.reset();
-        				
-        			
-        				
-        				$("#reviewDialogModal").modal("hide");
-        				
-        				listReview(1);
-        			}
-        		};
-        		
-        		ajaxFun(url, "post", query, "json", fn, true);
+        	    const fn = function(data) {
+        	        if(data.state === "true") {
+        	            f.reset();
+        	            
+        	            // orderList를 새로 받아온 데이터를 바탕으로 업데이트
+        	            updateOrderList(data.orderList);
+        	            
+        	            $("#reviewDialogModal").modal("hide");
+        	            
+        	            listReview(1);
+        	        }
+        	    };
+        	    
+        	    ajaxFun(url, "post", query, "json", fn, true);
         	});
         	
         	$('.btnReviewSendCancel').click(function(){

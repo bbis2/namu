@@ -12,6 +12,10 @@ public class TmOrder {
 	private String thumbnail;
 	private int price;
 	private int quantity;
+	private int usePoint;
+	private int orderAmount;
+	private int reviewState;
+	private String completionDate;
 	
 	private String nickName;
 	
@@ -34,6 +38,31 @@ public class TmOrder {
 	
 	
 	
+	
+	public String getCompletionDate() {
+		return completionDate;
+	}
+	public void setCompletionDate(String completionDate) {
+		this.completionDate = completionDate;
+	}
+	public int getReviewState() {
+		return reviewState;
+	}
+	public void setReviewState(int reviewState) {
+		this.reviewState = reviewState;
+	}
+	public int getOrderAmount() {
+		return orderAmount;
+	}
+	public void setOrderAmount(int orderAmount) {
+		this.orderAmount = orderAmount;
+	}
+	public int getUsePoint() {
+		return usePoint;
+	}
+	public void setUsePoint(int usePoint) {
+		this.usePoint = usePoint;
+	}
 	public int getQuantity() {
 		return quantity;
 	}

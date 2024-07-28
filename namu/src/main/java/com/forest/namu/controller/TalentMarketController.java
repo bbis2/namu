@@ -16,6 +16,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -439,26 +440,19 @@ public class TalentMarketController {
 	@PostMapping("order")
 	public String orderSubmit(HttpSession session,
 			final RedirectAttributes reAttr,
-			@RequestParam long tboardNum,
-			@RequestParam int usePoint,
-			@RequestParam String option1,
-            @RequestParam String option2,
-            @RequestParam int quantity
+            TmOrder dto
 			) {
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		TmOrder dto = new TmOrder();
-		dto.setTboardNum(tboardNum);
+		
 		dto.setUserId(info.getUserId());
-		dto.setOptionValue(option1);
-		dto.setOptionValue2(option2);
-		dto.setQuantity(quantity);
+	
 		try {
 		 orderService.insertTmOrder(dto);
 		} catch (Exception e) {
 		}
 		
-		TalentMarket talentdto = service.findById(tboardNum);
+		TalentMarket talentdto = service.findById(dto.getTboardNum());
 		
 		int userPoint = 0;
 		try {
@@ -468,28 +462,47 @@ public class TalentMarketController {
 		
 		
 		Point pto = new Point();
-		pto.setPointVar(usePoint);
+		pto.setPointVar(dto.getUsePoint());
+		pto.setUserId(info.getUserId());
 		pto.setCurrentPoint(userPoint);
-		pto.setDescription("결제완료(재능마켓)");
 		
 		try {
-			pointService.insertPoint2(pto);
+			orderService.reqeustOrderByPoint(pto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		
-	
+		reAttr.addFlashAttribute("usePoint",dto.getUsePoint());
+		reAttr.addFlashAttribute("orderAmount",dto.getOrderAmount());
 		reAttr.addFlashAttribute("talentdto",talentdto);
-		reAttr.addFlashAttribute("userPoint",userPoint);
-		reAttr.addFlashAttribute("option1", option1);
-		reAttr.addFlashAttribute("option2",option2);
+		reAttr.addFlashAttribute("option1", dto.getOptionValue());
+		reAttr.addFlashAttribute("option2",dto.getOptionValues2());
 		
 		return "redirect:/talent/ordercomplete";
 	}
 	
 	@GetMapping("ordercomplete")
-	public String ordercomplete () {
+	public String ordercomplete (@ModelAttribute("option1") String option1,
+            @ModelAttribute("option2") String option2,
+            @ModelAttribute("talentdto") TalentMarket talentdto,
+            @ModelAttribute("usePoint") int usePoint,
+			HttpSession session,
+			Model model) {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		int userPoint = 0;
+		try {
+			userPoint = pointService.selectPoint(info.getUserId());
+		} catch (Exception e) {
+		}
+		
+		model.addAttribute("usePoint",usePoint);
+		model.addAttribute("userPoint",userPoint);
+		model.addAttribute("option1",option1);
+		model.addAttribute("option2",option2);
+		
+		model.addAttribute("dto",talentdto);
 		
 		return ".talentMarket.ordercomplete";
 	}
@@ -497,6 +510,7 @@ public class TalentMarketController {
 	@PostMapping("insertLike")
 	@ResponseBody
 	public Map<String, Object> insertLike(
+			
 			@RequestParam long tboardNum,
 			@RequestParam boolean userLiked,
 			HttpSession session

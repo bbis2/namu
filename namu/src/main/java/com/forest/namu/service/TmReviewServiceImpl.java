@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.forest.namu.domain.Summary;
 import com.forest.namu.domain.TmReview;
+import com.forest.namu.mapper.TmOrderMapper;
 import com.forest.namu.mapper.TmReviewMapper;
 
 
@@ -16,12 +17,12 @@ public class TmReviewServiceImpl implements TmReviewService {
 	@Autowired
 	private TmReviewMapper mapper;
 	
-	
+	@Autowired TmOrderMapper mapper2;
 	@Override
 	public void insertReview(TmReview dto) throws Exception {
 		try {
 			mapper.insertReview(dto);
-			
+			mapper2.updateReviewState(dto.getNum());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -30,10 +31,10 @@ public class TmReviewServiceImpl implements TmReviewService {
 	}
 
 	@Override
-	public void deleteReview(long num) throws Exception {
+	public void deleteReview(long applNum) throws Exception {
 		try {
 			
-			mapper.deleteReview(num);
+			mapper.deleteReview(applNum);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

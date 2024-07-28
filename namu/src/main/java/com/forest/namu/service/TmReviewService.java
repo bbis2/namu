@@ -17,5 +17,5 @@ public interface TmReviewService {
 	
 	public void updateReview(TmReview dto) throws Exception;
 	
-	public void deleteReview(long num) throws Exception;
+	public void deleteReview(long applNum) throws Exception;
 }
