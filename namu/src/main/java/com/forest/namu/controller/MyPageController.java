@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +17,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Badge;
 import com.forest.namu.domain.Delivery;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Point;
 import com.forest.namu.domain.Profile;
 import com.forest.namu.domain.SessionInfo;
+import com.forest.namu.domain.TmQuestion;
+import com.forest.namu.domain.TmReview;
 import com.forest.namu.domain.Url;
 import com.forest.namu.service.BadgeService;
 import com.forest.namu.service.DeliveryService;
 import com.forest.namu.service.MypageService;
 import com.forest.namu.service.PointService;
 import com.forest.namu.service.ScheduleService;
+import com.forest.namu.service.TmQuestionService;
+import com.forest.namu.service.TmReviewService;
 
 @Controller
 @RequestMapping("/mypage/*")
@@ -47,6 +53,15 @@ public class MyPageController {
 
 	@Autowired
 	private BadgeService bService;
+	
+	@Autowired
+	private TmReviewService tmReviewService;
+	
+	@Autowired
+	private TmQuestionService tmQuestionService;
+	
+	@Autowired
+	private MyUtil myUtil;
 
 	@GetMapping("list")
 	public String list(HttpSession session, Model model,Badge bto) throws Exception {
@@ -339,5 +354,7 @@ public class MyPageController {
 		model.put("Glist2", list2);
 		return model;
 	}
+	
+	
 
 }

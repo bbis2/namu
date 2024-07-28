@@ -21,9 +21,8 @@
 	</select>
 
 	<select id="listReview" parameterType="map" resultType="com.forest.namu.domain.TmReview">
-		SELECT pr.num, pr.userId, m.nickName, pr.score, review, answer, tboardNum,
-			TO_CHAR(reviewDate, 'YYYY-MM-DD') reviewDate, 
-			TO_CHAR(answerDate, 'YYYY-MM-DD') answerDate
+		SELECT pr.num, pr.userId, m.nickName, pr.score, review, tboardNum,
+			TO_CHAR(reviewDate, 'YYYY-MM-DD') reviewDate
 		FROM talentReview pr
 		JOIN member m ON pr.userId = m.userId 
 		WHERE pr.tboardNum = #{tboardNum} AND showReview = 1 AND locked = 0
@@ -48,39 +47,21 @@
 			<if test="userId != null">
 				userId = #{userId}
 			</if>
-			<if test="mode != null">
-				<if test="mode == 2">
-					AND ( answer IS NOT NULL )
-				</if>
-				<if test="mode == 3">
-					AND ( answer IS NULL )
-				</if>
-			</if>
 		</where>
 	</select>
 	
 	<select id="listReview2" parameterType="map" resultType="com.forest.namu.domain.TmReview">
-		SELECT pr.num, pr.userId, m.nickName, score, review, answer, pr.tboardNum,
-			showReview, locked, pr.reviewDate, pr.answerDate, 
-			p.subject, op.optionValue, op2.optionValue optionValue2
-		FROM talentReview pr
-		JOIN member m ON pr.userId = m.userId 
-		JOIN TMPURCHASEREQUEST td ON pr.userId = td.userId
-		JOIN talentMarket p ON p.tboardNum = td.tboardNum
-		LEFT OUTER JOIN optionDetail op ON td.detailNum = op.detailNum
-		LEFT OUTER JOIN optionDetail op2 ON td.detailNum2 = op2.detailNum		
-		
+			SELECT DISTINCT pr.num, pr.userId, m.nickName, pr.score, pr.review, pr.tboardNum,
+			       pr.showReview, pr.locked, pr.reviewDate,
+			       p.subject, td.optionValue, td.optionValue2
+			FROM TALENTREVIEW pr
+			JOIN MEMBER m ON pr.userId = m.userId 
+			JOIN TMORDER td ON pr.userId = td.userId
+			JOIN TALENTMARKET p ON p.tboardNum = td.tboardNum
+
 		<where>
 			<if test="userId != null">
 				pr.userId = #{userId}
-			</if>
-			<if test="mode != null">
-				<if test="mode == 2">
-					AND ( answer IS NOT NULL )
-				</if>
-				<if test="mode == 3">
-					AND ( answer IS NULL )
-				</if>
 			</if>
 		</where>
 		ORDER BY reviewDate DESC

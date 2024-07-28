@@ -37,6 +37,12 @@
 		WHERE applNum = #{applNum}
 	</update>
 	
+	<update id="updateReviewState0" parameterType="long">
+		UPDATE tmOrder
+		SET reviewState=0
+		WHERE applNum = #{applNum}
+	</update>
+	
 	<delete id="deleteTmOrder" parameterType="long">
 		DELETE FROM tmOrder WHERE applNum=#{applNum}
 	</delete>

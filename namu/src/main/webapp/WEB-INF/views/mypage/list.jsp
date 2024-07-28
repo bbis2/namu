@@ -63,6 +63,7 @@
 	height: 30px;
 }
 
+
 .btn-user {
 	width: 50%;
 	height: 100%;
@@ -456,11 +457,64 @@ h1 {
 				</div>
 			</div>
 		</div>
+		
+		<div class="row">
+			<div class="col-sm-3">
+				<!-- 빈 열을 추가하여 정렬 보정 -->
+			</div>
+			<div class="col-sm-8">
+				<h4>재능마켓</h4>
+				<div class="box custom-margin-top4"
+					style="display: flex; border: none;">
+					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
+						<!-- 왼쪽 영역 -->
+						 <a href="#" class="link-block" onclick="openQuestionModal();"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
+							&nbsp;나의 구매목록
+						</a><a class="link-block" onclick="questionModal();"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
+							&nbsp;내 상품 문의
+						</a>
+					</div>
+					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
+						<!-- 오른쪽 영역 -->
+						<a href="#" class="link-block changeSain" id="changeSain"
+							onclick="opentalentModal();"> <img class="icons"
+							src="${pageContext.request.contextPath}/resources/images/talent2.png">
+							&nbsp;나의리뷰/문의
+						</a>
+						 <a class="link-block" onclick="changeMent();"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
+							&nbsp;소개글 추가
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 </div>
 
-
+<div class="modal fade" id="contentModal" tabindex="-1" aria-labelledby="contentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contentModalLabel">Question & Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <jsp:include page="review.jsp" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
 
 <div class="modal fade" id="changePhoto" tabindex="-1"
 	aria-labelledby="changePhotoLabel" aria-hidden="true">
@@ -901,6 +955,10 @@ function photoInsert(){
 	    f.action = "${pageContext.request.contextPath}/mypage/insertPhoto";
 	    f.submit();
 	    
+}
+
+function opentalentModal() {
+	$('#contentModal').modal('show');
 }
 
 function changePhoto(){

@@ -35,7 +35,7 @@ public class TmReviewServiceImpl implements TmReviewService {
 		try {
 			
 			mapper.deleteReview(applNum);
-			
+			mapper2.updateReviewState0(applNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
