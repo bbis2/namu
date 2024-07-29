@@ -93,9 +93,6 @@ $(function(){
 	
 			<ul class="sub_menu">
 				<li class="sub_menu--item">
-					<a href="<c:url value='/admin/'/>" class="sub_menu--link">접속자</a>
-				</li>
-				<li class="sub_menu--item">
 					<a href="<c:url value='/admin/analysis/point'/>" class="sub_menu--link">포인트</a>
 				</li>
 				<li class="sub_menu--item">
