@@ -192,11 +192,16 @@ textarea.form-control {
     cursor: pointer;
     color: white;
 }
+.thumb img {
+    width: 100%; /* 부모 요소의 너비에 맞춤 */
+    height: 400px; /* 원하는 높이로 설정 */
+    object-fit: cover; /* 이미지 비율을 유지하며 크기에 맞게 자르기 */
+}
 
 .apply{
     border-radius: 30px;
 	height: 50px;
-	width: 450px;
+	width: 100%;
 	border: none;
 	background-color: #A4B974;
 	color: #fff;
@@ -418,6 +423,20 @@ textarea::placeholder{
       cursor: pointer;
       margin-left: 8px;
   }
+  
+
+.main-image {
+    width: 100%;
+    height: 300px; /* 원하는 높이로 설정하세요 */
+    object-fit: cover; /* 이미지 비율을 유지하며 크기에 맞게 자릅니다 */
+}
+
+.post-image img {
+    width: 100%;
+    height: 200px; /* 원하는 높이로 설정하세요 */
+    object-fit: cover; /* 이미지 비율을 유지하며 크기에 맞게 자릅니다 */
+}
+
 </style>
 
 

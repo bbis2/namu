@@ -46,14 +46,10 @@
 	</div>
 	<div class="col-md-8">
 		<div class="post">
-		    <h3>${dto.nickName}</h3>
+		    <h2>${dto.nickName}</h2>
 		    <p>${dto.regDate}</p>
 		    <p>${dto.content}</p>
 		
-		    <form class="comment-form" >
-		        <input type="text" placeholder="댓글을 달아보세요" />
-		        <button type="button"  class="btn togetherBoardOk">등록</button>
-		    </form>
 		</div>
 			<div class="mt-2 articleBoardReply"></div>
 	</div>

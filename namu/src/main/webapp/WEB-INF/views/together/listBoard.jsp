@@ -19,7 +19,7 @@
 	            ${vo.content}
         	</div>
         	<div class="right col col-3">
-		        <div class="post-image">
+		        <div class="post-image" style="width: 70%; height: 70%;" >
 					<c:choose>
 						<c:when test="${not empty vo.listFilename}">
 							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.listFilename[0]}" >
