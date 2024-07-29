@@ -1433,4 +1433,12 @@ select regDate,pointVar,description,currentpoint,lastMoney,userName from point p
 JOIN memberdetail md on md.userId = p.userId
 where p.userId=#{userId} order by regDate
 </select>
+
+<select id="pointSeoul" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '서울' AND pointcate = 0
+</select>
+
 </mapper>

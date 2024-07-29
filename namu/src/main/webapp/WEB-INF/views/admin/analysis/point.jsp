@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+
 <style type="text/css">
     .chart-container {
         width: 100%; /* 부모 컨테이너의 너비에 맞게 */
@@ -124,7 +125,7 @@
             <!-- 두 번째 줄: 큰 카드 섹션 2개 -->
             <div class="card-container">
                 <div class="large-card card">
-                    <div class="card-header">전체 포인트 대비 환불 포인트 도넛</div>
+                    <div class="card-header">전체 포인트 대비 환불 포인트</div>
                     <div class="card-body">
                         <div style="margin-bottom: 1rem;">
                             <label for="chartSelect">차트 선택:</label>
@@ -140,15 +141,15 @@
                             <!-- 차트가 표시될 영역 -->
                         </div>
                     </div>
-                    <div class="card-footer">설명 1</div>
+                    <div class="card-footer">충전 포인트/환불 포인트</div>
                 </div>
 
                 <div class="large-card card">
-                    <div class="card-header">큰 카드 2</div>
+                    <div class="card-header">적립포인트 대비 충전 포인트</div>
                     <div class="card-body">
                         <div id="largeCard2" style="width: 100%; height: 400px;"></div>
                     </div>
-                    <div class="card-footer">설명 2</div>
+                    <div class="card-footer">충전 포인트/적립 포인트</div>
                 </div>
             </div>
 
@@ -197,9 +198,10 @@
 <div id="selectAllModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header d-flex justify-content-between">
         <h5 class="modal-title">사용자 포인트 정보</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <!--  <button type="button" class="btn btn-primary btn-close ml-auto" data-dismiss="modal" aria-label="Close"> 모달창 </button> -->
+
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -223,6 +225,7 @@
     </div>
   </div>
 </div>
+
 
 
 <c:forEach var="dto2" items="${list}">
@@ -458,9 +461,27 @@
             });
         }
     });
+	
+    let userPointsTable; // 전역 변수로 선언
+
+    function initializeDatatable() {
+        const selectAllTable = document.getElementById('selectAllTable');
+        if (selectAllTable) {
+            if (userPointsTable) {
+                userPointsTable.update(); // 데이터 변경 시 테이블 업데이트
+            } else {
+                userPointsTable = new simpleDatatables.DataTable(selectAllTable, {
+                    perPage: 5,
+                    perPageSelect: [5, 10, 20],
+                    sortable: true,
+                    searchable: true
+                });
+            }
+        }
+    }
 
     function viewUser(userId) {
-        let url = `${pageContext.request.contextPath}/admin/analysis/userPoint?userId=`+userId;
+        let url = `${pageContext.request.contextPath}/admin/analysis/userPoint?userId=` + userId;
         let query = "";
 
         const fn = function(data) {
@@ -479,15 +500,10 @@
                 }
 
                 // 테이블의 tbody에 데이터를 추가합니다.
-                $('#selectAllModal tbody').html(htmlContent);
+                $('#selectAllTable tbody').html(htmlContent);
 
-                // `simpleDatatables`를 초기화합니다.
-                new simpleDatatables.DataTable(datatablesSimple, {
-                    perPage: 5, // 한 페이지에 표시할 행 수
-                    perPageSelect: [5, 10, 20], // 페이지당 선택 가능한 옵션
-                    sortable: true, // 열 정렬 가능
-                    searchable: true // 검색 기능
-                });
+                // `simpleDatatables` 초기화 또는 업데이트
+                initializeDatatable();
 
                 // 모달을 표시합니다.
                 $('#selectAllModal').modal('show');

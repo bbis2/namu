@@ -207,7 +207,7 @@ public class DelieveryController {
 	}
 
 	@GetMapping("article")
-	public String article(@RequestParam long num, @RequestParam String page,
+	public String article(@RequestParam long num, @RequestParam(defaultValue = "1") String page,
 			@RequestParam(defaultValue = "all") String schType, @RequestParam(defaultValue = "") String kwd,
 			HttpSession session, Delivery dto2, Model model) throws Exception {
 
