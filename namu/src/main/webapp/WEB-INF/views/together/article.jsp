@@ -490,7 +490,7 @@ textarea::placeholder{
 
 <style>
 .boardList {
-    background-color: #f8f9fa;
+    background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -540,6 +540,29 @@ textarea::placeholder{
     justify-content: center;
     align-items: center;
 } 
+
+.modal-lg {
+    max-width: 90% !important;
+}
+
+.modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 1rem);
+}
+
+.modal-content {
+    width: 100%;
+    height: auto;
+    max-width: 800px; /* 원하는 최대 너비 설정 */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-body {
+    overflow-y: auto;
+    max-height: 80vh; /* 모달의 최대 높이 설정 */
+}
 </style>
 
 <script type="text/javascript">
@@ -791,7 +814,7 @@ textarea::placeholder{
 <!-- 여기는 #2에서의 모달창 띄우는 부분!  -->
 <div class="modal fade" id="freeBoardModal" tabindex="-1" 
 		data-bs-backdrop="static" data-bs-keyboard="false"
-		aria-labelledby="freeBoardModalLabel" aria-hidden="true">
+		aria-labelledby="freeBoardModalLabel" aria-hidden="true" data-num="">
 	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 800px;">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -1009,6 +1032,7 @@ $(function(){
     	if(tab == "2") {
     		listTogetherNotice(1);
     	} else if(tab == "3") {
+    		$('.img-grid .img-item').remove();
     		listTogetherBoard(1);
     	}
     });
@@ -1067,27 +1091,21 @@ function listTogetherNotice(page) {
 	ajaxFun(url, 'get', query, 'text', fn);
 }
 
-//#1 공지사항 삭제
-$(function(){
-    $('.post-list').on('click', '.btndeleteNoticeList', function(){
-        if(!confirm('게시물을 삭제하시겠습니까?')) {
-            return false;
-        }
 
-        let noticeNum = $(this).data('num');
-        let url = '${pageContext.request.contextPath}/togetherNotice/deleteNotice';
-        let query = 'num=' + noticeNum;
 
-        const fn = function(data){
-            if(data.state === 'success') {
-                listTogetherNotice(page);
-            } else {
-                alert('게시물 삭제에 실패했습니다.');
-            }
-        };
-
-        ajaxFun(url, 'post', query, 'json', fn);
-    });
+//공지사항 삭제
+$('.listNotice').on('click', '.btnDeleteNoticeList', function() {
+	const num = this.dataset.num;
+	const url = '${pageContext.request.contextPath}/togetherNotice/deleteNotice';
+	let query = 'num=' + num;
+	
+	const fn = function(data) {
+		if (data.state === 'true') {
+			listTogetherNotice(1);
+		}
+	}
+	
+	ajaxFun(url, 'post', query, 'json', fn);
 });
 
 </script>
@@ -1205,6 +1223,7 @@ $(function(){
 		const fn = function(data) {
 			if(data.state === "true") {
 				f.reset();	//ㅇㅣ ㅁ ㅣ ㅈ ㅣ 지우기는 천천구다사이~!하있 ^^
+				$('.img-grid .img-item').remove();
 				listTogetherBoard(1);
 			}
 		};
@@ -1218,16 +1237,19 @@ $(function(){
 // # 모달 창
 
 $(function(){
-	// 상세보기  => 중요한 것은! 여기는 전부 num을 넘겨 받아야함. tNum 아님! 
+	// 함께해요의 상세보기  => 중요한 것은! 여기는 전부 num을 넘겨 받아야함. tNum 아님! 
 	$(".tab-content").on("click", ".btn-freeboard-detail", function(){
 		let num = $(this).attr("data-num");
 		const url = '${pageContext.request.contextPath}/togetherBoard/article'; 
 		let query = "num="+num; 
 		const fn = function(data) {
-			console.log(data);
+			// console.log(data);
+			$("#freeBoardModal").attr("data-num", num);
 			$("#freeBoardModal .modal-body").html(data) // 이 부분이 모달창 부분 jsp 넘겨 받는 부분.
 			
 			$('#freeBoardModal').modal('show');
+			
+			listTogetherBoardReply(1);
 		};
 		
 		ajaxFun(url, "get", query, "text", fn);
@@ -1238,6 +1260,53 @@ $(function(){
 
 
 // #Q. 댓글 등록하기
+// 함께해요의 댓글을 등록하는 함수
+ $(function() {
+    $('#freeBoardModal .modal-body').on('click', '.togetherBoardOk', function() {
+        const f = this.closest('form'); 
+        
+        const num = f.num.value;
+        const content = f.content.value;
+
+        const query = {
+			num: num,
+			content: content
+        }
+        
+        const url = '${pageContext.request.contextPath}/togetherBoard/insertReply'; 
+        
+        const fn = function(data) { 
+            f.content.value = '';     // content의 값을 비워줌
+            
+             let state = data.state;    
+             if (state === 'true') {
+                 listTogetherBoardReply(1);
+             } else if (state === 'false') {
+                 alert('공지사항을 추가하지 못했습니다.');
+             }
+        }
+        
+        ajaxFun(url, 'post', query, 'json', fn);
+    });
+});
+
+// #함께해요의 댓글을 가져오는 함수
+function listTogetherBoardReply(page) {
+    let url = '${pageContext.request.contextPath}/togetherBoard/listReply';
+    // 함께해요 글의 번호가 계속 바뀌기 때문에, 댓글을 표시하기 위해서는 글의 번호를 동적으로 바꿔줘야 함
+    const f = document.querySelector('form[name=comment-form]');
+    const num = $("#freeBoardModal").attr("data-num");
+
+  	let query = 'num=' + num + '&pageNo=' + page;
+    let selector = '.articleBoardReply';
+
+    const fn = function(data) {
+        $(selector).html(data);
+    };
+
+    ajaxFun(url, 'get', query, 'text', fn);
+}
+
 
 </script>
 

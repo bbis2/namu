@@ -261,9 +261,13 @@ public class TogetherBoardServiceImpl implements TogetherBoardService {
 	}
 
 	@Override
-	public void deleteTogetherBoardFile(long fileNum) throws Exception {
+	public void deleteTogetherBoardFile(long fileNum, String pathname) throws Exception {
 		
 		try {
+			if (pathname != null) {
+				fileManager.doFileDelete(pathname);
+			}
+			
 			mapper.deleteTogetherBoardFile(fileNum);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -296,6 +300,7 @@ public class TogetherBoardServiceImpl implements TogetherBoardService {
 		}
 		return dto;
 	}
+
 
 
 

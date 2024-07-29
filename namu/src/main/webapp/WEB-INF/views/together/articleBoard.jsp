@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div class="row articleBoard">
-	<div class="row-md-6" >
+	<div class="row" >
 		<div id="carouselArticleBoardIndicators" class="carousel slide">
 			<div class="carousel-indicators">
                 <c:if test="${listFile.size() == 0}">
@@ -43,17 +43,21 @@
 			</button>
 		</div>
 	</div>
-	<div class="row-md-6" >
+	<div class="row" >
 		<div class="post">
 		    <h2>${dto.nickName}</h2>
 		    <p>${dto.regDate}</p>
 		    <p>${dto.content}</p>
 		    
-		    <form class="comment-form" >
-		        <input type="text" placeholder="댓글을 달아보세요" />
+		    <form class="comment-form" name="comment-form">
+		        <input type="text" name="content" placeholder="댓글을 달아보세요" />
 		        <button type="button"  class="btn togetherBoardOk">등록</button>
+		        <input type="hidden" name="num" value="${dto.num}"/>
 		    </form>
+			<div class="mt-2 articleBoardReply">
+			
+			</div>
 		</div>
-			<div class="mt-2 articleBoardReply"></div>
+
 	</div>
 </div>

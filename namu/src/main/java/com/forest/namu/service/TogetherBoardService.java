@@ -22,7 +22,7 @@ public interface TogetherBoardService {
 	// 파일
 	public void insertTogetherBoardFile(TogetherBoard dto) throws Exception;
 	public List<TogetherBoard> listTogetherBoardFile(long num);
-	public void deleteTogetherBoardFile(long fileNum) throws Exception;
+	public void deleteTogetherBoardFile(long fileNum, String pathname) throws Exception;
 	public TogetherBoard findByFileId(long num) throws Exception;
 	
     

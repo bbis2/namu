@@ -114,5 +114,4 @@ public class TogetherNoticeController {
 		return map;
 	}	
 
-
 }

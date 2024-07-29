@@ -123,8 +123,39 @@ public class TogetherBoardController {
 		
 	}
 	
+	@GetMapping("deleteBoard")
+	public String delete (@RequestParam long num, 
+			@RequestParam String page,
+			HttpSession session) throws Exception {
+		
+		String query = "page=" + page;
+		
+		service.deleteTogetherBoard(num, query);
+		
+		return "redirect:/daily/list?" +query;
+	}
 	
 	
+	@PostMapping("deleteFile")
+	@ResponseBody
+	public Map<String, Object> deleteFile(@RequestParam long fileNum, 
+			@RequestParam String filename,
+			HttpSession session) throws Exception {
+
+		String state = "true";
+		try {
+			String root = session.getServletContext().getRealPath("/");
+			String pathname = root + "uploads" + File.separator + "product" + File.separator + filename;
+
+			service.deleteTogetherBoardFile(fileNum,pathname);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		return model;
+	}
 
 	@GetMapping("listReply")
 	public String listReply(@RequestParam long num, 
@@ -158,7 +189,7 @@ public class TogetherBoardController {
 		
 		List<BoardReply> listReply = service.listReply(map);
 
-		String paging = myUtil.pagingMethod(current_page, total_page, "listPage");
+		String paging = myUtil.pagingMethod(current_page, total_page, "listTogetherBoardReply");
 
 		// 포워딩할 jsp로 넘길 데이터
 		model.addAttribute("listReply", listReply);
@@ -167,7 +198,7 @@ public class TogetherBoardController {
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("paging", paging);
 
-		return "together/listReply";
+		return "together/articleBoardReply";
 	}
 	
 	@PostMapping("insertReply")

@@ -19,7 +19,7 @@
                         <i class='bi bi-three-dots-vertical'></i>
                     </button>
                     <div class="dropdown-menu">
-                        <button class="dropdown-item btndeleteNoticeList" type="button" data-num="${vo.num}">삭제</button>
+                        <button class="dropdown-item btnDeleteNoticeList" type="button" data-num="${vo.num}">삭제</button>
                     </div>
                 </div>
             </div>

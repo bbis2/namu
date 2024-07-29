@@ -34,7 +34,8 @@
         </div>
         <div class="post-footer" align='right'>
             <div >
-                <button type="button"  class='btn' style="background-color: #564838;"><i class="bi bi-chat-heart"></i></button>
+          		<button type="button"  class='btn deleteBoard()' style="background-color: #564838;"><i class="bi bi-trash"></i></button>
+                <button type="button"  class='btn' style="background-color: #564838;"><i class="bi bi-person-hearts"></i></button>
                 <button type="button" class='btn' style="background-color: #564838;"><i class="bi bi-chat-dots"></i></button>                
             </div>
         </div>

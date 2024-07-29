@@ -97,6 +97,7 @@
 	<select id="replyCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*),0)
 		FROM freeBoardReply
+		WHERE num=#{num}
 	</select>
 	
 	
@@ -119,6 +120,7 @@
 	        FROM freeBoardReplyLike
 	        GROUP BY rNum
 	    ) c ON r.rNum = c.rNum
+	    WHERE r.num=#{num}
 	    ORDER BY r.rNum DESC
 	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
