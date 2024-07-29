@@ -844,7 +844,7 @@ $(function(){
 	                            </div>
 	                            <div class="d-flex justify-content-between">
 	                            <div class="rating">
-	                                <span>★ ${dto.score}(${dto.reviewCount})</span> 
+	                              <p>★ ${dto.score}(${dto.reviewCount})</p> 
 	                            </div>
 	                            <div class="hitCount">
 	                            	<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>

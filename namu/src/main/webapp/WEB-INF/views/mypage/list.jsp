@@ -998,11 +998,11 @@ function purchaseListModal() {
                 }
 
                 if (order.reviewState === 0 && order.completionDate !== null) {
-                    htmlContent += '<td><button class="btn btn-secondary" onclick="registerReview(' + order.applNum + ')">리뷰 등록</button></td>';
+                    htmlContent += '<td><button class="btn btn-secondary" onclick="registerReview(' + order.tboardNum + ')">리뷰 등록</button></td>';
                 } else if (order.reviewState === 1) {
                     htmlContent += '<td>리뷰 등록 완료</td>';
                 } else {
-                    htmlContent += '<td></td>'; // 리뷰 상태가 정의되지 않은 경우 빈 칸
+                    htmlContent += '<td></td>'; 
                 }
 
                 htmlContent += '</tr>';
@@ -1020,12 +1020,33 @@ function purchaseListModal() {
 
 // 구매확정 버튼 클릭 시 호출되는 함수
 function confirmPurchase(applNum) {
-    alert("구매번호 " + applNum + " 구매를 확정합니다.");
+    // 확인 메시지 표시
+    if (!confirm("구매번호 " + applNum + " 구매를 확정하시겠습니까?")) {
+        return; // 사용자가 취소를 누른 경우
+    }
+
+    let url = '${pageContext.request.contextPath}/mypage/confirmed';
+    let method = 'POST';
+    let formData = { num: applNum };
+    let dataType = 'json';
+
+    
+    ajaxFun(url, method, formData, dataType, function(response) {
+        if (response.state === "true") {
+            alert("구매 확정이 완료되었습니다.");
+
+            purchaseListModal();
+        } else {
+            alert("구매 확정에 실패했습니다. 다시 시도해주세요.");
+        }
+    });
 }
 
-// 리뷰 등록 버튼 클릭 시 호출되는 함수
-function registerReview(applNum) {
-    alert("구매번호 " + applNum + " 리뷰를 등록합니다.");
+
+function registerReview(tboardNum) {
+	let contextPath = '${pageContext.request.contextPath}';
+	let url = contextPath + '/talent/article?num=' + tboardNum;
+	window.location.href = url;
 }
 
 function photoInsert(){

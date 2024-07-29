@@ -63,7 +63,7 @@ public class MyPageController {
 	private TmQuestionService tmQuestionService;
 	
 	@Autowired
-	private TmOrderService tmOderService;
+	private TmOrderService tmOrderService;
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -367,7 +367,7 @@ public class MyPageController {
 		String state = "true";
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		List<TmOrder> tmoderList = tmOderService.listTmOrderByUserIdAll(info.getUserId());
+		List<TmOrder> tmoderList = tmOrderService.listTmOrderByUserIdAll(info.getUserId());
 
 		if (tmoderList.isEmpty()) {
 			state = "false";
@@ -377,6 +377,22 @@ public class MyPageController {
 		model.put("state", state);
 		model.put("tmoderList", tmoderList);
 
+		return model;
+	}
+	
+	@PostMapping("confirmed")
+	@ResponseBody
+	public Map<String, Object> confirmedDate(@RequestParam long num) throws Exception{
+		String state = "true";
+		try {
+			tmOrderService.updateComplete(num);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		model.put("state", state);
 		return model;
 	}
 

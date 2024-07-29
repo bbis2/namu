@@ -17,7 +17,9 @@ public class TmReviewServiceImpl implements TmReviewService {
 	@Autowired
 	private TmReviewMapper mapper;
 	
-	@Autowired TmOrderMapper mapper2;
+	@Autowired 
+	private TmOrderMapper mapper2;
+	
 	@Override
 	public void insertReview(TmReview dto) throws Exception {
 		try {

@@ -35,7 +35,7 @@
 	
 	<update id="updateComplete" parameterType="long">
 		UPDATE tmOrder
-		SET state=1
+		SET completionDate=SYSDATE
 		WHERE applNum = #{applNum}
 	</update>
 	
