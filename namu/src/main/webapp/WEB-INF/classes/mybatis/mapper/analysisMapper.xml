@@ -1315,4 +1315,122 @@ FROM (
     WHERE SUBSTR(town, 1, 2) = '제주'
 )
 </select>
+
+<select id="allPoint" resultType="long">
+SELECT SUM(latest_money) AS totalMoney
+FROM (
+    SELECT p1.userId, p1.lastMoney AS latest_money
+    FROM point p1
+    INNER JOIN (
+        SELECT userId, MAX(regDate) AS max_regDate
+        FROM point
+        GROUP BY userId
+    ) p2
+    ON p1.userId = p2.userId
+    AND p1.regDate = p2.max_regDate
+)
+</select>
+
+<select id="totalRefund" resultType="long">
+SELECT SUM(pointvar) AS totalRefund
+FROM point
+WHERE description = '환불 완료'
+</select>
+
+<select id="sumedMoney" resultType="com.forest.namu.admin.domain.Analysis">
+WITH week_start_dates AS (
+    SELECT TRUNC(SYSDATE, 'IW') - (LEVEL - 1) * 7 AS start_of_week,
+           TRUNC(SYSDATE, 'IW') - (LEVEL - 2) * 7 - 1 AS end_of_week
+    FROM dual
+    CONNECT BY LEVEL &lt;= 7
+),
+weekly_points AS (
+    SELECT
+        TRUNC(regDate, 'IW') AS start_of_week,
+        SUM(currentPoint) AS weekly_total
+    FROM point
+    WHERE regDate &gt;= TRUNC(SYSDATE) - 7 * 7
+    AND regDate &lt; TRUNC(SYSDATE) + 1
+    GROUP BY TRUNC(regDate, 'IW')
+)
+SELECT
+    TO_CHAR(w.start_of_week, 'YYYY-IW') AS week_start_date,
+    NVL(SUM(wp.weekly_total) OVER (ORDER BY w.start_of_week ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 0) AS sumedMoney
+FROM week_start_dates w
+LEFT JOIN weekly_points wp ON w.start_of_week = wp.start_of_week
+ORDER BY w.start_of_week
+
+</select>
+
+<select id="sumedMoneyMonth" resultType="com.forest.namu.admin.domain.Analysis">
+WITH month_start_dates AS (
+    SELECT ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -(LEVEL - 1)) AS start_of_month,
+           ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -LEVEL) - 1 AS end_of_month
+    FROM dual
+    CONNECT BY LEVEL &lt;= 7
+),
+monthly_points AS (
+    SELECT
+        TRUNC(regDate, 'MM') AS start_of_month,
+        SUM(currentPoint) AS monthly_total
+    FROM point
+    WHERE regDate &gt;= ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -7)
+    AND regDate &lt; TRUNC(SYSDATE) + 1
+    GROUP BY TRUNC(regDate, 'MM')
+)
+SELECT
+    TO_CHAR(m.start_of_month, 'YYYY-MM') AS month_start_date,
+    NVL(SUM(mp.monthly_total) OVER (ORDER BY m.start_of_month ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 0) AS sumedMoney
+FROM month_start_dates m
+LEFT JOIN monthly_points mp ON m.start_of_month = mp.start_of_month
+ORDER BY m.start_of_month
+</select>
+
+<select id="refundALl" resultType="long">
+select sum(pointvar)allRefund from point where description = '환불 완료'
+</select>
+
+<select id="chargeAll" resultType="long">
+select sum(pointvar)allCharge from point where pointcate = 0
+</select>
+
+<select id="selectUser" resultType="com.forest.namu.admin.domain.Analysis">
+WITH LatestPoints AS (
+    SELECT
+        p.userId,
+        NVL(p.lastMoney, 0) AS lastMoney
+    FROM
+        point p
+    JOIN (
+        SELECT
+            userId,
+            MAX(regDate) AS maxRegDate
+        FROM
+            point
+        GROUP BY
+            userId
+    ) latest ON p.userId = latest.userId AND p.regDate = latest.maxRegDate
+)
+
+SELECT
+    m.memberIdx,
+    m.userId,
+    md.userName,
+    COALESCE(lp.lastMoney, 0) AS lastMoney
+FROM
+    member m
+JOIN
+    memberdetail md ON md.userId = m.userId
+LEFT JOIN
+    LatestPoints lp ON lp.userId = m.userId
+ORDER BY
+    lastMoney DESC
+
+</select>
+
+<select id="selectPoint" parameterType="String" resultType="com.forest.namu.admin.domain.Analysis">
+select regDate,pointVar,description,currentpoint,lastMoney,userName from point p
+JOIN memberdetail md on md.userId = p.userId
+where p.userId=#{userId} order by regDate
+</select>
 </mapper>

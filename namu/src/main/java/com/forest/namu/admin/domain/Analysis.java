@@ -23,7 +23,90 @@ public class Analysis {
 	private String tablename;
 	private String nickname;
 	private long total_count;
+	private long sumedMoney;
 	
+	private long allRefund;
+	private long allCharge;
+	
+	private long memberIdx;
+	private String userId;
+	private String userName;
+	private String regDate;
+	private long pointVar;
+	private long currentPoint;
+	private String description;
+	
+	public String getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+	public long getPointVar() {
+		return pointVar;
+	}
+	public void setPointVar(long pointVar) {
+		this.pointVar = pointVar;
+	}
+	public long getCurrentPoint() {
+		return currentPoint;
+	}
+	public void setCurrentPoint(long currentPoint) {
+		this.currentPoint = currentPoint;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public long getMemberIdx() {
+		return memberIdx;
+	}
+	public void setMemberIdx(long memberIdx) {
+		this.memberIdx = memberIdx;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public long getLastMoney() {
+		return lastMoney;
+	}
+	public void setLastMoney(long lastMoney) {
+		this.lastMoney = lastMoney;
+	}
+	private long lastMoney;
+	
+	public long getAllCharge() {
+		return allCharge;
+	}
+	public void setAllCharge(long allCharge) {
+		this.allCharge = allCharge;
+	}
+	private long totalMoney;
+	private long totalRefund;
+	
+	public long getTotalMoney() {
+		return totalMoney;
+	}
+	public void setTotalMoney(long totalMoney) {
+		this.totalMoney = totalMoney;
+	}
+	public long getTotalRefund() {
+		return totalRefund;
+	}
+	public void setTotalRefund(long totalRefund) {
+		this.totalRefund = totalRefund;
+	}
 	public String getTablename() {
 		return tablename;
 	}
@@ -164,6 +247,18 @@ public class Analysis {
 	}
 	public void setTotal_count(long total_count) {
 		this.total_count = total_count;
+	}
+	public long getSumedMoney() {
+		return sumedMoney;
+	}
+	public void setSumedMoney(long sumedMoney) {
+		this.sumedMoney = sumedMoney;
+	}
+	public long getAllRefund() {
+		return allRefund;
+	}
+	public void setAllRefund(long allRefund) {
+		this.allRefund = allRefund;
 	}
 	
 }

@@ -1,18 +1,26 @@
 package com.forest.namu.admin.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.admin.domain.Analysis;
 import com.forest.namu.admin.service.AnalysisService;
 import com.forest.namu.common.MyUtil;
+import com.forest.namu.domain.Point;
+import com.forest.namu.domain.SessionInfo;
 
 @Controller
 @RequestMapping("/admin/analysis/*")
@@ -125,6 +133,56 @@ public class AnalysisController {
 		
 		
 		return ".admin.analysis.page3";
+	}
+	
+	@RequestMapping("point")
+	public String point(HttpServletRequest req,
+			Analysis dto,
+			Model model){
+		
+		try {
+			List<Analysis> list = service.sumedMoney();
+			List<Analysis> list2 = service.sumedMoneyMonth();
+			List<Analysis> list3 = service.selectUser();
+			long totalMoney = service.allPoint();
+			long totalRefund = service.totalRefund();
+			
+			long allCharge = service.chargeAll();
+			long allRefund = service.refundALl();
+			
+			model.addAttribute("allCharge",allCharge);
+			model.addAttribute("allRefund",allRefund);
+			model.addAttribute("list",list);
+			model.addAttribute("list2",list2);
+			model.addAttribute("list3",list3);
+			model.addAttribute("totalMoney",totalMoney);
+			model.addAttribute("totalRefund",totalRefund);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return ".admin.analysis.point";
+	}
+	
+	@GetMapping("userPoint")
+	@ResponseBody
+	public Map<String, Object> selectAll(HttpSession session,
+			@RequestParam String userId) throws Exception {
+
+		String state = "true";
+
+		List<Analysis> listAll = service.selectPoint(userId);
+
+		if (listAll.isEmpty()) {
+			state = "false";
+		}
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("listAll", listAll);
+
+		return model;
 	}
 
 }

@@ -33,4 +33,16 @@ public interface AnalysisMapper {
 	public long selectGyeongnam()throws Exception;
 	public long selectJeju()throws Exception;
 	
+	
+	public long allPoint()throws Exception;
+	public long totalRefund()throws Exception;
+	public List<Analysis> sumedMoney()throws Exception;
+	public List<Analysis> sumedMoneyMonth()throws Exception;
+	
+	public long refundALl()throws Exception;
+	public long chargeAll()throws Exception;
+	
+	public List<Analysis> selectUser()throws Exception;
+	
+	public List<Analysis>selectPoint(String userId)throws Exception;
 }

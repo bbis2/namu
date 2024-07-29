@@ -272,4 +272,92 @@ public class AnalysisServiceImpl implements AnalysisService {
 		return result;
 	}
 
+	@Override
+	public long allPoint() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.allPoint();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long totalRefund() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.totalRefund();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Analysis> sumedMoney() throws Exception {
+		List<Analysis> list = null;
+		try {
+			list = mapper.sumedMoney();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<Analysis> sumedMoneyMonth() throws Exception {
+		List<Analysis> list = null;
+		try {
+			list = mapper.sumedMoneyMonth();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public long refundALl() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.refundALl();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long chargeAll() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.chargeAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Analysis> selectUser() throws Exception {
+		List<Analysis> list = null;
+		try {
+			list = mapper.selectUser();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<Analysis> selectPoint(String userId) throws Exception {
+		List<Analysis> list = null;
+		try {
+			list = mapper.selectPoint(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 }
