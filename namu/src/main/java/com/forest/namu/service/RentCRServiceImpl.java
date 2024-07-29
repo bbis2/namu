@@ -242,5 +242,15 @@ public class RentCRServiceImpl implements RentCRService {
 
         return change;
     }
+
+	@Override
+	public String getEmailByRentNum(long rentNum) throws Exception {
+		return mapper.getEmailByRentNum(rentNum);
+	}
+
+	@Override
+	public String getEmailByReqNum(long reqNum) throws Exception {
+		return mapper.getEmailByReqNum(reqNum);
+	}
     
 }

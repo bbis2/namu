@@ -2,6 +2,20 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.forest.namu.mapper.RentCRMapper">
+
+	<select id="getEmailByRentNum" parameterType="Long" resultType="String">
+		SELECT md.email
+		FROM rent r
+		JOIN memberDetail md ON r.userId = md.userId
+		WHERE r.rentNum = #{rentNum}
+	</select>
+
+	<select id="getEmailByReqNum" parameterType="Long" resultType="String">
+		SELECT md.email
+		FROM rentConfirm rc
+		JOIN memberDetail md ON rc.userId = md.userId
+		WHERE r.reqNum = #{reqNum}
+	</select>
 	
     <!-- 1: 대기중, 2: 수락 상태만 체크 -->
     <select id="checkRentOverlap" parameterType="map" resultType="int">

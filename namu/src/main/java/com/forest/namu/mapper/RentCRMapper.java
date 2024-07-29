@@ -42,4 +42,7 @@ public interface RentCRMapper {
 	public int selectRentReviewCount(long rentNum); // 리뷰 개수 가져오기
 	// 리뷰 가져오기
 	public List<Map<String, Object>> selectRentReviews(@Param("rentNum") long rentNum, @Param("offset") int offset, @Param("pageSize") int pageSize);
+	
+	public String getEmailByRentNum(long rentNum) throws SQLException; // 글쓴이 이메일 가져오기
+	public String getEmailByReqNum(long reqNum) throws SQLException; // 신청자 이메일 가져오기
 }

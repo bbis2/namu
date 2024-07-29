@@ -26,4 +26,6 @@ public interface RentCRService {
     public int getRentReviewCount(long rentNum) throws Exception; // 리뷰 개수 불러오기
 	public List<Map<String, Object>> getRentReviews(long rentNum, int page, int pageSize) throws Exception; // 리뷰 불러오기 (article)
 	
+	public String getEmailByRentNum(long rentNum) throws Exception; // 글쓴이 이메일 가져오기
+	public String getEmailByReqNum(long reqNum) throws Exception; // 신청자 이메일 가져오기
 }

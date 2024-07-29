@@ -22,6 +22,7 @@ import com.forest.namu.domain.Point;
 import com.forest.namu.domain.Rent;
 import com.forest.namu.domain.RentCR;
 import com.forest.namu.domain.SessionInfo;
+import com.forest.namu.mail.MailService;
 import com.forest.namu.service.PointService;
 import com.forest.namu.service.RentCRService;
 import com.forest.namu.service.RentService;
@@ -38,6 +39,9 @@ public class RentCRController {
 	
 	@Autowired
 	private PointService pService;
+	
+    @Autowired
+    private MailService mailService;
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -118,6 +122,7 @@ public class RentCRController {
             RentCR dto = new RentCR();
             dto.setRentNum(rentNum);
             dto.setUserId(info.getUserId());
+            dto.setBorrowName(info.getNickName());
             dto.setStrDate(strDate);
             dto.setEndDate(endDate);
             dto.setDeposit(deposit);
@@ -126,6 +131,9 @@ public class RentCRController {
             dto.setState(1); // 신청완료(대기중) 상태
             
             crService.insertRentConfirm(dto, point);
+            
+            String email = crService.getEmailByRentNum(rentNum);
+            mailService.sendRentRequestMail(email, dto);
 
             result.put("state", "success");
             
