@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.AlarmMapper">
+
+
+<sql id="where-list">
+	( INSTR(content, #{kwd}) &gt; 0 )
+</sql>
+
+
+<insert id="insertAlarm" parameterType="com.forest.namu.domain.Alarm">
+	insert into alarm(alarmNum, userId, content, sender, senderTime, timeRead, cnum) 
+		values(alarm_seq.nextval, #{userId}, #{content}, #{sender}, sysdate, #{timeRead, jdbcType=VARCHAR}, #{cnum})
+</insert>
+
+
+<select id="dataCount" parameterType="map">
+	select nvl(count(*),0) from alarm
+	<where>
+		<if test="kwd != null and kwd != '' ">
+			<include refid="where-list"/>
+		</if>
+	</where>
+</select>
+
+
+<select id="listAlarm" resultType="com.forest.namu.domain.Alarm" parameterType="map">
+	select alarmNum, a.userId, content, sender, TO_CHAR(senderTime, 'YYYY-MM-DD HH24:MI:SS') senderTime, 
+		NVL2(timeRead, TO_CHAR(timeRead, 'YYYY-MM-DD HH24:MI:SS'), null) timeRead, ac.cnum, name, m.nickName
+	from alarm a 
+	join alarmCategory ac on a.cnum = ac.cnum
+	join member m on a.userId = m.userId
+	<where>
+		<if test="kwd != null and kwd != '' ">
+			<include refid="where-list"/>
+		</if>
+	</where>	
+</select>
+
+<select id="listCategory" resultType="com.forest.namu.domain.Alarm">
+  select cNum, name from alarmcategory 
+</select>
+
+<select id="findById" resultType="com.forest.namu.domain.Alarm" parameterType="Long">
+	select alarmNum, userId, content, sender, senderTime, timeRead
+	from alarm
+	where alarmNum = #{alarmNum}
+</select>
+
+
+<update id="updateTimeRead" parameterType="Long">
+	update alarm set timeRead = #{timeRead} 
+	where alarmNum = #{alarmNum} and timeRead is null
+</update>
+
+</mapper>
