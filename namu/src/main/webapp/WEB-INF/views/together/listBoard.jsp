@@ -4,22 +4,22 @@
 
 <!-- board list -->
 <c:forEach var="vo" items="${list}">
-    <div class="post mb-3">
-        <div class="post-header">
+    <div class="boardList mb-3">
+        <div>
             <div>
                 <strong>${vo.nickName}</strong>
-                <span>${vo.regDate}</span>
+                <div>${vo.regDate}</div>
             </div>
-            <div class="btn-freeboard-detail mb-3" data-num="${vo.num}" style="cursor: pointer;">
+            <div class="btn-freeboard-detail mb-3" data-num="${vo.num}" style="cursor: pointer; text-decoration: underline;">
             	상세보기
             </div>
         </div>
         <div class="post-content row justify-content-between mb-5">
-        	<div class="left col col-9">
+        	<div class="left col col-6">
 	            ${vo.content}
         	</div>
-        	<div class="right col col-3">
-		        <div class="post-image" style="width: 70%; height: 70%;" >
+        	<div class="right col col-6">
+		        <div class="post-image" >
 					<c:choose>
 						<c:when test="${not empty vo.listFilename}">
 							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.listFilename[0]}" >

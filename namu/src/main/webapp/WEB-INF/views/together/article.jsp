@@ -424,21 +424,123 @@ textarea::placeholder{
       margin-left: 8px;
   }
   
-
 .main-image {
-    width: 100%;
-    height: 300px; /* 원하는 높이로 설정하세요 */
-    object-fit: cover; /* 이미지 비율을 유지하며 크기에 맞게 자릅니다 */
-}
-
-.post-image img {
-    width: 100%;
-    height: 200px; /* 원하는 높이로 설정하세요 */
-    object-fit: cover; /* 이미지 비율을 유지하며 크기에 맞게 자릅니다 */
+    width: 120%;
+    height: 250px; /* 원하는 높이로 설정하세요 */
+    object-fit: fill; /* 이미지 비율을 유지하며 크기에 맞게 자릅니다 */
 }
 
 </style>
 
+
+<style>
+.article-container {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.article-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.article-header .author {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.article-header .time {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.article-header .article-options {
+    position: relative;
+}
+
+.article-header .article-options button {
+    border: none;
+    background: #fff;
+    color: #aaa;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: color 0.3s ease;
+}
+
+.article-header .article-options button:hover {
+    color: #333;
+}
+
+.article-content {
+    font-size: 1em;
+    line-height: 1.6;
+    color: #555;
+    margin-top: 15px;
+}
+</style>
+
+<style>
+.boardList {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.boardList strong {
+    font-size: 1.2rem;
+    color: #343a40;
+}
+.boardList div {
+    margin-bottom: 10px;
+}
+.btn-freeboard-detail {
+    color: #007bff;
+}
+.btn-freeboard-detail:hover {
+    text-decoration: none;
+    color: #0056b3;
+}
+.post-content {
+    margin-top: 10px;
+}
+.post-content .left {
+    font-size: 1rem;
+    color: #6c757d;
+}
+.post-content .right .post-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.post-content .right .post-image img {
+    width: 60%;
+    max-height: 60%;
+    object-fit: fill;
+    border-radius: 5px;
+}
+.post-footer .btn {
+    color: white;
+    border: none;
+}
+.post-footer .btn i {
+    font-size: 1.2rem;
+}
+
+.carousel-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} 
+</style>
 
 <script type="text/javascript">
     function deleteTogether() {

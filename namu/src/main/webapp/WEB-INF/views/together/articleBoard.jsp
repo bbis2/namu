@@ -2,9 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<body>
 <div class="row articleBoard">
-	<div class="col-md-4" >
+	<div class="row-md-6" >
 		<div id="carouselArticleBoardIndicators" class="carousel slide">
 			<div class="carousel-indicators">
                 <c:if test="${listFile.size() == 0}">
@@ -44,15 +43,17 @@
 			</button>
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="row-md-6" >
 		<div class="post">
 		    <h2>${dto.nickName}</h2>
 		    <p>${dto.regDate}</p>
 		    <p>${dto.content}</p>
-		
+		    
+		    <form class="comment-form" >
+		        <input type="text" placeholder="댓글을 달아보세요" />
+		        <button type="button"  class="btn togetherBoardOk">등록</button>
+		    </form>
 		</div>
 			<div class="mt-2 articleBoardReply"></div>
 	</div>
 </div>
-</body>
-</html>

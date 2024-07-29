@@ -42,5 +42,6 @@ public interface TogetherBoardMapper {
     public void insertReplyLike(Map<String, Object> map) throws SQLException;
     public Map<String, Object> replyLikeCount(Map<String, Object> map);
 	
-	
+	// 
+    
 }

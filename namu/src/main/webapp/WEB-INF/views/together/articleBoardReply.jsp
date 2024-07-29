@@ -6,14 +6,14 @@
 <body>
 <div class="article-container">
     <div class="article-header">
-        <div class="author">정유진</div>
-        <div class="time">1분 전</div>
+        <div class="author">${dto.nickName}</div>
+        <div class="time">${dto.regDate}</div>
         <div class="article-options">
-            <button  type="button"  style="background: #fff; color: #aaa;">⋮</button>
+            <button  type="button"  class="btn btnBoardReply" style="background: #fff; color: #aaa;">⋮</button>
         </div>
     </div>
     <div class="article-content">
-        하하하하하
+       
     </div>
 </div>
 </body>
