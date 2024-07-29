@@ -61,9 +61,9 @@ public class TogetherNoticeServiceImpl implements TogetherNoticeService{
 	}
 
 	@Override
-	public void deleteNotice(long num) throws Exception {
+	public void deleteNotice(Map<String, Object> map) throws Exception {
 		try {
-			mapper.deleteNotice(num);
+			mapper.deleteNotice(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

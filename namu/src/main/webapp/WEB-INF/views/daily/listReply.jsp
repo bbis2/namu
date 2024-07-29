@@ -9,12 +9,12 @@
 
 <table class='table table-borderless'>
 	<c:forEach var="vo" items="${listReply}">
-		<tr class='border table-light'>
+		<tr class='border'>
 			<td width='50%'>
 				<div class='row reply-writer'>
-					<div class='col-1'><i class='bi bi-person-circle text-muted icon'></i></div>
+					<div><i class='bi bi-person-circle text-muted icon'></i></div>
 					<div class='col-auto align-self-center'>
-						<div class='name'>${vo.nickName}</div>
+						<div class='name' style="font-weight: bold;">${vo.nickName}</div>
 						<div class='date'>${vo.regDate}</div>
 					</div>
 				</div>
@@ -46,6 +46,7 @@
 		<tr>
 			<td>
 				<button type='button' class='btn btn-light btnReplyAnswerLayout' data-rNum='${vo.rNum}'>답글 <span id="answerCount${vo.rNum}">${vo.answerCount}</span></button>
+				<button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
 			</td>
 			<td align='right'>
 				<button type='button' class='btn btn-light btnSendReplyLike' data-rNum='${vo.rNum}' data-replyLike='1' title="좋아요"><i class="bi bi-hand-thumbs-up"></i> <span>${vo.likeCount}</span></button>
@@ -58,7 +59,7 @@
 	        	<div class='border rounded'>
 		            <div id='listReplyAnswer${vo.rNum}' class='answer-list'></div>
 		            <div>
-		                <textarea class="form-control m-2"></textarea>
+		                <textarea class="form-control m-2" style="width: 98%;"></textarea>
 		            </div>
 					<div class='text-end pe-2 pb-1'>
 						<button type='button' class='btn btn-light btnSendReplyAnswer' data-rNum='${vo.rNum}'>답글 등록</button>

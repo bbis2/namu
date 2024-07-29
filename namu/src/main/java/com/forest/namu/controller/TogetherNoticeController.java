@@ -7,18 +7,20 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.TogetherNotice;
 import com.forest.namu.service.TogetherNoticeService;
 
-@RestController
+@Controller
 @RequestMapping("/togetherNotice/*")
 public class TogetherNoticeController {
 
@@ -30,29 +32,32 @@ public class TogetherNoticeController {
 	
 	
 	@PostMapping("write")
+	@ResponseBody
 	public Map<String, Object> writeSubmit(TogetherNotice dto, HttpSession session) throws Exception {
 	
 		String state = "true";
 		try {
 			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			dto.setUserId(info.getUserId());
-			
 			service.insertNotice(dto);
 		} catch (Exception e) {
 			state = "false";
 		}
+		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("state", state);
+		
 		return model;
 	}
 	
-	@GetMapping("list2")
-	public Map<String, Object> list(
-			@RequestParam long num,
+	@GetMapping("list")
+	public String list(
+			@RequestParam long tNum,
 			@RequestParam(value = "pageNo", defaultValue ="1") int current_page,
-			HttpSession session) throws Exception{
+			HttpSession session,
+			Model model) throws Exception{
 		
-		Map<String, Object> model = new HashMap<String, Object>();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -60,9 +65,11 @@ public class TogetherNoticeController {
 			int size = 5;
 			int dataCount = 0;
 			
-			map.put("num", num);
+			map.put("tNum", tNum);
+			map.put("userId", info.getUserId());
 			
 			dataCount = service.dataCount(map);
+			
 			int total_page = myUtil.pageCount(dataCount, size);
 			if(current_page > total_page) {
 			}
@@ -77,20 +84,35 @@ public class TogetherNoticeController {
 	
 			String paging = myUtil.pagingFunc(current_page, total_page, "listTogetherNotice");
 			
-			model.put("list", list);
-			model.put("dataCount", dataCount);
-			model.put("size", size);
-			model.put("pageNo", current_page);
-			model.put("paging", paging);
-			model.put("total_page", total_page);
+			model.addAttribute("list", list);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("size", size);
+			model.addAttribute("pageNo", current_page);
+			model.addAttribute("paging", paging);
+			model.addAttribute("total_page", total_page);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
-		return model;
+		return "together/listNotice";
 	}
 	
-	
-	
+	@PostMapping("deleteNotice")
+	@ResponseBody
+	public Map<String, Object> deleteReply(@RequestParam Map<String, Object> paramMap) {
+		String state = "true";
+		
+		try {
+			service.deleteNotice(paramMap);
+		} catch (Exception e) {
+			state = "false";
+		}
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("state", state);
+		return map;
+	}	
+
 
 }

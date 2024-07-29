@@ -2,6 +2,7 @@ package com.forest.namu.domain;
 
 public class TogetherNotice {
 	
+	private long tNum;
 	private long num;
 	private String userId;
 	private String subject;
@@ -10,6 +11,14 @@ public class TogetherNotice {
 	private String nickName;
 	private int hitCount;
 	
+	
+	
+	public long gettNum() {
+		return tNum;
+	}
+	public void settNum(long tNum) {
+		this.tNum = tNum;
+	}
 	public long getNum() {
 		return num;
 	}
@@ -53,5 +62,5 @@ public class TogetherNotice {
 		this.hitCount = hitCount;
 	}
 	
-	
+
 }

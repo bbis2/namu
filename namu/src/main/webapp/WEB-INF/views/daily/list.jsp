@@ -79,18 +79,16 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
 }
 
 .card-body {
-    padding: 30px;
-    align-content: center;
+    padding: 20px;
+    text-align: center;
 }
 
 .card-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: bold;
-    margin-bottom: 10px;
 }
 
 /* 카테고리 스타일 */
@@ -101,15 +99,14 @@
     background-color: #EEF2E3;
     border-radius: 10px;
     margin-bottom: 50px;
-    font-size: 1.1rem;
 }
 
 .categories span {
     font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s;
 }
-
+.body-left {
+	padding-bottom: 40px;
+}
 .categories span:hover {
     color: #74634F;
 }
@@ -233,7 +230,7 @@ function filterByTown() {
    	<div class="body-title">
 		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/daily/list" method="post">
             <div class="filter-container">
-                <input type="text" class="search-input border border-2"  name="kwd" value="${kwd}" placeholder="검색어를 입력하세요"/>
+                <input type="text" class="search-input border border-2"  name="kwd" value="${kwd}" style="width: 60%" placeholder="검색어를 입력하세요"/>
 				<input type="hidden" name="categoryNum" value="${categoryNum}">
 				<input type="hidden" name="town" value="${town}">    			
                 <button type="button" class="search-button" onclick="searchList()" title="검색" ><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -266,19 +263,13 @@ function filterByTown() {
                     </div>
                 </div>
               
-			    <div class="card mb-4">
-					<div class="list-group">
-						<a class="list-group-item list-subject" type="button"  onclick="location.href='${pageContext.request.contextPath}/daily/list';">일상</a>
-						<a class="list-group-item list-subject" type="button"  onclick="location.href='${pageContext.request.contextPath}/together/list';">모임</a>
-					</div>
+		    <div class="card mb-4">
+				<div class="list-group">
+					<a class="list-group-item list-subject" type="button" style="text-align: center; font-weight: bold;" onclick="location.href='${pageContext.request.contextPath}/daily/list';">일상</a>
+					<a class="list-group-item list-subject" type="button" style="text-align: center; font-weight: bold;"  onclick="location.href='${pageContext.request.contextPath}/together/list';">모임</a>
 				</div>
+			</div>  
 			
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">BEST TOP 10</h5>
-                        <!-- 목록 추가 -->
-                    </div>
-                </div>
             </div>
             <div class="col-md-9">
               <div class="categories">

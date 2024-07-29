@@ -3,6 +3,20 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
+.togetherBoard-form .img-grid {
+	display: grid;
+	grid-template-columns:repeat(auto-fill, 54px);
+	grid-gap: 2px;
+}
+
+.togetherBoard-form .img-grid .item {
+	object-fit:cover;
+	width: 50px; height: 50px; border-radius: 10px;
+	border: 1px solid #c2c2c2;
+	cursor: pointer;
+}
+</style>
+<style type="text/css">
 .fleamarket-cover {
     background-color: #E3F1C5;
 }
@@ -257,13 +271,63 @@ textarea::placeholder{
 }
 </style>
 
-
+<style>
+/* 공지사항 */
+.form-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 20px;
+}
+.form-header {
+    display: flex;
+    align-items: center;
+}
+.user-name {
+    margin-left: 10px;
+    font-weight: bold;
+}
+.form-body textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+}
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+}
+.char-counter {
+    font-size: 0.9em;
+    color: #999;
+}
+.subject input{
+    width: 80%;
+    height: 40px;
+    padding: 5px;;
+    border: none;
+    resize: none;
+}
+.submit-btn {
+    background-color: #ffcc00;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: right;
+}
+.submit-btn:hover {
+    background-color: #ff9900;
+}
+</style>
 <!-- 공지사항 lsit -->
 <style>
-.post-list {
-    margin-bottom: 20px;
-    padding-top: 30px;
-}
 
 .post-item {
 	width: 100%;
@@ -313,6 +377,49 @@ textarea::placeholder{
 }
 </style>
 
+<style>
+/*articleBoard*/
+.articleBoard {
+	height: 600px;
+	width: 800px;
+}
+.post {
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 8px; /* 테두리 둥글게 */
+      box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .comments {
+      margin-top: 16px;
+  }
+  .comment {
+      border-top: 1px solid #eee;
+      padding: 8px 0;
+  }
+  .comment:first-child {
+      border-top: none;
+  }
+  .comment-form {
+      display: flex;
+      margin-top: 16px;
+  }
+  .comment-form input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+  }
+  .comment-form button {
+      padding: 8px 16px;
+      border: none;
+      background-color: #ffc107;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 8px;
+  }
+</style>
+
 
 <script type="text/javascript">
     function deleteTogether() {
@@ -337,7 +444,6 @@ textarea::placeholder{
         <div class="cover-image"></div>
     </section>
 </div>   
-
 
 <div class="container body-container">
     <div class="used">
@@ -453,39 +559,26 @@ textarea::placeholder{
 				        <div class="form-header">
 				            <div class="profile-pic"></div>
 				            <div class="user-name">모임장 : ${sessionScope.member.nickName}</div>
-				            <input type="hidden" name="tNum" value="${tNum}">    
 				        </div>
-				        <form action="submitForm.jsp" method="POST">			        
+				        <form action="${pageContext.request.contextPath}/togetherNotice/write" method="POST">			        
+				            <input type="hidden" name="tNum" value="${dto.tNum}">    
 				            <div class="form-body">
-				            <div class="subject" style="font-weight: bold;"> 제목 :
-				            	<input name="subject" placeholder=" 제목을 입력해 주세요 :)"></input>
-				            </div>	
+					            <div class="subject" style="font-weight: bold;"> 제목 :
+					            	<input name="subject" placeholder=" 제목을 입력해 주세요 :)"></input>
+					            </div>	
 				                <textarea name="content" placeholder="글을 작성해 주세요 :)"></textarea>
 				            </div>
 				            <div class="form-footer">
-				                <button type="submit"  class="btn btnSendReply">등록</button>
+				                <button type="button"  class="btn btnNotice">등록</button>
 				            </div>
 				        </form>
 				    </div>				
-				</c:if>	
-    <div class="post-list">
-        <div class="post-item">
-            <div class="post-date">
-            [공지글]
-                <div class="month-year">${dto.regDate}</div>
-            </div>
-            <div class="post-content">
-                <h2>${dto.subject}</h2>
-                <div class="post-meta">
-                    작성자: ${dto.nickName}
-                </div>
-            </div>
-        </div>
-    </div>			
+				</c:if>
+					
 			<div class="mt-2 listNotice"></div>
 		</div>		
 	
-	
+		<!-- 버튼, class 이름을 줄 때, 이름 중복을 막기위해 이 부분처럼 줘여 함. togetherBoard-form / btnTogetherBoard 유사한 형식으로 줄 것. -->
 		<!-- #2 함께해요 글쓰기 -->
 		<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
 			<div class="mt-3 pt-3">
@@ -493,22 +586,33 @@ textarea::placeholder{
 			</div>
 	
 			<!-- 함께해요 쓰기 -->
-			<div class="border p-2">
+			
+			<div class="border p-2 togetherBoard-form">
 			    <div class="post-header">
 			        <div style="font-weight: bold;">작성자 : ${dto.nickName}</div>
 			    </div>
-			    <form action="submitForm.jsp" method="POST" enctype="multipart/form-data">
+			    <form name="togetherBoardForm"  method="POST" enctype="multipart/form-data">
+			   		<input type="hidden" name="tNum" value="${dto.tNum}">    
 			        <div class="comment-box">
-			            <textarea class="form-control" placeholder="글을 작성해 주세요 :)" id="commentInput"></textarea>
-			            <div>
-			            	<button type="button" class="btn add-button">+</button>
-			                <button type="button" class="submit-button" disabled>등록</button>
-			            </div>		            
-			        </div>
+			            <textarea class="form-control" name="content" placeholder="글을 작성해 주세요 :)" id="commentInput"></textarea>
+					</div>
+					<div class="p-1">
+						<div class="img-grid">
+							<img class="item img-add" src="${pageContext.request.contextPath}/resources/images/add_photo.png">
+						</div>
+						<input type="file" name="selectFile" accept="image/*" multiple class="form-control" style="display: none;">
+					</div>					
+			        <div>
+			            <button type="button" class="btn btnTogetherBoard" >등록</button>
+		            </div>		            
 			    </form>
-			</div>		
-			<div class="mt-2 listBoard"></div>
+			</div>
+			
+			<!-- togetherBoard list 이 부분도 div 완전 벗어난 곳에 주면 안됨.-->
+			
+			<div class="mt-2 listTogetherBoard"></div>			
 		</div>
+
 	</div>		
 </div>
 
@@ -563,6 +667,23 @@ textarea::placeholder{
 	</div>
 </div>
 
+<!-- 여기는 #2에서의 모달창 띄우는 부분!  -->
+<div class="modal fade" id="freeBoardModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="freeBoardModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 800px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="freeBoardModalLabel"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<!-- 여기로 이제 jsp 작성해서 넣을 것. -->
+			<div class="modal-body">
+
+			</div>
+		</div>
+	</div>
+</div>
 
 <script type="text/javascript">
 function login() {
@@ -570,31 +691,37 @@ function login() {
 }
 
 function ajaxFun(url, method, formData, dataType, fn, file = false) {
-    const settings = {
-        type: method, 
-        data: formData,
-        dataType: dataType,
-        success: function(data) {
-            fn(data);
-        },
-        beforeSend: function(jqXHR) {
-            jqXHR.setRequestHeader('AJAX', true);
-        },
-        complete: function() {
-        },
-        error: function(jqXHR) {
-            if (jqXHR.status === 403) {
-                login();
-                return false;
-            } else if (jqXHR.status === 400) {
-                alert('요청 처리가 실패 했습니다.');
-                return false;
-            }
-            console.log(jqXHR.responseText);
-        }
-    };
-
-    $.ajax(url, settings);
+	const settings = {
+			type: method, 
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+	}
+	
+	$.ajax(url, settings);
 }
 
 $(function() {
@@ -632,27 +759,6 @@ $(function() {
     });
 });
 
-
-// #1 공지사항 등록
-// 댓글 등록
-
-
-
-$(function(){
-	$('.btnInsertForm').on('click', function(){
-		// 글 등록 폼
-		$('#myDialogModal .modal-body').empty();
-		
-		let url = '${pageContext.request.contextPath}/together/write';
-		$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
-		$.get(url, function(data){
-			$('#myDialogModal .modal-body').html(data);
-			$('#myDialogModal').modal('show');
-		}).fail(function(){
-			alert('error');
-		});
-	});
-});
 
 $(function(){
 	$('.container').on('click', '.btnSendOk', function() {
@@ -771,7 +877,243 @@ $("#myApplyListModal").on("click", ".btnAcceptOk", function(){
 	};
 	ajaxFun(url, 'post', formData, 'json', fn);
 });
+</script>
+
+<script type="text/javascript">
+// 탭이 바뀔때 -> 탭이 바뀔때는 탭에 이벤트를 발생시켜야 한다.
+$(function(){
+    $("button[role='tab']").on("click", function(e){
+    	const tab = $(this).attr("aria-controls");
+    	
+    	if(tab == "2") {
+    		listTogetherNotice(1);
+    	} else if(tab == "3") {
+    		listTogetherBoard(1);
+    	}
+    });
+});
+</script>
 
 
+
+
+<script type="text/javascript">
+//#1 공지사항 등록
+$(function() {
+    $('.btnNotice').click(function() { // btnNotice를 클릭하면,
+        const f = this.closest('form'); // 가장 가까운 form태그 찾기. form 태그의 장점 : 객체로 던질 수 있음.
+        // console.log(f);
+        // console.log(f.tNum.value);
+        // let 사용하는 것 보다 const로 변하지 않게 상수로 선언하는 게 좋다.
+    	const tNum = f.tNum.value;			// tNum의 값을 tNum에 담는다.
+    	const content = f.content.value;
+    	const subject = f.subject.value;
+
+    	const query = {					// 쿼리에 담는다.
+    			tNum: tNum,
+    			subject: subject,
+    			content: content
+    	}
+    	
+    	const url = '${pageContext.request.contextPath}/togetherNotice/write'; // togetherNotice(controller 주소의 write)로 보냄
+    	
+    	const fn = function(data) { // fn 함수 실행.
+    		f.subject.value = ''; 	// subject의 값을 비워줌 
+    		f.content.value = ''; 	// content의 값을 비워줌
+    		
+    		 let state = data.state;	
+             if (state === 'true') {
+            	 listTogetherNotice(1);
+             } else if (state === 'false') {
+                 alert('공지사항을 추가하지 못했습니다.');
+             }
+    	}
+    	
+    	ajaxFun(url, 'post', query, 'json', fn);  // url 주소/ 'post'방식으로/ 쿼리를/ json 방식으로 보냄. / fn 함수 실행  
+    });
+});
+
+function listTogetherNotice(page) {
+	let url = '${pageContext.request.contextPath}/togetherNotice/list';
+    let query = 'tNum=${dto.tNum}&pageNo=' + page;
+    let selector = '.listNotice';
+
+    const fn = function(data) {
+    	// console.log(data);
+        $(selector).html(data);
+    };
+
+	ajaxFun(url, 'get', query, 'text', fn);
+}
+
+//#1 공지사항 삭제
+$(function(){
+    $('.post-list').on('click', '.btndeleteNoticeList', function(){
+        if(!confirm('게시물을 삭제하시겠습니까?')) {
+            return false;
+        }
+
+        let noticeNum = $(this).data('num');
+        let url = '${pageContext.request.contextPath}/togetherNotice/deleteNotice';
+        let query = 'num=' + noticeNum;
+
+        const fn = function(data){
+            if(data.state === 'success') {
+                listTogetherNotice(page);
+            } else {
+                alert('게시물 삭제에 실패했습니다.');
+            }
+        };
+
+        ajaxFun(url, 'post', query, 'json', fn);
+    });
+});
 
 </script>
+
+<script type="text/javascript">
+//#2. 함께해요
+
+function listTogetherBoard(page) {
+	let url = '${pageContext.request.contextPath}/togetherBoard/list';
+    let query = 'tNum=${dto.tNum}&pageNo=' + page;
+    let selector = '.listTogetherBoard';
+
+    const fn = function(data) {
+        $(selector).html(data);
+    };
+
+	ajaxFun(url, 'get', query, 'text', fn);
+}
+
+// 파일 지우기
+$(function(){
+	var sel_files = [];
+	
+	$("body").on("click", ".togetherBoard-form .img-add", function(){
+		$(this).closest(".togetherBoard-form").find("input[name=selectFile]").trigger("click");
+	});
+	
+	$("form[name=togetherBoardForm] input[name=selectFile]").change(function(e){
+		if(! this.files) {
+			let dt = new DataTransfer();
+			for(let f of sel_files) {
+				dt.items.add(f);
+			}
+			
+			this.files = dt.files;
+			
+			return false;
+		}
+		
+		let $form = $(this).closest("form");
+		
+		// 유사 배열을  배열로 변환
+		const fileArr = Array.from(this.files);
+		
+		// 화면에 그려주기 위한 코드!! 
+		fileArr.forEach((file, index) => {
+			sel_files.push(file);
+			
+			const reader = new FileReader();
+			const $img = $("<img>", {"class":"item img-item"});
+			$img.attr("data-filename", file.name);
+			reader.onload = e => {
+				$img.attr("src", e.target.result);		
+			};
+			reader.readAsDataURL(file);
+			$form.find(".img-grid").append($img);
+		});
+		
+		let dt = new DataTransfer();
+		for(let f of sel_files) {
+			dt.items.add(f);
+		}
+		// this -> "input[name=selectFile]" 
+		this.files = dt.files; // dt.files : 유사배열
+	});
+	
+	
+	// 화면에 표시된 이미지를 클릭할 경우에 실행되는 이벤트 핸들러
+	// 기능 1. 화면에 출력된 이미지를 삭제
+	// 기능 2. input 요소에 등록된 files 유사배열에서 삭제한 이미지 정보를 제거
+	$("body").on("click", ".togetherBoard-form .img-item", function(){
+		if(! confirm("선택한 파일을 삭제 하시겠습니까 ? ")) {
+			return false;
+		}
+		
+		let filename = $(this).attr("data-filename");
+		
+		for(let i=0; i<sel_files.length; i++) {
+			if(filename === sel_files[i].name) {
+				sel_files.splice(i, 1);
+				break;
+			}
+		}
+		
+		let dt = new DataTransfer();
+		for(let f of sel_files) {
+			dt.items.add(f);
+		}
+		
+		const f = this.closest("form");
+		f.selectFile.files = dt.files;
+		
+		$(this).remove();
+	});
+
+	$('.btnTogetherBoard').click(function(){
+		const f = document.togetherBoardForm;
+		let s;
+		
+		s = f.content.value.trim();
+		if( ! s ) {
+			alert("내용을 입력하세요.")	;
+			f.content.focus();
+			return false;
+		}
+		
+		if(f.selectFile.files.length > 5) {
+			alert("이미지는 최대 5개까지 가능합니다..")	;
+			return false;
+		}
+
+    	const url = '${pageContext.request.contextPath}/togetherBoard/write'; 
+		let query = new FormData(f); 
+		
+		const fn = function(data) {
+			if(data.state === "true") {
+				f.reset();	//ㅇㅣ ㅁ ㅣ ㅈ ㅣ 지우기는 천천구다사이~!하있 ^^
+				listTogetherBoard(1);
+			}
+		};
+		
+		ajaxFun(url, "post", query, "json", fn, true); // 파일은 true 줘여 함 ^^
+	});
+});
+</script>
+
+<script type="text/javascript">
+// # 모달 창
+
+$(function(){
+	// 상세보기  => 중요한 것은! 여기는 전부 num을 넘겨 받아야함. tNum 아님! 
+	$(".tab-content").on("click", ".btn-freeboard-detail", function(){
+		let num = $(this).attr("data-num");
+		const url = '${pageContext.request.contextPath}/togetherBoard/article'; 
+		let query = "num="+num; 
+		const fn = function(data) {
+			console.log(data);
+			$("#freeBoardModal .modal-body").html(data) // 이 부분이 모달창 부분 jsp 넘겨 받는 부분.
+			
+			$('#freeBoardModal').modal('show');
+		};
+		
+		ajaxFun(url, "get", query, "text", fn);
+		
+	});
+
+});
+
+</script>
+

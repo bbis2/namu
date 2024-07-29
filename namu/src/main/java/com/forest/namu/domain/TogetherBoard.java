@@ -19,10 +19,9 @@ public class TogetherBoard {
 	
 	private long fileNum;		// 파일번호
 	private String filename; 	// 파일이름
-	private List<MultipartFile> selectFile; // 
+	private List<MultipartFile> selectFile; 
 
-	private String[] listFilename; //
-	
+	private String[] listFilename; 
 
 	public long getNum() {
 		return num;

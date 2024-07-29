@@ -7,7 +7,7 @@
 		<div class='row p-1'>
 			<div class='col-auto'>
 				<div class='row reply-writer'>
-					<div class='col-1'><i class='bi bi-person-circle text-muted icon'></i></div>
+					<div>&nbsp;&nbsp;<i class='bi bi-person-circle text-muted icon'></i></div>
 					<div class='col ms-2 align-self-center'>
 						<div class='name'>${vo.nickName}</div>
 						<div class='date'>${vo.regDate}</div>
@@ -26,10 +26,6 @@
 							<div class='deleteReplyAnswer reply-menu-item' data-rNum='${vo.rNum}' data-answer='${vo.answer}'>삭제</div>
 							<div class='blockReplyAnswer reply-menu-item'>차단</div>
 						</c:when>
-						<c:otherwise>
-							<div class='notifyReplyAnswer reply-menu-item'>신고</div>
-							<div class='blockReplyAnswer reply-menu-item'>차단</div>
-						</c:otherwise>
 					</c:choose>
 				</div>
 			</div>

@@ -9,7 +9,8 @@ public class Reply {
 	private String regDate;
 	private long answer;
 	private int showReply;
-	
+	private String tableName;
+
 	private int answerCount;
 	private int likeCount;
 	private int disLikeCount;
@@ -80,6 +81,13 @@ public class Reply {
 	}
 	public void setDisLikeCount(int disLikeCount) {
 		this.disLikeCount = disLikeCount;
+	}
+	
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 	
 	

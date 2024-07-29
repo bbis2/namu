@@ -138,28 +138,35 @@
 .togetherlist {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* 가운데 정렬 추가 */
-    gap: 21px; /* 항목 간의 간격 조정 */
-    max-height: 80%; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
-    margin-bottom:100px; /* footer와 겹치지 않도록 하단 여백 추가 */
-    
+    justify-content: flex-start;
+    gap: 21px;
+    max-height: 80%;
+    margin-bottom: 100px;
 }
 
 .togetherlist .list {
     flex: 1 1 30%;
-    max-width: 40%;
+    max-width: 30%;
     box-sizing: border-box;
-    height: 250px; /* 고정된 높이 추가 */
+    height: 350px; /* 고정된 높이 추가 */
     display: flex;
     flex-direction: column;
-    margin-bottom: 150px;
+    padding: 10px; /* 패딩 추가 */
 }
 
 .togetherlist .list img {
     width: 100%;
-    height: 280px; /* 고정된 이미지 높이 */
-    object-fit: fill;
-    padding-bottom: 20px;
+    height: 200px; /* 고정된 이미지 높이 */
+    object-fit: cover;
+    margin-bottom: 10px; /* 이미지 아래 마진 추가 */
+}
+
+.togetherlist .list .listTitle, 
+.togetherlist .list .listDescription {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 @media (max-width: 768px) {
@@ -174,7 +181,7 @@
         flex: 1 1 100%; /* 1개의 항목을 한 줄에 배치 */
         max-width: 100%;
     }
-    
+}
 
 }
 </style>
@@ -260,12 +267,6 @@ function filterByTown() {
 				</div>
 			</div>              
 
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">BEST TOP 10</h5>
-                    <!-- 목록 추가 -->
-                </div>
-            </div>
 		</div>
             
        <div class="col-md-9">

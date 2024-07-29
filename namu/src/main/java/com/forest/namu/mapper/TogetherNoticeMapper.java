@@ -12,7 +12,8 @@ public interface TogetherNoticeMapper {
 	public List<TogetherNotice> listTogetherNotice(Map<String, Object>map); // 공지사항 리스트 
 	public int dataCount(Map<String, Object> map); // 조회수
 	public void updateNotice(TogetherNotice dto) throws SQLException; // 공지사항 수정
-	public void deleteNotice(long num)throws SQLException; // 공지사항 삭제
+	// public void deleteNotice(long num)throws SQLException; // 공지사항 삭제
+	public void deleteNotice(Map<String, Object> map)throws SQLException; // 공지사항 삭제
 	
 	
 }

@@ -5,6 +5,7 @@
 <style type="text/css">
 .body-container {
 	max-width: 1500px;
+	max-height: 1500px;
 }
 
 .btn {
@@ -52,7 +53,7 @@ function sendLogin() {
             <div class="col-md-6 offset-md-3">
                 <div class="border mt-5 p-4">
                     <form name="loginForm" action="" method="post" class="row g-3">
-                        <h3 class="text-center" style="color:#3F2C15; "><i class="fa-solid fa-user-lock"></i> WELCOME 나무</h3>
+                        <h3 class="text-center" style="color:#3F2C15; font-weight: bold;"><img alt="logo" src="${pageContext.request.contextPath}/resources/images/namuLogo.png" width="30" height="24" class="d-inline-block align-text-top"> WELCOME 나무</h3>
                         <div class="col-12">
                             <input type="text" name="userId" class="form-control" placeholder="아이디">
                         </div>
@@ -77,11 +78,7 @@ function sendLogin() {
                         	<a href="${pageContext.request.contextPath}/member/pwdFind" style="color: #3F2C15;" class="text-decoration-none me-2">패스워드 찾기</a>
                         	<a href="${pageContext.request.contextPath}/member/member" style="color: #3F2C15;" class="text-decoration-none">회원가입</a>
                         </p>
-                    </div>
-                     <hr style="border-width: 2px; border-color:#3F2C15;" class="mt-3">
-                     <div  class="kakao">
-                            <button class="btn" type="button" style="background-color:#FFF84F; " onclick="">카카오 로그인</button>
-                     </div>                    
+                    </div>                  
                      
                 </div>
 

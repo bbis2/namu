@@ -88,6 +88,7 @@ textarea.form-control {
 }
 </style>
 
+
 <c:if test="${sessionScope.member.userId==dto.userId}">
 	<script type="text/javascript">
 		function deleteBoard() {
@@ -217,6 +218,54 @@ textarea.form-control {
     </div>
 </div>
 
+
+<!-- 신고 모달 -->
+<div class="modal fade" id="SinGoModal" tabindex="-1"
+	data-bs-backdrop="static" data-bs-keyboard="false"
+	aria-labelledby="SinGoModal" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="">신고하기</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="p-3">
+					<form name="SinGoForm" action="" method="post" class="row g-3">
+						<div class="mt-0">
+							<p class="form-control-plaintext">신고유형과 사유를 적어주세요</p>
+						</div>
+						<div class="mt-0">
+							<select id="reportType" name="reportType" class="form-select">
+								<option value="욕설/인신공격" selected>욕설/인신공격</option>
+									<option value="개인정보노출">개인정보노출</option>
+									<option value="불법정보">불법정보</option>
+									<option value="같은내용반복(도배)">같은내용반복(도배)</option>
+									<option value="기타">기타</option>
+							</select>
+						</div>
+						<div>
+							<input type="text" name="reportContent" autocomplete="off"
+								 class="form-control"
+								placeholder="신고사유 : ">
+						</div>
+							<input type="hidden" name="Field" value="${dto.tableName}">
+							<!-- 파라미터 num -->
+							<input type="hidden" name="postNum" value="${dto.num}">
+							<input type="hidden" name="banUser" value="${dto.userId}">
+						<div>
+							<button type="button" class="btn btn-primary w-100"
+								onclick="sendOk();">신고하기</button>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 function login() {
     location.href = '${pageContext.request.contextPath}/member/login';
@@ -249,6 +298,26 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 	};
 
     $.ajax(url, settings);
+}
+
+function SinGo(){
+	$('#SinGoModal').modal('show');
+}
+
+function sendOk() {
+	const f = document.SinGoForm;
+	let str = f.reportContent.value.trim();
+	
+    if (!confirm("정말 신고하시겠습니까?")) {
+        return;
+    }
+    
+    if(!str){
+    	alert("사유를 입력해주세요");
+    }
+    
+    f.action = "${pageContext.request.contextPath}/singo/reception";
+    f.submit();
 }
 
 $(function() {

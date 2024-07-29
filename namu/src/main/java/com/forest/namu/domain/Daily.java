@@ -9,6 +9,7 @@ public class Daily {
 	private int hitCount;
 	private int notice;
 	private String nickName;
+	private String tableName;
 
 	private long categoryNum;
 	private String categoryName;
@@ -120,6 +121,14 @@ public class Daily {
 
 	public void setTown(String town) {
 		this.town = town;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 	

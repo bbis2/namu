@@ -11,5 +11,5 @@ public interface TogetherNoticeService {
 	public List<TogetherNotice>listTogetherNotice(Map<String, Object>map);
 	public int dataCount(Map<String, Object> map);
 	public void updateNotice(TogetherNotice dto) throws Exception;
-	public void deleteNotice(long num) throws Exception;
+	public void deleteNotice(Map<String, Object>map) throws Exception;
 }
