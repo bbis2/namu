@@ -108,7 +108,7 @@ public class TogetherBoardController {
 	
 	@GetMapping("article")
 	public String article(
-	        @RequestParam long num,
+	        @RequestParam(defaultValue = "1") long num,
 	        Model model,
 	        HttpSession session) throws Exception {
 		

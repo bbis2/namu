@@ -156,7 +156,7 @@ public class DailyController {
 	@GetMapping("article")
 	public String article(
 			@RequestParam long num,
-			@RequestParam String page,
+			@RequestParam(defaultValue = "1") String page,
 			@RequestParam(defaultValue = "all") String schType,
 			@RequestParam(defaultValue = "") String kwd,
 			HttpSession session,

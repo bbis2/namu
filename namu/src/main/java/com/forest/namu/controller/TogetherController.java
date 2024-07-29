@@ -153,7 +153,7 @@ public class TogetherController {
 	
 	@GetMapping("article")
 	public String article(
-			@RequestParam long tNum,
+			@RequestParam(defaultValue = "1") long tNum,
 			@RequestParam String page,
 			@RequestParam(defaultValue = "all") String schType, 
 			@RequestParam(defaultValue = "")String kwd,
