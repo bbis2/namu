@@ -99,18 +99,11 @@ $(function(){
 					<a href="<c:url value='/admin/analysis/page'/>" class="sub_menu--link">게시물</a>
 				</li>
 				<li class="sub_menu--item">
-					<a href="<c:url value='/admin/'/>" class="sub_menu--link">VIP</a>
+					<a href="<c:url value='/admin/analysis/vip'/>" class="sub_menu--link">VIP</a>
 				</li>
 			</ul>
 		</li>
 
-	
-		<li class="menu--item">
-	        <a href="#" class="menu--link" title="GroupWare">
-				<i class="menu--icon bi bi-c-square"></i>
-				<span class="menu--label">GroupWare</span>
-			</a>
-		</li>
 	
 		<li class="menu--item">
 	        <a href="${pageContext.request.contextPath}/member/logout" class="menu--link" title="Logout">

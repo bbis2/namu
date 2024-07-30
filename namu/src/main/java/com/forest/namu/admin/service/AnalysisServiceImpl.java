@@ -593,4 +593,37 @@ public class AnalysisServiceImpl implements AnalysisService {
 		return result;
 	}
 
+	@Override
+	public List<Analysis> selectVip() throws Exception {
+		List<Analysis> list = null;
+		try {
+			list = mapper.selectVip();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public long vipTotal() throws Exception {
+		long result =0;
+		try {
+			result = mapper.vipTotal();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Analysis> postVip() throws Exception {
+		List<Analysis> list = null;
+		try {
+			list = mapper.postVip();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 }

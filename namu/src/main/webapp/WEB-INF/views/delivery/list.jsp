@@ -4,29 +4,50 @@
 
 <style type="text/css">
 .fleamarket-cover {
-	background-color: #E3F1C5;
+    position: relative;
+    width: 100%;
+    height: 315px; /* 커버 높이를 고정 */
+    overflow: hidden;
+    background-image: url('${pageContext.request.contextPath}/resources/images/bicycle.jpg');
+    background-size: cover; /* 이미지를 커버 전체에 맞춤 */
+    background-position: center; /* 이미지를 중앙에 위치시킴 */
+    color: white; /* 텍스트가 더 잘 보이도록 색상을 흰색으로 설정 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
 }
 
-.htext {
-	padding-top: 100px;
-	padding-left: 100px;
+.cover-title {
+    position: absolute;
+    top: 30%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* 텍스트 배경을 반투명 검은색으로 설정 */
 }
 
-.cover-content {
-	padding: 50px;
-	position: relative;
-	height: 100%;
-	box-sizing: border-box;
-	margin-left: 100px;
+.cover-description {
+    position: absolute;
+    bottom: 10%;
+    left: 22%;
+    transform: translateX(-50%);
+    font-size: 1.2em;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* 텍스트 배경을 반투명 검은색으로 설정 */
+    border-radius: 10px;
 }
 
-@media ( min-width : 768px) {
-	.fleamarket-cover {
-		height: 315px;
-		padding: 0 16px 0 16px;
-		margin-top: 60px;
-		margin-bottom: 60px;
-	}
+.cover-image {
+    display: none; /* 이미지 요소를 숨김 */
+}
+
+@media (min-width: 768px) {
+    .fleamarket-cover {
+        padding: 0 16px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
+
 	/*여기까지 초록 박스*/
 	.body-left {
 		padding-bottom: 20px;
@@ -128,14 +149,15 @@ window.addEventListener('load', function() {
 </script>
 
 <div class="container">
-	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">
-			둘러보는<br>우리 동네
-		</h1>
-		<span class="cover-description htext"></span><br> <span
-			class="cover-description htext">심부름하고 포인트를 얻어가세요!</span>
-		<div class="cover-image"></div>
-	</section>
+    <section class="fleamarket-cover">
+        <h1 class="cover-title htext bd">
+            둘러보는<br>우리 동네
+        </h1>
+        <span class="cover-description htext">심부름하고 포인트를 얻어가세요!</span>
+        <div class="cover-image">
+            <img src="${pageContext.request.contextPath}/resources/images/bicycle.jpg">
+        </div>
+    </section>
 
 
 	<main class="container">

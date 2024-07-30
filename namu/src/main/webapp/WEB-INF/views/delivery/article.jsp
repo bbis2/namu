@@ -1,12 +1,91 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
 <style type="text/css">
 .fleamarket-cover {
-	background-color: #E3F1C5;
+    background-color: #E3F1C5;
+    background-image: url('${pageContext.request.contextPath}/resources/images/bicycle.jpg');
+    background-size: cover; /* 이미지를 커버 전체에 맞춤 */
+    background-position: center; /* 이미지를 중앙에 위치시킴 */
+    position: relative;
 }
- .image-container {
+
+.htext {
+    padding-top: 100px;
+    padding-left: 100px;
+    color: black; /* 배경 이미지와 대비되도록 텍스트를 흰색으로 설정 */
+    position: relative;
+    z-index: 1; /* 텍스트를 배경 위에 표시되도록 함 */
+    
+}
+
+.cover-content {
+    padding: 50px;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    margin-left: 100px;
+}
+
+@media ( min-width : 768px) {
+    .fleamarket-cover {
+        height: 315px;
+        padding: 0 16px 0 16px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
+    /*여기까지 초록 박스*/
+    .body-title {
+        margin: 40px 0;
+        text-align: left;
+    }
+    .body-title h2 {
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .write-form {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .write-form td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+    .write-form .bg-light {
+        background-color: #f9f9f9;
+    }
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+    .form-control-plaintext {
+        height: 40px;
+        padding: 8px;
+    }
+    .table-borderless td {
+        border: none;
+    }
+    .text-center {
+        text-align: center;
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 5px;
+    }
+    .btn-dark {
+        background-color: #333;
+        color: #fff;
+        border: none;
+    }
+    .btn-light {
+        background-color: #f9f9f9;
+        color: #333;
+        border: 1px solid #ddd;
+    }
+}
+.image-container {
             display: flex; /* Display images in a row */
             gap: 10px; /* Space between images */
         }
@@ -15,80 +94,7 @@
             max-width: 400px; /* Ensure images scale within their container */
             height: auto;
         }
-.htext {
-	padding-top: 100px;
-	padding-left: 100px;
-}
-
-.cover-content {
-	padding: 50px;
-	position: relative;
-	height: 100%;
-	box-sizing: border-box;
-	margin-left: 100px;
-}
-
-@media ( min-width : 768px) {
-	.fleamarket-cover {
-		height: 315px;
-		padding: 0 16px 0 16px;
-		margin-top: 60px;
-		margin-bottom: 60px;
-	}
-}
-
-.form-group {
-	margin-bottom: 15px;
-}
-
-.form-group label {
-	display: block;
-	font-weight: bold;
-	margin-bottom: 5px;
-}
-
-.form-group input, .form-group textarea {
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	background-color: #f2f2f2;
-}
-
-textarea.form-control {
-	height: 100px;
-	resize: none;
-}
-
-.content-meta {
-	display: flex;
-	justify-content: space-between;
-	margin: 10px 0;
-}
-
-.navigation, .actions, .comments {
-	margin: 10px 0;
-}
-
-.navigation .btn, .actions .btn, .comments .btn {
-	background-color: #5d4734;
-	color: white;
-	border: none;
-	padding: 10px 20px;
-	border-radius: 4px;
-	cursor: pointer;
-	margin-right: 10px;
-}
-
-.navigation .btn:hover, .actions .btn:hover, .comments .btn:hover {
-	background-color: #4c3b2b;
-}
-
-.comments input[type="text"] {
-	margin-bottom: 10px;
-}
 </style>
-
 <c:if
 	test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership > 99}">
 	<script type="text/javascript">

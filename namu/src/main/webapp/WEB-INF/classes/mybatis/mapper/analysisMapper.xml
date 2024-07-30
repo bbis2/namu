@@ -1574,4 +1574,88 @@ WHERE answer IS NULL
 <select id="countSingo" resultType="long">
 select count(*) from report where processresult = 0
 </select>
+
+<select id="selectVip" resultType="com.forest.namu.admin.domain.Analysis">
+WITH TopUsers AS (
+    SELECT userId, SUM(pointVar) AS totalPoints
+    FROM point
+    WHERE description = '전자 결제'
+    GROUP BY userId
+    ORDER BY totalPoints DESC
+    FETCH FIRST 5 ROWS ONLY
+),
+LatestMoney AS (
+    SELECT p.userId, p.lastMoney, p.regDate, tu.totalPoints
+    FROM point p
+    JOIN TopUsers tu ON p.userId = tu.userId
+    WHERE p.regDate = (
+        SELECT MAX(regDate)
+        FROM point
+        WHERE userId = p.userId
+    )
+)
+SELECT l.userId, l.lastMoney, md.userName, m.nickname, l.totalPoints,
+       (SELECT SUM(pointVar) 
+        FROM point
+        WHERE description = '전자 결제') AS totalPointsSum
+FROM LatestMoney l
+JOIN member m ON m.userId = l.userId
+JOIN memberdetail md ON md.userId = l.userId
+
+</select>
+
+<select id="vipTotal" resultType="long">
+WITH TopUsers AS (
+    SELECT userId
+    FROM point
+    WHERE description = '전자 결제'
+    GROUP BY userId
+    ORDER BY SUM(pointVar) DESC
+    FETCH FIRST 5 ROWS ONLY
+),
+TotalPointsSum AS (
+    SELECT SUM(p.pointVar) AS totalPointsSum
+    FROM point p
+    JOIN TopUsers tu ON p.userId = tu.userId
+    WHERE p.description = '전자 결제'
+)
+SELECT totalPointsSum
+FROM TotalPointsSum
+
+</select>
+
+<select id="postVip" resultType="com.forest.namu.admin.domain.Analysis">
+WITH UserPostCounts AS (
+    SELECT userId, COUNT(*) AS postCount
+    FROM (
+        SELECT userId FROM daily
+        UNION ALL
+        SELECT userId FROM talentMarket
+        UNION ALL
+        SELECT userId FROM togetherlist
+        UNION ALL
+        SELECT userId FROM borrow
+        UNION ALL
+        SELECT userId FROM rent
+        UNION ALL
+        SELECT userId FROM auction
+        UNION ALL
+        SELECT userId FROM used
+        UNION ALL
+        SELECT userId FROM delievery
+    ) 
+    GROUP BY userId
+),
+TopUsers AS (
+    SELECT userId, postCount
+    FROM UserPostCounts
+    ORDER BY postCount DESC
+    FETCH FIRST 5 ROWS ONLY
+)
+SELECT t.userId, t.postCount,m1.nickname,m.username
+FROM TopUsers t
+join memberdetail m on m.userId=t.userId
+join member m1 on m1.userId=t.userId
+
+</select>
 </mapper>

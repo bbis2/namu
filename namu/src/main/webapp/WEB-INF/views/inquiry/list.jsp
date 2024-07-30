@@ -4,15 +4,24 @@
 
 <style type="text/css">
 .fleamarket-cover {
-    background-color: #EBDDCC;
+    background-color: #E3F1C5;
+    background-image: url('${pageContext.request.contextPath}/resources/images/forest1.jpg');
+    background-size: cover; /* 이미지를 커버 전체에 맞춤 */
+    background-position: center; /* 이미지를 중앙에 위치시킴 */
+    position: relative;
 }
 
-.htext{
-	padding-top: 100px;
-	padding-left : 100px;
+.htext {
+    padding-top: 100px;
+    padding-left: 100px;
+    color: black; /* 배경 이미지와 대비되도록 텍스트를 흰색으로 설정 */
+    position: relative;
+    z-index: 1; /* 텍스트를 배경 위에 표시되도록 함 */
+    
 }
+
 .cover-content {
-	padding: 50px;
+    padding: 50px;
     position: relative;
     height: 100%;
     box-sizing: border-box;
@@ -169,11 +178,13 @@ function searchList() {
 
 <div class="container">
 <section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">1대1<br>문의하기</h1>
-		<span class="cover-description htext"></span><br>
-		<span class="cover-description htext">문의하고 싶은 내용을 자유롭게 적어주세요!</span>
+		<h1 class="cover-title htext bd">
+			1대1<br>물어 보기
+		</h1>
+		<span class="cover-description htext"></span><br> <span
+			class="cover-description htext">궁금한점은 마음껏 물어보세요!</span>
 		<div class="cover-image"></div>
-  	</section>
+	</section>
   	
 	<div class="body-container">	
 		

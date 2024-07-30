@@ -108,13 +108,7 @@
 					<i class="bi bi-bar-chart-line"></i> 신고관리
 				</button>
 			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="tab-2" data-bs-toggle="tab"
-					data-bs-target="#nav-content" type="button" role="tab"
-					aria-controls="2" aria-selected="true" data-tab="2">
-					<i class="bi bi-bar-chart-line"></i> 회원분석
-				</button>
-			</li>
+			
 		</ul>
 
 

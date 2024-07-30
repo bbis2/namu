@@ -41,6 +41,7 @@ public interface AnalysisService {
 	
 	public List<Analysis> selectUser()throws Exception;
 	public List<Analysis>selectPoint(String userId)throws Exception;
+	public List<Analysis> selectVip()throws Exception;
 	
 	
 	public long pointSeoul()throws Exception;
@@ -64,4 +65,6 @@ public interface AnalysisService {
 	public long countNewBi()throws Exception;
 	public long countInquiry()throws Exception;
 	public long countSingo()throws Exception;
+	public long vipTotal()throws Exception;
+	public List<Analysis> postVip()throws Exception;
 }

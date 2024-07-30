@@ -228,5 +228,27 @@ public class AnalysisController {
 
 		return model;
 	}
+	
+	@RequestMapping("vip")
+	public String vip(HttpServletRequest req,
+			Analysis dto,
+			Model model) throws Exception{
+		
+		try {
+			long chargeAll = service.chargeAll();
+			long vipTotal = service.vipTotal();
+			List<Analysis> listAll = service.selectVip();
+			List<Analysis> list = service.postVip();
+			
+			model.addAttribute("list",list);
+			model.addAttribute("vipTotal",vipTotal);
+			model.addAttribute("listAll",listAll);
+			model.addAttribute("chargeAll",chargeAll);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ".admin.analysis.vip";
+	}
 
 }

@@ -35,7 +35,9 @@ public class Analysis {
 	private long pointVar;
 	private long currentPoint;
 	private String description;
-	
+	private long totalPoints;
+	private long totalPointsSum;
+
 	public String getRegDate() {
 		return regDate;
 	}
@@ -259,6 +261,18 @@ public class Analysis {
 	}
 	public void setAllRefund(long allRefund) {
 		this.allRefund = allRefund;
+	}
+	public long getTotalPoints() {
+		return totalPoints;
+	}
+	public void setTotalPoints(long totalPoints) {
+		this.totalPoints = totalPoints;
+	}
+	public long getTotalPointsSum() {
+		return totalPointsSum;
+	}
+	public void setTotalPointsSum(long totalPointsSum) {
+		this.totalPointsSum = totalPointsSum;
 	}
 	
 }

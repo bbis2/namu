@@ -69,6 +69,9 @@ public interface AnalysisMapper {
 	public long countNewBi()throws Exception;
 	public long countInquiry()throws Exception;
 	public long countSingo()throws Exception;
+	public List<Analysis> selectVip()throws Exception;
+	public long vipTotal()throws Exception;
+	public List<Analysis> postVip()throws Exception;
 	
 	
 }
