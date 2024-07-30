@@ -50,11 +50,11 @@ public class AlarmServiceImpl implements AlarmService {
 	}
 
 	@Override
-	public Alarm findById(long alarm) {
+	public Alarm findById(long alarmNum) {
 		Alarm dto = null;
 		
 		try {
-			dto = mapper.findById(alarm);
+			dto = mapper.findById(alarmNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -63,10 +63,10 @@ public class AlarmServiceImpl implements AlarmService {
 	}
 
 	@Override
-	public void updateTimeRead(long alarm) throws Exception {
+	public void updateTimeRead(long alarmNum) throws Exception {
 
 		try {
-			mapper.updateTimeRead(alarm);
+			mapper.updateTimeRead(alarmNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

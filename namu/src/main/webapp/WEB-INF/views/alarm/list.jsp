@@ -57,7 +57,6 @@
 			
 			
 			
-	<c:if test="${dto.userId == sessionScope.member.userId }">		
 	<form name="listForm" method="post">
 		<table class="table table-hover board-list">
 			<thead class="alarm-list">
@@ -71,28 +70,44 @@
 			</thead>
 			
 			<tbody>
-				<c:forEach var="dto" items="${list}" varStatus="status">
-					<tr>
-						<td class="list-center">${dto.alarmNum}</td>
-						<td class="list-left">
-							<span class="content">
-								<a href="${articleUrl}&num=${dto.alarmNum}" class="text-reset">${dto.content}</a>
-							</span>
-						</td>
-						<td class="list-center">${dto.sender}</td>
-						<td class="list-center">${dto.senderTime}</td>
-						<td class="list-center">${dto.timeRead}</td>
-					</tr>
-				</c:forEach>
+			    <c:forEach var="dto" items="${list}" varStatus="status">
+			        <tr>
+			            <td class="list-center">${dto.alarmNum}</td>
+			            <td class="list-left">
+			                <span class="content">
+			                    <a href="#" class="text-reset alarm-content" data-bs-toggle="modal" data-bs-target="#alarmModal" data-content="${dto.content}">${dto.content}</a>
+			                </span>
+			            </td>
+			            <td class="list-center">${dto.nickName}</td>
+			            <td class="list-center">${dto.senderTime}</td>
+			            <td class="list-center">${dto.timeRead}</td>
+			        </tr>
+			    </c:forEach>
 			</tbody>
 		</table>
 	</form>
-	</c:if>
   </div>
 
 	<div class="page-navigation">
 		${dataCount==0? "알림 내역이 없습니다." : paging }
 	</div>
+	
+<!-- 알림 내용 모달 -->
+<div class="modal fade" id="alarmModal" tabindex="-1" aria-labelledby="alarmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alarmModalLabel">알림 내용</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="alarmModalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
 $(document).ready(function () {
@@ -122,9 +137,24 @@ function change() {
 	f.submit();
 }
 
+// 알림 모달
+$(document).ready(function () {
+    $('.alarm-content').click(function (e) {
+        e.preventDefault();
+        var content = $(this).data('content');
+        $('#alarmModalBody').text(content);
+    });
+});
+
 </script>
 
 <style>
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 1rem);
+}
+
 .alarm-list{
 text-align: center;
 }

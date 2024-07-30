@@ -15,6 +15,8 @@ public class Alarm {
 	// 읽은시간
 	private String timeRead;
 	
+	private String nickName;
+	
 	// 구분(카테고리)
 	private int cnum;
 	// 카테고리명
@@ -66,6 +68,12 @@ public class Alarm {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 	
 }

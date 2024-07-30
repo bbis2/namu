@@ -17,8 +17,12 @@
 <select id="dataCount" parameterType="map">
 	select nvl(count(*),0) from alarm
 	<where>
-		<if test="kwd != null and kwd != '' ">
-			<include refid="where-list"/>
+		userId = #{userId}
+		<if test="kwd != null and kwd != ''">
+			AND <include refid="where-list"/>
+		</if>
+		<if test="cnum != 0" >
+			AND cnum = #{cnum}
 		</if>
 	</where>
 </select>
@@ -29,16 +33,22 @@
 		NVL2(timeRead, TO_CHAR(timeRead, 'YYYY-MM-DD HH24:MI:SS'), null) timeRead, ac.cnum, name, m.nickName
 	from alarm a 
 	join alarmCategory ac on a.cnum = ac.cnum
-	join member m on a.userId = m.userId
+	join member m on a.sender = m.userId
 	<where>
+		a.userId = #{userId}
 		<if test="kwd != null and kwd != '' ">
-			<include refid="where-list"/>
+			AND <include refid="where-list"/>
 		</if>
-	</where>	
+		<if test="cnum != 0" >
+			AND a.cnum = #{cnum}
+		</if>
+	</where>
+	order by alarmNum desc	
 </select>
 
 <select id="listCategory" resultType="com.forest.namu.domain.Alarm">
-  select cNum, name from alarmcategory 
+  select a.cNum, name from alarmcategory ac
+  join alarm a on a.cNum = ac.cNum
 </select>
 
 <select id="findById" resultType="com.forest.namu.domain.Alarm" parameterType="Long">
@@ -49,7 +59,7 @@
 
 
 <update id="updateTimeRead" parameterType="Long">
-	update alarm set timeRead = #{timeRead} 
+	update alarm set timeRead = SYSDATE
 	where alarmNum = #{alarmNum} and timeRead is null
 </update>
 

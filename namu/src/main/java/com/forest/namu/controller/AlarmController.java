@@ -46,6 +46,7 @@ public class AlarmController {
 		int dataCount = 0;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", info.getUserId());
 		map.put("kwd", kwd);
 		map.put("cnum", cnum);
 		
@@ -73,7 +74,11 @@ public class AlarmController {
 			query = "kwd=" + URLEncoder.encode(kwd, "utf-8");
 		}
 		if(cnum != 0) {
-			query += "&cnum=" + cnum;
+			if(query.length() == 0) {
+				query = "cnum=" + cnum;
+			} else {
+				query += "&cnum=" + cnum;
+			}
 		}
 		
 		listUrl = cp + "/alarm/list";
@@ -94,6 +99,7 @@ public class AlarmController {
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("paging", paging);		
 		model.addAttribute("listCategory", listCategory);
+		
 		return ".alarm.list";
 	}
 	
@@ -104,20 +110,21 @@ public class AlarmController {
 			HttpSession session,
 			Model model) throws Exception {
 		
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-
 		kwd = URLDecoder.decode(kwd, "utf-8");
 
 		String query = "page=" + alarmNum;
-		if (kwd.length() != 0) {
-			query += "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
+		if(kwd.length() != 0) {
+			query += "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+		}
+		if(cnum != 0) {
+			query += "&cnum=" + cnum;
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("kwd", kwd);
 		map.put("alarmNum", alarmNum);
 		
-		Alarm dto = null;
+		Alarm dto = service.findById(alarmNum);
 		
 		dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 
