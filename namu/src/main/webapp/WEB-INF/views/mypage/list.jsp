@@ -472,7 +472,7 @@ h1 {
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;나의 구매목록
-						</a><a class="link-block" onclick="questionModal();"> <img
+						</a><a class="link-block" onclick="openStoreApplicationModal();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;내 상점 관리
@@ -1093,6 +1093,49 @@ function registerReview(tboardNum) {
 	window.location.href = url;
 }
 
+
+function openStoreApplicationModal() {
+    let url = '${pageContext.request.contextPath}/mypage/mytalentshop';
+    let method = 'GET';
+    let formData = {};
+    let dataType = 'json';
+
+    ajaxFun(url, method, formData, dataType, function(response) {
+        let htmlContent = '';
+
+        if (response.state === "true") {
+            let myShopList = response.myShopList;
+
+            if (myShopList.length > 0) {
+                for (let order of myShopList) {
+                    htmlContent += '<tr>';
+                    htmlContent += '<td>' + order.applNum + '</td>';
+                    htmlContent += '<td>' + order.applDate + '</td>';
+                    htmlContent += '<td>' + order.nickName + '</td>';
+                    htmlContent += '<td>' + order.subject + '</td>';
+
+                    
+                    htmlContent += '<td>' + (order.state === 1 ? '취소함' : '진행 중') + '</td>';
+
+                    
+                    htmlContent += '<td>' + (order.reviewState === 1 ? 'O' : 'X') + '</td>';
+                    htmlContent += '</tr>';
+                }
+            } else {
+                htmlContent = '<tr><td colspan="6">신청 목록이 없습니다.</td></tr>';
+            }
+        } else {
+            htmlContent = '<tr><td colspan="6">신청 목록이 없습니다.</td></tr>';
+        }
+
+        
+        document.querySelector('#storeApplicationTable tbody').innerHTML = htmlContent;
+
+       
+        $('#storeApplicationModal').modal('show');
+    });
+}
+
 function photoInsert(){
 	const f = document.photoForm;
 	
@@ -1107,6 +1150,8 @@ function photoInsert(){
 	    f.submit();
 	    
 }
+
+
 
 function opentalentModal() {
 	$('#contentModal').modal('show');
