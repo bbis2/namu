@@ -131,4 +131,15 @@ public class TmOrderServiceImpl implements TmOrderService{
 		return list;
 	}
 
+	@Override
+	public List<TmOrder> listTmOrderMyshop(String userId) {
+		List<TmOrder> list=null;
+		try {
+			list=mapper.listTmOrderMyshop(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 }

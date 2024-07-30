@@ -293,10 +293,12 @@ public class TalentMarketController {
 		Profile profile = mypageService.selectProfile(dto.getUserId());
 		
 		int reviewCount = 0;
+		double score = 0.0;
 		Summary summary = reviewService.findByReviewSummary(map);
 		
-		if(summary != null) {
-			reviewCount = summary.getCount();
+		if(summary == null) {
+			summary.setCount(reviewCount);
+			summary.setAve(score);
 		}
 		
 		
@@ -330,7 +332,7 @@ public class TalentMarketController {
 	
 		model.addAttribute("profile",profile);
 		model.addAttribute("dto",dto);
-		model.addAttribute("reviewCount",reviewCount);
+		model.addAttribute("summary",summary);
 		model.addAttribute("page",page);
 		model.addAttribute("listOption", listOption);
 		model.addAttribute("listOptionDetail", listOptionDetail);
@@ -472,9 +474,8 @@ public class TalentMarketController {
 			e.printStackTrace();
 		}
 		
-		
+		reAttr.addFlashAttribute("quantity",dto.getQuantity());
 		reAttr.addFlashAttribute("usePoint",dto.getUsePoint());
-		reAttr.addFlashAttribute("orderAmount",dto.getOrderAmount());
 		reAttr.addFlashAttribute("talentdto",talentdto);
 		reAttr.addFlashAttribute("option1", dto.getOptionValue());
 		reAttr.addFlashAttribute("option2",dto.getOptionValues2());
@@ -485,6 +486,7 @@ public class TalentMarketController {
 	@GetMapping("ordercomplete")
 	public String ordercomplete (@ModelAttribute("option1") String option1,
             @ModelAttribute("option2") String option2,
+            @ModelAttribute("quantity") int quantity,
             @ModelAttribute("talentdto") TalentMarket talentdto,
             @ModelAttribute("usePoint") int usePoint,
 			HttpSession session,
@@ -497,6 +499,7 @@ public class TalentMarketController {
 		} catch (Exception e) {
 		}
 		
+		model.addAttribute("quantity",quantity);
 		model.addAttribute("usePoint",usePoint);
 		model.addAttribute("userPoint",userPoint);
 		model.addAttribute("option1",option1);

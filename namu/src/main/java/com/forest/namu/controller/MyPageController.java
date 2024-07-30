@@ -395,5 +395,24 @@ public class MyPageController {
 		model.put("state", state);
 		return model;
 	}
+	
+	@GetMapping("mytalentshop")
+	@ResponseBody
+	public Map<String, Object> mytalentShop(HttpSession session) throws Exception {
 
+		String state = "true";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		List<TmOrder> myShopList = tmOrderService.listTmOrderMyshop(info.getUserId());
+
+		if (myShopList.isEmpty()) {
+			state = "false";
+		}
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		model.put("myShopList", myShopList);
+
+		return model;
+	}
 }

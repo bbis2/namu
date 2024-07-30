@@ -475,7 +475,7 @@ h1 {
 						</a><a class="link-block" onclick="questionModal();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
-							&nbsp;내 상품 문의
+							&nbsp;내 상점 관리
 						</a>
 					</div>
 					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
@@ -488,7 +488,7 @@ h1 {
 						 <a class="link-block" onclick="changeMent();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
-							&nbsp;소개글 추가
+							&nbsp;내 상점 문의
 						</a>
 					</div>
 				</div>
@@ -497,6 +497,40 @@ h1 {
 	</div>
 
 </div>
+<!-- 내 상점 구매 신청 현황 모달 -->
+<div class="modal fade" id="storeApplicationModal" tabindex="-1" aria-labelledby="storeApplicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="storeApplicationModalLabel">내 상점 구매 신청 현황</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="storeApplicationTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>신청번호</th>
+                            <th>신청일</th>
+                            <th>구매자명</th>
+                            <th>상품명</th>
+                            <th>선택 옵션</th>
+                            <th>구매확정일</th>
+                            <th>취소 여부</th>
+                            <th>리뷰 여부</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 데이터가 동적으로 추가됩니다 -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--  재능마켓 구매목록 모달 -->
 <div class="modal fade" id="purchaseListModal" tabindex="-1" aria-labelledby="purchaseListModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -910,6 +944,14 @@ h1 {
 <script type="text/javascript">
 
 window.onload = function() {
+	const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('openModalPurchase') === 'true') {
+    	purchaseListModal();
+    }
+	
+    if (urlParams.get('mode') === 'qna') {
+    	opentalentModal();
+    }
     var mannerTemperature = ${userdto.userManner}; // 서버에서 전달된 매너 온도 점수
     var progressBar = document.getElementById('progressBar');
     
@@ -990,8 +1032,10 @@ function purchaseListModal() {
                 htmlContent += '<td>' + order.applNum + '</td>';
                 htmlContent += '<td>' + order.subject + '</td>';
                 htmlContent += '<td>' + order.applDate + '</td>';
-
-                if (order.completionDate === null) {
+					
+                if(order.state===1){
+                	htmlContent += '<td>구매 취소됨</td>';
+                } else if (order.completionDate === null) {
                     htmlContent += '<td><button class="btn btn-primary" onclick="confirmPurchase(' + order.applNum + ')">구매확정</button></td>';
                 } else {
                     htmlContent += '<td>' + order.completionDate + '</td>';

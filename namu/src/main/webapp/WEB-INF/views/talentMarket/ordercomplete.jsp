@@ -91,7 +91,7 @@
             <div class="details">
                 <p><strong>상품명 : </strong>${dto.subject} </p>
                 <p><strong>판매자 : </strong>${dto.nickName}</p>
-                <p><strong>수량 : </strong> 1</p>
+                <p><strong>수량 : </strong> ${quantity}</p>
                 <p><strong>선택 옵션 : </strong> <c:if test="${option1!=null}">${option1}</c:if> <c:if test="${option2!=null}">, option2</c:if></p>
             </div>
             <div class="custom-summary">
@@ -100,7 +100,7 @@
             </div>
         </div>
         <div class="custom-buttons">
-            <a href="#" class="custom-btn">주문 내역 확인</a>
+            <a href="${pageContext.request.contextPath}/mypage/list?openModalPurchase=true" class="custom-btn">주문 내역 확인</a>
             <a href="${pageContext.request.contextPath}/talent/list" class="custom-btn">리스트로 돌아가기</a>
         </div>
     </div>

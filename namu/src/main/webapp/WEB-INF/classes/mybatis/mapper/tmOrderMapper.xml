@@ -25,7 +25,19 @@
 		FROM tmOrder o
 		JOIN talentMarket t ON o.tboardNum = t.tboardNum
 		WHERE o.userId = #{userId}
+		ORDER BY o.applNum DESC
 	</select>
+	
+	<select id="listTmOrderMyshop" parameterType="String" resultType="com.forest.namu.domain.TmOrder">
+		SELECT o.applNum,o.applDate,o.state,o.userId,o.tboardNum,o.completionDate,o.reviewState,o.optionValue,o.optionValue2,o.quantity,o.reviewState,t.subject,
+		TO_CHAR(o.completionDate,'YYYY-MM-DD') completionDate
+		FROM tmOrder o
+		JOIN talentMarket t ON o.tboardNum = t.tboardNum
+		WHERE t.userId = #{userId}
+		ORDER BY o.applNum DESC
+	</select>
+	
+	
 	
 	<update id="updateState" parameterType="long">
 		UPDATE tmOrder

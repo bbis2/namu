@@ -608,7 +608,7 @@ $(function(){
 				    </div>
                 <div class="tabs">
                     <button id="detail-btn" class="active">상세 설명</button>
-                    <button id="review-btn">리뷰 <span class="badge badge-custom ">${reviewCount}</span></button>
+                    <button id="review-btn">리뷰 <span class="badge badge-custom ">${summary.count}</span></button>
                     <button id="inquiry-btn">상품 문의</button>
                     <button id="exchange-btn">교환/환불</button>
                 </div>
@@ -844,7 +844,7 @@ $(function(){
 	                            </div>
 	                            <div class="d-flex justify-content-between">
 	                            <div class="rating">
-	                              <p>★ ${dto.score}(${dto.reviewCount})</p> 
+	                              <p class="talent-score">★${summary.ave}(${summary.count})</p> 
 	                            </div>
 	                            <div class="hitCount">
 	                            	<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
@@ -888,21 +888,26 @@ $(function(){
 	                            <input type="hidden" value="${dto.tboardNum}">
 	                           
 	                            
-	                             
+	                             	<c:if test="${sessionScope.member.userId!=dto.userId}">
 		                            <button type="button" class="btn custom-button" onclick="validateAndSubmit();">구매하기</button>
-		                       
+		                       		</c:if>
+		                       		<c:if test="${sessionScope.member.userId==dto.userId}">
+		                       		<button type="button" class="btn custom-button" onclick="location.href='${pageContext.request.contextPath}/mypage/list';">내 상점 관리</button>
+		                       		</c:if>
 		                        
 	                            </form>
 	                        </div>
 	                        <div class="modifydelete-button">
 	                        <c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50}">
-	                        	
+	                    
 	                        	<c:if test="${sessionScope.member.userId==dto.userId}">
 								<button type="button" class="btn custom-button" onclick="location.href='${pageContext.request.contextPath}/talent/update?tboardNum=${dto.tboardNum}&page=${page}';">수정</button><p>&nbsp;</p>
 								</c:if>
 								<button type="button" class="btn custom-button" onclick="deleteBoard();">삭제</button>
 							</c:if>
+							<c:if test="${sessionScope.member.userId!=dto.userId}">
 							<button type="button" class="btn custom-button" onclick="SinGo();">신고</button>
+							</c:if>
 							</div>
 							
 							<!-- 신고 모달 -->
@@ -1178,6 +1183,7 @@ $(function(){
                 $(".review-score-star .item").eq(i - 1).addClass("on");
             }
             $(".review-score").text(ave + " / 5");
+            $(".talent-score").text("★"+ave + "("+count+")");
             $(".review-reviewCount").text(count);
 
             $(".review-rate .one-space").removeClass("on");
@@ -1390,7 +1396,7 @@ $(function(){
         	});	
         	
         	$('.btnMyQuestion').click(function(){
-        		location.href = '${pageContext.request.contextPath}/myPage/review?mode=qna';
+        		location.href = '${pageContext.request.contextPath}/mypage/list?mode=qna';
         	});
         });
         

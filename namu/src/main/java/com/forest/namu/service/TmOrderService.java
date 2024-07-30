@@ -13,6 +13,7 @@ public interface TmOrderService {
 	public List<TmOrder> listTmOrder(long tboardNum);
 	public List<TmOrder> listTmOrderByUserId(Map<String,Object> map);
 	public List<TmOrder> listTmOrderByUserIdAll(String userId);
+	public List<TmOrder> listTmOrderMyshop(String userId);
 	public void updateState(long applNum) throws Exception;
 	public void updateComplete(long applNum)throws Exception;
 	public void deleteTmOrder(long applNum) throws Exception;
