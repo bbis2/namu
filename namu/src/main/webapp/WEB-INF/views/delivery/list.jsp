@@ -130,10 +130,10 @@ window.addEventListener('load', function() {
 <div class="container">
 	<section class="fleamarket-cover">
 		<h1 class="cover-title htext bd">
-			소통하는<br>일상 생활
+			둘러보는<br>우리 동네
 		</h1>
 		<span class="cover-description htext"></span><br> <span
-			class="cover-description htext">동네주민과 함께 만들어가요!</span>
+			class="cover-description htext">심부름하고 포인트를 얻어가세요!</span>
 		<div class="cover-image"></div>
 	</section>
 

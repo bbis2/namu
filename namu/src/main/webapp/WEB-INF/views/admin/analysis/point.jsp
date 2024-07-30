@@ -145,11 +145,11 @@
                 </div>
 
                 <div class="large-card card">
-                    <div class="card-header">적립포인트 대비 충전 포인트</div>
+                    <div class="card-header">지역별 포인트 충전 현황</div>
                     <div class="card-body">
-                        <div id="largeCard2" style="width: 100%; height: 400px;"></div>
+                        <div id="map" style="width: 100%; height: 400px;"></div>
                     </div>
-                    <div class="card-footer">충전 포인트/적립 포인트</div>
+                    <div class="card-footer">전국 시,도 별</div>
                 </div>
             </div>
 
@@ -550,4 +550,140 @@
 		
 		$.ajax(url, settings);
 	}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<script>
+let result1 = ${seoul};
+let result2 = ${busan};
+let result3 = ${daegu};
+let result4 = ${incheon};
+let result5 = ${gwangju};
+let result6 = ${daejeon};
+let result7 = ${ulsan};
+let result8 = ${sejong};
+let result9 = ${gyeonggi};
+let result11 = ${gangwon};
+let result12 = ${chungbuk};
+let result13 = ${chungnam};
+let result14 = ${jeonbuk};
+let result15 = ${jeonnam};
+let result16 = ${gyeongbuk};
+let result17 = ${gyeongnam};
+let result18 = ${jeju};
+
+// 전체 결과 변수
+let result = ${result};
+
+// 백분율 계산sssssssdddsdsdsdsdsdsdsd
+let percentage1 = Math.floor((result1 / result) * 100);
+let percentage2 = Math.floor((result2 / result) * 100);
+let percentage3 = Math.floor((result3 / result) * 100);
+let percentage4 = Math.floor((result4 / result) * 100);
+let percentage5 = Math.floor((result5 / result) * 100);
+let percentage6 = Math.floor((result6 / result) * 100);
+let percentage7 = Math.floor((result7 / result) * 100);
+let percentage8 = Math.floor((result8 / result) * 100);
+let percentage9 = Math.floor((result9 / result) * 100);
+let percentage11 = Math.floor((result11 / result) * 100);
+let percentage12 = Math.floor((result12 / result) * 100);
+let percentage13 = Math.floor((result13 / result) * 100);
+let percentage14 = Math.floor((result14 / result) * 100);
+let percentage15 = Math.floor((result15 / result) * 100);
+let percentage16 = Math.floor((result16 / result) * 100);
+let percentage17 = Math.floor((result17 / result) * 100);
+let percentage18 = Math.floor((result18 / result) * 100);
+
+	
+    var ROOT_PATH = "${pageContext.request.contextPath}/resources/koreaAll4.geojson"; // geoJSON 파일 경로
+    var chartDom = document.getElementById("map"); // 지도 차트를 표시할 DOM 요소
+    var myChart = echarts.init(chartDom); // ECharts 인스턴스 초기화
+
+    var option; // 옵션 변수를 선언
+
+    myChart.showLoading(); // 차트 로딩 상태 표시
+
+    // geoJSON 파일 로드
+    $.getJSON(ROOT_PATH, function (geoJson) {
+        myChart.hideLoading(); // 로딩 상태 숨기기
+        echarts.registerMap("KOREA", geoJson); // geoJSON 데이터를 ECharts에 등록
+
+        // 차트 옵션 설정
+        myChart.setOption(option = {
+            tooltip: {
+                trigger: "item",
+                formatter: "{b}<br />{c} %" // 툴팁 포맷 설정
+            },
+            visualMap: {
+                min: 0,
+                max: 100,
+                text: ["100%", "0%"],
+                realtime: false,
+                calculable: true,
+                inRange: {
+                    color: ["#89b6fe", "#25529a"] // 색상 범위 설정
+                }
+            },
+            series: [{
+                name: "County Map",
+                type: "map",
+                roam: true,
+                zoom: 1, // 기본 줌 레벨 설정
+                scaleLimit: {
+                    min: 1,
+                    max: 3
+                }, // 줌 레벨 제한
+                map: "KOREA", // 사용할 지도 데이터
+                itemStyle: {
+                    normal: {
+                        borderColor: "#26566a" // 경계선 색상
+                    },
+                    emphasis: {
+                        areaColor: "#85fff7" // 강조 영역 색상
+                    }
+                },
+                data: [
+                    {name: "서울", value: percentage1},
+                    {name: "부산", value: percentage2},
+                    {name: "대구", value: percentage3},
+                    {name: "인천", value: percentage4},
+                    {name: "광주", value: percentage5},
+                    {name: "대전", value: percentage6},
+                    {name: "울산", value: percentage7},
+                    {name: "세종", value: percentage8},
+                    {name: "경기", value: percentage9},
+                    {name: "강원", value: percentage11},
+                    {name: "충북", value: percentage12},
+                    {name: "충남", value: percentage13},
+                    {name: "전북", value: percentage14},
+                    {name: "전남", value: percentage15},
+                    {name: "경북", value: percentage16},
+                    {name: "경남", value: percentage17},
+                    {name: "제주", value: percentage18}
+                ],
+                nameMap: {
+                    "서울특별시": "서울",
+                    "부산광역시": "부산",
+                    "대구광역시": "대구",
+                    "인천광역시": "인천",
+                    "광주광역시": "광주",
+                    "대전광역시": "대전",
+                    "울산광역시": "울산",
+                    "세종특별자치시": "세종",
+                    "경기도": "경기",
+                    "강원도": "강원",
+                    "충청북도": "충북",
+                    "충청남도": "충남",
+                    "전라북도": "전북",
+                    "전라남도": "전남",
+                    "경상북도": "경북",
+                    "경상남도": "경남",
+                    "제주특별자치도": "제주"
+                }
+            }]
+        });
+    });
+
+    // 옵션 적용
+    option && myChart.setOption(option);
 </script>

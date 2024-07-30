@@ -175,4 +175,15 @@ public class MypageServiceImpl implements MypageService{
 		return list;
 	}
 
+	@Override
+	public long selectMessage(String userId) throws Exception {
+		long result = 0;
+		try {
+			result = mapper.selectMessage(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 }

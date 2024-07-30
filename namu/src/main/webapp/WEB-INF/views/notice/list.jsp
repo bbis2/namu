@@ -3,17 +3,17 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
-<style type="text/css">
 .fleamarket-cover {
-    background-color: #E3F1C5;
+    background-color: #EBDDCC;
 }
 
-.htext{
-	padding-top: 100px;
-	padding-left : 100px;
+.htext {
+    padding-top: 100px;
+    padding-left: 100px;
 }
+
 .cover-content {
-	padding: 50px;
+    padding: 50px;
     position: relative;
     height: 100%;
     box-sizing: border-box;
@@ -26,9 +26,9 @@
         padding: 0 16px 0 16px;
         margin-top: 60px;
         margin-bottom: 60px;
+    }
+    /* 전체 배경색 */
 }
-/* 전체 배경색 */
-
 
 .cover-description {
     font-size: 1.2rem;
@@ -57,7 +57,6 @@
     width: 500px;
     height: 40px;
 }
-
 
 .search-button {
     background-color: #74634F;
@@ -102,12 +101,16 @@
     border-radius: 10px;
     margin-bottom: 50px;
     font-size: 1.1rem;
+    width: 100%; /* Adjusted width */
+    flex-wrap: wrap; /* Allow wrapping */
 }
 
 .categories span {
     font-weight: bold;
     cursor: pointer;
     transition: color 0.3s;
+    flex: 1; /* Distribute evenly */
+    text-align: center;
 }
 
 .categories span:hover {
@@ -160,8 +163,8 @@
     background-color: #74634F;
     color: #fff;
 }
-
 </style>
+
 
 
 <script type="text/javascript"
@@ -213,9 +216,11 @@ function searchCategory(categoryNum) {
 
 <div class="container">
  	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">소통하는<br>일상 생활</h1>
+		<h1 class="cover-title htext bd">공지사항<br></h1>
 		<span class="cover-description htext"></span><br>
-		<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
+		<span class="cover-description htext">확인하시고 도움되는</span><br>
+		<span class="cover-description htext">정보들 받아가세요!</span>
+		
 		<div class="cover-image"></div>
   	</section>
 
@@ -226,7 +231,7 @@ function searchCategory(categoryNum) {
 				<h5>&nbsp;전체 공지</h5>
 				<h5 style="color: #b3b3b3;" class="bd">&nbsp;${dataCount}개</h5>
 			</div>
-   	<div class="body-title">
+   	<div class="body-title" style="width: 100%;">
 		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/notice/list" method="post">
             <div class="filter-container">
                 <input type="text" class="search-input border border-2"  name="kwd" value="${kwd}" placeholder="검색어를 입력하세요"/>
@@ -239,9 +244,9 @@ function searchCategory(categoryNum) {
         </form>		
 	</div>
 	
-        <div class="row introduce">
+        <div class="row introduce"style="width: 100%;">
 
-            <div class="col-md-9">
+            <div class="col-md-9" style="width: 100%;">
               <div class="categories">
                     <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(0)">#전체</a></span>         
                     <span class="${category == 1 ? 'fw-semibold text-primary' : ''}"><a href="javascript:searchCategory(1)">#빌려드림</a></span>         

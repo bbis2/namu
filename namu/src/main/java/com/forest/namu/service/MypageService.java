@@ -23,4 +23,5 @@ public interface MypageService {
 	
 	public List<Url> myGGim(String userId)throws Exception;
 	public List<Url> myGGim2(String userId)throws Exception;
+	public long selectMessage(String userId)throws Exception;
 }

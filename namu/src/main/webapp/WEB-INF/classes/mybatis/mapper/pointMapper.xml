@@ -41,7 +41,7 @@
 		resultType="com.forest.namu.domain.Point">
 		select pointnum,userId,regDate,lastMoney,pointVar from
 		point where pointCate
-		= 0 and userId = #{userId} order by regDate desc
+		= 0 and description='전자 결제' and userId = #{userId} order by regDate desc
 	</select>
 	
 	<select id="selectAll" parameterType="String"

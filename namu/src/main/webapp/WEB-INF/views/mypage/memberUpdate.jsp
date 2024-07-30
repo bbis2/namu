@@ -131,7 +131,7 @@
 			    <div class="row mb-3">
 			        <div class="text-center">
 			            <button type="button" style="background: #D4DDC1;" name="sendButton" class="btn" onclick="memberOk();"> ${mode=="member"?"회원가입":"정보수정"} <i class="bi bi-check2"></i></button>
-			            <button type="button" style="background: #EFEFEF;" class="btn" onclick="location.href='${pageContext.request.contextPath}/';"> ${mode=="member"?"가입취소":"수정취소"} <i class="bi bi-x"></i></button>
+			            <button type="button" style="background: #EFEFEF;" class="btn" onclick="location.href='${pageContext.request.contextPath}/mypage/list';"> ${mode=="member"?"가입취소":"수정취소"} <i class="bi bi-x"></i></button>
 						<input type="hidden" name="userIdValid" id="userIdValid" value="false">
 						<input type="hidden" name="nickNameValid" id="nickNameValid" value="false">
 			        </div>

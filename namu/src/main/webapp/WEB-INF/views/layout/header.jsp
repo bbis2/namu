@@ -88,7 +88,7 @@
 								title="로그아웃"><i class="bi bi-unlock"></i></a>
 						</div>
 						<div class="p-2">
-							<a href="#" title="마이페이지"><i class="bi bi-person-circle"></i></a>
+							<a href="${pageContext.request.contextPath}/mypage/list" title="마이페이지"><i class="bi bi-person-circle"></i></a>
 						</div>
 						<div class="p-2">
 							<a href="${pageContext.request.contextPath}/alarm/list"

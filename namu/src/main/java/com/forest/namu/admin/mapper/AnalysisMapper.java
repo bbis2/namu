@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.forest.namu.admin.domain.Analysis;
+import com.forest.namu.domain.Member;
 
 @Mapper
 public interface AnalysisMapper {
@@ -45,4 +46,29 @@ public interface AnalysisMapper {
 	public List<Analysis> selectUser()throws Exception;
 	
 	public List<Analysis>selectPoint(String userId)throws Exception;
+	
+	public long pointSeoul()throws Exception;
+	public long pointBusan()throws Exception;
+	public long pointDaegu()throws Exception;
+	public long pointIncheon()throws Exception;
+	public long pointGwanju()throws Exception;
+	public long pointDaejeon()throws Exception;
+	public long pointUlsan()throws Exception;
+	public long pointSejong()throws Exception;
+	public long pointGyeonggi()throws Exception;
+	public long pointGangwon()throws Exception;
+	public long pointChungbuk()throws Exception;
+	public long pointChungnam()throws Exception;
+	public long pointJeonbuk()throws Exception;
+	public long pointJeonnam()throws Exception;
+	public long pointGyeongbuk()throws Exception;
+	public long pointGyeongnam()throws Exception;
+	public long pointJeju()throws Exception;
+	
+	public List<Member> selectNewBi()throws Exception;
+	public long countNewBi()throws Exception;
+	public long countInquiry()throws Exception;
+	public long countSingo()throws Exception;
+	
+	
 }

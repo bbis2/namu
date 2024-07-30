@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.forest.namu.admin.domain.Analysis;
 import com.forest.namu.admin.mapper.AnalysisMapper;
+import com.forest.namu.domain.Member;
 
 @Service
 public class AnalysisServiceImpl implements AnalysisService {
@@ -358,6 +359,238 @@ public class AnalysisServiceImpl implements AnalysisService {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public long pointSeoul() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointSeoul();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointBusan() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointBusan();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointDaegu() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointDaegu();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointIncheon() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointIncheon();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointGwanju() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointGwanju();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointDaejeon() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointDaejeon();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointUlsan() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointUlsan();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointSejong() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointSejong();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointGyeonggi() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointGyeonggi();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointGangwon() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointGangwon();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointChungbuk() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointChungbuk();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointChungnam() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointChungnam();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointJeonbuk() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointJeonbuk();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointJeonnam() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointJeonnam();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointGyeongbuk() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointGyeongbuk();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointGyeongnam() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointGyeongnam();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long pointJeju() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.pointJeju();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Member> selectNewBi() throws Exception {
+		List<Member> list = null;
+		
+		try {
+			list = mapper.selectNewBi();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public long countNewBi() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.countNewBi();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long countInquiry() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.countInquiry();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public long countSingo() throws Exception {
+		long result = 0;
+		try {
+			result = mapper.countSingo();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }

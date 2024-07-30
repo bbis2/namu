@@ -1441,4 +1441,137 @@ SELECT NVL(SUM(pointVar),0) AS totalPoint
     WHERE SUBSTR(town1, 1, 2) = '서울' AND pointcate = 0
 </select>
 
+<select id="pointBusan" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '부산' AND pointcate = 0
+</select>
+
+<select id="pointDaegu" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '대구' AND pointcate = 0
+</select>
+
+<select id="pointIncheon" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '인천' AND pointcate = 0
+</select>
+
+<select id="pointGwanju" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '광주' AND pointcate = 0
+</select>
+
+<select id="pointDaejeon" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '대전' AND pointcate = 0
+</select>
+
+<select id="pointUlsan" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '울산' AND pointcate = 0
+</select>
+
+<select id="pointSejong" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '세종' AND pointcate = 0
+</select>
+
+<select id="pointGyeonggi" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '경기' AND pointcate = 0
+</select>
+
+<select id="pointGangwon" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '강원' AND pointcate = 0
+</select>
+
+<select id="pointChungbuk" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '충북' AND pointcate = 0
+</select>
+
+<select id="pointChungnam" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '충남' AND pointcate = 0
+</select>
+
+<select id="pointJeonbuk" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '전북' AND pointcate = 0
+</select>
+
+<select id="pointJeonnam" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '전남' AND pointcate = 0
+</select>
+
+<select id="pointGyeongbuk" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '경북' AND pointcate = 0
+</select>
+
+<select id="pointGyeongnam" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '경남' AND pointcate = 0
+</select>
+
+<select id="pointJeju" resultType="long">
+SELECT NVL(SUM(pointVar),0) AS totalPoint
+    FROM point d
+    JOIN member m ON m.userId = d.userId
+    WHERE SUBSTR(town1, 1, 2) = '제주' AND pointcate = 0
+</select>
+
+<select id="selectNewBi" resultType="com.forest.namu.domain.Member">
+   SELECT memberIdx,m.userId,nickname,username,town1,birth,ment
+FROM member m
+JOIN memberdetail md on md.userId=m.userId
+WHERE regdate &gt;= SYSDATE - INTERVAL '7' DAY
+</select>
+
+<select id="countNewBi" resultType="long">
+ SELECT count(*)FROM member
+WHERE regdate &gt;= SYSDATE - INTERVAL '7' DAY
+</select>
+
+<select id="countInquiry" resultType="long">
+SELECT COUNT(*)
+FROM inquiry
+WHERE answer IS NULL
+</select>
+
+<select id="countSingo" resultType="long">
+select count(*) from report where processresult = 0
+</select>
 </mapper>

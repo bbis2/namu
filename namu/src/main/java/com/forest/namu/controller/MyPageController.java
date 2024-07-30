@@ -55,33 +55,36 @@ public class MyPageController {
 
 	@Autowired
 	private BadgeService bService;
-	
+
 	@Autowired
 	private TmReviewService tmReviewService;
-	
+
 	@Autowired
 	private TmQuestionService tmQuestionService;
-	
+
 	@Autowired
 	private TmOrderService tmOrderService;
-	
+
 	@Autowired
 	private MyUtil myUtil;
 
 	@GetMapping("list")
-	public String list(HttpSession session, Model model,Badge bto) throws Exception {
+	public String list(HttpSession session, Model model, Badge bto) throws Exception {
 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		long point = service.selectPoint(info.getUserId());
 		List<Member> list = myService.selectSchedule(info.getUserId());
 		List<Badge> blist = bService.selectBadge(info.getUserId());
-		
+
 		Profile userdto = myService.selectProfile(info.getUserId());
 		Profile dto = new Profile();
 		dto = myService.selectPhoto(info.getUserId());
-		
-		model.addAttribute("blist",blist);
+		long message = myService.selectMessage(info.getUserId());
+
+		model.addAttribute("message", message);
+
+		model.addAttribute("blist", blist);
 		model.addAttribute("list", list);
 		model.addAttribute("dto", dto);
 		model.addAttribute("userdto", userdto);
@@ -303,8 +306,8 @@ public class MyPageController {
 		try {
 			List<Badge> list = bService.selectBadge(info.getUserId());
 			long count = bService.dailyCount(info.getUserId());
-			if ((list.isEmpty() || list == null) && count>5) {
-				
+			if ((list.isEmpty() || list == null) && count > 5) {
+
 				bto.setUserId(info.getUserId());
 				bService.insertBadge1(bto);
 			}
@@ -316,8 +319,7 @@ public class MyPageController {
 		model.put("state", state);
 		return model;
 	}
-	
-	
+
 	@GetMapping("myWrite")
 	@ResponseBody
 	public Map<String, Object> myWrite(HttpSession session) throws Exception {
@@ -327,7 +329,7 @@ public class MyPageController {
 
 		List<Url> list = myService.myWrite(info.getUserId());
 		List<Url> list2 = myService.myWrite2(info.getUserId());
-		
+
 		if (list.isEmpty()) {
 			state = "false";
 		}
@@ -338,7 +340,7 @@ public class MyPageController {
 		model.put("Wlist2", list2);
 		return model;
 	}
-	
+
 	@GetMapping("myGGim")
 	@ResponseBody
 	public Map<String, Object> myGGim(HttpSession session) throws Exception {
@@ -348,7 +350,7 @@ public class MyPageController {
 
 		List<Url> list = myService.myGGim(info.getUserId());
 		List<Url> list2 = myService.myGGim2(info.getUserId());
-		
+
 		if (list.isEmpty()) {
 			state = "false";
 		}
@@ -359,7 +361,7 @@ public class MyPageController {
 		model.put("Glist2", list2);
 		return model;
 	}
-	
+
 	@GetMapping("mytalent")
 	@ResponseBody
 	public Map<String, Object> talentList(HttpSession session) throws Exception {
@@ -379,23 +381,23 @@ public class MyPageController {
 
 		return model;
 	}
-	
+
 	@PostMapping("confirmed")
 	@ResponseBody
-	public Map<String, Object> confirmedDate(@RequestParam long num) throws Exception{
+	public Map<String, Object> confirmedDate(@RequestParam long num) throws Exception {
 		String state = "true";
 		try {
 			tmOrderService.updateComplete(num);
 		} catch (Exception e) {
 			state = "false";
 		}
-		
+
 		Map<String, Object> model = new HashMap<String, Object>();
-		
+
 		model.put("state", state);
 		return model;
 	}
-	
+
 	@GetMapping("mytalentshop")
 	@ResponseBody
 	public Map<String, Object> mytalentShop(HttpSession session) throws Exception {

@@ -106,10 +106,11 @@
 
 		<div class="tab-content pt-2" id="nav-tabContent">
 			<div class="card-container">
-				<div class="card">
+				<div class="card" >
 					<div class="card-header">전체 현황</div>
-					<div class="card-body">
-						<div id="map" style="width: 100%; height: 400px;"></div>
+					<div class="card-body row">
+						<div id="map" style="width: 100%; height: 400px;" style="display: flex;">
+						</div>
 					</div>
 					<div class="card-footer">차트 1</div>
 				</div>

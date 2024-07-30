@@ -146,6 +146,10 @@
 		join borrowLike bw on bw.borrownum = b.borrownum
 		where bw.userId=#{userId}
 	</select>
+	
+	<select id="selectMessage" resultType="long">
+	select count(*)message from alarm where userId = #{userId}
+	</select>
 
 
 

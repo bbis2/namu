@@ -40,8 +40,10 @@ public class AnalysisController {
 		
 		try {
 			dto = service.selectPageCount();
-			
+			long countNew = service.countNewBi();
 			List<Analysis> list = service.selectAlldayCount();
+			
+			model.addAttribute("countNew",countNew);
 			model.addAttribute("list",list);
 			model.addAttribute("dto",dto);
 			
@@ -149,6 +151,48 @@ public class AnalysisController {
 			
 			long allCharge = service.chargeAll();
 			long allRefund = service.refundALl();
+			
+			
+			long seoul = service.pointSeoul();
+			long busan = service.pointBusan();
+			long daegu = service.pointDaegu();
+			long incheon = service.pointIncheon();
+			long gwangju = service.pointGwanju();
+			long daejeon = service.pointDaejeon();
+			long ulsan = service.pointUlsan();
+			long sejong = service.pointSejong();
+			long gyeonggi = service.pointGyeonggi();
+			long gangwon = service.pointGangwon();
+			long chungnam = service.pointChungnam();
+			long chungbuk = service.pointChungbuk();
+			long jeonbuk = service.pointJeonbuk();
+			long jeonnam = service.pointJeonnam();
+			long gyeongbuk = service.pointGyeongbuk();
+			long gyeongnam = service.pointGyeongnam();
+			long jeju = service.pointJeju();
+			
+			long result = seoul + busan + daegu + incheon + gwangju + daejeon + ulsan + sejong + gyeonggi + gangwon + chungnam + chungbuk + jeonbuk + jeonnam + gyeongbuk + gyeongnam + jeju;
+			
+			
+			model.addAttribute("seoul",seoul);
+			model.addAttribute("busan",busan);
+			model.addAttribute("daegu",daegu);
+			model.addAttribute("incheon",incheon);
+			model.addAttribute("gwangju",gwangju);
+			model.addAttribute("daejeon",daejeon);
+			model.addAttribute("ulsan",ulsan);
+			model.addAttribute("sejong",sejong);
+			model.addAttribute("gyeonggi",gyeonggi);
+			model.addAttribute("gangwon",gangwon);
+			model.addAttribute("chungnam",chungnam);
+			model.addAttribute("chungbuk",chungbuk);
+			model.addAttribute("jeonbuk",jeonbuk);
+			model.addAttribute("jeonnam",jeonnam);
+			model.addAttribute("gyeongbuk",gyeongbuk);
+			model.addAttribute("gyeongnam",gyeongnam);
+			model.addAttribute("jeju",jeju);
+			model.addAttribute("result",result);
+			
 			
 			model.addAttribute("allCharge",allCharge);
 			model.addAttribute("allRefund",allRefund);

@@ -6,7 +6,15 @@
 .fleamarket-cover {
 	background-color: #E3F1C5;
 }
+ .image-container {
+            display: flex; /* Display images in a row */
+            gap: 10px; /* Space between images */
+        }
 
+        .image-container img {
+            max-width: 400px; /* Ensure images scale within their container */
+            height: auto;
+        }
 .htext {
 	padding-top: 100px;
 	padding-left: 100px;
@@ -98,10 +106,10 @@ textarea.form-control {
 <div class="container">
 	<section class="fleamarket-cover">
 		<h1 class="cover-title htext bd">
-			소통하는<br>일상 생활
+			둘러보는<br>우리 동네
 		</h1>
 		<span class="cover-description htext"></span><br> <span
-			class="cover-description htext">동네주민과 함께 만들어가요!</span>
+			class="cover-description htext">심부름하고 포인트를 얻어가세요!</span>
 		<div class="cover-image"></div>
 	</section>
 
@@ -181,16 +189,19 @@ textarea.form-control {
 		</tr>
 	</table>
 
-	<span class="bold">😊</span><span> 안타 안타 날려버려라 키움의 히어로 이정후 ❣️</span>
+	<span class="bold">😊</span><span> 배달 인증하고 보증금 받아가세요 ❣️</span>
 	<div class="reply" style="display: none;">
 		<form name="answerForm" method="post" enctype="multipart/form-data">
-			<textarea class='form-control' name="" readonly
-				style="height: 300px;">${dto.author}</textarea>
-			<img
-				src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename1}">
-			<img
-				src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename2}">
-			<table class="table table-borderless reply-form">
+			<div class="image-container">
+				<img
+					src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename1}"
+					alt="Image 1"> <img
+					src="${pageContext.request.contextPath}/uploads/delivery/${dto.imageFilename2}"
+					alt="Image 2">
+			</div>
+
+			<textarea class="text-area" style="width: 50%;" readonly>${dto.author}</textarea>
+			<table class="table table-borderless reply-form" >
 				<tr>
 					<td><textarea class='form-control' name="author"></textarea>
 						<div class="img-viewer"></div> <input type="file"

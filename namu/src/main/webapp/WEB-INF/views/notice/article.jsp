@@ -4,82 +4,119 @@
 
 <style type="text/css">
 .fleamarket-cover {
-	background-color: #E3F1C5;
+    background-color: #EBDDCC;
+    width: 100%;
+    max-width: 1200px; /* 최대 너비를 설정하여 큰 화면에서도 일정 크기를 유지 */
+    margin: 0 auto; /* 가운데 정렬 */
 }
 
 .htext {
-	padding-top: 100px;
-	padding-left: 100px;
+    padding-top: 100px;
+    padding-left: 100px;
 }
 
 .cover-content {
-	padding: 50px;
-	position: relative;
-	height: 100%;
-	box-sizing: border-box;
-	margin-left: 100px;
+    padding: 50px;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    margin-left: 100px;
 }
 
-@media ( min-width : 768px) {
-	.fleamarket-cover {
-		height: 315px;
-		padding: 0 16px 0 16px;
-		margin-top: 60px;
-		margin-bottom: 60px;
-	}
+@media (min-width: 768px) {
+    .fleamarket-cover {
+        height: 315px;
+        padding: 0 16px 0 16px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
 }
 
 .form-group {
-	margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
-	display: block;
-	font-weight: bold;
-	margin-bottom: 5px;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
-.form-group input, .form-group textarea {
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	background-color: #f2f2f2;
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f2f2f2;
 }
 
 textarea.form-control {
-	height: 100px;
-	resize: none;
+    height: 100px;
+    resize: none;
 }
 
 .content-meta {
-	display: flex;
-	justify-content: space-between;
-	margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
 }
 
-.navigation, .actions, .comments {
-	margin: 10px 0;
+.navigation,
+.actions,
+.comments {
+    margin: 10px 0;
 }
 
-.navigation .btn, .actions .btn, .comments .btn {
-	background-color: #5d4734;
-	color: white;
-	border: none;
-	padding: 10px 20px;
-	border-radius: 4px;
-	cursor: pointer;
-	margin-right: 10px;
+.navigation .btn,
+.actions .btn,
+.comments .btn {
+    background-color: #5d4734;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
 }
 
-.navigation .btn:hover, .actions .btn:hover, .comments .btn:hover {
-	background-color: #4c3b2b;
+.navigation .btn:hover,
+.actions .btn:hover,
+.comments .btn:hover {
+    background-color: #4c3b2b;
 }
 
 .comments input[type="text"] {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 가운데 정렬 */
+    padding: 0 20px; /* 좌우 여백 */
+}
+
+.body-title {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.btn-light {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    color: #333;
 }
 </style>
+
 
 <c:if test="${sessionScope.member.userId==dto.userId}">
 	<script type="text/javascript">
@@ -92,15 +129,15 @@ textarea.form-control {
 		}
 	</script>
 </c:if>
-<div class="container">
-	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">
-			소통하는<br>일상 생활
-		</h1>
-		<span class="cover-description htext"></span><br> <span
-			class="cover-description htext">동네주민과 함께 만들어가요!</span>
+<div class="container" style="max-width: 1300px;">
+	<section class="fleamarket-cover" style="width: 1000%;">
+		<h1 class="cover-title htext bd">공지사항<br></h1>
+		<span class="cover-description htext"></span><br>
+		<span class="cover-description htext">확인하시고 도움되는</span><br>
+		<span class="cover-description htext">정보들 받아가세요!</span>
+		
 		<div class="cover-image"></div>
-	</section>
+  	</section>
 
 	<div class="body-title">
 		<h2 style="font-weight: bold;">${dto.categoryName}</h2>

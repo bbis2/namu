@@ -63,7 +63,6 @@
 	height: 30px;
 }
 
-
 .btn-user {
 	width: 50%;
 	height: 100%;
@@ -242,8 +241,7 @@ h1 {
 					<div class="inner-box" style="height: 30px; width: 100%">
 						<p style="font-size: 20px;">${userdto.ment}</p>
 					</div>
-					<div class="inner-box"
-						style=" height: 60px; width: 50%">
+					<div class="inner-box" style="height: 60px; width: 50%">
 						<c:forEach var="bo" items="${blist}">
 							<img alt=""
 								src="${pageContext.request.contextPath}/resources/images/${bo.num}.png">
@@ -265,19 +263,24 @@ h1 {
 					</div>
 
 					<div style="display: flex; justify-content: space-between;">
-						<p style="margin: 0; font-size: 20px; font-weight: 200;">
-							<img class="icons"
-								src="${pageContext.request.contextPath}/resources/images/icon_message.png">
+						<a style="margin: 0; font-size: 20px; font-weight: 200;"
+							href="${pageContext.request.contextPath}/alarm/list"> <img
+							class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_message.png">
 							메세지
-						</p>
-						<p style="margin: 0; font-size: 20px;">3건</p>
+						</a>
+						<p style="margin: 0; font-size: 20px;">${message}건</p>
 					</div>
 				</div>
 			</div>
 
-			<div class="col-sm-6 d-none d-sm-block mt-3">
-				<div class="box"
-					style="display: flex; align-items: center; height: 100px;">
+			<div class="box"
+				style="display: flex; flex-direction: column; align-items: center; height: 120px;">
+				<!-- 제목을 추가하는 div -->
+				<div
+					style="margin-bottom: 10px; font-size: 18px; font-weight: bold;">
+					나무 성장 속도 : ${userdto.userManner}cm</div>
+				<div style="display: flex; align-items: center; width: 100%;">
 					<img class="namuLevel"
 						src="${pageContext.request.contextPath}/resources/images/namuLogo.png"
 						style="margin-right: 10px;">
@@ -285,8 +288,10 @@ h1 {
 						style="flex-grow: 1; height: 30px; margin: 0 10px;">
 						<div
 							class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-							id="progressBar" role="progressbar" aria-valuenow="0"
-							aria-valuemin="0" aria-valuemax="100"></div>
+							id="progressBar" role="progressbar" aria-valuenow="50"
+							aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+							<!-- 진행률 표시 텍스트 -->
+						</div>
 					</div>
 					<img class="namuLevel"
 						src="${pageContext.request.contextPath}/resources/images/namuLogo.png"
@@ -361,12 +366,10 @@ h1 {
 					style="display: flex; border: none;">
 					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
 						<!-- 왼쪽 영역 -->
-						<a class="link-block" onclick="myGGim();">
-							<img class="icons" 
-								src="${pageContext.request.contextPath}/resources/images/icon_heart.png">
+						<a class="link-block" onclick="myGGim();"> <img class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_heart.png">
 							&nbsp;관심목록
-						</a>
-						<a class="link-block" onclick="delivery();"> <img
+						</a> <a class="link-block" onclick="delivery();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_transaction.png">
 							&nbsp;배달 관리
@@ -374,12 +377,10 @@ h1 {
 					</div>
 					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
 						<!-- 오른쪽 영역 -->
-						<a class="link-block" onclick="myWrite();">
-							<img class="icons"
-								src="${pageContext.request.contextPath}/resources/images/icon_pencil.png">
+						<a class="link-block" onclick="myWrite();"> <img class="icons"
+							src="${pageContext.request.contextPath}/resources/images/icon_pencil.png">
 							&nbsp;내가쓴글
-						</a>
-						<a class="link-block" onclick="badge();"> <img class="icons"
+						</a> <a class="link-block" onclick="badge();"> <img class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_badge.png">
 							&nbsp;나의뱃지
 						</a>
@@ -457,7 +458,7 @@ h1 {
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="row">
 			<div class="col-sm-3">
 				<!-- 빈 열을 추가하여 정렬 보정 -->
@@ -468,12 +469,12 @@ h1 {
 					style="display: flex; border: none;">
 					<div style="flex-grow: 1; text-align: left; font-size: 19px;">
 						<!-- 왼쪽 영역 -->
-						 <a href="#" class="link-block" onclick="purchaseListModal();"> <img
-							class="icons"
+						<a href="#" class="link-block" onclick="purchaseListModal();">
+							<img class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;나의 구매목록
-						</a><a class="link-block" onclick="openStoreApplicationModal();"> <img
-							class="icons"
+						</a><a class="link-block" onclick="openStoreApplicationModal();">
+							<img class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;내 상점 관리
 						</a>
@@ -484,8 +485,7 @@ h1 {
 							onclick="opentalentModal();"> <img class="icons"
 							src="${pageContext.request.contextPath}/resources/images/talent2.png">
 							&nbsp;나의리뷰/문의
-						</a>
-						 <a class="link-block" onclick="changeMent();"> <img
+						</a> <a class="link-block" onclick="changeMent();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;내 상점 문의
@@ -498,87 +498,98 @@ h1 {
 
 </div>
 <!-- 내 상점 구매 신청 현황 모달 -->
-<div class="modal fade" id="storeApplicationModal" tabindex="-1" aria-labelledby="storeApplicationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="storeApplicationModalLabel">내 상점 구매 신청 현황</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table id="storeApplicationTable" class="table">
-                    <thead>
-                        <tr>
-                            <th>신청번호</th>
-                            <th>신청일</th>
-                            <th>구매자명</th>
-                            <th>상품명</th>
-                            <th>선택 옵션</th>
-                            <th>구매확정일</th>
-                            <th>취소 여부</th>
-                            <th>리뷰 여부</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 데이터가 동적으로 추가됩니다 -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
+<div class="modal fade" id="storeApplicationModal" tabindex="-1"
+	aria-labelledby="storeApplicationModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="storeApplicationModalLabel">내 상점 구매
+					신청 현황</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table id="storeApplicationTable" class="table">
+					<thead>
+						<tr>
+							<th>신청번호</th>
+							<th>신청일</th>
+							<th>구매자명</th>
+							<th>상품명</th>
+							<th>선택 옵션</th>
+							<th>구매확정일</th>
+							<th>취소 여부</th>
+							<th>리뷰 여부</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 데이터가 동적으로 추가됩니다 -->
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <!--  재능마켓 구매목록 모달 -->
-<div class="modal fade" id="purchaseListModal" tabindex="-1" aria-labelledby="purchaseListModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="purchaseListModalLabel">나의 구매목록</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table id="purchaseListTable" class="table">
-                    <thead>
-                        <tr>
-                            <th>구매번호</th>
-                            <th>제목</th>
-                            <th>구매일</th>
-                            <th>구매 확정 상태</th>
-                            <th>리뷰 등록 상태</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 데이터가 동적으로 추가됩니다 -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
+<div class="modal fade" id="purchaseListModal" tabindex="-1"
+	aria-labelledby="purchaseListModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="purchaseListModalLabel">나의 구매목록</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table id="purchaseListTable" class="table">
+					<thead>
+						<tr>
+							<th>구매번호</th>
+							<th>제목</th>
+							<th>구매일</th>
+							<th>구매 확정 상태</th>
+							<th>리뷰 등록 상태</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 데이터가 동적으로 추가됩니다 -->
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- 재능마켓 리뷰/질문모달 -->
-<div class="modal fade" id="contentModal" tabindex="-1" aria-labelledby="contentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="contentModalLabel">Question & Review</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <jsp:include page="review.jsp" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-   
+<div class="modal fade" id="contentModal" tabindex="-1"
+	aria-labelledby="contentModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="contentModalLabel">Question &
+					Review</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<jsp:include page="review.jsp" />
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <div class="modal fade" id="changePhoto" tabindex="-1"
 	aria-labelledby="changePhotoLabel" aria-hidden="true">
@@ -855,19 +866,19 @@ h1 {
 				<div class="p-3">
 					<form name="modelLoginForm" action="" method="post" class="row g-3">
 						<c:forEach var="bbo" items="${blist}">
-						<div>
-							<img alt=""
-								src="${pageContext.request.contextPath}/resources/images/${bbo.num}.png">
-						</div>
-						<div class="mt-0">
-							<input type="text" name="userId" class="form-control" readonly
-								placeholder="뱃지이름 : ${bbo.name}">
-						</div>
-						<div>
-							<input type="password" name="userEamil" autocomplete="off"
-								readonly class="form-control"
-								placeholder="뱃지설명 : ${bbo.description}">
-						</div>
+							<div>
+								<img alt=""
+									src="${pageContext.request.contextPath}/resources/images/${bbo.num}.png">
+							</div>
+							<div class="mt-0">
+								<input type="text" name="userId" class="form-control" readonly
+									placeholder="뱃지이름 : ${bbo.name}">
+							</div>
+							<div>
+								<input type="password" name="userEamil" autocomplete="off"
+									readonly class="form-control"
+									placeholder="뱃지설명 : ${bbo.description}">
+							</div>
 						</c:forEach>
 					</form>
 				</div>
