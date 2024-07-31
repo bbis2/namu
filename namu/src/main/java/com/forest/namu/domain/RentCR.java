@@ -23,6 +23,8 @@ public class RentCR {
 	private String rentName; // 대여 제공자 닉네임
 	private String rentId; // 대여 제공자 아이디
 	
+	private String email; // 이벤트 발생 대상 이메일
+	
 	// 빌려드림 후기 (rentReview)
 	private long rentReviewNum;
 	private String content;
@@ -154,5 +156,11 @@ public class RentCR {
 	}
 	public void setBorrowerReview(int borrowerReview) {
 		this.borrowerReview = borrowerReview;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

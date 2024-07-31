@@ -561,7 +561,7 @@ function sendOk() {
 								        <c:forEach var="post" items="${writerOtherPosts}" varStatus="status">
 								            <c:if test="${status.index < 8}">
 								                <li class="d-flex">
-													<a href="${pageContext.request.contextPath}/${post.TABLENAME}/article?num=${post.NUM}" class="text-decoration-none">
+													<a href="${pageContext.request.contextPath}/${post.TABLENAME}/article?${post.TABLENAME == 'auction' ? 'aNum' : (post.TABLENAME == 'together' ? 'tNum' : 'num')}=${post.NUM}" class="text-decoration-none">
 													    <span class="bd">[${post.boardName}]</span> ${post.SUBJECT}
 													</a>
 								                </li>
@@ -1322,7 +1322,7 @@ $(function() {
 			const fn = function(data) {
 				let state = data.state;
 				if(state === 'true') {
-					let count = data.LikeCount;
+					let count = data.rentLikeCount;
 					$btn.closest('.list').find('.LikeCount').html('<i class="fa-solid fa-heart"></i>&nbsp;' + count);
 					
 					// 토스트 팝업
@@ -1571,13 +1571,13 @@ $(function() {
 	    var tabs = {
 	        'all': '전체',
 	        'used': '중고거래',
-	        'auction': '경매',
+	        'auction': '중고경매',
 	        'rent': '빌려드림',
 	        'borrow': '빌려줘요',
 	        'talent': '재능마켓',
-	        'daily': '일상',
-	        'togetherlist': '함께해요',
-	        'delievery': '배달'
+	        'daily': '나무일상',
+	        'together': '나무모임',
+	        'delivery': '배달해요'
 	    };
 	    var tabContent = '';
 	    var navItems = '';
@@ -1599,12 +1599,15 @@ $(function() {
 	                return post.TABLENAME === key || key === 'all';
 	            });
 	            
+	            var numParameter;
+	            
 	            if (postsInThisTab.length === 0) {
 	                tabContent += '<li class="list-group-item">등록된 글이 없습니다.</li>';
 	            } else {
 	                postsInThisTab.forEach(function(post) {
+	                	numParameter = (post.TABLENAME === 'auction' ? 'aNum=' : (post.TABLENAME === 'together' ? 'tNum=' : 'num='));
 	                    tabContent += '<li class="list-group-item">' +
-	                        '<a href="${pageContext.request.contextPath}/' + post.TABLENAME + '/article?num=' + post.NUM + '" class="text-decoration-none">' +
+	                        '<a href="${pageContext.request.contextPath}/' + post.TABLENAME + '/article?' + numParameter + post.NUM + '" class="text-decoration-none">' +
 	                        '[' + tabs[post.TABLENAME] + '] ' + post.SUBJECT +
 	                        '</a>' +
 	                        '</li>';

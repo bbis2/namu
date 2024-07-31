@@ -244,13 +244,23 @@ public class RentCRServiceImpl implements RentCRService {
     }
 
 	@Override
-	public String getEmailByRentNum(long rentNum) throws Exception {
+	public Map<String, Object> getEmailByRentNum(long rentNum) throws Exception {
 		return mapper.getEmailByRentNum(rentNum);
 	}
 
 	@Override
-	public String getEmailByReqNum(long reqNum) throws Exception {
+	public Map<String, Object> getEmailByReqNum(long reqNum) throws Exception {
 		return mapper.getEmailByReqNum(reqNum);
+	}
+
+	@Override
+	public RentCR findByReqNum(Long reqNum) {
+		return mapper.findByReqNum(reqNum);
+	}
+
+	@Override
+	public RentCR findByRentNum(Map<String, Object> map) {
+		return mapper.findByRentNum(map);
 	}
     
 }

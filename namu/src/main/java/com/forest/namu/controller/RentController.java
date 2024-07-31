@@ -200,12 +200,12 @@ public class RentController {
 	        	String boardName = switch ((String)map2.get("TABLENAME")) {
 				case "borrow" 			-> "빌려줘요";
 				case "rent" 			-> "빌려드림";
-				case "delievery" 		-> "배달해요";
+				case "delivery" 		-> "배달해요";
 				case "daily" 			-> "나무일상";
-				case "togetherlist" 	-> "나무모임";
+				case "together" 		-> "나무모임";
 				case "talent" 			-> "재능마켓";
-				case "used" 			-> "중고";
-				case "auction" 			-> "경매";
+				case "used" 			-> "중고거래";
+				case "auction" 			-> "중고경매";
 				default					-> "오류";
 				};
 				
@@ -223,7 +223,10 @@ public class RentController {
 		    map.put("location", dto.getLocation());
 		    map.put("categoryNum", dto.getCategoryNum());
 		    map.put("rentNum", num); // 현재 글 제외
-		    List<Rent> otherPosts = service.listOtherPosts(map);
+		    List<Rent> otherPosts = service.listOtherPosts(map); // 동네 > 카테고리의 다른 글
+		    for(Rent rent : otherPosts) {
+				rent.setPassedTime(myUtil.returnPassedTime(rent.getRegDate()));
+		    }
 		    
 		    int totalPages = Math.max(1, (otherPosts.size() + 4) / 5); // 최소 1페이지
 	
@@ -388,6 +391,7 @@ public class RentController {
 			) {
 		
 		String state = "true";
+		int rentLikeCount = 0;
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -406,7 +410,7 @@ public class RentController {
 			state = "false";
 		}
 		
-		int rentLikeCount = service.rentLikeCount(num);
+		rentLikeCount = service.rentLikeCount(num);
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("state", state);

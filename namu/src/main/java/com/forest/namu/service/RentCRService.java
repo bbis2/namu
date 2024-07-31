@@ -7,6 +7,8 @@ import com.forest.namu.domain.Point;
 import com.forest.namu.domain.RentCR;
 
 public interface RentCRService {
+	public RentCR findByReqNum(Long reqNum);
+	public RentCR findByRentNum(Map<String, Object> map);
 
 	public boolean checkRentOverlap(Map<String, Object> map) throws Exception; 		// 대여 기간 중복 확인
 	public void insertRentConfirm(RentCR dto, Point point) throws Exception; 		// 렌트 신청 삽입
@@ -26,6 +28,6 @@ public interface RentCRService {
     public int getRentReviewCount(long rentNum) throws Exception; // 리뷰 개수 불러오기
 	public List<Map<String, Object>> getRentReviews(long rentNum, int page, int pageSize) throws Exception; // 리뷰 불러오기 (article)
 	
-	public String getEmailByRentNum(long rentNum) throws Exception; // 글쓴이 이메일 가져오기
-	public String getEmailByReqNum(long reqNum) throws Exception; // 신청자 이메일 가져오기
+	public Map<String, Object> getEmailByRentNum(long rentNum) throws Exception; // 글쓴이 이메일 가져오기
+	public Map<String, Object> getEmailByReqNum(long reqNum) throws Exception; // 신청자 이메일 가져오기
 }

@@ -29,6 +29,7 @@ public interface RentCRMapper {
     public List<RentCR> selectReceivedRequests(String userId); // 받은 신청 가져오기
     
     public RentCR findByReqNum(Long reqNum);
+    public RentCR findByRentNum(Map<String, Object> map);
     public void updateRentCRState(Map<String, Object> map) throws SQLException; // 받은 신청 수락하기
     
     public void insertUserReview(Map<String, String> reviewData) throws SQLException; // 사용자 후기 추가
@@ -43,6 +44,6 @@ public interface RentCRMapper {
 	// 리뷰 가져오기
 	public List<Map<String, Object>> selectRentReviews(@Param("rentNum") long rentNum, @Param("offset") int offset, @Param("pageSize") int pageSize);
 	
-	public String getEmailByRentNum(long rentNum) throws SQLException; // 글쓴이 이메일 가져오기
-	public String getEmailByReqNum(long reqNum) throws SQLException; // 신청자 이메일 가져오기
+	public Map<String, Object> getEmailByRentNum(long rentNum) throws SQLException; // 글쓴이 이메일 가져오기
+	public Map<String, Object> getEmailByReqNum(long reqNum) throws SQLException; // 신청자 이메일 가져오기
 }

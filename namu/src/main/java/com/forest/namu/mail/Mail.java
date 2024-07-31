@@ -16,14 +16,6 @@ public class Mail {
 	private List<MultipartFile> selectFile; // <input type="file" name="selectFile"
 	private List<String> savePathname = new ArrayList<>();
 	
-//	public String getHtmlContent() {
-//		StringBuilder html = new StringBuilder();
-//		html.append("<html><body>");
-//		html.append(content);
-//		html.append("<p><a href=\"")
-//	}
-	
-	
 	public String getReceiverEmail() {
 		return receiverEmail;
 	}
