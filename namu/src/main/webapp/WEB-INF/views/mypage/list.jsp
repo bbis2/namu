@@ -251,7 +251,7 @@ h1 {
 			</div>
 
 			<div class="col-sm-3 d-none d-sm-block ml-5 mt-3">
-				<div class="box" style="height: 100px;">
+				<div class="box" style="height: 120px;">
 					<div
 						style="display: flex; justify-content: space-between; margin-bottom: 10px;">
 						<p style="margin: 0; font-size: 20px; font-weight: 200;">
@@ -274,6 +274,7 @@ h1 {
 				</div>
 			</div>
 
+			<div class="col-sm-6 d-none d-sm-block ml-4 mt-3">
 			<div class="box"
 				style="display: flex; flex-direction: column; align-items: center; height: 120px;">
 				<!-- 제목을 추가하는 div -->
