@@ -75,7 +75,7 @@
 			            <td class="list-center">${dto.alarmNum}</td>
 			            <td class="list-left">
 			                <span class="content">
-			                    <a href="#" class="text-reset alarm-content" data-bs-toggle="modal" data-bs-target="#alarmModal" data-content="${dto.content}">${dto.content}</a>
+			                    <span class="text-reset alarm-content" data-bs-toggle="modal" data-bs-target="#alarmModal" data-content="${dto.content}">${dto.content}</span>
 			                </span>
 			            </td>
 			            <td class="list-center">${dto.nickName}</td>
@@ -142,7 +142,7 @@ $(document).ready(function () {
     $('.alarm-content').click(function (e) {
         e.preventDefault();
         var content = $(this).data('content');
-        $('#alarmModalBody').text(content);
+        $('#alarmModalBody').html(content);
     });
 });
 

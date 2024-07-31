@@ -47,8 +47,7 @@
 </select>
 
 <select id="listCategory" resultType="com.forest.namu.domain.Alarm">
-  select a.cNum, name from alarmcategory ac
-  join alarm a on a.cNum = ac.cNum
+  select  cNum, name from alarmcategory
 </select>
 
 <select id="findById" resultType="com.forest.namu.domain.Alarm" parameterType="Long">

@@ -1,6 +1,5 @@
 package com.forest.namu.controller;
 
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -83,12 +81,12 @@ public class AlarmController {
 		
 		listUrl = cp + "/alarm/list";
 		articleUrl = cp + "/alarm/article?page=" + current_page;
-		if(query.length() != 0) {
+		if(query.length() != 0) {;
 			listUrl += "?" + query;
 			articleUrl += "&" + query;
 		}
 		
-		String paging = myUtil.paging(current_page, total_page, listUrl);		
+		String paging = myUtil.paging(current_page, total_page, listUrl);	
 		
 		model.addAttribute("list", list);
 		model.addAttribute("kwd", kwd);
@@ -101,39 +99,6 @@ public class AlarmController {
 		model.addAttribute("listCategory", listCategory);
 		
 		return ".alarm.list";
-	}
-	
-	@GetMapping("article")
-	public String article(@RequestParam long alarmNum, @RequestParam String page,
-			@RequestParam(defaultValue = "0") int cnum, 
-			@RequestParam(defaultValue = "") String kwd,
-			HttpSession session,
-			Model model) throws Exception {
-		
-		kwd = URLDecoder.decode(kwd, "utf-8");
-
-		String query = "page=" + alarmNum;
-		if(kwd.length() != 0) {
-			query += "&kwd=" + URLEncoder.encode(kwd, "utf-8");
-		}
-		if(cnum != 0) {
-			query += "&cnum=" + cnum;
-		}
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("kwd", kwd);
-		map.put("alarmNum", alarmNum);
-		
-		Alarm dto = service.findById(alarmNum);
-		
-		dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
-
-		model.addAttribute("dto", dto);
-		model.addAttribute("page", page);
-		model.addAttribute("query", query);
-		
-		return ".alarm.article";
-		
 	}
 	
 }
