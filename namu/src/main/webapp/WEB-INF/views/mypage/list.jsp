@@ -202,6 +202,23 @@ h1 {
 .link-block img {
 	vertical-align: middle; /* 이미지와 텍스트를 수직으로 정렬 */
 }
+
+
+#storeApplicationModal .modal-dialog {
+        max-width: 60%;
+}
+
+#storeApplicationModal .modal-body {
+    overflow-x: auto; /* 필요한 경우 가로 스크롤을 추가 */
+}
+
+.item-basic-content { cursor: pointer; }
+.item-detail-content { display: none; }
+
+.answer-form textarea { width: 100%; height: 75px; resize: none; }
+
+.answerQuestion, .deleteQuestion { cursor: pointer; padding-left: 5px; }
+.answerQuestion:hover, .deleteQuestion:hover { font-weight: 500; color: #2478FF; }
 </style>
 </head>
 
@@ -486,7 +503,7 @@ h1 {
 							onclick="opentalentModal();"> <img class="icons"
 							src="${pageContext.request.contextPath}/resources/images/talent2.png">
 							&nbsp;나의리뷰/문의
-						</a> <a class="link-block" onclick="changeMent();"> <img
+						</a> <a class="link-block" onclick="openStoreInquiryModal();"> <img
 							class="icons"
 							src="${pageContext.request.contextPath}/resources/images/icon_change.png">
 							&nbsp;내 상점 문의
@@ -497,6 +514,92 @@ h1 {
 		</div>
 	</div>
 
+</div>
+<!-- 내상점 문의 모달 -->
+<div class="modal fade" id="storeInquiryModal" tabindex="-1" 
+     data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="storeInquiryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="storeInquiryModalLabel">상품 문의</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 이곳에 AJAX로 데이터를 불러와서 채웁니다. -->
+                <div id="inquiryListContent">
+                    <!-- 로딩 중 표시 -->
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Loading inquiries...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 문의 답변 모달 -->
+<div class="modal fade" id="storeInquiryModal" tabindex="-1" 
+     data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="storeInquiryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="storeInquiryModalLabel">상품 문의</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="inquiryListContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="answerDialogModal" tabindex="-1" 
+     data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="answerDialogModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="answerDialogModalLabel">상품 문의 답변</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-2 answer-form">
+                    <form name="answerForm" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <span class="fw-bold">답변 달기</span>
+                            </div>
+                            <div class="col-3 text-end">
+                                <input type="checkbox" name="showQuestion" id="showQuestion1" class="form-check-input" value="1">
+                                <label class="form-check-label" for="showQuestion1">표시</label>
+                            </div>
+                        </div>
+                        <div class="p-1">
+                            <input type="hidden" name="num">
+                            <input type="hidden" name="mode" value="${mode}">
+                            <input type="hidden" name="page" value="${page}">
+                            <textarea name="answer" id="answer" class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btnAnswerSendOk">답변등록 <i class="bi bi-check2"></i></button>
+                <button type="button" class="btn btn-secondary btnAnswerSendCancel" data-bs-dismiss="modal">취소</button>
+            </div>            
+        </div>
+    </div>
 </div>
 <!-- 내 상점 구매 신청 현황 모달 -->
 <div class="modal fade" id="storeApplicationModal" tabindex="-1"
@@ -519,7 +622,6 @@ h1 {
 							<th>상품명</th>
 							<th>선택 옵션</th>
 							<th>구매확정일</th>
-							<th>취소 여부</th>
 							<th>리뷰 여부</th>
 						</tr>
 					</thead>
@@ -1026,8 +1128,125 @@ $(function() {
 	});
 });
 
+function openStoreInquiryModal() {
+    $('#storeInquiryModal').modal('show');
+
+    $('#inquiryListContent').html(
+        '<div class="text-center">' +
+        '    <div class="spinner-border" role="status">' +
+        '        <span class="visually-hidden">Loading...</span>' +
+        '    </div>' +
+        '    <p>문의 내역을 불러오는 중입니다...</p>' +
+        '</div>'
+    );
+
+    $.ajax({
+        url: `${pageContext.request.contextPath}/mypage/mytalentshopQna`, // 데이터를 가져올 URL
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            console.log("수신된 데이터:", data); // 서버로부터 수신한 데이터를 출력
+
+            let contentHtml = '';
+
+            if (data && data.list && data.list.length > 0) {
+                contentHtml += '<div class="body-container">';
+                contentHtml += '<div class="body-title"><h3><i class="bi bi-exclamation-square"></i> 상품 문의</h3></div>';
+                contentHtml += '<div class="body-main">';
+                contentHtml += '<table class="table table-borderless board-list">';
+                contentHtml += '<thead class="table-light"><tr><th>답변상태</th><th>내용</th><th>작성자</th><th>작성일</th></tr></thead>';
+                contentHtml += '<tbody>';
+
+                data.list.forEach(function(item) {
+                    contentHtml += '<tr class="item-basic-content border-bottom" onclick="toggleDetail(this)">';
+                    contentHtml += '<td>' + (item.answer ? '<span class="text-primary">답변완료</span>' : '<span class="text-secondary">답변대기</span>') + '</td>';
+                    contentHtml += '<td class="left ellipsis"><span>' + item.question.replace('<br>', '') + '</span></td>';
+                    contentHtml += '<td>' + item.nickName + '</td>';
+                    contentHtml += '<td>' + item.questionDate.substring(0, 10) + '</td>';
+                    contentHtml += '</tr>';
+                    contentHtml += '<tr class="item-detail-content" style="display: none;">';
+                    contentHtml += '<td colspan="6" class="left p-0">';
+                    contentHtml += '<div class="border-bottom p-2 px-3"><div class="bg-light p-2">';
+                    contentHtml += '<div><div class="p-2 pb-0 fw-semibold">' + item.subject + '</div>';
+                    contentHtml += '<div class="row p-2"><div class="col-auto"><span>' + item.questionDate + '</span></div>';
+                    contentHtml += '<div class="col text-end"><span class="deleteQuestion" data-num="' + item.num + '" onclick="deleteQuestion(' + item.num + ')">삭제</span> |';
+                    contentHtml += '<span class="answerQuestion" data-num="' + item.num + '" data-showQuestion="' + item.showQuestion + '" onclick="openAnswerModal(' + item.num + ', \'' + item.answer + '\')">답변</span></div></div>';
+                    contentHtml += '<div class="p-2">' + item.question + '</div>';
+
+                    if (item.answer) {
+                        contentHtml += '<div class="p-2 pt-0 border-top"><div class="bg-light"><div class="p-3 pb-0">';
+                        contentHtml += '<label class="text-bg-primary px-2">' + item.answerName + '</label> <label>' + item.answerDate + '</label>';
+                        contentHtml += '</div><div class="p-3 pt-1 pb-1 answer-content">' + item.answer + '</div></div></div>';
+                    }
+
+                    contentHtml += '</div></div></div></td></tr>';
+                });
+
+                contentHtml += '</tbody></table></div></div>';
+            } else {
+                contentHtml = '<p>문의 내역이 없습니다.</p>';
+            }
+
+            $('#inquiryListContent').html(contentHtml);
+        },
+        error: function(xhr, status, error) {
+            console.error('문의 내역을 불러오지 못했습니다:', status, error);
+            $('#inquiryListContent').html('<p>문의 내역을 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요.</p>');
+        }
+    });
+}
+
+function toggleDetail(element) {
+    $(element).next('.item-detail-content').toggle();
+}
+
+function openAnswerModal(num, answer) {
+    const f = document.answerForm;
+    f.num.value = num;
+    f.answer.value = (answer && answer !== "null") ? answer : '';
+    $("#answerDialogModal").modal("show");
+}
+
+function deleteQuestion(num) {
+    if (confirm('게시글을 삭제 하시겠습니까 ?')) {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/admin/customer/question/delete',
+            method: 'POST',
+            data: { num: num },
+            success: function() {
+                alert('삭제되었습니다.');
+                openStoreInquiryModal(); // 리스트 갱신
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to delete question:', status, error);
+                alert('삭제 실패. 다시 시도해주세요.');
+            }
+        });
+    }
+}
+
+$(function(){
+    $('.btnAnswerSendOk').click(function(){
+        const f = document.answerForm;
+        let s = f.answer.value.trim();
+        if (!s) {
+            alert("답변을 입력하세요.");
+            f.answer.focus();
+            return false;
+        }
+        f.action = "${pageContext.request.contextPath}/admin/customer/question/answer";
+        f.submit();
+    });
+
+    $('.btnAnswerSendCancel').click(function(){
+        const f = document.answerForm;
+        f.reset();
+        $("#answerDialogModal").modal("hide");
+    });
+});
+
 function purchaseListModal() {
-    // AJAX 요청을 사용하여 구매 목록 데이터를 가져옵니다.
+  
     let url = '${pageContext.request.contextPath}/mypage/mytalent';
     let method = 'GET';
     let formData = {};
@@ -1124,11 +1343,13 @@ function openStoreApplicationModal() {
                     htmlContent += '<td>' + order.applNum + '</td>';
                     htmlContent += '<td>' + order.applDate + '</td>';
                     htmlContent += '<td>' + order.nickName + '</td>';
-                    htmlContent += '<td>' + order.subject + '</td>';
-
-                    
+                    htmlContent += '<td> <a href ="${pageContext.request.contextPath}/talent/article?num='+order.tboardNum + '">'+ order.subject + '</a></td>';
+                    htmlContent += '<td>' + order.optionValue + ', ' + order.optionValue2 + '</td>';
+                    if(order.completionDate!=null){
+                    htmlContent += '<td>' + order.completionDate + '</td>';
+                    } else{ 
                     htmlContent += '<td>' + (order.state === 1 ? '취소함' : '진행 중') + '</td>';
-
+                    }
                     
                     htmlContent += '<td>' + (order.reviewState === 1 ? 'O' : 'X') + '</td>';
                     htmlContent += '</tr>';

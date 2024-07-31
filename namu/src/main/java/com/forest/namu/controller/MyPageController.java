@@ -417,4 +417,60 @@ public class MyPageController {
 
 		return model;
 	}
+	
+	@GetMapping("mytalentshopQna")
+	@ResponseBody
+	public Map<String, Object> questionList(
+	        @RequestParam(value = "page", defaultValue = "1") int current_page,
+	        @RequestParam(defaultValue = "1") int mode,
+	        HttpServletRequest req, HttpSession session) throws Exception {
+	    
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    Map<String, Object> model = new HashMap<>();
+
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        int size = 10;
+	        int dataCount = 0;
+
+	        map.put("mode", mode);
+	        map.put("userId", info.getUserId());
+	        
+	        dataCount = tmQuestionService.dataCount2(map);
+	        int total_page = myUtil.pageCount(dataCount, size);
+	        if (current_page > total_page) {
+	            current_page = total_page;
+	        }
+
+	        int offset = (current_page - 1) * size;
+	        if (offset < 0) offset = 0;
+
+	        map.put("offset", offset);
+	        map.put("size", size);
+
+	        List<TmQuestion> list = tmQuestionService.listQuestion2(map);
+	        
+	        // 문의 내용에서 줄바꿈 태그(<br>)를 공백으로 대체
+	        for (TmQuestion question : list) {
+	            question.setQuestion(question.getQuestion().replace("<br>", ""));
+	        }
+
+	        model.put("list", list);
+	        model.put("dataCount", dataCount);
+	        model.put("size", size);
+	        model.put("page", current_page);
+	        model.put("total_page", total_page);
+	        model.put("mode", mode);
+	        
+	    } catch (Exception e) {
+	        // 예외가 발생한 경우 로그를 남기고 에러 메시지 반환
+	        e.printStackTrace();
+	        model.put("error", "An error occurred while fetching the questions.");
+	    }
+
+	    return model;
+	}
+	
+	
 }
