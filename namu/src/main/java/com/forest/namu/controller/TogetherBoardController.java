@@ -21,6 +21,7 @@ import com.forest.namu.domain.BoardReply;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.TogetherBoard;
 import com.forest.namu.service.TogetherBoardService;
+import com.mongodb.DuplicateKeyException;
 
 
 @Controller
@@ -234,5 +235,43 @@ public class TogetherBoardController {
 		map.put("state", state);
 		return map;
 	}	
+	
+	
+	@PostMapping("insertFreeBoardLike")
+	@ResponseBody
+	public Map<String, Object> insertDailyLike(
+			@RequestParam long num,
+			@RequestParam boolean userLiked,
+			HttpSession session) {
+		
+		String state = "true";
+		int dailyLikeCount = 0;
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("num", num);
+		paramMap.put("userId", info.getUserId());
+		
+		try {
+			if(userLiked) {
+				service.deleteFreeBoardLike(paramMap);
+			}else {
+				service.insertFreeBoardLike(paramMap);
+			}
+		} catch (DuplicateKeyException e) {
+			state = "liked";
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		dailyLikeCount =service.FreeBoardLikeCount(num);
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		model.put("dailyLikeCount", dailyLikeCount);
+		
+		return model;
+	}
+	
 	
 }

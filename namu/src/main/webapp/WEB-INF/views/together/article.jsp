@@ -871,41 +871,6 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
 	$.ajax(url, settings);
 }
 
-$(function() {
-    $('.btnSendtogetherListLike').click(function() {
-        const $i = $(this).find('i');
-        let userLiked = $i.hasClass('bi-hand-thumbs-up-fill');
-        let msg = userLiked ? '게시글 공감을 취소하시겠습니까?' : '게시글에 공감하십니까?';
-
-        if (!confirm(msg)) {
-            return false;
-        }
-
-        let url = '${pageContext.request.contextPath}/together/inserttogetherListLike';
-        let tNum = '${dto.tNum}';
-        let query = 'tNum=' + tNum + '&userLiked=' + userLiked;
-
-        const fn = function(data) {
-            let state = data.state;
-            if (state === 'true') {
-                if (userLiked) {
-                    $i.removeClass('bi-hand-thumbs-up-fill').addClass('bi-hand-thumbs-up');
-                } else {
-                    $i.removeClass('bi-hand-thumbs-up').addClass('bi-hand-thumbs-up-fill');
-                }
-                let count = data.togetherListLikeCount;
-                $('#togetherListLikeCount').text(count);
-            } else if (state === 'liked') {
-                alert('게시글 공감은 한번만 가능합니다!');
-            } else if (state === 'false') {
-                alert('게시물 공감 여부 처리가 실패했습니다.');
-            }
-        };
-
-        ajaxFun(url, 'post', query, 'json', fn);
-    });
-});
-
 
 $(function(){
 	$('.container').on('click', '.btnSendOk', function() {
@@ -1330,6 +1295,84 @@ $('.listTogetherBoard').on('click', '.btnDeleteBoardList', function() {
 });
 
 
-
 </script>
 
+
+<script type="text/javascript">
+// 좋아요 등록
+
+$(function() {
+    $('.btnSendFreeBoardLiked').click(function() {
+        const $i = $(this).find('i');
+        let userLiked = $i.hasClass('bi-person-hearts');
+        let msg = userLiked ? '게시글 공감을 취소하시겠습니까?' : '게시글에 공감하십니까?';
+
+        if (!confirm(msg)) {
+            return false;
+        }
+
+        let url = '${pageContext.request.contextPath}/together/insertTogetherLike';
+		let num = '${dto.tNum}';
+		let query = 'tNum=' + tNum + '&userLiked=' + userLiked;
+
+        const fn = function(data) {
+            let state = data.state;
+            if (state === 'true') {
+                if (userLiked) {
+                    $i.removeClass('bi-person-hearts').addClass('bi-person-hearts');
+                } else {
+                    $i.removeClass('bi-person-hearts').addClass('bi-person-hearts');
+                }
+                let count = data.togetherLikeCount;
+                $('#togetherLikeCount').text(count);
+            } else if (state === 'liked') {
+                alert('게시글 공감은 한번만 가능합니다!');
+            } else if (state === 'false') {
+                alert('게시물 공감 여부 처리가 실패했습니다.');
+            }
+        };
+
+        ajaxFun(url, 'post', query, 'json', fn);
+    });
+});
+
+// 댓글 좋아요 
+$(function(){
+	// 댓글 좋아요 / 싫어요 등록
+	$('.boardReply').on('click', '.btnSendReplyLike', function(){
+		let rNum = $(this).attr('data-rNum');
+		let replyLike = $(this).attr('data-replyLike');
+		const $btn = $(this);
+		
+		let msg = '게시물이 마음에 들지 않으십니까 ?';
+		if(replyLike === '1') {
+			msg = '게시물에 공감하십니까 ?';
+		}
+		
+		if(! confirm(msg)) {
+			return false;
+		}
+		
+		let url = '${pageContext.request.contextPath}/together/insertReplyLike';
+		let query = 'rNum=' + rNum + '&replyLike=' + replyLike;
+		
+		const fn = function(data){
+			let state = data.state;
+			if(state === 'true') {
+				let likeCount = data.likeCount;
+				let disLikeCount = data.disLikeCount;
+				
+				$btn.parent('td').children().eq(0).find('span').html(likeCount);
+				$btn.parent('td').children().eq(1).find('span').html(disLikeCount);
+			} else if(state === 'liked') {
+				alert('게시물 공감 여부는 한번만 가능합니다!');
+			} else {
+				alert('게시물 공감 여부 처리가 실패했습니다');
+			}
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
+
+</script>

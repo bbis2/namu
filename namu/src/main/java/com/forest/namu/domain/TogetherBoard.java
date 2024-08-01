@@ -15,7 +15,7 @@ public class TogetherBoard {
 	private String nickName; // 닉네임
 	
 	private int replyCount;	// 리플 개수
-	private int BoardLikeCount; // 좋아요
+	private int freeBoardLikeCount; // 좋아요
 	
 	private long fileNum;		// 파일번호
 	private String filename; 	// 파일이름
@@ -95,12 +95,13 @@ public class TogetherBoard {
 		this.replyCount = replyCount;
 	}
 
-	public int getBoardLikeCount() {
-		return BoardLikeCount;
+
+	public int getFreeBoardLikeCount() {
+		return freeBoardLikeCount;
 	}
 
-	public void setBoardLikeCount(int boardLikeCount) {
-		BoardLikeCount = boardLikeCount;
+	public void setFreeBoardLikeCount(int freeBoardLikeCount) {
+		this.freeBoardLikeCount = freeBoardLikeCount;
 	}
 
 	public long getFileNum() {
