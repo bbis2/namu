@@ -301,6 +301,17 @@ public class TogetherBoardServiceImpl implements TogetherBoardService {
 		return dto;
 	}
 
+	@Override
+	public void deleteBoard(Map<String, Object> map) throws Exception {
+		try {
+			mapper.deleteBoard(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 
 
 

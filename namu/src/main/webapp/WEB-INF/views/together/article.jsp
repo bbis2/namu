@@ -580,6 +580,9 @@ textarea::placeholder{
     }
 </script>
 
+
+
+
 <div class="container">
     <section class="fleamarket-cover">
         <h1 class="cover-title htext bd">소통하는<br>일상 생활</h1>
@@ -1306,6 +1309,26 @@ function listTogetherBoardReply(page) {
 
     ajaxFun(url, 'get', query, 'text', fn);
 }
+
+
+$('.listTogetherBoard').on('click', '.btnDeleteBoardList', function() {
+	if(! confirm('게시글을 삭제 하시겠습니까 ? ')) {
+		return false;
+	}
+	
+	const num = this.dataset.num;
+	const url = '${pageContext.request.contextPath}/togetherBoard/deleteBoard';
+	let query = 'num=' + num;
+	
+	const fn = function(data) {
+		if (data.state === 'true') {
+			listTogetherBoard(1);
+		}
+	}
+	
+	ajaxFun(url, 'post', query, 'json', fn);
+});
+
 
 
 </script>
