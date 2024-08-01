@@ -262,6 +262,7 @@ textarea.form-control {
 							<!-- 파라미터 num -->
 							<input type="hidden" name="postNum" value="${dto.num}">
 							<input type="hidden" name="banUser" value="${dto.userId}">
+							<input type="hidden" name="subject" value="${dto.subject}">
 						<div>
 							<button type="button" class="btn btn-primary w-100"
 								onclick="sendOk();">신고하기</button>
@@ -273,6 +274,7 @@ textarea.form-control {
 		</div>
 	</div>
 </div>
+
 
 <script type="text/javascript">
 function login() {
