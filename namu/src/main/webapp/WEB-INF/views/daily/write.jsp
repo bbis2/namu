@@ -216,7 +216,7 @@ nhn.husky.EZCreator.createInIFrame({
 });
 
 function submitContents(elClickedObj) {
-	oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);z
+	oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
 	try {
 		if(! check()) {
 			return;

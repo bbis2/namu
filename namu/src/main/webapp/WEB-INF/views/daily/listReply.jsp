@@ -24,11 +24,11 @@
 			    <div class='reply-menu'>
 			        <c:choose>
 						<c:when test="${sessionScope.member.userId==vo.userId}">
-							<div class='deleteReply reply-menu-item' data-replyNum='${vo.rNum}' data-pageNo='${pageNo}'>삭제</div>
-							<div class='hideReply reply-menu-item' data-replyNum='${vo.rNum}' data-showReply='${vo.showReply}'>${vo.showReply == 1 ? "숨김":"표시"}</div>
+							<div class='deleteReply reply-menu-item' data-rNum='${vo.rNum}' data-pageNo='${pageNo}'>삭제</div>
+							<div class='hideReply reply-menu-item' data-rNum='${vo.rNum}' data-showReply='${vo.showReply}'>${vo.showReply == 1 ? "숨김":"표시"}</div>
 						</c:when>
 						<c:when test="${sessionScope.member.membership > 9}">
-							<div class='deleteReply reply-menu-item' data-replyNum='${vo.rNum}' data-pageNo='${pageNo}'>삭제</div>
+							<div class='deleteReply reply-menu-item' data-rNum='${vo.rNum}' data-pageNo='${pageNo}'>삭제</div>
 							<div class='blockReply reply-menu-item'>차단</div>
 						</c:when>
 			            <c:otherwise>
