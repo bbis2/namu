@@ -85,4 +85,17 @@ public class AlarmServiceImpl implements AlarmService {
 		return list;
 	}
 
+	@Override
+	public int alarmCount(String userId) {
+		int result = 0;
+		
+		try {
+			result = mapper.alarmCount(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
 }

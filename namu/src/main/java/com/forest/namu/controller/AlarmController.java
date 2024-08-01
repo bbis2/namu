@@ -11,8 +11,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Alarm;
@@ -99,6 +102,48 @@ public class AlarmController {
 		model.addAttribute("listCategory", listCategory);
 		
 		return ".alarm.list";
+	}
+	
+	@ResponseBody
+	@PostMapping("updateRead")
+	public Map<String, Object> updateRead(@RequestParam long alarmNum) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		try {
+			service.updateTimeRead(alarmNum);
+			
+			Alarm dto = service.findById(alarmNum);
+			if(dto != null) {
+				model.put("timeRead", dto.getTimeRead());
+			}
+			model.put("state", "true");
+		} catch (Exception e) {
+			model.put("state", "false");
+		}
+		
+		return model;
+	}
+	
+	@GetMapping("alarmCount")
+	@ResponseBody
+	public Map<String, Object> alarmCount(HttpSession session) throws Exception {
+		String state = "true";
+		int count = 0;
+		
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			String userId = info.getUserId();
+			
+			count = service.alarmCount(userId);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("state", state);
+		map.put("count", count);
+		
+		return map;
 	}
 	
 }

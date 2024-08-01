@@ -23,4 +23,7 @@ public interface AlarmMapper {
 
 	// 카테고리 리스트
 	public List<Alarm> listCategory();
+	
+	// 알림 확인
+	public int alarmCount(String userId);
 }
