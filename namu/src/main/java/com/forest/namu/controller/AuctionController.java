@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
+import com.forest.namu.domain.Alarm;
 import com.forest.namu.domain.Auction;
 import com.forest.namu.domain.AuctionBoard;
 import com.forest.namu.domain.SessionInfo;
+import com.forest.namu.service.AlarmService;
 import com.forest.namu.service.AuctionBoardService;
 import com.forest.namu.service.AuctionService;
 import com.forest.namu.service.PointService;
@@ -40,6 +42,9 @@ public class AuctionController {
 	
 	@Autowired
 	private PointService pointService;	
+
+	@Autowired
+	private AlarmService alarmService;	
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -81,7 +86,8 @@ public class AuctionController {
 		
 		List<Auction> list = service.listAuction(map);
 		List<Auction> listCategory = service.listCategory();
-				
+		
+		
 		String query = "town=" + town;
 		String cp = req.getContextPath();
 		String listUrl;
@@ -440,7 +446,7 @@ public class AuctionController {
 	@PostMapping("auctionOk")
 	@ResponseBody
 	public Map<String, Object> auctionOk(@RequestParam Map<String, Object> paramMap,
-			HttpSession session){
+			HttpSession session, HttpServletRequest req){
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		Map<String, Object> model = new HashMap<String, Object>();
 	
@@ -452,8 +458,46 @@ public class AuctionController {
 	    	Auction dto = service.findByMaxBid(paramMap);
 	    	paramMap.put("bidNum", dto.getBid());
 	    	
-			service.updateAuctionState(paramMap);	    	
+	    	long aNum = Long.parseLong(paramMap.get("aNum").toString());
+	    	
+	    	Auction dto2 = service.findById(aNum);
+	    	
+	    	
+			service.updateAuctionState(paramMap);
 	    	service.updateBiddetailsApply(paramMap);
+	    	
+	    	// 주소
+			String cp = req.getContextPath();
+			String articleUrl;
+			
+			articleUrl = cp + "/auction/article?aNum=" + aNum;
+	    	
+			// 내용
+	    	String s = dto.getNickName() + "님 축하드립니다! 🌳" + dto.getSubject() + "🌳 경매 상품에 낙찰되었습니다.";
+	    	s += "<a href='"+articleUrl+"'>상품바로가기</a>";
+	    	
+	    	// 낙찰자에게 알림
+	    	Alarm alarm = new Alarm();
+	    	alarm.setCnum(1);
+	    	alarm.setContent(s);
+	    	alarm.setUserId(dto.getUserId());
+	    	alarm.setSender("admin");
+	    	
+	    	alarmService.insertAlarm(alarm);
+	    	
+	    	// 내용
+	    	String s2 = dto2.getNickName() + "님 🌳" + dto.getSubject() + "🌳 경매 상품에 낙찰자가 나왔습니다.";
+	    	s2 += "<a href='"+articleUrl+"'>상품바로가기</a>";
+	    	
+	    	// 판매자에게 알림
+	    	Alarm alarm2 = new Alarm();
+	    	alarm2.setCnum(1);
+	    	alarm2.setContent(s2);
+	    	alarm2.setUserId(dto2.getUserId());
+	    	alarm2.setSender("admin");
+	    	
+	    	alarmService.insertAlarm(alarm2);
+	    	
 	    	
 	    	model.put("state", "true");
 	    } catch (Exception e) {

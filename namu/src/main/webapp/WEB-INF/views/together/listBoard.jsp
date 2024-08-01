@@ -11,31 +11,31 @@
                 <div>${vo.regDate}</div>
             </div>
             <div class="btn-freeboard-detail mb-3" data-num="${vo.num}" style="cursor: pointer; text-decoration: underline;">
-            	상세보기
+            상세보기
             </div>
         </div>
         <div class="post-content row justify-content-between mb-5">
-        	<div class="left col col-6">
-	            ${vo.content}
-        	</div>
-        	<div class="right col col-6">
-		        <div class="post-image" >
-					<c:choose>
-						<c:when test="${not empty vo.listFilename}">
-							<img src="${pageContext.request.contextPath}/uploads/photo/${vo.listFilename[0]}" >
-						</c:when>
-						
-						<c:otherwise>
-							<img src="${pageContext.request.contextPath}/uploads/image.png" class="img-fluid object-fit-cover h-100"> 
-						</c:otherwise>
-					</c:choose>
-		        </div>
-        	</div>
+        <div class="left col col-6">
+            ${vo.content}
+        </div>
+        <div class="right col col-6">
+        <div class="post-image" >
+<c:choose>
+<c:when test="${not empty vo.listFilename}">
+<img src="${pageContext.request.contextPath}/uploads/photo/${vo.listFilename[0]}" >
+</c:when>
+
+<c:otherwise>
+<img src="${pageContext.request.contextPath}/uploads/image.png" class="img-fluid object-fit-cover h-100"> 
+</c:otherwise>
+</c:choose>
+        </div>
+        </div>
         </div>
         <div class="post-footer" align='right'>
             <div >
-          		<button type="button"  class='btn deleteBoard()' style="background-color: #564838;"><i class="bi bi-trash"></i></button>
-                <button type="button"  class='btn' style="background-color: #564838;"><i class="bi bi-person-hearts"></i></button>
+         		<button type="button" class='btn btnDeleteBoardList' type="button" data-num="${vo.num}" style="background-color: #564838;"><i class="bi bi-trash"></i></button>
+                <button type="button" class='btn' style="background-color: #564838;"><i class="bi bi-person-hearts"></i></button>
                 <button type="button" class='btn' style="background-color: #564838;"><i class="bi bi-chat-dots"></i></button>                
             </div>
         </div>

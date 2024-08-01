@@ -37,4 +37,6 @@ public interface TogetherBoardService {
     
     public void insertReplyLike(Map<String, Object> map) throws Exception;
     public Map<String, Object> replyLikeCount(Map<String, Object> map);
+
+    public void deleteBoard(Map<String, Object> map) throws Exception;
 }

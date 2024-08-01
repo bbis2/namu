@@ -86,6 +86,14 @@ textarea.form-control {
 .comments input[type="text"] {
     margin-bottom: 10px;
 }
+
+.reply .reply-dropdown { cursor: pointer; }
+.reply .reply-dropdown:hover { color: #0d6efd; font-weight: 500; }
+.reply .reply-menu { display: none; position: absolute; width: 80px; min-height: 65px; background:#fff; border: 1px solid #d5d5d5; border-radius: 3px; z-index: 9999; }
+.reply .reply-menu-item { text-align: center; cursor: pointer; padding: 7px; }
+.reply .reply-menu-item:nth-child(2n+1) { border-bottom: 1px solid #d5d5d5; }
+.reply .reply-menu-item:hover { color: #0d6efd; font-weight: 500; }
+
 </style>
 
 
@@ -435,10 +443,10 @@ $(function(){
 		
 		let rNum = $(this).attr('data-rNum');
 		let page = $(this).attr('data-pageNo');
-		
+			
 		let url = '${pageContext.request.contextPath}/daily/deleteReply';
 		let query = 'rNum=' + rNum + '&mode=reply';
-		
+
 		const fn = function(data){
 			listPage(page);
 		};
@@ -446,6 +454,7 @@ $(function(){
 		ajaxFun(url, 'post', query, 'json', fn);
 	});
 });
+
 
 
 $(function(){

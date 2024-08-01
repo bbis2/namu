@@ -100,6 +100,13 @@
 		WHERE num=#{num}
 	</select>
 	
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM freeBoardReply
+		WHERE rNum =#{rNum}
+		<if test="mode=='reply'">
+			OR answer =#{rNum}
+		</if>
+	</delete>
 	
 	<select id="listReply" parameterType="map" resultType="com.forest.namu.domain.BoardReply">
 	    SELECT r.rNum, r.userId, nickName, r.num, r.content, r.regDate,
@@ -125,14 +132,6 @@
 	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 
-	<delete id="deleteReply" parameterType="map">
-		DELETE FROM freeBoardReply
-		WHERE rNum=#{rNum}
-		<if test="mode=='reply'">
-			OR answer=#{rNum}
-		</if>
-	</delete>	
-	
 	<!-- 댓글의 답글 리스트 -->
 	<select id="listReplyAnswer" parameterType="map" resultType="com.forest.namu.domain.BoardReply">
 		SELECT rNum, num, r.userId, nickName, r.content, r.regDate, answer
@@ -159,6 +158,11 @@
 				COUNT(DECODE(replyLike, 0, 1)) disLikeCount
 		FROM freeBoardReplyLike WHERE rNum = #{rNum}
 	</select>	
+	
+	<delete id="deleteBoard" parameterType="map">
+		DELETE FROM freeBoard
+		WHERE num=#{num}
+	</delete>
 
 	
 </mapper>

@@ -1,6 +1,5 @@
 package com.forest.namu.controller;
 
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Alarm;
@@ -83,12 +84,12 @@ public class AlarmController {
 		
 		listUrl = cp + "/alarm/list";
 		articleUrl = cp + "/alarm/article?page=" + current_page;
-		if(query.length() != 0) {
+		if(query.length() != 0) {;
 			listUrl += "?" + query;
 			articleUrl += "&" + query;
 		}
 		
-		String paging = myUtil.paging(current_page, total_page, listUrl);		
+		String paging = myUtil.paging(current_page, total_page, listUrl);	
 		
 		model.addAttribute("list", list);
 		model.addAttribute("kwd", kwd);
@@ -103,37 +104,46 @@ public class AlarmController {
 		return ".alarm.list";
 	}
 	
-	@GetMapping("article")
-	public String article(@RequestParam long alarmNum, @RequestParam String page,
-			@RequestParam(defaultValue = "0") int cnum, 
-			@RequestParam(defaultValue = "") String kwd,
-			HttpSession session,
-			Model model) throws Exception {
+	@ResponseBody
+	@PostMapping("updateRead")
+	public Map<String, Object> updateRead(@RequestParam long alarmNum) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
 		
-		kwd = URLDecoder.decode(kwd, "utf-8");
-
-		String query = "page=" + alarmNum;
-		if(kwd.length() != 0) {
-			query += "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+		try {
+			service.updateTimeRead(alarmNum);
+			
+			Alarm dto = service.findById(alarmNum);
+			if(dto != null) {
+				model.put("timeRead", dto.getTimeRead());
+			}
+			model.put("state", "true");
+		} catch (Exception e) {
+			model.put("state", "false");
 		}
-		if(cnum != 0) {
-			query += "&cnum=" + cnum;
+		
+		return model;
+	}
+	
+	@GetMapping("alarmCount")
+	@ResponseBody
+	public Map<String, Object> alarmCount(HttpSession session) throws Exception {
+		String state = "true";
+		int count = 0;
+		
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			String userId = info.getUserId();
+			
+			count = service.alarmCount(userId);
+		} catch (Exception e) {
+			state = "false";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("kwd", kwd);
-		map.put("alarmNum", alarmNum);
+		map.put("state", state);
+		map.put("count", count);
 		
-		Alarm dto = service.findById(alarmNum);
-		
-		dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
-
-		model.addAttribute("dto", dto);
-		model.addAttribute("page", page);
-		model.addAttribute("query", query);
-		
-		return ".alarm.article";
-		
+		return map;
 	}
 	
 }

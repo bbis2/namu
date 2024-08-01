@@ -64,8 +64,19 @@ public class BorrowServiceImpl implements BorrowService {
 	        
 	        mapper.updateBorrow(dto);
 	        
-	        // 남아있는 이미지 번호와 일치하지 않는 이미지 삭제
-	        mapper.deleteNonMatchingImages(dto.getBorrowNum(), remainingImageNums);
+	        // 모든 기존 이미지 삭제 (remainingImageNums가 null이거나 비어있는 경우)
+	        if (remainingImageNums == null || remainingImageNums.isEmpty()) {
+	            List<Borrow> listFile = listBorrowImage(dto.getBorrowNum());
+	            if(listFile != null) {
+	                for(Borrow file : listFile) {
+	                    fileManager.doFileDelete(file.getImageFilename(), pathname);
+	                }
+	            }
+	            mapper.deleteBorrowFile(dto);
+	        } else {
+	            // 남아있는 이미지 번호와 일치하지 않는 이미지 삭제
+	            mapper.deleteNonMatchingImages(dto.getBorrowNum(), remainingImageNums);
+	        }
 	        
 	        // 새 파일이 업로드된 경우 추가
 	        if(dto.getImage() != null && !dto.getImage().isEmpty()) {

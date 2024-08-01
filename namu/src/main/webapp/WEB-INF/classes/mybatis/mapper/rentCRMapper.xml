@@ -3,18 +3,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.forest.namu.mapper.RentCRMapper">
 
-	<select id="getEmailByRentNum" parameterType="Long" resultType="String">
-		SELECT md.email
+	<select id="getEmailByRentNum" parameterType="Long" resultType="map">
+		SELECT md.email, r.subject
 		FROM rent r
 		JOIN memberDetail md ON r.userId = md.userId
 		WHERE r.rentNum = #{rentNum}
 	</select>
 
-	<select id="getEmailByReqNum" parameterType="Long" resultType="String">
-		SELECT md.email
+	<select id="getEmailByReqNum" parameterType="Long" resultType="map">
+		SELECT md.email, r.subject
 		FROM rentConfirm rc
 		JOIN memberDetail md ON rc.userId = md.userId
-		WHERE r.reqNum = #{reqNum}
+		JOIN rent r ON rc.rentNum = r.rentNum
+		WHERE rc.reqNum = #{reqNum}
 	</select>
 	
     <!-- 1: 대기중, 2: 수락 상태만 체크 -->
@@ -134,6 +135,14 @@
     
     <select id="findByReqNum" parameterType="Long" resultType="com.forest.namu.domain.RentCR">
         SELECT * FROM rentConfirm WHERE reqNum = #{reqNum}
+    </select>
+    
+    <select id="findByRentNum" parameterType="map" resultType="com.forest.namu.domain.RentCR">
+    	SELECT *
+    	FROM rentConfirm
+    	WHERE userId = #{userId} AND rentNum = #{rentNum}
+    	ORDER BY reqNum DESC
+    	FETCH FIRST 1 ROWS ONLY
     </select>
     
     <update id="updateRentCRState" parameterType="map">

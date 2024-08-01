@@ -56,7 +56,7 @@ public class Auction {
 	private int cnum;
 	
 	// 주소
-	private int town;
+	private String town;
 	
 	// 신고
 	private String tableName;
@@ -269,6 +269,14 @@ public class Auction {
 		this.fileNum = fileNum;
 	}
 
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
+	}
+
 	public int getLikeCount() {
 		return likeCount;
 	}
@@ -293,11 +301,11 @@ public class Auction {
 		this.cnum = cnum;
 	}
 
-	public int getTown() {
+	public String getTown() {
 		return town;
 	}
 
-	public void setTown(int town) {
+	public void setTown(String town) {
 		this.town = town;
 	}
 
@@ -307,14 +315,6 @@ public class Auction {
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
-	}
-
-	public boolean isUserLiked() {
-		return userLiked;
-	}
-
-	public void setUserLiked(boolean userLiked) {
-		this.userLiked = userLiked;
 	}
 
 }

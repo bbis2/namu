@@ -60,16 +60,16 @@
 </div>
   <div class="content1">${dto.content}</div>
 <div class="sale-meta">
-  <div class="views">찜 ${likeCount} &nbsp;|&nbsp; 조회수 ${dto.hitCount} &nbsp;|&nbsp; ${dto.regDate}</div>
- 	 <div class="buttons">
+  <div class="views"> 조회수 ${dto.hitCount} &nbsp;|&nbsp; ${dto.regDate}</div>
+</div>
+<div class="buttons">
  	   <c:if test="${sessionScope.member.userId == dto.userId}">
       	<button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/used/update?num=${dto.num}';">수정</button>
        </c:if>
        <c:if test="${sessionScope.member.userId == dto.userId || sessionScope.member.userId == 'admin'}">
         <button class="delete-btn" onclick="usedDelete()">삭제</button>
         </c:if>
-     </div>
-        </div>
+    </div>
 	<button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
      </div>
   </div>
@@ -156,6 +156,10 @@ function sendOk() {
 </script>
 
 <style>
+.buttons {
+  float: right;
+}
+
 .btn-list {
 background-color: transparent;
 font-size: 20px;

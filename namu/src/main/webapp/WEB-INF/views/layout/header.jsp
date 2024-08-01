@@ -91,8 +91,10 @@
 							<a href="${pageContext.request.contextPath}/mypage/list" title="마이페이지"><i class="bi bi-person-circle"></i></a>
 						</div>
 						<div class="p-2">
-							<a href="${pageContext.request.contextPath}/alarm/list"
-								title="알림"><i class="bi bi-bell"></i></a>
+							<a href="${pageContext.request.contextPath}/alarm/list" class="position-relative">
+								<i class="bi bi-bell"></i>
+							<span class="alarmCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 6px;"></span>
+							</a>
 						</div>
 						<c:if test="${sessionScope.member.membership>50}">
 							<div class="p-2">
@@ -106,3 +108,46 @@
 		</div>
 	</div>
 </nav>
+
+<script type="text/javascript">
+$(function(){
+	var isLogin = "${not empty sessionScope.member ? 'true':'false'}";
+	var timer = null;
+	
+	if(isLogin === "true") {
+		alarmCount();
+	}
+	
+	function alarmCount() {
+		var url = "${pageContext.request.contextPath}/alarm/alarmCount";
+		var query = "tmp=" + new Date().getTime();
+		
+		$.ajax({
+			type:"get"
+			,url:url
+			,data:query
+			,dataType:"json"
+			,success:function(data) {
+				var count = parseInt(data.count);
+				if(count === 0) {
+					$(".alarmCount").hide();
+					return false;
+				}
+				if(count >= 10) {
+					$(".alarmCount").text("9+");
+				} else {
+					$(".alarmCount").text(count);
+				}
+			}
+			,error:function(jqXHR) {
+				if(timer != null) {
+					clearInterval(timer);
+					timer = null;
+				}
+				console.log(jqXHR.responseText);
+			}
+		});
+	}
+});
+
+</script>

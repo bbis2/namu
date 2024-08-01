@@ -69,18 +69,19 @@
 				</tr>
 			</thead>
 			
-			<tbody>
+			<tbody class="list-tbody">
 			    <c:forEach var="dto" items="${list}" varStatus="status">
 			        <tr>
 			            <td class="list-center">${dto.alarmNum}</td>
 			            <td class="list-left">
 			                <span class="content">
-			                    <a href="#" class="text-reset alarm-content" data-bs-toggle="modal" data-bs-target="#alarmModal" data-content="${dto.content}">${dto.content}</a>
+			                    <span class="text-reset alarm-content" data-alarmNum="${dto.alarmNum}"
+			                    	data-content="${dto.content}" >${dto.content}</span>
 			                </span>
 			            </td>
 			            <td class="list-center">${dto.nickName}</td>
 			            <td class="list-center">${dto.senderTime}</td>
-			            <td class="list-center">${dto.timeRead}</td>
+			            <td class="list-center timeRead" data-alarmNum="${dto.alarmNum}">${dto.timeRead}</td>
 			        </tr>
 			    </c:forEach>
 			</tbody>
@@ -140,12 +141,57 @@ function change() {
 // 알림 모달
 $(document).ready(function () {
     $('.alarm-content').click(function (e) {
-        e.preventDefault();
         var content = $(this).data('content');
-        $('#alarmModalBody').text(content);
+        $('#alarmModalBody').html(content);
+        
+        let alarmNum = $(this).attr('data-alarmNum');
+        $('#alarmModal').attr("data-alarmNum", alarmNum);
+        
+        $('#alarmModal').modal('show');
     });
 });
 
+$(function(){
+	const alarmModalEl = document.getElementById('alarmModal');
+	alarmModalEl.addEventListener('show.bs.modal', function() {
+		let alarmNum = $('#alarmModal').attr("data-alarmNum");
+		
+		let b = false;
+		$('.list-tbody tr').each(function(){
+			let $tr = $(this);
+			let alarmNum2 = $tr.find(".timeRead").attr("data-alarmNum");
+			if(alarmNum == alarmNum2) {
+				let t = $tr.find(".timeRead").text().trim();
+				
+				if( t ) {
+					b = true;
+				}
+				
+				return false;
+			}
+		});
+		
+		if( b ) {
+			return false;
+		}
+		
+		
+		let url = '${pageContext.request.contextPath}/alarm/updateRead'; 
+
+		$.post(url, {alarmNum: alarmNum}, function(data) {
+			if(data.state == 'true') {
+				$('.list-tbody tr').each(function(){
+					let $tr = $(this);
+					let alarmNum2 = $tr.find(".timeRead").attr("data-alarmNum");
+					if(alarmNum == alarmNum2) {
+						$tr.find(".timeRead").text(data.timeRead);
+						return false;
+					}
+				});
+			}
+		});
+	});
+});
 </script>
 
 <style>
@@ -252,6 +298,10 @@ text-align: left;
 
 .cg-text {
 text-align: center;
+}
+
+.alarm-content {
+	cursor: pointer;
 }
 
 </style>

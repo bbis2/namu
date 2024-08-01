@@ -30,7 +30,7 @@
 
 <select id="listAlarm" resultType="com.forest.namu.domain.Alarm" parameterType="map">
 	select alarmNum, a.userId, content, sender, TO_CHAR(senderTime, 'YYYY-MM-DD HH24:MI:SS') senderTime, 
-		NVL2(timeRead, TO_CHAR(timeRead, 'YYYY-MM-DD HH24:MI:SS'), null) timeRead, ac.cnum, name, m.nickName
+		NVL2(timeRead, TO_CHAR(timeRead, 'YYYY-MM-DD HH24:MI'), null) timeRead, ac.cnum, name, m.nickName
 	from alarm a 
 	join alarmCategory ac on a.cnum = ac.cnum
 	join member m on a.sender = m.userId
@@ -47,12 +47,13 @@
 </select>
 
 <select id="listCategory" resultType="com.forest.namu.domain.Alarm">
-  select a.cNum, name from alarmcategory ac
-  join alarm a on a.cNum = ac.cNum
+  select  cNum, name from alarmcategory
 </select>
 
 <select id="findById" resultType="com.forest.namu.domain.Alarm" parameterType="Long">
-	select alarmNum, userId, content, sender, senderTime, timeRead
+	select alarmNum, userId, content, sender, 
+		NVL2(senderTime, TO_CHAR(senderTime, 'YYYY-MM-DD HH24:MI'), null) senderTime,
+		NVL2(timeRead, TO_CHAR(timeRead, 'YYYY-MM-DD HH24:MI'), null) timeRead
 	from alarm
 	where alarmNum = #{alarmNum}
 </select>
@@ -62,5 +63,11 @@
 	update alarm set timeRead = SYSDATE
 	where alarmNum = #{alarmNum} and timeRead is null
 </update>
+
+<select id="alarmCount" resultType="Integer" parameterType="String">
+	select nvl(count(*),0)  
+	from alarm
+	where userId = #{userId} and timeRead is null
+</select>
 
 </mapper>

@@ -132,8 +132,13 @@ public class RentCRController {
             
             crService.insertRentConfirm(dto, point);
             
-            String email = crService.getEmailByRentNum(rentNum);
-            mailService.sendRentRequestMail(email, dto);
+    		Map<String, Object> map = crService.getEmailByRentNum(rentNum);
+    		dto.setEmail((String)map.get("EMAIL"));
+    		dto.setSubject((String)map.get("SUBJECT"));
+            
+            dto.getStrDate().replaceAll("T", " ");
+            dto.getEndDate().replaceAll("T", " ");
+            mailService.sendRentRequestMail(dto);
 
             result.put("state", "success");
             
@@ -173,6 +178,7 @@ public class RentCRController {
 	    return result;
 	}
 
+	
 	@PostMapping("cancelRent")
 	@ResponseBody
 	public Map<String, Object> cancelRent(
@@ -192,6 +198,13 @@ public class RentCRController {
 	    	point.setUserId(info.getUserId());
 	    	
 	        crService.cancelRent(map, point);
+	        
+	        RentCR dto = crService.findByRentNum(map);
+    		map = crService.getEmailByRentNum(rentNum);
+    		dto.setEmail((String)map.get("EMAIL"));
+    		dto.setSubject((String)map.get("SUBJECT"));
+    		dto.setBorrowName(info.getNickName());
+    		mailService.sendRentCancelMail(dto);
 	        
 	        result.put("state", "success");
 	        
@@ -216,6 +229,13 @@ public class RentCRController {
 	        map.put("userId", info.getUserId());
 	        
 	        crService.acceptRentRequest(map);
+	        
+	        RentCR dto = crService.findByReqNum(reqNum);
+    		map = crService.getEmailByReqNum(reqNum);
+    		dto.setEmail((String)map.get("EMAIL"));
+    		dto.setSubject((String)map.get("SUBJECT"));
+    		dto.setRentName(info.getNickName());
+	        mailService.sendRentAcceptMail(dto);
 	        
 	        result.put("state", "success");
 	        result.put("message", "신청이 수락되었습니다.");
@@ -245,6 +265,13 @@ public class RentCRController {
 	        
 	        crService.rejectRentRequest(map);
 	        
+	        RentCR dto = crService.findByReqNum(reqNum);
+    		map = crService.getEmailByReqNum(reqNum);
+    		dto.setEmail((String)map.get("EMAIL"));
+    		dto.setSubject((String)map.get("SUBJECT"));
+    		dto.setRentName(info.getNickName());
+	        mailService.sendRentRejectMail(dto, rejectReason);
+	        
 	        result.put("state", "success");
 	        result.put("message", "신청이 거절되었습니다.");
 	        
@@ -270,6 +297,13 @@ public class RentCRController {
 	        map.put("userId", info.getUserId());
 	        
 	        crService.finishRentRequest(map);
+	        
+	        RentCR dto = crService.findByReqNum(reqNum);
+    		map = crService.getEmailByReqNum(reqNum);
+    		dto.setEmail((String)map.get("EMAIL"));
+    		dto.setSubject((String)map.get("SUBJECT"));
+    		dto.setRentName(info.getNickName());
+	        mailService.sendRentCompleteMail(dto);
 	        
 	        result.put("state", "success");
 	        result.put("message", "대여가 완료되었습니다. 보증금이 반환되었습니다.");

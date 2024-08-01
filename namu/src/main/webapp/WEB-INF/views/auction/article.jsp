@@ -84,8 +84,9 @@
 </div>
   <div class="content1">${dto.content}</div>
 <div class="sale-meta">
-  <div class="views">시작가 <fmt:formatNumber value="${dto.minBid}"/> &nbsp;|&nbsp; 찜 ${likeCount} &nbsp;|&nbsp; 경매시작 ${dto.salesStart} &nbsp;|&nbsp; 경매종료 ${dto.salesEnd}</div>
- 	 <div class="buttons">
+  <div class="views">시작가 <fmt:formatNumber value="${dto.minBid}"/> &nbsp;|&nbsp; 경매시작 ${dto.salesStart} &nbsp;|&nbsp; 경매종료 ${dto.salesEnd}</div>
+ </div>
+ <div class="buttons">
  	   <c:if test="${sessionScope.member.userId == dto.userId && not empty maxAuction}">
       	  <button class="update-btn" onclick="auctionOk()">낙찰완료</button>
           <button class="delete-btn" onclick="auctionCancel();">입찰취소</button>
@@ -95,7 +96,6 @@
           <button class="delete-btn" onclick="usedDelete()">삭제</button>
         </c:if>
      </div>
-        </div>
         	<c:if test="${sessionScope.member.userId != dto.userId && dto.state == 0}">
 	        	<div class="row">
 	        		<div class="col">
@@ -117,8 +117,8 @@
         	</c:if>
         	<div class="auction-bid-ok">
 	        	<c:if test="${dto.state == 3}">
-	        		<label>낙찰유저 : ${maxAuction.nickName}</label>
-	        		<label>낙찰금액 : ${maxAuction.bid}</label>
+	        		<label style="color: blue;">[ 낙찰자 : ${maxAuction.nickName} &nbsp;|&nbsp; </label>
+	        		<label style="color: blue;">낙찰가 : <fmt:formatNumber value="${maxAuction.bid}"/>원 ]</label>
 	        	</c:if>
         	</div>
         	
@@ -553,6 +553,10 @@ padding: 5px;
 </style>
 
 <style>
+  .buttons {
+  float: right;
+}
+
   .used {
     display: flex;
     overflow: hidden;

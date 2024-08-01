@@ -132,7 +132,7 @@ public class TogetherBoardController {
 		
 		service.deleteTogetherBoard(num, query);
 		
-		return "redirect:/daily/list?" +query;
+		return "redirect:/together/article?" +query;
 	}
 	
 	
@@ -219,13 +219,13 @@ public class TogetherBoardController {
 		return model;
 	}
 	
-	@PostMapping("deleteReply")
+	@PostMapping("deleteBoard")
 	@ResponseBody
 	public Map<String, Object> deleteReply(@RequestParam Map<String, Object> paramMap) {
 		String state = "true";
 		
 		try {
-			service.deleteReply(paramMap);
+			service.deleteBoard(paramMap);
 		} catch (Exception e) {
 			state = "false";
 		}
@@ -233,6 +233,6 @@ public class TogetherBoardController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("state", state);
 		return map;
-	}
+	}	
 	
 }

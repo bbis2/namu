@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.forest.namu.common.FileManager;
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Borrow;
 import com.forest.namu.domain.Member;
+import com.forest.namu.domain.Rent;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.service.BorrowService;
 
@@ -193,12 +193,12 @@ public class BorrowController {
 	        	String boardName = switch ((String)map2.get("TABLENAME")) {
 				case "borrow" 			-> "빌려줘요";
 				case "rent" 			-> "빌려드림";
-				case "delievery" 		-> "배달해요";
+				case "delivery" 		-> "배달해요";
 				case "daily" 			-> "나무일상";
-				case "togetherlist" 	-> "나무모임";
+				case "together" 		-> "나무모임";
 				case "talent" 			-> "재능마켓";
-				case "used" 			-> "중고";
-				case "auction" 			-> "경매";
+				case "used" 			-> "중고거래";
+				case "auction" 			-> "중고경매";
 				default					-> "오류";
 				};
 				
@@ -217,6 +217,9 @@ public class BorrowController {
 		    map.put("categoryNum", dto.getCategoryNum());
 		    map.put("borrowNum", num); // 현재 글 제외
 		    List<Borrow> otherPosts = service.listOtherPosts(map);
+		    for(Borrow borrow : otherPosts) {
+		    	borrow.setPassedTime(myUtil.returnPassedTime(borrow.getRegDate()));
+		    }
 		    
 		    int totalPages = Math.max(1, (otherPosts.size() + 4) / 5); // 최소 1페이지
 	

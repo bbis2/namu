@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.forest.namu.common.FileManager;
+import com.forest.namu.domain.Borrow;
 import com.forest.namu.domain.Member;
 import com.forest.namu.domain.Rent;
 import com.forest.namu.mapper.RentMapper;
@@ -58,8 +59,19 @@ public class RentServiceImpl implements RentService {
 	    try {
 	        mapper.updateRent(dto);
 	        
-	        // 남아있는 이미지 번호와 일치하지 않는 이미지 삭제
-	        mapper.deleteNonMatchingImages(dto.getRentNum(), remainingImageNums);
+	        // 모든 기존 이미지 삭제 (remainingImageNums가 null이거나 비어있는 경우)
+	        if (remainingImageNums == null || remainingImageNums.isEmpty()) {
+	            List<Rent> listFile = listRentImage(dto.getRentNum());
+	            if(listFile != null) {
+	                for(Rent file : listFile) {
+	                    fileManager.doFileDelete(file.getImageFilename(), pathname);
+	                }
+	            }
+	            mapper.deleteRentFile(dto);
+	        } else {
+	            // 남아있는 이미지 번호와 일치하지 않는 이미지 삭제
+	            mapper.deleteNonMatchingImages(dto.getRentNum(), remainingImageNums);
+	        }
 	        
 	        // 새 파일이 업로드된 경우 추가
 	        if(dto.getImage() != null && !dto.getImage().isEmpty()) {
