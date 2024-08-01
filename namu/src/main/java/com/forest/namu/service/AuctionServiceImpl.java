@@ -382,4 +382,14 @@ public class AuctionServiceImpl implements AuctionService {
 		}
 	}
 
+	@Override
+	public void updateEndState() {
+
+		try {
+			mapper.updateEndState();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

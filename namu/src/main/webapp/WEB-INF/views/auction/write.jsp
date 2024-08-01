@@ -89,9 +89,9 @@
 			<tr>
 				<td class="bg-light col-sm-2" scope="row">나의 동네</td>
 				<td>
-					<button type="button" class="btn-town ${dto.town==1?'active':'' }" value="1" onclick="townChange(1)">${sessionScope.member.town1}</button>
-					<button type="button" class="btn-town ${dto.town==2?'active':'' }" value="2" onclick="townChange(2)">${sessionScope.member.town2}</button>
-					<input type="hidden" name="town" value="1">
+					<button type="button" class="btn-town ${dto.town==sessionScope.member.town1?'active':'' }" onclick="townChange('${sessionScope.member.town1}')">${sessionScope.member.town1}</button>
+					<button type="button" class="btn-town ${dto.town==sessionScope.member.town2?'active':'' }" onclick="townChange('${sessionScope.member.town2}')">${sessionScope.member.town2}</button>
+					<input type="hidden" name="town" value="${dto.town}">
 				</td>
 			</tr>
 			<tr>
@@ -119,7 +119,7 @@
 				<td class="bg-light col-sm-2" scope="row">상태</td>
 				<td>
 				  <input type="radio" name="state" value="1" 
-                <c:if test="${dto.state == 1}">checked</c:if>>&nbsp;유찰
+                <c:if test="${dto.state == 1}">checked</c:if>>&nbsp;경매종료
 				  <input type="radio" name="state" value="2" 
                 <c:if test="${dto.state == 2}">checked</c:if>>&nbsp;경매취소
 				  <input type="radio" name="state" value="3" 
@@ -383,7 +383,7 @@ function cnumChange(cnum) {
 	f.cnum.value = cnum;
 }
 
-function townChange(cnum) {
+function townChange(town) {
 	const f = document.AuctionForm;
 	
 	f.town.value = town;

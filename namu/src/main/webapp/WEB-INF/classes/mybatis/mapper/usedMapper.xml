@@ -45,7 +45,7 @@
 		<if test="cnum != 0">
 			AND u.cnum = #{cnum}
 		</if>
-		<if test="town != 0">
+		<if test="town != null and town != ''">
 			AND u.town = #{town}
 		</if>		
 	</where>   
@@ -64,7 +64,7 @@
 		<if test="cnum != 0">
 			AND u.cnum = #{cnum}
 		</if>
-		<if test="town != 0">
+		<if test="town != null and town != ''">
 			AND u.town = #{town}
 		</if>		
 	</where>

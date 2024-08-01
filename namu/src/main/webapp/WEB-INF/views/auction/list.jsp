@@ -21,11 +21,11 @@
 					<div class="col">
 						<h6 class="bd">나의 동네</h6>
 						<select class="form-select mb-4 border border-2" aria-label="Default select example" name="town" onchange="change();">
-							<option value="0" ${town==0?'selected':''}>전체</option>
-							<option value="1" ${town==1?'selected':''}>${sessionScope.member.town1}</option>
-							<c:if test="${sessionScope.member.town2 != null}">
-								<option value="2" ${town==2?'selected':''}>${sessionScope.member.town2}</option>
-							</c:if>
+						    <option value="" ${town==''?'selected':''}>전체</option>
+						    <option value="${sessionScope.member.town1}" ${town==sessionScope.member.town1?'selected':''}>${sessionScope.member.town1}</option>
+						    <c:if test="${sessionScope.member.town2 != null}">
+						        <option value="${sessionScope.member.town2}" ${town==sessionScope.member.town2?'selected':''}>${sessionScope.member.town2}</option>
+					   		</c:if>
 						</select>
 					</div>
 					<div class="col">

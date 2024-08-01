@@ -31,26 +31,10 @@ public class Used {
 	private int cnum;
 	
 	// 주소
-	private int town;
+	private String town;
 	
 	// 신고
 	private String tableName;
-	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getCnum() {
-		return cnum;
-	}
-
-	public void setCnum(int cnum) {
-		this.cnum = cnum;
-	}
 
 	public long getNum() {
 		return num;
@@ -172,11 +156,35 @@ public class Used {
 		this.likeCount = likeCount;
 	}
 
-	public int getTown() {
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getCnum() {
+		return cnum;
+	}
+
+	public void setCnum(int cnum) {
+		this.cnum = cnum;
+	}
+
+	public String getTown() {
 		return town;
 	}
 
-	public void setTown(int town) {
+	public void setTown(String town) {
 		this.town = town;
 	}
 
@@ -187,13 +195,5 @@ public class Used {
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
 	}
-
-	public boolean isUserLiked() {
-		return userLiked;
-	}
-
-	public void setUserLiked(boolean userLiked) {
-		this.userLiked = userLiked;
-	}
-
+	
 }

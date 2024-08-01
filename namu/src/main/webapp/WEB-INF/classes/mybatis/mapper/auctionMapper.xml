@@ -57,7 +57,7 @@
 		<if test="cnum != 0">
 			AND a.cnum = #{cnum}
 		</if>
-		<if test="town != 0">
+		<if test="town != null and town != ''">
 			AND a.town = #{town}
 		</if>		
 	</where>   
@@ -76,7 +76,7 @@ select nvl(count(*),0)
 		<if test="cnum != 0">
 			AND a.cnum = #{cnum}
 		</if>
-		<if test="town != 0">
+		<if test="town != null and town != ''">
 			AND a.town = #{town}
 		</if>		
 	</where>
@@ -195,5 +195,9 @@ select nvl(count(*),0)
 	WHERE bidNum = #{bidNum}
 </update>
 
+<update id="updateEndState">
+	UPDATE auction SET state = 1
+	WHERE salesEnd &lt;= SYSDATE
+</update>
 
 </mapper>
