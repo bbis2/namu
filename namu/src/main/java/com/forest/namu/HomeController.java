@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +34,7 @@ public class HomeController {
 	
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String home(Locale locale, Model model) {
+    public String home(Locale locale, Model model, HttpSession session) {
     	
     	// 중고거래
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -46,12 +48,12 @@ public class HomeController {
     	// 빌려줘요
     	Map<String, Object> map2 = new HashMap<String, Object>();
     	map2.put("categoryNum", 0);
-    	map2.put("location", "");
+    	map2.put("location", "쌍용강북"); // 로그인 전 - 전체, 로그인 - town1 로 불러오기 () 
     	map2.put("offset", 0);
     	map2.put("size", 4);
     	List<Borrow> list2 = service2.listBorrow(map2);
     	
-    	/*
+    	
     	// 재능마켓
     	Map<String, Object> map3 = new HashMap<String, Object>();
     	map3.put("categoryNum", 0);
@@ -60,13 +62,11 @@ public class HomeController {
     	map3.put("offset", 0);
     	map3.put("size", 4);
     	List<TalentMarket> list3 = service3.listTalentMarket(map3);
-    	*/
+    	
     	
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
-		//model.addAttribute("list3", list3);
-		
-		System.out.println("빌려줘요"+list2); // list2에 값이 안넣어짐.. -> 빌려줘요[]
+		model.addAttribute("list3", list3);
 		
         return ".home";
     }

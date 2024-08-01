@@ -80,28 +80,17 @@
 </select>
 
 <!-- 글보기 -->
-	<!-- 프로필 조인 버전
-	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, 
-	to_char(u.regDate,'YYYY-MM-DD') regDate, m.nickName, m.town1, p.photo, m.nickName, u.town, u.tableName
-	from used u 
-	left outer join(select num, count(*)
-	from usedlike
-	group by num) ul on u.num = ul.num
-	join member m on u.userId = m.userId
-	join profile p on m.userId = p.userId
-	where u.num = #{num}
-	 -->
 <select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Used">
- 
-	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, u.cnum,
-	to_char(u.regDate,'YYYY-MM-DD') regDate, m.nickName, m.town1, u.userId, m.nickName, u.town, u.tableName
+	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, 
+	to_char(u.regDate,'YYYY-MM-DD') regDate, m.nickName, m.town1, p.photo, m.nickName, u.town, u.tableName,
+   p.photo
 	from used u 
 	left outer join(select num, count(*)
 	from usedlike
 	group by num) ul on u.num = ul.num
 	join member m on u.userId = m.userId
+	left outer join profile p on m.userId = p.userId
 	where u.num = #{num}
-	
 </select>
 
 <!-- 찜 수 -->

@@ -36,9 +36,10 @@
 
 <div class="used-info">
  <div class="user">
-	<img src="회원 프로필!!">
-	   <div class="user-name">${dto.nickName}</div>
+	<img class="myphoto" src="${pageContext.request.contextPath}/uploads/photo/${dto.photo}">
+	   <div class="user-name">${dto.nickName}
 	   <div class="seller-location">${dto.town}</div>
+	   </div>
 </div>
   <hr>
 <div class="used-header">
@@ -62,7 +63,7 @@
 <div class="sale-meta">
   <div class="views"> 조회수 ${dto.hitCount} &nbsp;|&nbsp; ${dto.regDate}</div>
 </div>
-<div class="buttons">
+	<div class="buttons">
  	   <c:if test="${sessionScope.member.userId == dto.userId}">
       	<button class="update-btn" onclick="location.href='${pageContext.request.contextPath}/used/update?num=${dto.num}';">수정</button>
        </c:if>
@@ -70,7 +71,14 @@
         <button class="delete-btn" onclick="usedDelete()">삭제</button>
         </c:if>
     </div>
-	<button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
+    
+    
+    
+    	<div class="col-auto mt-5 text-end">
+		<button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
+    </div>
+    
+    
      </div>
   </div>
 </div>
@@ -156,6 +164,16 @@ function sendOk() {
 </script>
 
 <style>
+
+.myphoto {
+ 	width: 45px; 
+    height: 45px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin-right: 5px;
+}
+
+
 .buttons {
   float: right;
 }
@@ -199,8 +217,9 @@ white-space: nowrap;
 }
 
 .seller-location {
-    font-size: 14px;
+    font-size: 13px;
     color: gray;
+    font-weight:500;
 }
 
 

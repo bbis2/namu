@@ -90,7 +90,9 @@
 				<td class="bg-light col-sm-2" scope="row">나의 동네</td>
 				<td>
 					<button type="button" class="btn-town ${dto.town==sessionScope.member.town1?'active':'' }" onclick="townChange('${sessionScope.member.town1}')">${sessionScope.member.town1}</button>
-					<button type="button" class="btn-town ${dto.town==sessionScope.member.town2?'active':'' }" onclick="townChange('${sessionScope.member.town2}')">${sessionScope.member.town2}</button>
+						<c:if test="${sessionScope.member.town2 != null}">
+							<button type="button" class="btn-town ${dto.town==sessionScope.member.town2?'active':'' }" onclick="townChange('${sessionScope.member.town2}')">${sessionScope.member.town2}</button>
+						</c:if>
 					<input type="hidden" name="town" value="${dto.town}">
 				</td>
 			</tr>

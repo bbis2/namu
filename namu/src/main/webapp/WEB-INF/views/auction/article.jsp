@@ -40,7 +40,7 @@
  		<div class="col">
  			<div class="row">
  				<div class="col-auto">
- 					<img src="회원 프로필!!">
+					<img class="myphoto" src="${pageContext.request.contextPath}/uploads/photo/${dto.photo}">
  				</div>
  				<div class="col  align-self-center">
 					<div class="user-name">${dto.nickName}</div>
@@ -501,6 +501,16 @@ $('.btnBidOk').click(function(){
 
 
 <style>
+
+.myphoto {
+ width: 45px; 
+ height: 45px; 
+ border-radius: 50%; 
+ object-fit: cover; 
+ margin-right: 5px;
+}
+
+
 .btn-ok {
 border: none;
 background-color: #DCDA00;

@@ -60,6 +60,9 @@ public class Auction {
 	
 	// 신고
 	private String tableName;
+	
+	// 프로필
+	private String photo;
 
 	public long getaNum() {
 		return aNum;
@@ -315,6 +318,14 @@ public class Auction {
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 }

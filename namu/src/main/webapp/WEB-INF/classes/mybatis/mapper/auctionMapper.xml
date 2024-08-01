@@ -96,13 +96,14 @@ select nvl(count(*),0)
 	SELECT a.aNum, a.content, a.imageFile, a.subject, a.minBid, a.state, a.hitCount, a.cnum,
        TO_CHAR(a.salesStart,'YYYY-MM-DD HH24:MI') salesStart, 
        TO_CHAR(a.salesEnd,'YYYY-MM-DD HH24:MI') salesEnd, 
-       m.nickName, m.town1, a.userId, m.nickName, a.town, a.tableName, a.soldId, nvl(bc.bid,0) bid
+       m.nickName, m.town1, a.userId, m.nickName, a.town, a.tableName, a.soldId, nvl(bc.bid,0) bid, p.photo
 	FROM auction a 
 	LEFT OUTER JOIN ( SELECT aNum, COUNT(*) FROM auctionlike GROUP BY aNum ) al ON a.aNum = al.aNum
 	JOIN member m ON a.userId = m.userId 
+    left outer join profile p on m.userId = p.userId
 	LEFT OUTER JOIN ( SELECT aNum, bid FROM ( SELECT aNum, bid, ROW_NUMBER() OVER (PARTITION BY aNum ORDER BY bid DESC) as rn
-        FROM bidDetails ) WHERE rn = 1) bc ON a.aNum = bc.aNum
-	where a.aNum = #{a.aNum}
+    FROM bidDetails ) WHERE rn = 1) bc ON a.aNum = bc.aNum
+    where a.aNum = #{a.aNum}
 </select>
 
 <!-- 찜 수 -->

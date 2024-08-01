@@ -46,18 +46,34 @@ footer .d-flex img {
 				</h5>
 				<p>(주)나무 | 대표이사 윤상상 | 서울특별시 마포구 월드컵북로 21</p>
                 <p>forest.namu.official@gmail.com</p>
-                <span class="btn-sm"><a href="${pageContext.request.contextPath}/inquiry/list">1:1 상담</a></span>
                 <br>
-                <span class="btn-sm">이메일 문의</span>
                 <br>
-                
             </div>
+            
+             <div class="col-md-3 py-4 d-flex justify-content-center">
+                <ul class="list-unstyled ">
+                	<li style="color: darkgreen; font-weight: bold;">문의</li>
+                	<li><a href="${pageContext.request.contextPath}/inquiry/list">1:1 상담</a></li>
+                    <li><a href="#">이메일 문의</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-md-3 py-4 d-flex justify-content-center">
+                <ul class="list-unstyled ">
+                	<li style="color: darkgreen; font-weight: bold;">회사정보</li>
+                    <li><a href="#">회사소개</a></li>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#">개인정보 처리방침</a></li>
+                    <li><a href="${pageContext.request.contextPath}/notice/list">공지사항</a></li>
+                </ul>
+            </div>
+            
         </div>
 	</div>
 </div>
 
 <style>
 .container-fluid {
-height: 150px;
+height: 130px;
 }
 </style>

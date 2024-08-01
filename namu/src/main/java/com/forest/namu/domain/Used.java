@@ -35,6 +35,9 @@ public class Used {
 	
 	// 신고
 	private String tableName;
+	
+	// 프로필 사진
+	private String photo;
 
 	public long getNum() {
 		return num;
@@ -194,6 +197,14 @@ public class Used {
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 	
 }
