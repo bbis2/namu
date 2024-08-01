@@ -39,4 +39,6 @@ public interface AuctionService {
 	public void updateAuctionState(Map<String, Object> map);
 	
 	public void updateBiddetailsApply(Map<String, Object> map);
+	// 판매기간 종료 시, 상태 변경
+	public void updateEndState();
 }

@@ -222,19 +222,6 @@ public class TogetherBoardServiceImpl implements TogetherBoardService {
 		return countMap;
 	}
 
-	@Override
-	public boolean userFreeBoardLiked(Map<String, Object> map) {
-		boolean result = false;
-		try {
-			TogetherBoard dto = mapper.userFreeBoardLiked(map);
-			if(dto != null) {
-				result =true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
 
 	@Override
 	public void insertTogetherBoardFile(TogetherBoard dto) throws Exception {
@@ -312,6 +299,55 @@ public class TogetherBoardServiceImpl implements TogetherBoardService {
 		
 	}
 
+	@Override
+	public void insertFreeBoardLike(Map<String, Object> map) throws Exception {
+	
+		try {
+			mapper.insertFreeBoardLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteFreeBoardLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.deleteFreeBoardLike(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public int FreeBoardLikeCount(long num) {
+		int result = 0;
+		
+		try {
+			result = mapper.FreeBoardLikeCount(num);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean userFreeBoardLiked(Map<String, Object> map) {
+		boolean result = false;
+		try {
+			TogetherBoard dto = mapper.userFreeBoardLiked(map);
+			if(dto != null) {
+				result =true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 
 

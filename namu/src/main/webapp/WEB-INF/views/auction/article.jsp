@@ -125,9 +125,9 @@
      </div>
   </div>
   <hr>
-  <div class="fs-6 fw-semibold text-success">1:1문의</div>
+  <div class="question">🤖<button class="btn-q">1:1문의</button> | 판매자에게 직접 문의를 남길 수 있어요! </div>
   <div class="mb-2">  
-  	<button type="button" class="btn-reply mb-2 p-1" style="float: right; color: white;" onclick="location.href='${pageContext.request.contextPath}/auction/write2?aNum=${dto.aNum}&page=${page}';">문의작성</button>
+  	<button type="button" class="qwrite" style="float: right;" onclick="location.href='${pageContext.request.contextPath}/auction/write2?aNum=${dto.aNum}&page=${page}';">문의작성</button>
  </div>
  
  <div class="qnaList pt-2"></div>
@@ -553,6 +553,24 @@ padding: 5px;
 </style>
 
 <style>
+.btn-q {
+	font-weight: bold;
+	color: green;
+	border: none;
+	border-radius: 5px;
+}
+
+.question {
+	font-weight: bold;
+	color: gray;
+}
+
+.qwrite {
+	border: none;
+	background-color: transparent;
+	color: #D24F04; 
+	font-weight: bold;
+}
   .buttons {
   float: right;
 }

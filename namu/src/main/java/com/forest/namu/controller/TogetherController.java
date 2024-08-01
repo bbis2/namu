@@ -23,7 +23,6 @@ import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.Together;
 import com.forest.namu.domain.TogetherApply;
 import com.forest.namu.service.TogetherService;
-import com.mongodb.DuplicateKeyException;
 
 @Controller
 @RequestMapping("/together/*")
@@ -200,7 +199,7 @@ public class TogetherController {
 		
 		// 게시글 좋아요
 		map.put("userId", info.getUserId());
-		boolean userTogetherLiked  = service.userTogetherLiked(map);
+		boolean userTogetherLiked  = service.userFreeBoardLiked(map);
 		
 		model.addAttribute("dto", dto);
 		model.addAttribute("prevDto", prevDto);
@@ -286,41 +285,6 @@ public class TogetherController {
 		return "redirect:/together/list?"+query;
 	}
 	
-	@PostMapping("insertTogetherLike")
-	@ResponseBody
-	public Map<String, Object> insertTogetherLike(
-			@RequestParam long tNum,
-			@RequestParam boolean userLiked,
-			HttpSession session) {
-		
-		String state = "true";
-		int togetherLikeCount = 0;
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("tNum", tNum);
-		paramMap.put("userId", info.getUserId());
-		
-		try {
-			if(userLiked) {
-				service.deleteTogetherLike(paramMap);
-			}else {
-				service.insertTogetherLike(paramMap);
-			}
-		} catch (DuplicateKeyException e) {
-			state = "liked";
-		} catch (Exception e) {
-			state = "false";
-		}
-		
-		togetherLikeCount =service.togetherLikeCount(tNum);
-		
-		Map<String, Object> model = new HashMap<>();
-		model.put("state", state);
-		model.put("togetherLikeCount", togetherLikeCount);
-		
-		return model;
-	}
 	
 	@PostMapping("apply")
 	@ResponseBody

@@ -27,9 +27,15 @@ public interface TogetherBoardMapper {
 	public void deleteTogetherBoardFile(long num) throws SQLException;
 	public TogetherBoard findByFileId(long num);
 	
-	public TogetherBoard userFreeBoardLiked(Map<String, Object> map);
 	
-	//댓글 
+	// 좋아요
+    public void insertFreeBoardLike(Map<String, Object> map) throws SQLException;
+    public void deleteFreeBoardLike(Map<String, Object> map) throws SQLException;
+    public int FreeBoardLikeCount(long num);
+    public TogetherBoard userFreeBoardLiked(Map<String, Object> map);
+    
+	
+	// 댓글 
     public void insertReply(BoardReply dto) throws SQLException;
     public int replyCount(Map<String,Object> map);
     public List<BoardReply> listReply (Map<String, Object> map);
@@ -44,5 +50,7 @@ public interface TogetherBoardMapper {
 	
 	// 댓글 삭제
     public void deleteBoard(Map<String, Object> map) throws SQLException;
+    
+   
     
 }

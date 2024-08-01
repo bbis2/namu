@@ -176,55 +176,6 @@ public class TogetherServiceImpl implements TogetherService{
 		}
 		return dto;
 	}
-
-	@Override
-	public void insertTogetherLike(Map<String, Object> map) throws Exception {
-		try {
-			mapper.insertTogetherLike(map);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-		
-	}
-
-	@Override
-	public void deleteTogetherLike(Map<String, Object> map) throws Exception {
-		try {
-			mapper.deleteTogetherLike(map);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;			
-		}
-		
-	}
-
-	@Override
-	public int togetherLikeCount(long tNum) {
-		int result = 0;
-		try {
-			result  = mapper.togetherLikeCount(tNum);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	@Override
-	public boolean userTogetherLiked(Map<String, Object> map) {
-		boolean result = false;
-		try {
-			Together dto = mapper.userTogetherLiked(map);
-			if(dto  != null)  {
-				result =true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-
 	
 //  모임참가
 	
@@ -261,6 +212,30 @@ public class TogetherServiceImpl implements TogetherService{
 			throw e;
 		}
 		
+	}
+
+	@Override
+	public void insertFreeBoardLike(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteFreeBoardLike(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int FreeBoardLikeCount(long num) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean userFreeBoardLiked(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

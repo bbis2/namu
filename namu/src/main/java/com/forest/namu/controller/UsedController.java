@@ -39,7 +39,7 @@ public class UsedController {
 	public String list(HttpServletRequest req,
 			@RequestParam(value = "page", defaultValue = "1") int current_page,
 			@RequestParam(defaultValue = "0") int cnum, 
-			@RequestParam(defaultValue = "0") int town , 
+			@RequestParam(defaultValue = "") String town , 
 			@RequestParam(defaultValue = "") String kwd,
 			Model model) throws Exception {
 
@@ -49,6 +49,9 @@ public class UsedController {
 		
 		if(req.getMethod().equals("GET")) {
 			kwd = URLDecoder.decode(kwd, "utf-8");
+		}
+		if(req.getMethod().equals("GET")) {
+			town = URLDecoder.decode(kwd, "utf-8");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();

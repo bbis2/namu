@@ -35,7 +35,15 @@
         <div class="post-footer" align='right'>
             <div >
          		<button type="button" class='btn btnDeleteBoardList' type="button" data-num="${vo.num}" style="background-color: #564838;"><i class="bi bi-trash"></i></button>
-                <button type="button" class='btn' style="background-color: #564838;"><i class="bi bi-person-hearts"></i></button>
+                
+                <button type="button" class='btn btnSendFreeBoardLiked' style="background-color: #564838;" title="좋아요">
+                    <i class="bi ${userFreeBoardLiked ? 'bi bi-arrow-through-heart-fill':'bi bi-arrow-through-heart'}"></i>
+                    <span id="BoardLikeCount">${dto.BoardLikeCount}</span>
+                    
+                    
+                    
+                </button>  
+                              
                 <button type="button" class='btn' style="background-color: #564838;"><i class="bi bi-chat-dots"></i></button>                
             </div>
         </div>

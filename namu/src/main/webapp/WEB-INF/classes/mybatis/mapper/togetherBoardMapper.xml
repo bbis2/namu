@@ -64,11 +64,6 @@
 		DELETE FROM freeBoardFile WHERE fileNum = #{fileNum}
 	</delete>
 	
-	<!-- 좋아요 -->
-	<select id="userFreeBoardLiked" parameterType="map" resultType="com.forest.namu.domain.TogetherBoard">
-		SELECT num, userId FROM freeBoardLike WHERE num = #{num} AND userId = #{userId}
-	</select>	
-	
 	<!-- 삭제 -->
 	<delete id="deleteTogetherBoard" parameterType="long">
 		DELETE FROM freeBoard
@@ -163,6 +158,28 @@
 		DELETE FROM freeBoard
 		WHERE num=#{num}
 	</delete>
+	
+	<!-- # -->
+	
+	<!-- 좋아요 등록 -->
+	<insert id="insertFreeBoardLike" parameterType="map">
+		INSERT INTO freeBoardLike(num, userId) VALUES (#{num}, #{userId})
+	</insert>
+	
+	<!-- 게시글 좋아요 삭제 -->
+	<delete id="deleteFreeBoardLike" parameterType="map">
+		DELETE FROM freeBoardLike WHERE num = #{num} AND userId = #{userId}
+	</delete>
+	
+	<!-- 게시글 좋아요 개수 -->
+	<select id="FreeBoardLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*) FROM freeBoardLike WHERE num =#{num}
+	</select>
+	
+	<!-- 게시글 좋아요 여부 -->
+	<select id="userFreeBoardLiked" parameterType="map" resultType="com.forest.namu.domain.TogetherBoard">
+		SELECT num, userId FROM freeBoardLike WHERE num = #{num} AND userId = #{userId}
+	</select>
 
 	
 </mapper>

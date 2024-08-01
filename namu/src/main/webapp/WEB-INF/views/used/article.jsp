@@ -38,7 +38,7 @@
  <div class="user">
 	<img src="회원 프로필!!">
 	   <div class="user-name">${dto.nickName}</div>
-	   <div class="seller-location">${dto.town==1 ? sessionScope.member.town1:sessionScope.member.town2}</div>
+	   <div class="seller-location">${dto.town}</div>
 </div>
   <hr>
 <div class="used-header">

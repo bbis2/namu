@@ -45,7 +45,7 @@ footer .d-flex img {
 					나무
 				</h5>
 				<p>(주)나무 | 대표이사 윤상상 | 서울특별시 마포구 월드컵북로 21</p>
-                <p>이메일 적기</p>
+                <p>forest.namu.official@gmail.com</p>
                 <span class="btn-sm"><a href="${pageContext.request.contextPath}/inquiry/list">1:1 상담</a></span>
                 <br>
                 <span class="btn-sm">이메일 문의</span>

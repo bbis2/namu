@@ -17,15 +17,18 @@ public interface TogetherBoardService {
 	public void updateTogetherBoard(TogetherBoard dto)throws Exception;
 	public void deleteTogetherBoard(long num, String pathname) throws Exception;
 	
-	public boolean userFreeBoardLiked(Map<String, Object> map);
-	
 	// 파일
 	public void insertTogetherBoardFile(TogetherBoard dto) throws Exception;
 	public List<TogetherBoard> listTogetherBoardFile(long num);
 	public void deleteTogetherBoardFile(long fileNum, String pathname) throws Exception;
 	public TogetherBoard findByFileId(long num) throws Exception;
 	
-    
+	// 좋아요
+    public void insertFreeBoardLike(Map<String, Object> map) throws Exception;
+    public void deleteFreeBoardLike(Map<String, Object> map) throws Exception;
+    public int FreeBoardLikeCount(long num);
+    public boolean userFreeBoardLiked(Map<String, Object> map);
+	
     // 댓글
     public void insertReply(BoardReply dto) throws Exception;
     public List<BoardReply> listReply (Map<String, Object> map);

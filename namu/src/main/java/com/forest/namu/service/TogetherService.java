@@ -22,10 +22,10 @@ public interface TogetherService {
 	public void deleteTogether(long tNum, String userId, int membership) throws Exception; // ?
 	public void updateHitCount(long tNum) throws Exception;
 	
-	public void insertTogetherLike(Map<String, Object> map) throws Exception;
-	public void deleteTogetherLike(Map<String, Object> map) throws Exception;
-	public int togetherLikeCount (long tNum);
-	public boolean userTogetherLiked(Map<String, Object> map);
+	public void insertFreeBoardLike(Map<String, Object> map) throws Exception;
+	public void deleteFreeBoardLike(Map<String, Object> map) throws Exception;
+	public int FreeBoardLikeCount (long num);
+	public boolean userFreeBoardLiked(Map<String, Object> map);
 	
 	public void insertTogetherApply(TogetherApply dto) throws Exception;
 	public List<TogetherApply> listApply (Map<String, Object> map);

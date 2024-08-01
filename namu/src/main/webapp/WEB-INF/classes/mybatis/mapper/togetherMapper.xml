@@ -157,26 +157,6 @@
 	<delete id="deleteTogether" parameterType="Long">
 		DELETE FROM togetherList WHERE tNum = #{tNum}
 	</delete>
-
-	<!-- 게시글 좋아요 등록 -->	
-	<insert id="insertTogetherLike" parameterType="map">
-		INSERT INTO togetherLike(tNum, userId) VALUES (#{tNum}, #{userId})
-	</insert>
-	
-	<!-- 게시글 좋아요 삭제 -->	
-	<delete id="deleteTogetherLike" parameterType="map">
-		DELETE FROM togetherLike WHERE tNum = #{tNum} AND userId = #{userId}
-	</delete>
-	
-	<!-- 게시글 좋아요 개수 -->	
-	<select id="togetherLikeCount" parameterType="Long" resultType="Integer">
-		SELECT COUNT(*) FROM togetherLike WHERE tNum =#{tNum}
-	</select>
-	
-	<!-- 게시글 좋아요 여부 -->
-	<select id="userTogetherLiked" parameterType="map" resultType="com.forest.namu.domain.Together">
-		SELECT tNum, userId FROM togetherLike WHERE tNum =#{tNum} AND userId = #{userId}
-	</select>
 	
 	<!-- 참가신청 -->
 	<insert id="insertTogetherApply" parameterType="com.forest.namu.domain.TogetherApply">
