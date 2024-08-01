@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -469,6 +470,46 @@ public class MyPageController {
 	        model.put("error", "An error occurred while fetching the questions.");
 	    }
 
+	    return model;
+	}
+	
+	@PostMapping("mytalentshopQna/answer")
+	@ResponseBody
+	public Map<String, Object> questionAnswer(@RequestBody TmQuestion dto, HttpSession session) {
+	    Map<String, Object> model = new HashMap<>();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    try {
+	        dto.setAnswerId(info.getUserId());
+	        tmQuestionService.updateQuestion(dto);
+
+	        model.put("status", "success");
+	        model.put("message", "답변이 성공적으로 등록되었습니다.");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.put("status", "error");
+	        model.put("message", "답변 등록 중 오류가 발생했습니다.");
+	    }
+	    
+	    return model;
+	}
+	
+	@PostMapping("mytalentshopQna/delete")
+	@ResponseBody
+	public Map<String, Object> questionDelete(@RequestParam long num, HttpSession session) {
+	    Map<String, Object> model = new HashMap<>();
+	  
+	    
+	    try {
+	        tmQuestionService.deleteQuestion(num);
+	        model.put("status", "success");
+	        model.put("message", "질문이 성공적으로 삭제되었습니다.");
+	    } catch (Exception e) {
+	        model.put("status", "error");
+	        model.put("message", "질문 삭제 중 오류가 발생했습니다.");
+	        e.printStackTrace(); 
+	    }
+	    
 	    return model;
 	}
 	

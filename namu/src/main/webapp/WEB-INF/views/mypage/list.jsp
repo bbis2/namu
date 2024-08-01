@@ -3,6 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style>
+
+
 .write-form .img-viewer {
 	cursor: pointer;
 	border: 1px solid #ccc;
@@ -203,6 +205,11 @@ h1 {
 	vertical-align: middle; /* 이미지와 텍스트를 수직으로 정렬 */
 }
 
+.table .completed-row {
+ 	font-style: inherit;
+ 	color: #9c27b0 !important; 
+    font-weight: bold !important;
+}
 
 #storeApplicationModal .modal-dialog {
         max-width: 60%;
@@ -219,6 +226,8 @@ h1 {
 
 .answerQuestion, .deleteQuestion { cursor: pointer; padding-left: 5px; }
 .answerQuestion:hover, .deleteQuestion:hover { font-weight: 500; color: #2478FF; }
+
+
 </style>
 </head>
 
@@ -613,7 +622,7 @@ h1 {
 					aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<table id="storeApplicationTable" class="table">
+				<table id="storeApplicationTable" class="table table-hover">
 					<thead>
 						<tr>
 							<th>신청번호</th>
@@ -649,7 +658,7 @@ h1 {
 					aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<table id="purchaseListTable" class="table">
+				<table id="purchaseListTable" class="table table-hover">
 					<thead>
 						<tr>
 							<th>구매번호</th>
@@ -1141,45 +1150,51 @@ function openStoreInquiryModal() {
     );
 
     $.ajax({
-        url: `${pageContext.request.contextPath}/mypage/mytalentshopQna`, // 데이터를 가져올 URL
+        url: `${pageContext.request.contextPath}/mypage/mytalentshopQna`,
         method: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.log("수신된 데이터:", data); // 서버로부터 수신한 데이터를 출력
+            console.log("수신된 데이터:", data);
 
             let contentHtml = '';
 
             if (data && data.list && data.list.length > 0) {
-                contentHtml += '<div class="body-container">';
-                contentHtml += '<div class="body-title"><h3><i class="bi bi-exclamation-square"></i> 상품 문의</h3></div>';
-                contentHtml += '<div class="body-main">';
-                contentHtml += '<table class="table table-borderless board-list">';
-                contentHtml += '<thead class="table-light"><tr><th>답변상태</th><th>내용</th><th>작성자</th><th>작성일</th></tr></thead>';
+                contentHtml += '<div class="card">';
+                contentHtml += '<div class="card-header bg-purple text-black">';
+                contentHtml += '<h5 class="card-title mb-0">상품 문의</h5>';
+                contentHtml += '</div>';
+                contentHtml += '<div class="card-body p-0">';
+                contentHtml += '<table class="table table-striped">';
+                contentHtml += '<thead><tr><th>답변상태</th><th>내용</th><th>작성자</th><th>작성일</th></tr></thead>';
                 contentHtml += '<tbody>';
 
                 data.list.forEach(function(item) {
                     contentHtml += '<tr class="item-basic-content border-bottom" onclick="toggleDetail(this)">';
-                    contentHtml += '<td>' + (item.answer ? '<span class="text-primary">답변완료</span>' : '<span class="text-secondary">답변대기</span>') + '</td>';
-                    contentHtml += '<td class="left ellipsis"><span>' + item.question.replace('<br>', '') + '</span></td>';
+                    contentHtml += '<td>' + (item.answer ? '<span class="badge bg-success">답변완료</span>' : '<span class="badge bg-secondary">답변대기</span>') + '</td>';
+                    contentHtml += '<td class="text-truncate" style="max-width: 200px;">' + item.question.replace('<br>', '') + '</td>';
                     contentHtml += '<td>' + item.nickName + '</td>';
                     contentHtml += '<td>' + item.questionDate.substring(0, 10) + '</td>';
                     contentHtml += '</tr>';
                     contentHtml += '<tr class="item-detail-content" style="display: none;">';
-                    contentHtml += '<td colspan="6" class="left p-0">';
-                    contentHtml += '<div class="border-bottom p-2 px-3"><div class="bg-light p-2">';
-                    contentHtml += '<div><div class="p-2 pb-0 fw-semibold">' + item.subject + '</div>';
-                    contentHtml += '<div class="row p-2"><div class="col-auto"><span>' + item.questionDate + '</span></div>';
-                    contentHtml += '<div class="col text-end"><span class="deleteQuestion" data-num="' + item.num + '" onclick="deleteQuestion(' + item.num + ')">삭제</span> |';
-                    contentHtml += '<span class="answerQuestion" data-num="' + item.num + '" data-showQuestion="' + item.showQuestion + '" onclick="openAnswerModal(' + item.num + ', \'' + item.answer + '\')">답변</span></div></div>';
-                    contentHtml += '<div class="p-2">' + item.question + '</div>';
+                    contentHtml += '<td colspan="4">';
+                    contentHtml += '<div class="p-3 bg-light rounded">';
+                    contentHtml += '<div class="mb-2"><strong>' + item.subject + '</strong></div>';
+                    contentHtml += '<div class="mb-2">' + item.question + '</div>';
 
                     if (item.answer) {
-                        contentHtml += '<div class="p-2 pt-0 border-top"><div class="bg-light"><div class="p-3 pb-0">';
-                        contentHtml += '<label class="text-bg-primary px-2">' + item.answerName + '</label> <label>' + item.answerDate + '</label>';
-                        contentHtml += '</div><div class="p-3 pt-1 pb-1 answer-content">' + item.answer + '</div></div></div>';
+                        contentHtml += '<div class="bg-light p-3 rounded mt-3" style="border: 1px solid #d4a0ff; background-color: #f9f1ff;">';
+                        contentHtml += '<h6 class="mb-2">'+item.answerName+'</h6>';
+                        contentHtml += '<div class="mb-2">' + item.answer + '</div>';
+                        contentHtml += '<div class="text-end"><small>' + item.answerName + ' - ' + item.answerDate.substring(0, 10) + '</small></div>';
+                        contentHtml += '</div>';
                     }
 
-                    contentHtml += '</div></div></div></td></tr>';
+                    contentHtml += '<div class="text-end mt-2">';
+                    contentHtml += '<button class="btn btn-sm btn-danger me-2" onclick="deleteQuestion(' + item.num + ')">삭제</button>';
+                    contentHtml += '<button class="btn btn-sm btn-primary" onclick="openAnswerModal(' + item.num + ', \'' + item.answer + '\')">답변</button>';
+                    contentHtml += '</div>';
+                    contentHtml += '</div>';
+                    contentHtml += '</td></tr>';
                 });
 
                 contentHtml += '</tbody></table></div></div>';
@@ -1196,6 +1211,7 @@ function openStoreInquiryModal() {
     });
 }
 
+
 function toggleDetail(element) {
     $(element).next('.item-detail-content').toggle();
 }
@@ -1210,7 +1226,7 @@ function openAnswerModal(num, answer) {
 function deleteQuestion(num) {
     if (confirm('게시글을 삭제 하시겠습니까 ?')) {
         $.ajax({
-            url: '${pageContext.request.contextPath}/admin/customer/question/delete',
+            url: '${pageContext.request.contextPath}/mypage/mytalentshopQna/delete',
             method: 'POST',
             data: { num: num },
             success: function() {
@@ -1225,8 +1241,8 @@ function deleteQuestion(num) {
     }
 }
 
-$(function(){
-    $('.btnAnswerSendOk').click(function(){
+$(function() {
+    $('.btnAnswerSendOk').click(function() {
         const f = document.answerForm;
         let s = f.answer.value.trim();
         if (!s) {
@@ -1234,16 +1250,41 @@ $(function(){
             f.answer.focus();
             return false;
         }
-        f.action = "${pageContext.request.contextPath}/admin/customer/question/answer";
-        f.submit();
+
+      
+        $.ajax({
+            url: `${pageContext.request.contextPath}/mypage/mytalentshopQna/answer`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                num: f.num.value,
+                answer: s,
+                showQuestion: f.showQuestion.checked ? 1 : 0
+               
+            }),
+            success: function(response) {
+                if (response.status === "success") {
+                    alert(response.message);
+                    $("#answerDialogModal").modal("hide");
+                    openStoreInquiryModal();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('답변 등록에 실패했습니다:', status, error);
+                alert('답변 등록에 실패했습니다. 다시 시도해 주세요.');
+            }
+        });
     });
 
-    $('.btnAnswerSendCancel').click(function(){
+    $('.btnAnswerSendCancel').click(function() {
         const f = document.answerForm;
         f.reset();
         $("#answerDialogModal").modal("hide");
     });
 });
+
 
 function purchaseListModal() {
   
@@ -1339,18 +1380,20 @@ function openStoreApplicationModal() {
 
             if (myShopList.length > 0) {
                 for (let order of myShopList) {
-                    htmlContent += '<tr>';
+               
+                    let rowClass = order.completionDate ? 'completed-row' : '';
+
+                    htmlContent += '<tr class="'+rowClass+'">';
                     htmlContent += '<td>' + order.applNum + '</td>';
                     htmlContent += '<td>' + order.applDate + '</td>';
                     htmlContent += '<td>' + order.nickName + '</td>';
-                    htmlContent += '<td> <a href ="${pageContext.request.contextPath}/talent/article?num='+order.tboardNum + '">'+ order.subject + '</a></td>';
+                    htmlContent += `<td> <a href="${pageContext.request.contextPath}/talent/article?num=${order.tboardNum}">${order.subject}</a></td>`;
                     htmlContent += '<td>' + order.optionValue + ', ' + order.optionValue2 + '</td>';
-                    if(order.completionDate!=null){
-                    htmlContent += '<td>' + order.completionDate + '</td>';
-                    } else{ 
-                    htmlContent += '<td>' + (order.state === 1 ? '취소함' : '진행 중') + '</td>';
+                    if(order.completionDate != null) {
+                        htmlContent += '<td>' + order.completionDate + '</td>';
+                    } else { 
+                        htmlContent += '<td>' + (order.state === 1 ? '취소함' : '진행 중') + '</td>';
                     }
-                    
                     htmlContent += '<td>' + (order.reviewState === 1 ? 'O' : 'X') + '</td>';
                     htmlContent += '</tr>';
                 }
@@ -1361,10 +1404,8 @@ function openStoreApplicationModal() {
             htmlContent = '<tr><td colspan="6">신청 목록이 없습니다.</td></tr>';
         }
 
-        
         document.querySelector('#storeApplicationTable tbody').innerHTML = htmlContent;
 
-       
         $('#storeApplicationModal').modal('show');
     });
 }
