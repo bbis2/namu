@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+
 <div class="row articleBoard">
 	<div class="row">
 		<div id="carouselArticleBoardIndicators" class="carousel slide" data-bs-ride="carousel">
@@ -14,19 +15,14 @@
 	            </c:forEach>
 			</div>
 			<div class="carousel-inner">
-				<c:if test="${listFile.size() == 0}">
-					<div class="carousel-item active">
-	                    <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="card-img-top mb-3 main-image" alt="No image available">
-	                </div>
-				</c:if>
 				<c:forEach var="vo" items="${listFile}" varStatus="status">
 	                <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
 	                    <c:choose>
 	                        <c:when test="${vo.filename != null && !vo.filename.isEmpty()}">
-	                            <img src="${pageContext.request.contextPath}/uploads/photo/${vo.filename}" class="card-img-top mb-3 main-image" alt="Main image">
+	                            <img style="object-fit: fill;" src="${pageContext.request.contextPath}/uploads/photo/${vo.filename}" class="card-img-top mb-3 main-image" alt="Main image">
 	                        </c:when>
 	                        <c:otherwise>
-	                            <img src="${pageContext.request.contextPath}/resources/images/noimage.png" class="card-img-top mb-3 main-image" alt="No image available">
+	                            <img style="object-fit: fill;" src="${pageContext.request.contextPath}/resources/images/noimage.png" class="card-img-top mb-3 main-image" alt="No image available">
 	                        </c:otherwise>
 	                    </c:choose>
 	                </div>
@@ -43,10 +39,18 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="post">
-		    <h2>${dto.nickName}</h2>
-		    <p>${dto.regDate}</p>
-		    <p>${dto.content}</p>
+        <div class="col-12">
+        <div>
+            <h3 style="font-weight: bold;">${dto.nickName}</h3>
+            <p>${dto.regDate}</p>
+        </div>
+        <div class="col-12">
+            
+        </div>
+        <div class="col-12">
+            <p>${dto.content}</p>
+        </div>
+    </div>
 		    
 		    <form class="comment-form" name="comment-form">
 		        <input type="text" name="content" placeholder="댓글을 달아보세요" aria-label="댓글 입력" />

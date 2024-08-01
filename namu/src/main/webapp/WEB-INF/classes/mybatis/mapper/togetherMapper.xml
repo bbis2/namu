@@ -85,15 +85,16 @@
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
-	<!-- -->
+	<!--글 보기-->
 	<select id="findById" parameterType="map" resultType="com.forest.namu.domain.Together">
 		SELECT l.tNum, l.userId, m.nickName, l.subject, l.categoryNum, categoryName, l.content, l.hitCount, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate, l.name,l.memberCnt,
-			NVL(togetherLikeCount,0) togetherLikeCount, NVL(acceptance, -1) acceptance, thumbnail
+			NVL(togetherLikeCount,0) togetherLikeCount, NVL(acceptance, -1) acceptance, thumbnail,  p.photo, l.tableName
 		FROM togetherList l
 		JOIN member m ON l.userId = m.userId
+		LEFT OUTER JOIN profile p ON m.userId = p.userId
 		JOIN togetherCategory t ON l.categoryNum = t.categoryNum
 		LEFT OUTER JOIN (
-			SELECT tNum, acceptance FROM togetherApply a WHERE tNum = #{tNum} AND a.userId = #{userId}
+			SELECT tNum, acceptance FROM togetherApply  WHERE tNum = #{tNum} AND userId = #{userId}
 		) ap ON l.tNum = ap.tNum
 		LEFT OUTER JOIN (
 			SELECT tNum, COUNT(*) togetherLikeCount FROM togetherLike
@@ -174,6 +175,8 @@
 	    	AND acceptance = #{acceptance}
 	    </if>
 	</select>
+
+
 
 	<update id="updateApply" parameterType="com.forest.namu.domain.TogetherApply">
 		UPDATE togetherApply SET acceptance = #{acceptance}

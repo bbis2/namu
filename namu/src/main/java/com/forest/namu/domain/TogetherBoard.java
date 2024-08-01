@@ -23,6 +23,18 @@ public class TogetherBoard {
 
 	private String[] listFilename; 
 
+	// 신고
+	private String tableName;
+	
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
 
 	public long getNum() {
 		return num;

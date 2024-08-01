@@ -45,7 +45,6 @@
 }
 
 .card-body {
-    padding: 20px;
     text-align: center;
 }
 
@@ -183,6 +182,14 @@
     }
 }
 
+.myphoto {
+ 	width: 50px; 
+    height: 50px; 
+    object-fit: cover; 
+     border-radius: 30%; 
+    margin-right: 5px;
+}
+
 }
 </style>
 <script type="text/javascript">
@@ -204,8 +211,7 @@ function filterByTown() {
     f.submit();
 }
 </script>
-</head>
-<body>
+
 <div class="container">
  	<section class="fleamarket-cover">
 		<h1 class="cover-title htext bd">함께하는<br>모임 생활</h1>
@@ -241,7 +247,11 @@ function filterByTown() {
     <div class="row">
         <div class="col-md-3 ">
         
-			<div class="card mb-4">
+			<div class="card mb-4 d-flex align-items-center">
+				<div style="margin-top: 10px;">				
+						<img class="myphoto" src="${pageContext.request.contextPath}/uploads/photo/${photo}">
+				</div>
+				
 				<div class="card-body">
 					<h5 class="card-title">${sessionScope.member.userId}</h5>
    				    <h6 class="bd">[<a style="color: green">${sessionScope.member.nickName}</a>]님의 동네</h6>
@@ -253,10 +263,7 @@ function filterByTown() {
 							</c:if>
 						</select>
 				   		<br>
-						<div>
-							<span ><i class="fa-solid fa-heart"></i> </span>
-							<span><i class="bi bi-bell-fill"></i></span>
-						</div>
+						
 				</div>
 			</div>
             
@@ -319,5 +326,79 @@ function filterByTown() {
         </div>
     </main>
 </div>
-</body>
-</html>
+
+
+
+<script type="text/javascript">
+function ajaxFun(url, method, formData, dataType, fn, file = false) {
+	const settings = {
+			type: method, 
+			data: formData,
+			dataType:dataType,
+			success:function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);
+			},
+			complete: function () {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 400) {
+					alert('요청 처리가 실패 했습니다.');
+					return false;
+		    	}
+		    	
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		settings.contentType = false;  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+	}
+	
+	$.ajax(url, settings);
+}
+
+
+$(function() {
+	$('.btnSendLike').click(function() {
+		
+		let $btn = $(this);
+		let userLiked = $btn.hasClass('on');
+		
+		let url = '${pageContext.request.contextPath}/together/insertLike';
+		let num = $btn.next('input').val();
+		let query = 'num=' + num + '&userLiked=' + userLiked;
+		
+		// 토스트 팝업
+		let $toast = document.querySelector('#toast_message');
+		
+		const fn = function(data) {
+			let state = data.state;
+			if(state === 'true') {
+				
+				// 토스트 팝업
+				if(userLiked) {
+					$toast.innerText = '찜 목록에 추가되었습니다.';
+				} else {
+					$toast.innerText = '찜 목록에서 삭제되었습니다.';
+				}
+				
+				$toast.classList.add('active');
+				setTimeout(() => {
+					$toast.classList.remove('active');
+				}, 1500);
+				
+			}
+			
+		};
+		
+		ajaxFun(url, 'post', query, 'json', fn);
+	});
+});
+</script>

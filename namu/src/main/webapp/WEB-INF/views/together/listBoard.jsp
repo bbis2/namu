@@ -6,7 +6,6 @@
 
 <!-- board list -->
 <c:forEach var="vo" items="${list}">
-    <c:if test="${sessionScope.member.userId == vo.userId || not empty sessionScope.member}">
         <div class="boardList mb-3">
             <div>
                 <div>
@@ -44,11 +43,12 @@
                     
                     <button type="button" class='btn' style="background-color: #564838;">
                         <i class="bi bi-chat-dots"></i>
+                        <span id="BoardLikeCount">${dto.BoardLikeCount}</span>
                     </button>
                 </div>
             </div>
         </div>
-    </c:if>
+
 </c:forEach>
 
 <div class="page-navigation">${paging}</div>

@@ -4,6 +4,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class Together {
 	private long tNum;
+	private long num; // 오류
+	
 	private String userId;
 
 	private String name;
@@ -24,9 +26,41 @@ public class Together {
 	private int togetherLikeCount;
 	private int acceptance; 
 	
+	private boolean userLiked;// 찜 여부
+	private int likeCount; // 찜 개수
+	private String photo; //프로필 사진
+	
 	private String town;
 
 	private int userApply; // 참여 여부
+	
+	private String tableName;
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
+	}
+
+	public int getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+
 
 	public long gettNum() {
 		return tNum;
@@ -170,6 +204,22 @@ public class Together {
 
 	public void setAcceptance(int acceptance) {
 		this.acceptance = acceptance;
+	}
+
+	public long getNum() {
+		return num;
+	}
+
+	public void setNum(long num) {
+		this.num = num;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 	

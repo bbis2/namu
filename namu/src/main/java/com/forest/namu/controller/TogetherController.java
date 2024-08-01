@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -285,6 +286,38 @@ public class TogetherController {
 		return "redirect:/together/list?"+query;
 	}
 	
+	@PostMapping("insertLike")
+	@ResponseBody
+	public Map<String, Object> insertLike(
+			@RequestParam long num,
+			@RequestParam boolean userLiked,
+			HttpSession session
+			) {
+		
+		String state = "true";
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("num", num);
+		paramMap.put("userId", info.getUserId());
+		
+		try {
+			if(userLiked) {
+				service.insertFreeBoardLike(paramMap);
+			} else {
+				service.deleteFreeBoardLike(paramMap);
+			}
+		} catch (DuplicateKeyException e) {
+			state = "liked";
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		
+		return model;
+	}
 	
 	@PostMapping("apply")
 	@ResponseBody

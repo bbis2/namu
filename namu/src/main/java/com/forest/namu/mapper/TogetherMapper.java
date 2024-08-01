@@ -37,5 +37,7 @@ public interface TogetherMapper {
 	public List<TogetherApply> listApply (Map<String, Object> map); // 모임리스트
 	
 	public void updateApply(TogetherApply dto)throws SQLException;	
+
+
 	
 }
