@@ -24,23 +24,63 @@
 #myTabContent {
     padding: 20px 0;  /* 탭 내용과 탭 사이에 여백 추가 */
 }
+.unread-dot {
+    width: 9px;
+    height: 9px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 7px;
+    margin-top: 2px;
+}
+.fleamarket-cover {
+    position: relative;
+    width: 100%;
+    height: 300px; /* 원하는 높이로 조정 */
+    background-image: url('${pageContext.request.contextPath}/resources/images/borrowlist.PNG');
+    background-size: cover;
+    background-position: center 20%;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.cover-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #eee;
+    margin-left: 50px;
+}
 </style>
 
 
 <div class="container mt-5 mb-5 pb-5">
 
 	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">빌려드림 신청 관리</h1>
-		<span class="cover-description htext">나의 신청 내역과 받은 신청 내역을 관리해요.</span>
-		<div class="cover-image"></div>
+	    <div class="cover-content pt-5 mt-5">
+        	<h1 class="bd">
+           	 	빌려드림 신청 관리
+        	</h1>
+        	<h6>나의 신청 내역과 받은 신청 내역을 관리해요.</h6>
+    	</div>
 	</section>
 
 	<ul class="nav nav-tabs custom-tabs" id="myTab" role="tablist">
 	    <li class="nav-item" role="presentation">
-	        <button class="nav-link active" id="applicant-tab" data-bs-toggle="tab" data-bs-target="#applicant" type="button" role="tab" aria-controls="applicant" aria-selected="true">내 신청 목록</button>
+	        <button class="nav-link active position-relative" id="applicant-tab" data-bs-toggle="tab" data-bs-target="#applicant" type="button" role="tab" aria-controls="applicant" aria-selected="true">
+	            내 신청 목록
+	            <span id="applicantTabDot" class="unread-dot d-none"></span>
+	        </button>
 	    </li>
 	    <li class="nav-item" role="presentation">
-	        <button class="nav-link" id="provider-tab" data-bs-toggle="tab" data-bs-target="#provider" type="button" role="tab" aria-controls="provider" aria-selected="false">받은 신청 목록</button>
+	        <button class="nav-link position-relative" id="provider-tab" data-bs-toggle="tab" data-bs-target="#provider" type="button" role="tab" aria-controls="provider" aria-selected="false">
+	            받은 신청 목록
+	            <span id="providerTabDot" class="unread-dot d-none"></span>
+	        </button>
 	    </li>
 	</ul>
 
@@ -100,9 +140,16 @@
 		                                    <c:when test="${dto.state == 1}">
 		                                        <button class="btn btn-sm btn-danger cancel-btn" data-id="${dto.rentNum}">취소</button>
 		                                    </c:when>
-		                                    <c:when test="${dto.state == 2}">
-		                                        <button class="btn btn-sm btn-danger chat-btn" data-id="${dto.reqNum}">채팅하기</button>
-		                                    </c:when>
+											<c:when test="${dto.state == 2}">
+											    <button class="btn btn-sm btn-danger chat-btn position-relative"
+											            onclick="liveChatStart('rent-${dto.rentNum}', '${dto.rentId}', '${dto.rentName}');"
+											            data-id="${dto.reqNum}">
+											        채팅하기
+											        <c:if test="${dto.hasUnreadMessages == 1}">
+											            <span class="unread-dot position-absolute top-0 end-1 translate-middle"></span>
+											        </c:if>
+											    </button>
+											</c:when>
 		                                    <c:when test="${dto.state == 3}">
 		                                        <button class="btn btn-sm btn-danger rejectReason-btn" data-id="${dto.reject}">거절사유</button>
 		                                    </c:when>
@@ -132,6 +179,7 @@
 		                    </c:forEach>
 		                </tbody>
 		            </table>
+		            <c:import url="/WEB-INF/views/liveChat/chatClient.jsp"/>
             	</c:otherwise>
             </c:choose>
         </div>
@@ -187,10 +235,16 @@
 		                                        <button class="btn btn-sm btn-success accept-btn" data-id="${dto.reqNum}">수락</button>
 		                                        <button class="btn btn-sm btn-danger reject-btn" data-id="${dto.reqNum}">거절</button>
 		                                    </c:when>
-		                                    <c:when test="${dto.state == 2}">
-		                                        <button class="btn btn-sm btn-primary chat-btn" data-id="${dto.reqNum}">채팅하기</button>
-		                                        <button class="btn btn-sm btn-primary finish-btn" data-id="${dto.reqNum}">반납완료</button>
-		                                    </c:when>
+											<c:when test="${dto.state == 2}">
+											    <button class="btn btn-sm btn-danger chat-btn position-relative"
+											            onclick="liveChatStart('rent-${dto.rentNum}', '${dto.rentId}', '${dto.rentName}');"
+											            data-id="${dto.reqNum}">
+											        채팅하기
+											        <c:if test="${dto.hasUnreadMessages == 1}">
+											            <span class="unread-dot position-absolute top-0 end-2 translate-middle"></span>
+											        </c:if>
+											    </button>
+											</c:when>
 		                                    <c:when test="${dto.state == 5}">
 		                                    	<c:choose>
 		                                    		<c:when test="${dto.borrowerReview == 0}">
@@ -207,6 +261,7 @@
 		                    </c:forEach>
 		                </tbody>
 		            </table>
+		            <c:import url="/WEB-INF/views/liveChat/chatOwner.jsp"/>
             	</c:otherwise>
             </c:choose>
         </div>
@@ -339,6 +394,24 @@
 <script>
 
 $(document).ready(function() {
+    // 채팅 버튼 클릭 이벤트
+    $('.chat-btn').click(function() {
+        $(this).find('.unread-dot').remove();
+        updateTabDots();
+    });
+
+    // 탭의 빨간 점 업데이트 함수
+    function updateTabDots() {
+        let applicantHasUnread = $('#applicant .unread-dot').length > 0;
+        let providerHasUnread = $('#provider .unread-dot').length > 0;
+
+        $('#applicantTabDot').toggleClass('d-none', !applicantHasUnread);
+        $('#providerTabDot').toggleClass('d-none', !providerHasUnread);
+    }
+
+    // 초기 탭 빨간 점 설정
+    updateTabDots();
+	
     // 탭 클릭 이벤트
     $('.nav-link').on('click', function (e) {
         // 클릭한 탭의 id를 로컬 스토리지에 저장
@@ -352,9 +425,7 @@ $(document).ready(function() {
     if(activeTab){
         $('#' + activeTab).tab('show');
     }
-});
 
-$(document).ready(function() {
     // 취소 버튼 클릭 이벤트
     $('.cancel-btn').click(function() {
         if(confirm('정말 취소하시겠습니까?')) {

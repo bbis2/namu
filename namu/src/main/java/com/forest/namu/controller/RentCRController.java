@@ -53,13 +53,13 @@ public class RentCRController {
         
         List<RentCR> myApplications = crService.getMyApplications(userId);
         for(RentCR dto : myApplications) {
-        	dto.setReqDate(myUtil.convertDateFormat(dto.getReqDate()));
+        	dto.setUserId(userId);
         	dto.setStrDate(myUtil.convertDateFormat(dto.getStrDate()));
         	dto.setEndDate(myUtil.convertDateFormat(dto.getEndDate()));
         }
         List<RentCR> receivedRequests = crService.getReceivedRequests(userId);
         for(RentCR dto : receivedRequests) {
-        	dto.setReqDate(myUtil.convertDateFormat(dto.getReqDate()));
+        	dto.setUserId(userId);
         	dto.setStrDate(myUtil.convertDateFormat(dto.getStrDate()));
         	dto.setEndDate(myUtil.convertDateFormat(dto.getEndDate()));
         }

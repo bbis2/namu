@@ -30,6 +30,7 @@ public class RentCR {
 	private String content;
 	private int wasGood;	// 1-좋았음, 2-별로였음
 	
+	private int hasUnreadMessages; // 안읽은 메세지 수
 	
 	public long getReqNum() {
 		return reqNum;
@@ -162,5 +163,11 @@ public class RentCR {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public int getHasUnreadMessages() {
+		return hasUnreadMessages;
+	}
+	public void setHasUnreadMessages(int hasUnreadMessages) {
+		this.hasUnreadMessages = hasUnreadMessages;
 	}
 }

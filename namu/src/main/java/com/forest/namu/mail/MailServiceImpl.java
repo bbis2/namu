@@ -39,7 +39,7 @@ public class MailServiceImpl implements MailService {
         contentBuilder.append("<p><strong>총 금액:</strong> ").append(rentCR.getTotalPrice()).append("원</p>");
         contentBuilder.append("</div>");
         contentBuilder.append("<p>자세한 내용은 아래 버튼을 클릭하여 나무마켓 웹사이트에서 확인해 주세요.</p>");
-        contentBuilder.append("<a href='http://localhost:9090/namu/rentcr/list' class='btn'>신청 목록 확인하기</a>");
+        contentBuilder.append("<a href='http://211.238.142.95:3306/namu/rentcr/list' class='btn'>신청 목록 확인하기</a>");
         contentBuilder.append("<p>나무을 이용해 주셔서 감사합니다. 항상 최상의 서비스를 제공하기 위해 노력하겠습니다.</p>");
         contentBuilder.append("<p>문의사항이 있으시면 언제든 고객센터로 연락 주시기 바랍니다.</p>");
         contentBuilder.append("<p>감사합니다.<br>나무 팀 드림</p>");
@@ -79,7 +79,7 @@ public class MailServiceImpl implements MailService {
         contentBuilder.append("<p><strong>거절사유:</strong> ").append(rejectReason).append("</p>");
         contentBuilder.append("</div>");
         contentBuilder.append("<p>자세한 내용은 아래 버튼을 클릭하여 나무마켓 웹사이트에서 확인해 주세요.</p>");
-        contentBuilder.append("<a href='http://localhost:9090/namu/rentcr/list' class='btn'>신청 목록 확인하기</a>");
+        contentBuilder.append("<a href='http://211.238.142.95:3306/namu/rentcr/list' class='btn'>신청 목록 확인하기</a>");
         contentBuilder.append("<p>나무을 이용해 주셔서 감사합니다. 항상 최상의 서비스를 제공하기 위해 노력하겠습니다.</p>");
         contentBuilder.append("<p>문의사항이 있으시면 언제든 고객센터로 연락 주시기 바랍니다.</p>");
         contentBuilder.append("<p>감사합니다.<br>나무 팀 드림</p>");
@@ -117,7 +117,7 @@ public class MailServiceImpl implements MailService {
         contentBuilder.append("<p><strong>총 금액:</strong> ").append(rentCR.getTotalPrice()).append("원</p>");
         contentBuilder.append("</div>");
         contentBuilder.append("<p>자세한 내용은 아래 버튼을 클릭하여 나무마켓 웹사이트에서 확인해 주세요.</p>");
-        contentBuilder.append("<a href='http://localhost:9090/namu/rentcr/list' class='btn'>신청 목록 확인하기</a>");
+        contentBuilder.append("<a href='http://211.238.142.95:3306/namu/rentcr/list' class='btn'>신청 목록 확인하기</a>");
         contentBuilder.append("<p>나무을 이용해 주셔서 감사합니다. 항상 최상의 서비스를 제공하기 위해 노력하겠습니다.</p>");
         contentBuilder.append("<p>문의사항이 있으시면 언제든 고객센터로 연락 주시기 바랍니다.</p>");
         contentBuilder.append("<p>감사합니다.<br>나무 팀 드림</p>");
@@ -155,8 +155,8 @@ public class MailServiceImpl implements MailService {
         contentBuilder.append("<p><strong>총 금액:</strong> ").append(rentCR.getTotalPrice()).append("원</p>");
         contentBuilder.append("<p><strong>보증금:</strong> ").append(rentCR.getDeposit()).append("원</p>");
         contentBuilder.append("</div>");
-        contentBuilder.append("<p>자세한 내용은 아래 버튼을 클릭하여 나무마켓 웹사이트에서 확인해 주세요.</p>");
-        contentBuilder.append("<a href='http://localhost:9090/namu/rentcr/list' class='btn'>신청 목록 확인하기</a>");
+        contentBuilder.append("<p>아래 버튼을 클릭하여 제공자님과 채팅으로 약속을 잡아보세요!</p>");
+        contentBuilder.append("<a href='http://211.238.142.95:3306/namu/rentcr/list' class='btn'>채팅하러가기</a>");
         contentBuilder.append("<p>나무을 이용해 주셔서 감사합니다. 항상 최상의 서비스를 제공하기 위해 노력하겠습니다.</p>");
         contentBuilder.append("<p>문의사항이 있으시면 언제든 고객센터로 연락 주시기 바랍니다.</p>");
         contentBuilder.append("<p>감사합니다.<br>나무 팀 드림</p>");
@@ -194,7 +194,7 @@ public class MailServiceImpl implements MailService {
         contentBuilder.append("<p><strong>총 금액:</strong> ").append(rentCR.getTotalPrice()).append("원</p>");
         contentBuilder.append("</div>");
         contentBuilder.append("<p>아래 버튼을 클릭하여 따뜻한 후기를 남겨주세요.</p>");
-        contentBuilder.append("<a href='http://localhost:9090/namu/rentcr/list' class='btn'>후기 남기러가기</a>");
+        contentBuilder.append("<a href='http://211.238.142.95:3306/namu/rentcr/list' class='btn'>후기 남기러가기</a>");
         contentBuilder.append("<p>나무을 이용해 주셔서 감사합니다. 항상 최상의 서비스를 제공하기 위해 노력하겠습니다.</p>");
         contentBuilder.append("<p>문의사항이 있으시면 언제든 고객센터로 연락 주시기 바랍니다.</p>");
         contentBuilder.append("<p>감사합니다.<br>나무 팀 드림</p>");

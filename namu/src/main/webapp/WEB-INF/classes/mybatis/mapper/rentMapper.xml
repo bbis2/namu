@@ -215,7 +215,7 @@
 	
 	<!-- 글보기 -->
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Rent">
-		SELECT rentNum, nickName, subject, content, hPrice, dPrice, wPrice, mPrice, r.regDate, hitCount, location, r.categoryNum, rbc.category, r.tableName
+		SELECT rentNum, r.userId, nickName, subject, content, hPrice, dPrice, wPrice, mPrice, r.regDate, hitCount, location, r.categoryNum, rbc.category, r.tableName
 		FROM rent r
 		JOIN member m ON r.userId = m.userId
 		JOIN rbCategory rbc On r.categoryNum = rbc.categoryNum

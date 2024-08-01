@@ -212,7 +212,7 @@
 	
 	<!-- 글보기 -->
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Borrow">
-		SELECT borrowNum, nickName, subject, content, price, strDate, endDate, b.regDate, hitCount, location, b.categoryNum, rbc.category, b.tableName
+		SELECT borrowNum, b.userId, nickName, subject, content, price, strDate, endDate, b.regDate, hitCount, location, b.categoryNum, rbc.category, b.tableName
 		FROM borrow b
 		JOIN member m ON b.userId = m.userId
 		JOIN rbCategory rbc On b.categoryNum = rbc.categoryNum

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forest.namu.mapper.MessageMapper">
+	<insert id="insertMessage" parameterType="com.forest.namu.liveChat.ChatMessage">
+		INSERT INTO chatMessage(num, roomName, ownerIdx, fromIdx, fromName, classify, toIdx, toName, content, 
+			sendDate, readIdx)
+			VALUES(chatMessage_seq.NEXTVAL, #{roomName}, #{ownerIdx}, #{fromIdx}, #{fromName}, #{classify},
+				#{toIdx}, #{toName}, #{content}, TO_DATE(#{sendDate}, 'YYYY-MM-DD HH24:MI:SS'),
+				#{readIdx, jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateMessageUser" parameterType="map">
+		UPDATE chatMessage SET readIdx = #{readIdx} 
+		WHERE roomName = #{roomName} AND toIdx = #{userIdx} AND classify = 2 AND readIdx IS NULL
+	</update>
+
+	<update id="updateMessageOwner" parameterType="map">
+		UPDATE chatMessage SET readIdx = #{readIdx} 
+		WHERE roomName = #{roomName} AND fromIdx = #{userIdx} AND classify = 1 AND readIdx IS NULL
+	</update>
+	
+	<select id="listChatUser" parameterType="map" resultType="com.forest.namu.liveChat.ChatMessage">
+		SELECT * FROM (
+			SELECT num, roomName, DECODE(classify, 1, fromIdx, toIdx) userIdx,
+				DECODE(classify, 1, fromName, toName) userName,
+				classify, content, readIdx, sendDate, 
+                CASE
+                    WHEN TRUNC(SYSDATE) = TRUNC(sendDate) THEN TO_CHAR(SYSDATE, 'AM HH:MI')
+                    WHEN TRUNC(SYSDATE)-1 = TRUNC(sendDate) THEN '어제'
+                    ELSE TO_CHAR(sendDate, 'MM"월" DD"일"')
+                END AS sdate,
+				ROW_NUMBER() OVER(PARTITION BY DECODE(classify, 1, fromIdx, toIdx) ORDER BY sendDate DESC) rank
+			FROM chatMessage
+			WHERE roomName = #{roomName}
+		) WHERE rank = 1
+		ORDER BY readIdx NULLS FIRST, sendDate DESC
+	</select>
+	
+	<select id="listUserMessage" parameterType="map" resultType="com.forest.namu.liveChat.ChatMessage">
+		SELECT num, roomName, ownerIdx, fromIdx, fromName, classify, toIdx, toName, content, readIdx, sendDate
+		FROM chatMessage
+		WHERE roomName = #{roomName} AND (fromIdx = #{userIdx} OR toIdx = #{userIdx})
+			AND TRUNC(sendDate) >= TO_DATE(#{date}, 'YYYYMMDD')
+		ORDER BY sendDate ASC
+	</select>
+
+	<select id="lastUserMessage" parameterType="map" resultType="com.forest.namu.liveChat.ChatMessage">
+		SELECT num, roomName, ownerIdx, fromIdx, fromName, classify, toIdx, toName, content, readIdx, sendDate,
+                CASE
+                    WHEN TRUNC(SYSDATE) = TRUNC(sendDate) THEN TO_CHAR(SYSDATE, 'AM HH:MI')
+                    WHEN TRUNC(SYSDATE)-1 = TRUNC(sendDate) THEN '어제'
+                    ELSE TO_CHAR(sendDate, 'MM"월" DD"일"')
+                END AS sdate
+		FROM chatMessage
+		WHERE roomName = #{roomName} AND (fromIdx = #{userIdx} OR toIdx = #{userIdx})
+		ORDER BY sendDate DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+
+</mapper>

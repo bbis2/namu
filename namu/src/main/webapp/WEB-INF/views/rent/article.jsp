@@ -970,7 +970,7 @@ $(function() {
             $rentalButton.text('대기중(취소하기)').removeClass('btnChat btnAccept').addClass('btnWaiting');
             displayRentalInfo();
         } else if (${rentCR.state == 2}) {
-            $rentalButton.text('대여 확정(채팅하기)').removeClass('btnChat btnWaiting').addClass('btnAccept').prop('disabled', true);
+            $rentalButton.text('대여 확정(채팅하기)').removeClass('btnChat btnWaiting').addClass('btnAccept').attr('onclick', 'liveChatStart("rent-${dto.rentNum}", "${dto.userId}", "${dto.nickName}")');
             displayRentalInfo();
         } else {
             $rentalButton.text('신청하기').removeClass('btnWaiting btnAccept').addClass('btnChat');
@@ -1125,9 +1125,9 @@ $(function() {
         // 보유 포인트가 부족한 경우
         if(${point} < deposit) {
             let needPoint = deposit - ${point};
-            if (confirm("보유한 나무머니가 부족합니다.(나무머니 잔액: ${point})" + needPoint + "나무머니를 결제하시겠습니까?")) {
-                // 포인트 결제 로직 구현
-                // 여기에 포인트 충전 페이지로 이동하는 코드를 추가하세요
+            if (confirm("보유한 나무머니가 부족합니다.\n(나무머니 잔액: ${point}, 부족한 포인트: " + needPoint + ")\n마이페이지로 이동하시겠습니까?")) {
+                location.href = '${pageContext.request.contextPath}/mypage/list';
+                return;
             } else {
 				$toast.innerText = '대여신청을 취소합니다.';
 				$toast.classList.add('active');
@@ -1371,6 +1371,8 @@ $(function() {
 	        location.href = url;
 	    }
 	});
+    
+
     
 	// 현재 날짜와 시간을 YYYY-MM-DDTHH:00 형식으로 반환하는 함수
 	function getCurrentDateTime() {
@@ -1622,8 +1624,7 @@ $(function() {
 });
 
 </script>
-
-
+<c:import url="/WEB-INF/views/liveChat/chatClient.jsp" />
 
 
 

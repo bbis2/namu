@@ -156,27 +156,57 @@
     	FROM rentConfirm
     	WHERE rentNum = #{num} AND userId = #{userId} AND state IN (1, 2)
     </select>
+    
+    <select id="getUnreadMessageCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM chatMessage
+	    WHERE roomName = 'rent-${rentNum}'
+	    AND toIdx = #{userId}
+	    AND readIdx IS NULL
+	</select>
 	
 	<select id="selectMyApplications" parameterType="String" resultType="com.forest.namu.domain.RentCR">
-        SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName, r.userId AS rentId,
-        	  r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject, rc.userReview, rc.rentReview, rc.borrowerReview
-        FROM rentConfirm rc
-        JOIN rent r ON rc.rentNum = r.rentNum
-        JOIN member borrow ON rc.userId = borrow.userId
-        JOIN member rent ON r.userId = rent.userId
-        WHERE rc.userId = #{userId}
-        ORDER BY rc.reqDate DESC
+	    SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName, r.userId AS rentId,
+	           r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject, 
+	           rc.userReview, rc.rentReview, rc.borrowerReview,
+	           CASE WHEN cm.num IS NOT NULL THEN 1 ELSE 0 END AS hasUnreadMessages
+	    FROM rentConfirm rc
+	    JOIN rent r ON rc.rentNum = r.rentNum
+	    JOIN member borrow ON rc.userId = borrow.userId
+	    JOIN member rent ON r.userId = rent.userId
+	    LEFT JOIN chatMessage cm ON cm.roomName = CONCAT('rent-', rc.rentNum)
+	                             AND cm.toIdx = #{userId}
+	                             AND cm.readIdx IS NULL
+	                             AND cm.fromIdx != #{userId}
+	                             AND cm.sendDate = (
+	                                 SELECT MAX(sendDate)
+	                                 FROM chatMessage
+	                                 WHERE roomName = cm.roomName AND fromIdx != #{userId}
+	                             )
+	    WHERE rc.userId = #{userId}
+	    ORDER BY rc.reqDate DESC
     </select>
 
     <select id="selectReceivedRequests" parameterType="String" resultType="com.forest.namu.domain.RentCR">
-        SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName, rc.userId AS rentId,
-        	  r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject, rc.userReview, rc.rentReview, rc.borrowerReview
-        FROM rentConfirm rc
-        JOIN rent r ON rc.rentNum = r.rentNum
-        JOIN member borrow ON rc.userId = borrow.userId
-        JOIN member rent ON r.userId = rent.userId
-        WHERE r.userId = #{userId}
-        ORDER BY rc.reqDate DESC
+	    SELECT rc.reqNum, rc.rentNum, borrow.nickName AS borrowName, rent.nickName AS rentName, rc.userId AS rentId,
+	           r.subject, rc.reqDate, rc.strDate, rc.endDate, rc.state, deposit, totalPrice, reject, 
+	           rc.userReview, rc.rentReview, rc.borrowerReview,
+	           CASE WHEN cm.num IS NOT NULL THEN 1 ELSE 0 END AS hasUnreadMessages
+	    FROM rentConfirm rc
+	    JOIN rent r ON rc.rentNum = r.rentNum
+	    JOIN member borrow ON rc.userId = borrow.userId
+	    JOIN member rent ON r.userId = rent.userId
+	    LEFT JOIN chatMessage cm ON cm.roomName = CONCAT('rent-', rc.rentNum)
+	                             AND cm.toIdx = #{userId}
+	                             AND cm.readIdx IS NULL
+	                             AND cm.fromIdx != #{userId}
+	                             AND cm.sendDate = (
+	                                 SELECT MAX(sendDate)
+	                                 FROM chatMessage
+	                                 WHERE roomName = cm.roomName AND fromIdx != #{userId}
+	                             )
+	    WHERE r.userId = #{userId}
+	    ORDER BY rc.reqDate DESC
     </select>
 	
 </mapper>

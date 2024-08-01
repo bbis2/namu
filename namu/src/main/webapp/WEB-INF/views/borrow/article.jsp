@@ -22,7 +22,7 @@
 	
 }
 .btnChat {
-	background: #ec433d;
+	background: #4169e1;
 	color: white;
 	width: 150px;
 	height: 50px;
@@ -39,7 +39,7 @@
 	background: #8a8a8a;
 }
 .btnChat:hover {
-	background: #ff2600;
+	background: #1e90ff;
 }
 
 a:hover {text-decoration: none;}
@@ -356,11 +356,12 @@ function sendOk() {
 						<c:choose>
 							<c:when test="${dto.nickName.equals(sessionScope.member.nickName)}">
 								<button type="button" class="btnUpdate btnSendLike">수정하기</button>
-								<button type="button" class="btnDelete btnChat">삭제하기</button>
+								<button type="button" class="btnDelete btnSendLike">삭제하기</button>
+								<button class="btnChat" type="button" onclick="liveChatStart('borrow-${dto.borrowNum}', '${dto.userId}', '${dto.nickName}');">채팅하기</button>
 							</c:when>
 							<c:otherwise>
 								<button class="ajaxLike btnSendLike ${dto.userLiked ? 'on' : ''}">${dto.userLiked ? '찜삭제' : '찜하기'}</button>
-								<button class="btnChat">채팅하기</button>
+								<button class="btnChat" type="button" onclick="liveChatStart('borrow-${dto.borrowNum}', '${dto.userId}', '${dto.nickName}');">채팅하기</button>
 								<input type="hidden" value="${dto.borrowNum}" class="likeBorrowNum">
 							</c:otherwise>
 						</c:choose>
@@ -877,3 +878,12 @@ $(function() {
 });
 
 </script>
+
+<c:choose>
+	<c:when test="${sessionScope.member.userId==dto.userId}">
+		<c:import url="/WEB-INF/views/liveChat/chatOwner.jsp" />
+	</c:when>
+	<c:otherwise>
+		<c:import url="/WEB-INF/views/liveChat/chatClient.jsp" />
+	</c:otherwise>
+</c:choose>

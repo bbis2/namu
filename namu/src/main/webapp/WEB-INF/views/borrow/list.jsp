@@ -5,6 +5,34 @@
 <style type="text/css">
 .sortMethod { }
 .sortSelected { color: tomato;}
+.fleamarket-cover {
+    position: relative;
+    width: 100%;
+    height: 300px; /* 원하는 높이로 조정 */
+    background-image: url('${pageContext.request.contextPath}/resources/images/borrowlist.PNG');
+    background-size: cover;
+    background-position: center 20%;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.cover-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #eee;
+    margin-left: 50px;
+}
+.active > .page-link {
+    z-index: 3;
+    color: var(--bs-pagination-active-color);
+    background-color: #7BB950;
+    border-color: #7BB950;
+}
 </style>
 
 <script type="text/javascript">
@@ -42,11 +70,12 @@ $(function() {
 <div class="container">
 
 	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">
-			동네사람들<br>빌려줘요
-		</h1>
-		<h6 style="margin: 0px; margin-left: 100px; margin-top: 20px;">내가 필요한 물건을 동네주민들께 요청해봐요. 재밌는 경험이 될 거에요!</h6>
-		<div class="cover-image"></div>
+	    <div class="cover-content pt-5 mt-5">
+        	<h1 class="bd">
+           	 	동네사람들<br>빌려줘요
+        	</h1>
+        	<h6>내가 필요한 물건을 동네주민들께 요청해봐요. 재밌는 경험이 될 거에요!</h6>
+    	</div>
 	</section>
 
 	<div class="row">
