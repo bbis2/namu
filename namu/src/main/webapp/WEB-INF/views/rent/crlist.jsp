@@ -244,6 +244,7 @@
 											            <span class="unread-dot position-absolute top-0 end-2 translate-middle"></span>
 											        </c:if>
 											    </button>
+		                                        <button class="btn btn-sm btn-danger finish-btn" data-id="${dto.reqNum}">반납완료</button>
 											</c:when>
 		                                    <c:when test="${dto.state == 5}">
 		                                    	<c:choose>

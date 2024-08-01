@@ -4,14 +4,14 @@
 <mapper namespace="com.forest.namu.mapper.RentCRMapper">
 
 	<select id="getEmailByRentNum" parameterType="Long" resultType="map">
-		SELECT md.email, r.subject
+		SELECT md.email, r.subject, r.userId
 		FROM rent r
 		JOIN memberDetail md ON r.userId = md.userId
 		WHERE r.rentNum = #{rentNum}
 	</select>
 
 	<select id="getEmailByReqNum" parameterType="Long" resultType="map">
-		SELECT md.email, r.subject
+		SELECT md.email, r.subject, r.userId, rc.userId AS borrowId
 		FROM rentConfirm rc
 		JOIN memberDetail md ON rc.userId = md.userId
 		JOIN rent r ON rc.rentNum = r.rentNum

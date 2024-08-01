@@ -93,7 +93,7 @@
 						<div class="p-2">
 							<a href="${pageContext.request.contextPath}/alarm/list" class="position-relative">
 								<i class="bi bi-bell"></i>
-							<span class="alarmCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 6px;"></span>
+							<span class="alarmCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 6px;"></span>
 							</a>
 						</div>
 						<c:if test="${sessionScope.member.membership>50}">

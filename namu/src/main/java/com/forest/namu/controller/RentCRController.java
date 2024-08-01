@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
+import com.forest.namu.domain.Alarm;
 import com.forest.namu.domain.Point;
 import com.forest.namu.domain.Rent;
 import com.forest.namu.domain.RentCR;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.mail.MailService;
+import com.forest.namu.service.AlarmService;
 import com.forest.namu.service.PointService;
 import com.forest.namu.service.RentCRService;
 import com.forest.namu.service.RentService;
@@ -42,6 +45,9 @@ public class RentCRController {
 	
     @Autowired
     private MailService mailService;
+    
+    @Autowired
+	private AlarmService alarmService;	
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -78,6 +84,7 @@ public class RentCRController {
             @RequestParam long rentNum,
             @RequestParam int deposit,
             @RequestParam int totalPrice,
+            HttpServletRequest req,
             HttpSession session) {
 
 		Map<String, Object> result = new HashMap<>();
@@ -132,13 +139,22 @@ public class RentCRController {
             
             crService.insertRentConfirm(dto, point);
             
+            // 6. 메일 발송
     		Map<String, Object> map = crService.getEmailByRentNum(rentNum);
     		dto.setEmail((String)map.get("EMAIL"));
     		dto.setSubject((String)map.get("SUBJECT"));
-            
             dto.getStrDate().replaceAll("T", " ");
             dto.getEndDate().replaceAll("T", " ");
             mailService.sendRentRequestMail(dto);
+            
+            // 7. 알람
+			String url = req.getContextPath() + "/rentcr/list";
+            Alarm alarm = new Alarm();
+            alarm.setCnum(2);
+            alarm.setContent("새로운 대여 신청이 접수되었습니다. <a href='" + url + "'> 눌러서 신청 관리 바로가기</a>");
+            alarm.setUserId((String)map.get("USERID"));
+            alarm.setSender("admin");
+            alarmService.insertAlarm(alarm);
 
             result.put("state", "success");
             
@@ -183,6 +199,7 @@ public class RentCRController {
 	@ResponseBody
 	public Map<String, Object> cancelRent(
 	        @RequestParam long rentNum,
+	        HttpServletRequest req,
 	        HttpSession session) {
 	    Map<String, Object> result = new HashMap<>();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -205,6 +222,15 @@ public class RentCRController {
     		dto.setSubject((String)map.get("SUBJECT"));
     		dto.setBorrowName(info.getNickName());
     		mailService.sendRentCancelMail(dto);
+    		
+            // 7. 알람
+			String url = req.getContextPath() + "/rentcr/list";
+            Alarm alarm = new Alarm();
+            alarm.setCnum(2);
+            alarm.setContent("대여 신청이 취소되었습니다. <a href='" + url + "'> 눌러서 신청 관리 바로가기</a>");
+            alarm.setUserId((String)map.get("USERID"));
+            alarm.setSender("admin");
+            alarmService.insertAlarm(alarm);
 	        
 	        result.put("state", "success");
 	        
@@ -219,6 +245,7 @@ public class RentCRController {
 	@ResponseBody
 	public Map<String, Object> acceptRentRequest(
 	        @RequestParam long reqNum,
+	        HttpServletRequest req,
 	        HttpSession session) {
 	    Map<String, Object> result = new HashMap<>();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -237,6 +264,15 @@ public class RentCRController {
     		dto.setRentName(info.getNickName());
 	        mailService.sendRentAcceptMail(dto);
 	        
+            // 7. 알람
+			String url = req.getContextPath() + "/rentcr/list";
+            Alarm alarm = new Alarm();
+            alarm.setCnum(2);
+            alarm.setContent("대여 신청이 수락되었습니다. <a href='" + url + "'> 눌러서 신청 관리 바로가기</a>");
+            alarm.setUserId((String)map.get("BORROWID"));
+            alarm.setSender("admin");
+            alarmService.insertAlarm(alarm);
+	        
 	        result.put("state", "success");
 	        result.put("message", "신청이 수락되었습니다.");
 	        
@@ -253,6 +289,7 @@ public class RentCRController {
 	public Map<String, Object> rejectRentRequest(
 	        @RequestParam long reqNum,
 	        @RequestParam String rejectReason,
+	        HttpServletRequest req,
 	        HttpSession session) {
 	    Map<String, Object> result = new HashMap<>();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -272,6 +309,15 @@ public class RentCRController {
     		dto.setRentName(info.getNickName());
 	        mailService.sendRentRejectMail(dto, rejectReason);
 	        
+            // 7. 알람
+			String url = req.getContextPath() + "/rentcr/list";
+            Alarm alarm = new Alarm();
+            alarm.setCnum(2);
+            alarm.setContent("대여 신청이 거절되었습니다. <a href='" + url + "'> 눌러서 신청 관리 바로가기</a>");
+            alarm.setUserId((String)map.get("BORROWID"));
+            alarm.setSender("admin");
+            alarmService.insertAlarm(alarm);
+	        
 	        result.put("state", "success");
 	        result.put("message", "신청이 거절되었습니다.");
 	        
@@ -287,6 +333,7 @@ public class RentCRController {
 	@ResponseBody
 	public Map<String, Object> finishRentRequest(
 	        @RequestParam long reqNum,
+	        HttpServletRequest req,
 	        HttpSession session) {
 	    Map<String, Object> result = new HashMap<>();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -304,6 +351,15 @@ public class RentCRController {
     		dto.setSubject((String)map.get("SUBJECT"));
     		dto.setRentName(info.getNickName());
 	        mailService.sendRentCompleteMail(dto);
+	        
+            // 7. 알람
+			String url = req.getContextPath() + "/rentcr/list";
+            Alarm alarm = new Alarm();
+            alarm.setCnum(2);
+            alarm.setContent("대여가 완료되었습니다. 보증금이 반환되었습니다. <a href='" + url + "'> 눌러서 신청 관리 바로가기</a>");
+            alarm.setUserId((String)map.get("BORROWID"));
+            alarm.setSender("admin");
+            alarmService.insertAlarm(alarm);
 	        
 	        result.put("state", "success");
 	        result.put("message", "대여가 완료되었습니다. 보증금이 반환되었습니다.");
