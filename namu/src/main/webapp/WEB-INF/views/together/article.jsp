@@ -631,15 +631,16 @@ textarea::placeholder{
         </div>
         <div class="together-info">
         
-            <div class="rpr">
-                <h1>${dto.name}</h1>
-                <div class="seller-location">${dto.town}</div>
-            </div>
-            <hr>
-            <div class="used-header">
-                <div class="title">${dto.subject}</div>
-                <div> <h4>모임장 : ${dto.nickName}</h4></div>	
-            </div>
+		<div class="rpr">
+		    <h1 style="font-weight: bold; text-align: center;">${dto.name}</h1>
+		    
+		</div>
+		<hr>
+		<div class="used-header">
+		    
+		    <div style="color: green; font-weight: bold; font-size: 20px;">모임장 : ${dto.nickName}</div>
+		</div>
+		<div class="title"	style="height: 60%;" >${dto.subject}</div>
 
             <table class="table table-borderless mb-2">
                 <tr>
@@ -743,19 +744,18 @@ textarea::placeholder{
 			        <div class="comment-box">
 			            <textarea class="form-control" name="content" placeholder="글을 작성해 주세요 :)" id="commentInput"></textarea>
 					</div>
-					<div class="p-1">
+ 					<div class=" p-1">					
 						<div class="img-grid">
 							<img class="item img-add" src="${pageContext.request.contextPath}/resources/images/add_photo.png">
 						</div>
 						<input type="file" name="selectFile" accept="image/*" multiple class="form-control" style="display: none;">
 					</div>					
-			        <div>
+			        <div class="d-flex justify-content-end p-1">
 			            <button type="button" class="btn btnTogetherBoard" >등록</button>
 		            </div>		            
 			    </form>
 			</div>
 			
-			<!-- togetherBoard list 이 부분도 div 완전 벗어난 곳에 주면 안됨.-->
 			
 			<div class="mt-2 listTogetherBoard"></div>			
 		</div>

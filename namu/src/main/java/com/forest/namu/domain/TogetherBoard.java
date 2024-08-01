@@ -23,6 +23,7 @@ public class TogetherBoard {
 
 	private String[] listFilename; 
 
+
 	public long getNum() {
 		return num;
 	}
@@ -135,6 +136,5 @@ public class TogetherBoard {
 	public void setListFilename(String[] listFilename) {
 		this.listFilename = listFilename;
 	}
-	
 	
 }

@@ -13,17 +13,21 @@
 <c:forEach var="vo" items="${list}">
     <div class="post-list mb-3">
         <div class="post-item" style="position: relative;">
+        <c:if test="${sessionScope.member.userId == vo.userId}">
             <div style="position: absolute; right: 0; mb-6">
+            
                 <div class="dropdown">
                     <button class="dropdown" type="button" data-bs-toggle="dropdown" style="background:none; border: none; color: olive;">
                         <i class='bi bi-three-dots-vertical'></i>
                     </button>
+                    
                     <div class="dropdown-menu">
                         <button class="dropdown-item btnDeleteNoticeList" type="button" data-num="${vo.num}">삭제</button>
                     </div>
                 </div>
+                
             </div>
-
+		</c:if>
             <div class="post-date">
                 [공지글]
                 <div class="month-year">${vo.regDate}</div>

@@ -297,8 +297,8 @@ function filterByTown() {
 					            <button class="btn_like">like
 					            	<span class="like-count">찜</span>
 					            </button>
-					        <a href="${pageContext.request.contextPath}/" class="listTitle"> <h5>${dto.subject}</h5></a>
-					        <a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
+					        <a  class="listTitle"> <h5>${dto.subject}</h5></a>
+					        <a ><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
 					        <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>
 					        <div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">
 					            <p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
