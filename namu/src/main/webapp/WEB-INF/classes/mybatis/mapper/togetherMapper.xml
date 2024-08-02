@@ -66,9 +66,10 @@
 	</select>
 	
 	<select id="listTogether" parameterType="map" resultType="com.forest.namu.domain.Together">
-	SELECT tNum, l.userId, m.nickName, t.categoryNum, t.categoryName, l.name, l.subject, l.memberCnt, l.thumbnail , l.town, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate, l.hitCount 		
+	SELECT tNum, l.userId, m.nickName, t.categoryNum, t.categoryName, l.name, l.subject, l.memberCnt, l.thumbnail , l.town, TO_CHAR(l.regDate, 'YYYY-MM-DD') regDate, l.hitCount , p.photo		
 	FROM togetherList l
 	JOIN  member m ON l.userId = m.userId
+	LEFT OUTER JOIN profile p ON m.userId = p.userId
 	JOIN togetherCategory t ON l.categoryNum = t.categoryNum
 	<where>
 	    <if test="kwd != null and kwd != ''">

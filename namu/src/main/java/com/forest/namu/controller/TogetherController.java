@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.forest.namu.common.MyUtil;
+import com.forest.namu.domain.Profile;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.domain.Together;
 import com.forest.namu.domain.TogetherApply;
+import com.forest.namu.service.MypageService;
 import com.forest.namu.service.TogetherService;
 
 @Controller
@@ -33,7 +36,10 @@ public class TogetherController {
 	private TogetherService service;
 
 	@Autowired
-	private com.forest.namu.common.MyUtil myUtil;
+	private MyUtil myUtil;
+	
+	@Autowired
+	private MypageService myService;	
 	
 	@RequestMapping(value = "list")
 	public String list(
@@ -43,7 +49,9 @@ public class TogetherController {
 			@RequestParam(defaultValue = "") String kwd,
 			@RequestParam(value = "town", defaultValue = "") String town,
 			HttpServletRequest req,
+			HttpSession session,
 			Model model) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		int size = 9;
 		int total_page = 0;
@@ -104,6 +112,8 @@ public class TogetherController {
 		}		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 		
+		Profile userdto = myService.selectProfile(info.getUserId());
+		
 		model.addAttribute("list", list);
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("size", size);
@@ -111,6 +121,8 @@ public class TogetherController {
 		model.addAttribute("articleUrl", articleUrl);
 		model.addAttribute("page", current_page);
 		model.addAttribute("paging", paging);
+		
+		model.addAttribute("userdto", userdto);
 
 		model.addAttribute("schType", schType);
 		model.addAttribute("kwd", kwd);

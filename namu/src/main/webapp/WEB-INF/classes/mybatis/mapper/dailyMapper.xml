@@ -52,9 +52,10 @@
 	<!-- 글리스트 -->
 	<select id="listDaily" parameterType="map" resultType="com.forest.namu.domain.Daily">
 		SELECT d.num, d.userId, m.nickName, t.categoryNum, t.categoryName , d.subject, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
-			hitCount, town
+			hitCount, town , p.photo	
 		FROM daily d
 		JOIN member m ON d.userId=m.userId
+		LEFT OUTER JOIN profile p ON m.userId = p.userId
 		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
 		LEFT OUTER JOIN (
 			SELECT num, COUNT(*) rNum FROM dailyReply
@@ -78,9 +79,10 @@
 	
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Daily">
 		SELECT d.num, d.userId, m.nickName, d.subject, d.categoryNum, categoryName , content, hitCount, TO_CHAR(d.regDate, 'YYYY-MM-DD') regDate,
-		 NVL(dailyLikeCount, 0) dailyLikeCount,d.tableName
+		 NVL(dailyLikeCount, 0) dailyLikeCount,d.tableName , p.photo	
 		FROM daily d
 		JOIN member m On d.userId = m.userId
+		LEFT OUTER JOIN profile p ON m.userId = p.userId
 		JOIN dailyCategory t ON d.categoryNum = t.categoryNum
 		LEFT OUTER JOIN (
 			SELECT num, COUNT(*) dailyLikeCount FROM dailyLike
