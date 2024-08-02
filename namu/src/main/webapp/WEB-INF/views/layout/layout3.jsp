@@ -60,8 +60,6 @@
 		<div class="loader"></div>
 	</div>
 	
-	<button class="chat">채팅 💬</button>
-
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/vendor/bootstrap5/js/bootstrap.bundle.min.js"></script>
 
