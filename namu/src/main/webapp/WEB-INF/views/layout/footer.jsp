@@ -46,8 +46,6 @@ footer .d-flex img {
 				</h5>
 				<p>(주)나무 | 대표이사 윤상상 | 서울특별시 마포구 월드컵북로 21</p>
                 <p>forest.namu.official@gmail.com</p>
-                <br>
-                <br>
             </div>
             
              <div class="col-md-3 py-4 d-flex justify-content-center">

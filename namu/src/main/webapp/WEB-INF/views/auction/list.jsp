@@ -222,6 +222,7 @@ $(function() {
 </script>
 
 <style>
+
 .main1 {
     background: #C3FF9A;
     height: 300px;

@@ -81,7 +81,7 @@
 
 <!-- 글보기 -->
 <select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Used">
-	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, u.cnum
+	select u.num, u.content, u.imageFile, u.subject, u.price, u.state, u.hitCount, u.cnum,
 	to_char(u.regDate,'YYYY-MM-DD') regDate, m.nickName, m.town1, p.photo, u.userId, u.town, u.tableName,
    p.photo
 	from used u 

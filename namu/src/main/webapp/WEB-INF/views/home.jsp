@@ -197,7 +197,7 @@
 <div class="container body-container">
   <div class="inner-page-container">
     <div class="inner-page">
-      <img class="img1" src="${pageContext.request.contextPath}/resources/images/main4.png" alt="Namu Image">
+      <img class="img1" src="${pageContext.request.contextPath}/resources/images/main11.gif" alt="Namu Image">
     </div>
     
     <div class="inner-page2">
