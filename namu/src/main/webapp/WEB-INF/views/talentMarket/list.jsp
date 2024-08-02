@@ -111,6 +111,40 @@ $(function() {
 
 .sortSelected { color: tomato;}
 
+.fleamarket-cover {
+    position: relative;
+    width: 100%;
+    height: 300px; /* 원하는 높이로 조정 */
+    background-image: url('${pageContext.request.contextPath}/resources/images/talentMarket.png');
+    background-size: cover;
+    background-position: center 90%;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    color: white;
+}
+
+.cover-title {
+    position: absolute;
+    top: 30%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* 텍스트 배경을 반투명 검은색으로 설정 */
+}
+
+.cover-description {
+    position: absolute;
+    bottom: 10%;
+    left: 22%;
+    transform: translateX(-50%);
+    font-size: 1.2em;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* 텍스트 배경을 반투명 검은색으로 설정 */
+    border-radius: 10px;
+}
+
  .custom-button {
       background-color: #d7bfff;
       color: white;
@@ -209,12 +243,11 @@ justify-content: space-between;
 
 <div class="container">
 
-	<section class="fleamarket-cover" style="background-color: #f0e5ff;">
+	<section class="fleamarket-cover">
 		<h1 class="cover-title htext bd">
 			우리 동네 재능마켓<br>함께 나눠요
 		</h1>
-		<span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>
-		<span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
+		<span class="cover-description htext">나: 나누고 싶은 마음을 담아<br>무: 무한한 가능성을 거래합니다.</span>
 		<div class="cover-image"></div>
 	</section>
 
