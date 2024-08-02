@@ -341,11 +341,14 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		
 		try {
 			list = mapper.listTalentMarket(map);
+			String userId = (String)map.get("userId");
 			
-			for(TalentMarket dto : list) {
-				map.put("tboardNum", dto.getTboardNum());
-				dto.setUserLiked(userTalentLiked(map));
-				dto.setLikeCount(talentLikeCount(dto.getTboardNum()));
+			if(userId != null) {
+				for(TalentMarket dto : list) {
+					map.put("tboardNum", dto.getTboardNum());
+					dto.setUserLiked(userTalentLiked(map));
+					dto.setLikeCount(talentLikeCount(dto.getTboardNum()));
+				}
 			}
 			
 		} catch (Exception e) {

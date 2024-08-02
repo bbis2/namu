@@ -68,21 +68,12 @@ public class TogetherBoardServiceImpl implements TogetherBoardService {
 		try {
 			list = mapper.listTogetherBoard(map);
 			
-			String s;
+			
 			for (TogetherBoard dto : list) {
 				if(dto.getFilename() != null) {
 					dto.setListFilename(dto.getFilename().split(",")); 
 				}
-				
-				s = dto.getNickName().substring(0, 1);
-				if(dto.getNickName().length() <= 2) {
-					s += "*";
-				} else {
-					s += dto.getNickName().substring(2, dto.getNickName().length()).replaceAll(".", "*");
-				}
-				s += dto.getNickName().substring(dto.getNickName().length()-1);
-				dto.setNickName(s);
-				
+			
 				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 				
 			}

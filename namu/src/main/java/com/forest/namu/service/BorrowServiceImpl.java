@@ -135,11 +135,15 @@ public class BorrowServiceImpl implements BorrowService {
 		List<Borrow> list = null;
 		try {
 			list = mapper.listBorrow(map);
+		
+			String userId = (String)map.get("userId");
 			
-			for(Borrow dto : list) {
-				map.put("num", dto.getBorrowNum());
-				dto.setUserLiked(userBorrowLiked(map));
-				dto.setLikeCount(borrowLikeCount(dto.getBorrowNum()));
+			if(userId != null) {
+				for(Borrow dto : list) {
+					map.put("num", dto.getBorrowNum());
+					dto.setUserLiked(userBorrowLiked(map));
+					dto.setLikeCount(borrowLikeCount(dto.getBorrowNum()));
+				}
 			}
 			
 		} catch (Exception e) {

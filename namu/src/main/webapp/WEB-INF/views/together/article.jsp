@@ -736,6 +736,7 @@ textarea::placeholder{
 			<div class="mt-2 listNotice"></div>
 		</div>		
 	
+	<c:if test="${sessionScope.member.userId == dto.userId||dto.acceptance == 1}">	
 		<!-- 버튼, class 이름을 줄 때, 이름 중복을 막기위해 이 부분처럼 줘여 함. togetherBoard-form / btnTogetherBoard 유사한 형식으로 줄 것. -->
 		<!-- #2 함께해요 글쓰기 -->
 		<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
@@ -769,7 +770,7 @@ textarea::placeholder{
 			
 			<div class="mt-2 listTogetherBoard"></div>			
 		</div>
-
+	</c:if>
 	</div>		
 </div>
 

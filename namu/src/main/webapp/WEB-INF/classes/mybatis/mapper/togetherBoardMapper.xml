@@ -44,7 +44,7 @@
 	</select>
 	
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.TogetherBoard">
-	    SELECT b.num, b.tNum, b.userId, m.nickName, b.content, b.hitCount, TO_CHAR(b.regDate, 'YYYY-MM-DD') regDate
+	    SELECT b.num, b.tNum, b.userId, m.nickName, b.content, b.hitCount, TO_CHAR(b.regDate, 'YYYY-MM-DD') regDate, acceptance
 	    FROM freeboard b
 	    JOIN togetherList l ON b.tNum = l.tNum
 	    JOIN member m ON b.userId = m.userId
