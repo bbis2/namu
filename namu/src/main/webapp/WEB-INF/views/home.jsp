@@ -204,13 +204,19 @@
       <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="1000">
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img class="img2" src="${pageContext.request.contextPath}/resources/images/st1.png" class="d-block w-100">
+          	<a href="${pageContext.request.contextPath}/together/list">
+           		<img class="img2" src="${pageContext.request.contextPath}/resources/images/st1.png" class="d-block w-100">
+            </a>
           </div>
           <div class="carousel-item">
-            <img class="img2" src="${pageContext.request.contextPath}/resources/images/slide2.png" class="d-block w-100">
+          	<a href="${pageContext.request.contextPath}/notice/list">
+            	<img class="img2" src="${pageContext.request.contextPath}/resources/images/st2.png" class="d-block w-100">
+            </a>	
           </div>
           <div class="carousel-item">
-            <img class="img2" src="${pageContext.request.contextPath}/resources/images/slide3.png" class="d-block w-100">
+          	<a href="${pageContext.request.contextPath}/delivery/list">
+           	 <img class="img2" src="${pageContext.request.contextPath}/resources/images/st4.png" class="d-block w-100">
+           	</a> 
           </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
