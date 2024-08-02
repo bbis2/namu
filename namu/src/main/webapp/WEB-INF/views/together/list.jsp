@@ -248,8 +248,13 @@ function filterByTown() {
         <div class="col-md-3 ">
         
 			<div class="card mb-4 d-flex align-items-center">
-				<div style="margin-top: 10px;">				
-						<img class="myphoto" src="${pageContext.request.contextPath}/uploads/photo/${photo}">
+				<div style="margin-top: 10px;">
+					<c:if test="${empty userdto.photo }">
+						<img class="myphoto" src="${pageContext.request.contextPath}/resources/images/person.png">
+					</c:if>
+					<c:if test="${not empty userdto.photo }">
+						<img class="myphoto" src="${pageContext.request.contextPath}/uploads/photo/${userdto.photo}">
+					</c:if>	
 				</div>
 				
 				<div class="card-body">

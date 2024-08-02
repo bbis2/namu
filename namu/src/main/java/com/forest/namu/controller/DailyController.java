@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.forest.namu.common.MyUtil;
 import com.forest.namu.domain.Daily;
+import com.forest.namu.domain.Profile;
 import com.forest.namu.domain.Reply;
 import com.forest.namu.domain.SessionInfo;
 import com.forest.namu.service.DailyService;
+import com.forest.namu.service.MypageService;
 import com.mongodb.DuplicateKeyException;
 
 @Controller
@@ -35,6 +37,9 @@ public class DailyController {
 	
 	@Autowired
 	private MyUtil myUtil;
+
+	@Autowired
+	private MypageService myService;
 	
 	@RequestMapping("list")
 	public String list(
@@ -47,6 +52,7 @@ public class DailyController {
 			Model model,
 			HttpSession session) throws Exception {
 	
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		int size = 10;
 		int total_page = 0;
 		int dataCount= 0;
@@ -111,6 +117,8 @@ public class DailyController {
 		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 		
+		Profile userdto = myService.selectProfile(info.getUserId());
+		
 		model.addAttribute("list", list);
 		model.addAttribute("articleUrl", articleUrl);
 		model.addAttribute("page", current_page);
@@ -119,6 +127,8 @@ public class DailyController {
 		model.addAttribute("paging", paging);
 		model.addAttribute("size", size);
 	
+		model.addAttribute("userdto", userdto);
+		
 		model.addAttribute("schType", schType);
 		model.addAttribute("kwd", kwd);
 		model.addAttribute("categoryNum", categoryNum);

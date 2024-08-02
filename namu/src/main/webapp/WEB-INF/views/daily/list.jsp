@@ -158,6 +158,13 @@
     color: #fff;
 }
 
+.myphoto {
+ 	width: 50px; 
+    height: 50px; 
+    object-fit: cover; 
+     border-radius: 30%; 
+    margin-right: 5px;
+}
 </style>
 
 
@@ -243,7 +250,15 @@ function filterByTown() {
 	
         <div class="row introduce">
             <div class="col-md-3 ">
-			<div class="card mb-4">
+			<div class="card mb-4 d-flex align-items-center">
+				<div style="margin-top: 10px;">
+					<c:if test="${empty userdto.photo }">
+						<img class="myphoto" src="${pageContext.request.contextPath}/resources/images/person.png">
+					</c:if>
+					<c:if test="${not empty userdto.photo }">
+						<img class="myphoto" src="${pageContext.request.contextPath}/uploads/photo/${userdto.photo}">
+					</c:if>	
+				</div>
 				<div class="card-body">
 					<h5 class="card-title">${sessionScope.member.userId}</h5>
    				    <h6 class="bd">[<a style="color: green">${sessionScope.member.nickName}</a>]님의 동네</h6>

@@ -755,7 +755,7 @@ textarea::placeholder{
 					</div>					
 			        <div class="d-flex justify-content-end p-1">
 			            <button type="button" class="btn btnTogetherBoard" >등록</button>
-		            </div>		            
+		            </div>
 			    </form>
 			</div>
 			
@@ -1258,7 +1258,9 @@ $(function(){
 		
 		const fn = function(data) {
 			if(data.state === "true") {
-				f.reset();	//ㅇㅣ ㅁ ㅣ ㅈ ㅣ 지우기는 천천구다사이~!하있 ^^
+				f.reset();
+				// f.selectFile.value = '';
+				sel_files = [];
 				$('.img-grid .img-item').remove();
 				listTogetherBoard(1);
 			}
