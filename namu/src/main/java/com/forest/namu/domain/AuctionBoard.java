@@ -12,6 +12,7 @@ public class AuctionBoard {
 	private int secret;
 	private long aNum;
 	private String nickName;
+	private String auctionId;
 	
 	public long getqNum() {
 		return qNum;
@@ -78,6 +79,12 @@ public class AuctionBoard {
 	}
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+	}
+	public String getAuctionId() {
+		return auctionId;
+	}
+	public void setAuctionId(String auctionId) {
+		this.auctionId = auctionId;
 	}
 
 }

@@ -18,12 +18,14 @@
                 <td>${qna.qNum}</td>
                 <c:choose>
                     <c:when test="${qna.secret == 1}">
-                        <c:if test="${qna.nickName == sessionScope.member.nickName || sessionScope.member.nickName == '관리자'}">
-                            <td style="text-align: left; cursor: pointer;" onclick="clickContent(${qna.qNum})">🔒 ${qna.subject}</td>
-                        </c:if>
-                        <c:if test="${qna.nickName != sessionScope.member.nickName}">
-                            <td style="text-align: left;">🔒 ${qna.subject}</td>
-                        </c:if>
+                    	<c:choose>
+                    		<c:when test="${qna.auctionId==sessionScope.member.userId || qna.answerId == sessionScope.member.userId || qna.nickName == sessionScope.member.nickName || sessionScope.member.userId == 'admin'}">
+                    		 	<td style="text-align: left; cursor: pointer;" onclick="clickContent(${qna.qNum})">🔒 ${qna.subject}</td>
+                    		</c:when>
+                    		<c:otherwise>
+                    			<td style="text-align: left;">🔒 ${qna.subject}</td>
+                    		</c:otherwise>
+                    	</c:choose>
                     </c:when>
                     <c:when test="${qna.secret == 0}">
                         <td style="text-align: left; cursor: pointer;" onclick="clickContent(${qna.qNum})">${qna.subject}</td>

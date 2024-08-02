@@ -37,11 +37,12 @@
 
 <!-- 리스트 -->
 <select id="listQuestion" resultType="com.forest.namu.domain.AuctionBoard" parameterType="map">
-	select qNum, questionId, questionDate, subject, content, answer, 
-		answerDate, answerId, secret, aNum, m.nickName
-	from auctionBoard a
-	join member m on a.questionId = m.userId
-	where aNum = #{aNum}
+	select b.qNum, b.questionId, b.questionDate, b.subject, b.content, b.answer, 
+		b.answerDate, b.answerId, b.secret, b.aNum, m.nickName, a.userId auctionId
+	from auctionBoard b
+	join auction a on b.aNum = a.aNum
+	join member m on b.questionId = m.userId
+	where b.aNum = #{aNum}
 	order by qNum desc
 	OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 </select>

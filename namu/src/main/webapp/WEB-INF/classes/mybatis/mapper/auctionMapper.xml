@@ -14,7 +14,7 @@
 </sql>
 
 
-<!-- state:0 경매등록, state:1 유찰, state:2 경매취소 state:3 경매완료-삭제, 수정불가 -->
+<!-- state:0 경매등록, state:1 경매종료, state:2 경매취소 state:3 경매완료-삭제, 수정불가 -->
 
 <!-- 추가 -->
 <insert id="insertAuction" parameterType="com.forest.namu.domain.Auction">
