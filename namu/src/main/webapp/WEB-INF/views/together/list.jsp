@@ -5,12 +5,19 @@
 <style type="text/css">
 
 .fleamarket-cover {
-    background-color: #E3F1C5;
+    position: relative;
+    width: 100%;
+    height: 300px; /* 원하는 높이로 조정 */
+    background-image: url('${pageContext.request.contextPath}/resources/images/together.jpg');
+    background-size: cover;
+    background-position: center 20%;
+    background-repeat: no-repeat;
+    overflow: hidden;
 }
 
 .htext{
 	padding-top: 100px;
-	padding-left : 100px;
+	padding-left : 60px;
 }
 .cover-content {
 	padding: 50px;
@@ -28,6 +35,8 @@
         margin-bottom: 60px;
 }
 /*여기까지 초록 박스*/
+
+
 
 
 .row {
@@ -216,8 +225,7 @@ function filterByTown() {
  	<section class="fleamarket-cover">
 		<h1 class="cover-title htext bd">함께하는<br>모임 생활</h1>
 		<span class="cover-description htext"></span><br>
-		<span class="cover-description htext">동네주민과 함께 만들어가요!</span>
-		<div class="cover-image"></div>
+		<span class="cover-description htext bd">동네주민과 함께 만들어가요!</span>
   	</section> 
 
 

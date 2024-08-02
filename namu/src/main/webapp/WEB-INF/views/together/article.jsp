@@ -17,13 +17,20 @@
 }
 </style>
 <style type="text/css">
-.fleamarket-cover {
-    background-color: #E3F1C5;
-}
 
-.htext {
-    padding-top: 100px;
-    padding-left: 100px;
+.fleamarket-cover {
+    position: relative;
+    width: 100%;
+    height: 300px; /* 원하는 높이로 조정 */
+    background-image: url('${pageContext.request.contextPath}/resources/images/together.jpg');
+    background-size: cover;
+    background-position: center 20%;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+.htext{
+	padding-top: 100px;
+	padding-left : 60px;
 }
 
 .cover-content {
