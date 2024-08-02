@@ -167,13 +167,40 @@
 	font-size: 11px;
 	margin-top: 0;
 }
+.fleamarket-cover {
+    background-color: #E3F1C5;
+    background-image: url('${pageContext.request.contextPath}/resources/images/myhome.jpg');
+    background-size: cover; /* 이미지를 커버 전체에 맞춤 */
+    background-position: center; /* 이미지를 중앙에 위치시킴 */
+    position: relative;
+}
+
+.htext {
+    padding-top: 100px;
+    padding-left: 100px;
+    color: black; /* 배경 이미지와 대비되도록 텍스트를 흰색으로 설정 */
+    position: relative;
+    z-index: 1; /* 텍스트를 배경 위에 표시되도록 함 */
+    
+}
+
+.cover-content {
+    padding: 50px;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    margin-left: 100px;
+}
+
 </style>
 <div class="container mt-5">
 
 	<section class="fleamarket-cover">
-		<h1 class="cover-title htext bd">내집근처<br>뭐가 있을까</h1>
-		<span class="cover-description htext">나: 나누고 싶은 마음을 담아</span><br>
-		<span class="cover-description htext">무: 무한한 가능성을 거래합니다.</span>
+		<h1 class="cover-title htext bd">
+			내 집근처<br>뭐가 있을까
+		</h1>
+		<span class="cover-description htext"></span><br> <span
+			class="cover-description htext">심부름하고 포인트를 얻어가세요!</span>
 		<div class="cover-image"></div>
 	</section>
 	
@@ -199,6 +226,8 @@
 <script type="text/javascript"
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bd17f1bf688c4db20bc89158d76400a0&libraries=services"></script>
 <script>
+console.log('${latitude}');
+console.log('${longitude}');
 		// 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
 		var placeOverlay = new kakao.maps.CustomOverlay({
 			zIndex : 1

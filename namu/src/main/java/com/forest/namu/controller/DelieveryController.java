@@ -343,5 +343,18 @@ public class DelieveryController {
 
 		return coordinates; // 위도와 경도를 담고 있는 배열 반환
 	}
+	
+	
+	@GetMapping("delete")
+	public String deleteDiv(@RequestParam Long num, HttpSession session) throws Exception {
+
+		try {
+			dService.deleteDiv(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/admin/memberManage/singo";
+	}
+
 
 }

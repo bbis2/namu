@@ -174,5 +174,9 @@
 	<select id="selectAddr" parameterType="long" resultType="com.forest.namu.domain.Delivery">
 	select saddr,receive from delievery where num = #{num}
 	</select>
+	
+	<delete id="deleteDiv" parameterType="long">
+	delete from delievery where num = #{num}
+	</delete>
 
 </mapper>

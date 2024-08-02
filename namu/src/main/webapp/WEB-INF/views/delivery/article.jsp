@@ -3,105 +3,106 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <style type="text/css">
 .fleamarket-cover {
-    background-color: #E3F1C5;
-    background-image: url('${pageContext.request.contextPath}/resources/images/bicycle.jpg');
-    background-size: cover; /* 이미지를 커버 전체에 맞춤 */
-    background-position: center; /* 이미지를 중앙에 위치시킴 */
-    position: relative;
+	background-color: #E3F1C5;
+	background-image:
+		url('${pageContext.request.contextPath}/resources/images/bicycle.jpg');
+	background-size: cover; /* 이미지를 커버 전체에 맞춤 */
+	background-position: center; /* 이미지를 중앙에 위치시킴 */
+	position: relative;
 }
 
 .htext {
-    padding-top: 100px;
-    padding-left: 100px;
-    color: black; /* 배경 이미지와 대비되도록 텍스트를 흰색으로 설정 */
-    position: relative;
-    z-index: 1; /* 텍스트를 배경 위에 표시되도록 함 */
-    
+	padding-top: 100px;
+	padding-left: 100px;
+	color: black; /* 배경 이미지와 대비되도록 텍스트를 흰색으로 설정 */
+	position: relative;
+	z-index: 1; /* 텍스트를 배경 위에 표시되도록 함 */
 }
 
 .cover-content {
-    padding: 50px;
-    position: relative;
-    height: 100%;
-    box-sizing: border-box;
-    margin-left: 100px;
+	padding: 50px;
+	position: relative;
+	height: 100%;
+	box-sizing: border-box;
+	margin-left: 100px;
 }
 
 @media ( min-width : 768px) {
-    .fleamarket-cover {
-        height: 315px;
-        padding: 0 16px 0 16px;
-        margin-top: 60px;
-        margin-bottom: 60px;
-    }
-    /*여기까지 초록 박스*/
-    .body-title {
-        margin: 40px 0;
-        text-align: left;
-    }
-    .body-title h2 {
-        font-size: 28px;
-        font-weight: bold;
-    }
-    .write-form {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .write-form td {
-        padding: 10px;
-        border: 1px solid #ddd;
-    }
-    .write-form .bg-light {
-        background-color: #f9f9f9;
-    }
-    .form-control {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-    }
-    .form-control-plaintext {
-        height: 40px;
-        padding: 8px;
-    }
-    .table-borderless td {
-        border: none;
-    }
-    .text-center {
-        text-align: center;
-    }
-    .btn {
-        padding: 10px 20px;
-        font-size: 16px;
-        margin: 5px;
-    }
-    .btn-dark {
-        background-color: #333;
-        color: #fff;
-        border: none;
-    }
-    .btn-light {
-        background-color: #f9f9f9;
-        color: #333;
-        border: 1px solid #ddd;
-    }
+	.fleamarket-cover {
+		height: 315px;
+		padding: 0 16px 0 16px;
+		margin-top: 60px;
+		margin-bottom: 60px;
+	}
+	/*여기까지 초록 박스*/
+	.body-title {
+		margin: 40px 0;
+		text-align: left;
+	}
+	.body-title h2 {
+		font-size: 28px;
+		font-weight: bold;
+	}
+	.write-form {
+		width: 100%;
+		border-collapse: collapse;
+	}
+	.write-form td {
+		padding: 10px;
+		border: 1px solid #ddd;
+	}
+	.write-form .bg-light {
+		background-color: #f9f9f9;
+	}
+	.form-control {
+		width: 100%;
+		padding: 8px;
+		box-sizing: border-box;
+	}
+	.form-control-plaintext {
+		height: 40px;
+		padding: 8px;
+	}
+	.table-borderless td {
+		border: none;
+	}
+	.text-center {
+		text-align: center;
+	}
+	.btn {
+		padding: 10px 20px;
+		font-size: 16px;
+		margin: 5px;
+	}
+	.btn-dark {
+		background-color: #333;
+		color: #fff;
+		border: none;
+	}
+	.btn-light {
+		background-color: #f9f9f9;
+		color: #333;
+		border: 1px solid #ddd;
+	}
 }
-.image-container {
-            display: flex; /* Display images in a row */
-            gap: 10px; /* Space between images */
-        }
 
-        .image-container img {
-            max-width: 400px; /* Ensure images scale within their container */
-            height: auto;
-        }
+.image-container {
+	display: flex; /* Display images in a row */
+	gap: 10px; /* Space between images */
+}
+
+.image-container img {
+	max-width: 400px; /* Ensure images scale within their container */
+	height: auto;
+}
 </style>
 <c:if
-	test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership > 99}">
+	test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership > 90}">
 	<script type="text/javascript">
 		function deleteBoard() {
 			if (confirm('게시글을 삭제 하시겠습니까?')) {
-				let query = 'num=${dto.num}&${query}';
-				let url = '${pageContext.request.contextPath}/daily/delete?'
+				let query = 'num=${dto.num}';
+				let url = '${pageContext.request.contextPath}/delivery/delete?'
 						+ query;
 				location.href = url;
 			}
@@ -163,28 +164,23 @@
 
 	<table class="table table-borderless mb-2">
 		<tr>
-			<td width="50%"><c:choose>
-					<c:when test="${sessionScope.member.userId == dto.userId}">
-						<button type="button" class="btn btn-light"
-							onclick="location.href='${pageContext.request.contextPath}/delivery/update?num=${dto.num}';">수정</button>
-					</c:when>
-					<c:otherwise>
-						<button type="button" class="btn btn-light" disabled>수정</button>
-					</c:otherwise>
-				</c:choose> <c:choose>
-					<c:when test="${sessionScope.member.userId == dto.userId}">
+			<td width="50%">
+				<!-- 수정 버튼은 언제나 비활성화된 상태 -->
+				<button type="button" class="btn btn-light" disabled>수정</button> <!-- 삭제 버튼은 회원등급이 90 이상일 때만 활성화 -->
+				<c:choose>
+					<c:when test="${sessionScope.member.membership > 90}">
 						<button type="button" class="btn btn-light"
 							onclick="deleteBoard();">삭제</button>
 					</c:when>
 					<c:otherwise>
 						<button type="button" class="btn btn-light" disabled>삭제</button>
 					</c:otherwise>
-				</c:choose> <c:if test="${count == 0}">
+				</c:choose> <!-- 신청 버튼은 count가 0일 때만 활성화 --> <c:if test="${count == 0}">
 					<button type="button" class="btn btn-light" onclick="itsMe();">신청</button>
 				</c:if> <c:if test="${count != 0}">
 					<button type="button" class="btn btn-light" onclick="itsMe();"
 						disabled>신청</button>
-				</c:if>
+				</c:if> <!-- 신고, 지도보기 버튼 -->
 				<button type="button" class="btn btn-light" onclick="SinGo();">신고</button>
 				<button type="button" class="btn btn-light" onclick="mapOk();">지도보기</button>
 			</td>
@@ -194,6 +190,7 @@
 			</td>
 		</tr>
 	</table>
+
 
 	<span class="bold">😊</span><span> 배달 인증하고 보증금 받아가세요 ❣️</span>
 	<div class="reply" style="display: none;">
@@ -207,7 +204,7 @@
 			</div>
 
 			<textarea class="text-area" style="width: 50%;" readonly>${dto.author}</textarea>
-			<table class="table table-borderless reply-form" >
+			<table class="table table-borderless reply-form">
 				<tr>
 					<td><textarea class='form-control' name="author"></textarea>
 						<div class="img-viewer"></div> <input type="file"

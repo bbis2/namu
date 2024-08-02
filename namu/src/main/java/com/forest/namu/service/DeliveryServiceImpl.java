@@ -190,4 +190,14 @@ public class DeliveryServiceImpl implements DeliveryService {
 		return dto;
 	}
 
+	@Override
+	public void deleteDiv(long num) throws Exception {
+		try {
+			mapper.deleteDiv(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 }

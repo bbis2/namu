@@ -24,5 +24,7 @@ public interface DeliveryService {
 	
 	public void updateAuthor(Delivery dto,String path)throws Exception;
 	public Delivery selectAddr(long num)throws Exception;
+	
+	public void deleteDiv(long num)throws Exception;
 
 }

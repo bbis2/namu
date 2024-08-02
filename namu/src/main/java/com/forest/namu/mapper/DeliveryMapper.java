@@ -30,4 +30,6 @@ public interface DeliveryMapper {
 	public void updateAuthor(Delivery dto)throws Exception;
 	public void riderState(Delivery dto)throws Exception;
 	public Delivery selectAddr(long num)throws Exception;
+	
+	public void deleteDiv(long num)throws Exception;
 }
