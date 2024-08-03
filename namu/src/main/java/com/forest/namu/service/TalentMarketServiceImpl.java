@@ -146,109 +146,105 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 	
 	@Override
 	public void updateTalentOption(TalentMarket dto) throws Exception {
-		try {
-		if(dto.getOptionCount() == 0) {
-			
-			if(dto.getPrevOptionNum2() != 0) {
-				mapper.deleteOptionDetail2(dto.getPrevOptionNum2());
-				mapper.deleteTalentOption(dto.getPrevOptionNum2());
-			}
-			
-			if(dto.getPrevOptionNum() != 0) {
-				mapper.deleteOptionDetail2(dto.getPrevOptionNum());
-				mapper.deleteTalentOption(dto.getPrevOptionNum());
-			}
-			
-			return;
-		} else if(dto.getOptionCount() == 1) {
-			
-			if(dto.getPrevOptionNum2() != 0) {
-				mapper.deleteOptionDetail2(dto.getPrevOptionNum2());
-				mapper.deleteTalentOption(dto.getPrevOptionNum2());
-			}
-		}
-		
-		long detailNum, parentNum;
-		
-		if(dto.getOptionNum() == 0) {
-			insertTalentOption(dto);
-			return;
-		}
-		
-		mapper.updateTalentOption(dto);
-		
-		
-		int size = dto.getDetailNums().size();
-		for(int i = 0; i < size; i++) {
-			dto.setDetailNum(dto.getDetailNums().get(i));
-			dto.setOptionValue(dto.getOptionValues().get(i));
-			mapper.updateOptionDetail(dto);
-		}
+	    try {
+	        if(dto.getOptionCount() == 0) {
+	            
+	            if(dto.getPrevOptionNum2() != 0) {
+	                mapper.deleteOptionDetail2(dto.getPrevOptionNum2());
+	                mapper.deleteTalentOption(dto.getPrevOptionNum2());
+	            }
+	            
+	            if(dto.getPrevOptionNum() != 0) {
+	                mapper.deleteOptionDetail2(dto.getPrevOptionNum());
+	                mapper.deleteTalentOption(dto.getPrevOptionNum());
+	            }
+	            
+	            return;
+	        } else if(dto.getOptionCount() == 1) {
+	            
+	            if(dto.getPrevOptionNum2() != 0) {
+	                mapper.deleteOptionDetail2(dto.getPrevOptionNum2());
+	                mapper.deleteTalentOption(dto.getPrevOptionNum2());
+	            }
+	        }
+	        
+	        long detailNum, parentNum;
+	        
+	        // Null 체크 추가
+	        if(dto.getOptionNum() == null || dto.getOptionNum() == 0) {
+	            insertTalentOption(dto);
+	            return;
+	        }
+	        
+	        mapper.updateTalentOption(dto);
+	        
+	        int size = dto.getDetailNums().size();
+	        for(int i = 0; i < size; i++) {
+	            dto.setDetailNum(dto.getDetailNums().get(i));
+	            dto.setOptionValue(dto.getOptionValues().get(i));
+	            mapper.updateOptionDetail(dto);
+	        }
 
-		dto.setDetailNums(new ArrayList<Long>());
-		for(int i = size; i < dto.getOptionValues().size(); i++) {
-			detailNum = mapper.detailSeq(); 
-			dto.setDetailNum(detailNum);
-			dto.setOptionValue(dto.getOptionValues().get(i));
-			mapper.insertOptionDetail(dto);
-			
-			dto.getDetailNums().add(detailNum);
-		}
+	        dto.setDetailNums(new ArrayList<Long>());
+	        for(int i = size; i < dto.getOptionValues().size(); i++) {
+	            detailNum = mapper.detailSeq(); 
+	            dto.setDetailNum(detailNum);
+	            dto.setOptionValue(dto.getOptionValues().get(i));
+	            mapper.insertOptionDetail(dto);
+	            
+	            dto.getDetailNums().add(detailNum);
+	        }
 
-		
-		if(dto.getOptionCount() > 1) {
-			
-			parentNum = dto.getOptionNum(); 
-			if(dto.getOptionNum2() == 0) {
-				long optionNum2 = mapper.optionSeq();
-				dto.setOptionNum(optionNum2);
-				dto.setOptionName(dto.getOptionName2());
-				dto.setParentOption(parentNum);
-				mapper.insertTalentOption(dto);
-				
-				
-				dto.setDetailNums2(new ArrayList<Long>());
-				for(String optionValue2 : dto.getOptionValues2()) {
-					detailNum = mapper.detailSeq(); 
-					dto.setDetailNum(detailNum);
-					dto.setOptionValue(optionValue2);
-					mapper.insertOptionDetail(dto);
-					
-					dto.getDetailNums2().add(detailNum);
-				}
-				
-				return;
-			} 
-			
-			
-			dto.setOptionNum(dto.getOptionNum2());
-			dto.setOptionName(dto.getOptionName2());
-			mapper.updateTalentOption(dto);
-			
-			
-			int size2 = dto.getDetailNums2().size();
-			for(int i = 0; i < size2; i++) {
-				dto.setDetailNum(dto.getDetailNums2().get(i));
-				dto.setOptionValue(dto.getOptionValues2().get(i));
-				mapper.updateOptionDetail(dto);
-			}
+	        
+	        if(dto.getOptionCount() > 1) {
+	            
+	            parentNum = dto.getOptionNum(); 
+	            if(dto.getOptionNum2() == null || dto.getOptionNum2() == 0) {
+	                long optionNum2 = mapper.optionSeq();
+	                dto.setOptionNum(optionNum2);
+	                dto.setOptionName(dto.getOptionName2());
+	                dto.setParentOption(parentNum);
+	                mapper.insertTalentOption(dto);
+	                
+	                
+	                dto.setDetailNums2(new ArrayList<Long>());
+	                for(String optionValue2 : dto.getOptionValues2()) {
+	                    detailNum = mapper.detailSeq(); 
+	                    dto.setDetailNum(detailNum);
+	                    dto.setOptionValue(optionValue2);
+	                    mapper.insertOptionDetail(dto);
+	                    
+	                    dto.getDetailNums2().add(detailNum);
+	                }
+	                
+	                return;
+	            } 
+	            
+	            dto.setOptionNum(dto.getOptionNum2());
+	            dto.setOptionName(dto.getOptionName2());
+	            mapper.updateTalentOption(dto);
+	            
+	            int size2 = dto.getDetailNums2().size();
+	            for(int i = 0; i < size2; i++) {
+	                dto.setDetailNum(dto.getDetailNums2().get(i));
+	                dto.setOptionValue(dto.getOptionValues2().get(i));
+	                mapper.updateOptionDetail(dto);
+	            }
 
-			
-			dto.setDetailNums2(new ArrayList<Long>());
-			for(int i = size2; i < dto.getOptionValues2().size(); i++) {
-				detailNum = mapper.detailSeq(); 
-				dto.setDetailNum(detailNum);
-				dto.setOptionValue(dto.getOptionValues2().get(i));
-				mapper.insertOptionDetail(dto);
-				
-				dto.getDetailNums2().add(detailNum);
-			}
-		}
-	} catch (Exception e) {
-		throw e;
+	            dto.setDetailNums2(new ArrayList<Long>());
+	            for(int i = size2; i < dto.getOptionValues2().size(); i++) {
+	                detailNum = mapper.detailSeq(); 
+	                dto.setDetailNum(detailNum);
+	                dto.setOptionValue(dto.getOptionValues2().get(i));
+	                mapper.insertOptionDetail(dto);
+	                
+	                dto.getDetailNums2().add(detailNum);
+	            }
+	        }
+	    } catch (Exception e) {
+	        throw e;
+	    }
 	}
-		
-}
 	
 	@Override
 	public void deleteTalent(long tboardNum) throws Exception {
@@ -341,15 +337,17 @@ public class TalentMarketServiceImpl implements TalentMarketService{
 		
 		try {
 			list = mapper.listTalentMarket(map);
-			String userId = (String)map.get("userId");
+			String userId = (String)map.get("likeUserId");
 			
-			if(userId != null) {
+		
 				for(TalentMarket dto : list) {
+					if(userId != null) {
 					map.put("tboardNum", dto.getTboardNum());
 					dto.setUserLiked(userTalentLiked(map));
+					}
 					dto.setLikeCount(talentLikeCount(dto.getTboardNum()));
 				}
-			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
