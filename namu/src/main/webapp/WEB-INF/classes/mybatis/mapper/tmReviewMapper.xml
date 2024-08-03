@@ -56,8 +56,8 @@
 			       p.subject, td.optionValue, td.optionValue2
 			FROM TALENTREVIEW pr
 			JOIN MEMBER m ON pr.userId = m.userId 
-			JOIN TMORDER td ON pr.userId = td.userId
-			JOIN TALENTMARKET p ON p.tboardNum = td.tboardNum
+			JOIN TMORDER td ON pr.num = td.applnum
+			JOIN TALENTMARKET p ON p.tboardNum = pr.tboardNum
 
 		<where>
 			<if test="userId != null">

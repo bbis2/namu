@@ -131,7 +131,7 @@ public class TmQuestionController {
 			map.put("offset", offset);
 			map.put("size", size);
 
-			List<TmQuestion> list = service.listQuestion2(map);
+			List<TmQuestion> list = service.listQuestion3(map);
 			
 			String paging = myUtil.pagingFunc(current_page, total_page, "listQuestion");
 			

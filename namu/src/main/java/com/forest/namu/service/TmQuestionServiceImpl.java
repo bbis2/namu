@@ -133,4 +133,25 @@ public class TmQuestionServiceImpl implements TmQuestionService {
 		
 	}
 
+	@Override
+	public List<TmQuestion> listQuestion3(Map<String, Object> map) {
+List<TmQuestion> list = null;
+		
+		try {
+			list = mapper.listQuestion3(map);
+			for (TmQuestion dto : list) {
+				
+				dto.setQuestion(dto.getQuestion().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
 }

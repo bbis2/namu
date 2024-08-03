@@ -213,7 +213,7 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
                                     <div class="p-3 pt-0">
                                         <div class="bg-light">
                                             <div class="p-3 pb-0">
-                                                <label class="text-bg-primary px-2"> 관리자 </label> <label>${dto.answerDate}</label>
+                                                <label class="text-bg-primary px-2"> </label> <label>${dto.answerDate}</label>
                                             </div>
                                             <div class="p-3 pt-1">${dto.answer}</div>
                                         </div>

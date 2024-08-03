@@ -317,6 +317,7 @@ $(function(){
         let question = item.question;
         let question_date = item.questionDate;
         let answer = item.answer;
+        let answerName = item.answerName;
         let answer_date = item.answerDate;
         let answerState = answer_date ? '<span class="badge badge-success">답변완료</span>' : '<span class="badge badge-secondary">답변대기</span>';
         let productName = item.subject;
@@ -338,7 +339,7 @@ $(function(){
             out += '  <div class="p-3 pt-0 answer-content bg-light-purple" style="display: none;">';
             out += '    <div>';
             out += '      <div class="p-3 pb-0">';
-            out += '        <label class="text-bg-primary px-2"> 관리자 </label> <label>' + answer_date + '</label>';
+            out += '        <label class="text-bg-primary px-2"> '+ answerName +' </label> <label>' + answer_date + '</label>';
             out += '      </div>';
             out += '      <div class="p-3 pt-1">' + answer + '</div>';
             out += '    </div>';

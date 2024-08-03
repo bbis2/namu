@@ -1036,7 +1036,9 @@ $(function(){
 
             if ($(this).attr('id') === 'review-btn') {
                 listReview(1);
-            } else if ($(this).attr('id') === 'inquiry-btn') {
+            }
+            
+            if ($(this).attr('id') === 'inquiry-btn') {
                 listQuestion(1);
             }
         });

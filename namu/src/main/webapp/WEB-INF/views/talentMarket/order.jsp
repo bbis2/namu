@@ -369,10 +369,9 @@ function ajaxFun(url, method, formData, dataType, fn, file = false) {
     	 const f = document.orderForm;
     	 var totalAmountElement = document.getElementById("totalAmount");
 
- 	    // 요소의 텍스트 값 가져오기
+ 	  
  	    var totalAmountText = totalAmountElement.textContent || totalAmountElement.innerText;
 
- 	    // 숫자만 추출하기
  	    var numericValue = totalAmountText.replace(/[^0-9.-]+/g, "");
         var money =numericValue;
         if (money ==0) {

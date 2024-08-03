@@ -69,6 +69,32 @@
     ORDER BY q.num DESC
     OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 </select>
+
+<select id="listQuestion3" parameterType="map" resultType="com.forest.namu.domain.TmQuestion">
+    SELECT q.num, q.userId, m.nickName, secret, question, answer, 
+           m2.userId answerId, m2.nickName AS answerName, 
+           q.tboardNum, subject, showQuestion, locked,
+           questionDate, answerDate
+    FROM talentQna q
+    JOIN talentMarket p ON q.tboardNum = p.tboardNum 
+    JOIN member m ON q.userId = m.userId
+    LEFT OUTER JOIN member m2 ON answerId = m2.userId
+    <where>
+        <if test="userId != null">
+            q.userId = #{userId}
+        </if>
+        <if test="mode != null">
+            <if test="mode == 2">
+                AND answer IS NOT NULL
+            </if>
+            <if test="mode == 3">
+                AND answer IS NULL
+            </if>
+        </if>
+    </where>
+    ORDER BY q.num DESC
+    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+</select>
 	
 	<update id="updateQuestion" parameterType="com.forest.namu.domain.TmQuestion">
 		UPDATE talentQna SET answer = #{answer}, answerId = #{answerId}, answerDate = SYSDATE, 

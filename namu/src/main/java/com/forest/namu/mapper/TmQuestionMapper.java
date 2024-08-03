@@ -19,6 +19,7 @@ public interface TmQuestionMapper {
 	
 	public int dataCount2(Map<String, Object> map);
 	public List<TmQuestion>listQuestion2(Map<String, Object> map);
+	public List<TmQuestion>listQuestion3(Map<String, Object> map);
 	
 	public void updateQuestion(TmQuestion dto) throws SQLException;
 
