@@ -16,6 +16,13 @@
 	cursor: pointer;
 }
 </style>
+<style>
+    .carousel-inner img {
+        width: 100%;
+        height: 400px; /* 원하는 높이로 설정 */
+        object-fit: fill; /* 이미지가 컨테이너에 맞게 조정 */
+    }
+</style>
 <style type="text/css">
 
 .fleamarket-cover {
@@ -588,8 +595,6 @@ textarea::placeholder{
         }
     }
 </script>
-
-
 
 
 <div class="container">

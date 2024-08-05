@@ -237,7 +237,7 @@ function filterByTown() {
   <main class="container">
 			<div class="d-flex">
 				<h5 style="font-weight: bold;">${town}</h5>
-				<h5 style="color: #b3b3b3;" class="bd">&nbsp;${dataCount}개</h5>
+				<h5 style="color: #b3b3b3;" class="bd">전체&nbsp;${dataCount}개</h5>
 			</div>
    	<div class="body-title">
 		<form class="row" name="searchForm" action="${pageContext.request.contextPath}/daily/list" method="post">
@@ -269,7 +269,7 @@ function filterByTown() {
 					<h5 class="card-title">${sessionScope.member.userId}</h5>
    				    <h6 class="bd">[<a style="color: green">${sessionScope.member.nickName}</a>]님의 동네</h6>
 						<select id="townFilter" class="form-select border-2" aria-label="Default select example" onchange="filterByTown()">
-							
+							 <option value="" ${town==''?'selected':''}>전체</option>
 							<option value="${sessionScope.member.town1}" <c:if test="${town == sessionScope.member.town1}">selected</c:if>>${sessionScope.member.town1}</option>
 							<c:if test="${sessionScope.member.town2 != null}">
 								<option value="${sessionScope.member.town2}" <c:if test="${town == sessionScope.member.town2}">selected</c:if>>${sessionScope.member.town2}</option>

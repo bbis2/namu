@@ -29,7 +29,7 @@
 	    FROM freeboard b
 	    JOIN togetherList l ON b.tNum = l.tNum
 	    JOIN member m ON b.userId = m.userId
-	    LEFT OUTER JOIN togetherApply a ON b.userId = a.userId
+	    LEFT OUTER JOIN togetherApply a ON b.userId = a.userId AND a.tNum = b.tNum
 	    LEFT OUTER JOIN (
 	        SELECT num, COUNT(*) rNum FROM freeBoardReply GROUP BY num
 	    ) c ON b.num = c.num
@@ -48,7 +48,7 @@
 	    FROM freeboard b
 	    JOIN togetherList l ON b.tNum = l.tNum
 	    JOIN member m ON b.userId = m.userId
-	    LEFT OUTER JOIN togetherApply a ON b.userId = a.userId
+	    LEFT OUTER JOIN togetherApply a ON b.userId = a.userId AND a.tNum = b.tNum
 	    WHERE b.num = #{num}
 	    
 	</select>

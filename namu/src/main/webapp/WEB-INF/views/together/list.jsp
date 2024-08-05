@@ -165,7 +165,7 @@
 .togetherlist .list img {
     width: 100%;
     height: 200px; /* 고정된 이미지 높이 */
-    object-fit: cover;
+    object-fit: fill;
     margin-bottom: 10px; /* 이미지 아래 마진 추가 */
 }
 
@@ -269,7 +269,7 @@ function filterByTown() {
 					<h5 class="card-title">${sessionScope.member.userId}</h5>
    				    <h6 class="bd">[<a style="color: green">${sessionScope.member.nickName}</a>]님의 동네</h6>
 						<select id="townFilter" class="form-select border-2" aria-label="Default select example" onchange="filterByTown()">
-							
+							<option value="" ${town==''?'selected':''}>전체</option>
 							<option value="${sessionScope.member.town1}" <c:if test="${town == sessionScope.member.town1}">selected</c:if>>${sessionScope.member.town1}</option>
 							<c:if test="${sessionScope.member.town2 != null}">
 								<option value="${sessionScope.member.town2}" <c:if test="${town == sessionScope.member.town2}">selected</c:if>>${sessionScope.member.town2}</option>
@@ -317,7 +317,7 @@ function filterByTown() {
 					            <button class="btn_like">like
 					            	<span class="like-count">찜</span>
 					            </button>
-					        <a  class="listTitle"> <h5>${dto.subject}</h5></a>
+					        <a  class="listTitle"> <h5>${dto.name}</h5></a>
 					        <a ><i class="fa-solid fa-circle-user"></i>&nbsp;${dto.nickName}</a>
 					        <div class="float-end"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.town}</div>
 					        <div class="d-flex justify-content-between mt-2" style="color: #bfbfbf;">

@@ -3,6 +3,19 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <style type="text/css">
+.container {
+    width: 100%;
+    max-width: 1200px; /* 원하는 최대 너비로 설정 */
+    margin: 0 auto; /* 가운데 정렬 */
+    padding: 20px; /* 양쪽 여백 */
+    box-sizing: border-box;
+}
+/* 이미지 최대 너비 설정 */
+.board-article img {
+    max-width: 100%; /* 이미지가 부모 요소의 너비를 초과하지 않도록 설정 */
+    height: auto; /* 이미지의 비율을 유지 */
+}
+
 .fleamarket-cover {
     position: relative;
     width: 100%;
