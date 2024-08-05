@@ -1387,7 +1387,7 @@ function openStoreApplicationModal() {
                     htmlContent += '<td>' + order.applNum + '</td>';
                     htmlContent += '<td>' + order.applDate + '</td>';
                     htmlContent += '<td>' + order.nickName + '</td>';
-                    htmlContent += `<td> <a href="${pageContext.request.contextPath}/talent/article?num=${order.tboardNum}">${order.subject}</a></td>`;
+                    htmlContent += '<td> <a href="${pageContext.request.contextPath}/talent/article?num='+order.tboardNum+'">'+order.subject+'</a></td>';
                     htmlContent += '<td>' + order.optionValue + ', ' + order.optionValue2 + '</td>';
                     if(order.completionDate != null) {
                         htmlContent += '<td>' + order.completionDate + '</td>';
