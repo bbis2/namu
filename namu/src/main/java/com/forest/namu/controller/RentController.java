@@ -164,6 +164,9 @@ public class RentController {
 			service.updateHitCount(num);
 			
 			Rent dto = service.findById(num);
+			if(dto.getVisible() != 1) {
+				return "error/error";
+			}
 			categoryNum = dto.getCategoryNum() + "";
 			
 			SessionInfo info = (SessionInfo)session.getAttribute("member");

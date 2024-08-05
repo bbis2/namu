@@ -43,18 +43,20 @@
 	
 	<!-- 데이터 DELETE -->	
 	<delete id="deleteRent" parameterType="com.forest.namu.domain.Rent">
-		DELETE FROM rent WHERE rentNum = #{rentNum}
+		UPDATE rent SET visible = 0 WHERE rentNum = #{rentNum}
 	</delete>
 	
-	<!-- rbImage 테이블에서 삭제 -->
+	<!--
+	rbImage 테이블에서 삭제
 	<delete id="deleteRentFile" parameterType="com.forest.namu.domain.Rent">
 	    DELETE FROM rbImage WHERE rentNum = #{rentNum}
 	</delete>
 	
-	<!-- rentLike 테이블에서 삭제 -->
+	rentLike 테이블에서 삭제
 	<delete id="deleteRentLike2" parameterType="com.forest.namu.domain.Rent">
 	    DELETE FROM rentLike WHERE num = #{rentNum}
 	</delete>
+	-->
 	
 	<delete id="deleteNonMatchingImages">
 	    DELETE FROM rbImage 
@@ -70,7 +72,7 @@
 		SELECT NVL(COUNT(*), 0)
 		FROM rent
 		<where>
-			location = #{location} 
+			location = #{location} AND visible = 1
 			<if test="categoryNum > 0">
 				AND categoryNum = #{categoryNum}
 			</if>
@@ -82,7 +84,7 @@
 	
 	<!-- list -->
 	<select id="listRent" parameterType="map" resultType="com.forest.namu.domain.Rent">
-		SELECT r.rentNum, r.userId, nickName, subject, hitCount, r.regDate, r.hPrice, location, imageFilename, NVL(likeCount, 0) likeCount, photo AS profile
+		SELECT r.rentNum, r.userId, nickName, subject, hitCount, r.regDate, r.hPrice, location, imageFilename, NVL(likeCount, 0) likeCount, photo AS profile, visible
 		FROM rent r
 		LEFT OUTER JOIN (
 			SELECT imageNum, rentNum, imageFilename FROM (
@@ -99,7 +101,7 @@
 		) rl ON r.rentNum = rl.rentNum
 		JOIN profile p ON r.userId = p.userId
 		<where>
-			location = #{location} 
+			location = #{location}
 			<if test="categoryNum > 0">
 				AND categoryNum = #{categoryNum}
 			</if>
@@ -215,7 +217,8 @@
 	
 	<!-- 글보기 -->
 	<select id="findById" parameterType="Long" resultType="com.forest.namu.domain.Rent">
-		SELECT rentNum, r.userId, nickName, subject, content, hPrice, dPrice, wPrice, mPrice, r.regDate, hitCount, location, r.categoryNum, rbc.category, r.tableName
+		SELECT rentNum, r.userId, nickName, subject, content, hPrice, dPrice, wPrice, mPrice,
+			r.regDate, hitCount, location, r.categoryNum, rbc.category, r.tableName, visible
 		FROM rent r
 		JOIN member m ON r.userId = m.userId
 		JOIN rbCategory rbc On r.categoryNum = rbc.categoryNum

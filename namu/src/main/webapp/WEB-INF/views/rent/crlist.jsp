@@ -57,6 +57,16 @@
 }
 </style>
 
+<script type="text/javascript">
+$(function() {
+	msg = ${msg};
+	if(msg) {
+		alert(msg);
+		location.href = '${pageContext.request.contextPath}' + ${url};
+	}
+});
+</script>
+
 
 <div class="container mt-5 mb-5 pb-5">
 

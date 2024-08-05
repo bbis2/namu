@@ -15,7 +15,7 @@ public class Rent {
 	private int wPrice;
 	private int mPrice;
 	private String content;
-	private int visible; // 0일때 공개, 1일때 숨김
+	private int visible; // 1일때 공개, 0일때 숨김
 	private String regDate;
 	private int hitCount;
 	private String location;

@@ -152,43 +152,45 @@ $(function() {
 		<c:choose>
 			<c:when test="${list.size() > 0}">
 				<c:forEach var="dto" items="${list}">
-					<div class="col-lg-20 col-md-3 col-sm-6 list">
-						<div>
-							<div class="overflow-hidden border mb-2 ratio ratio-1x1">
-								<a href="${articleUrl}&num=${dto.rentNum}" class="listTitle">
-									<img class="thumbnail img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/album/${dto.imageFilename}">
-								</a>
-								<c:if test="${!dto.nickName.equals(sessionScope.member.nickName)}">
-									<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
-										like
-									</button>
-									<input type="hidden" value="${dto.rentNum}" class="likeBorrowNum">
-								</c:if>
-							</div>
-							<a href="${articleUrl}&num=${dto.rentNum}" class="listTitle" title="${dto.subject}"> <h5 class="bd">${dto.subject}</h5> </a>
-							<div class="d-flex justify-content-between" style="height: 35px;">
-								<div class="d-flex align-items-center">
-									<c:choose>
-										<c:when test="${dto.profile != null}">
-								    		<img class="mt-2" style="width: 20px; height: 20px; margin-bottom: 20px; border-radius: 50%; object-fit: cover;" 
-										         alt="" src="${pageContext.request.contextPath}/uploads/photo/${dto.profile}"> 
-										</c:when>
-										<c:otherwise>
-								    		<img class="mt-2" style="width: 20px; height: 20px; margin-bottom: 20px; border-radius: 50%; object-fit: cover;" 
-										         alt="" src="${pageContext.request.contextPath}/resources/images/default_profile.png"> 
-										</c:otherwise>
-									</c:choose>
-						    		<h6 class="ms-2">${dto.nickName}</h6>
+					<c:if test="${dto.visible == 1}">
+						<div class="col-lg-20 col-md-3 col-sm-6 list">
+							<div>
+								<div class="overflow-hidden border mb-2 ratio ratio-1x1">
+									<a href="${articleUrl}&num=${dto.rentNum}" class="listTitle">
+										<img class="thumbnail img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/album/${dto.imageFilename}">
+									</a>
+									<c:if test="${!dto.nickName == sessionScope.member.nickName}">
+										<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
+											like
+										</button>
+										<input type="hidden" value="${dto.rentNum}" class="likeBorrowNum">
+									</c:if>
 								</div>
-								<div style="margin-top: 4px;"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.location}</div>	
-							</div>
-							<div class="d-flex justify-content-between" style="color: #bfbfbf;">
-								<p class="rentLikeCount"><i class="fa-solid fa-heart"></i>&nbsp;${dto.likeCount}</p>
-								<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
-								<p><i class="fa-solid fa-clock"></i>&nbsp;${dto.passedTime}</p>
+								<a href="${articleUrl}&num=${dto.rentNum}" class="listTitle" title="${dto.subject}"> <h5 class="bd">${dto.subject}</h5> </a>
+								<div class="d-flex justify-content-between" style="height: 35px;">
+									<div class="d-flex align-items-center">
+										<c:choose>
+											<c:when test="${dto.profile != null}">
+									    		<img class="mt-2" style="width: 20px; height: 20px; margin-bottom: 20px; border-radius: 50%; object-fit: cover;" 
+											         alt="" src="${pageContext.request.contextPath}/uploads/photo/${dto.profile}"> 
+											</c:when>
+											<c:otherwise>
+									    		<img class="mt-2" style="width: 20px; height: 20px; margin-bottom: 20px; border-radius: 50%; object-fit: cover;" 
+											         alt="" src="${pageContext.request.contextPath}/resources/images/default_profile.png"> 
+											</c:otherwise>
+										</c:choose>
+							    		<h6 class="ms-2">${dto.nickName}</h6>
+									</div>
+									<div style="margin-top: 4px;"><i class="fa-solid fa-location-dot"></i>&nbsp;${dto.location}</div>	
+								</div>
+								<div class="d-flex justify-content-between" style="color: #bfbfbf;">
+									<p class="rentLikeCount"><i class="fa-solid fa-heart"></i>&nbsp;${dto.likeCount}</p>
+									<p><i class="fa-solid fa-eye"></i>&nbsp;${dto.hitCount}</p>
+									<p><i class="fa-solid fa-clock"></i>&nbsp;${dto.passedTime}</p>
+								</div>
 							</div>
 						</div>
-					</div>
+					</c:if>
 				</c:forEach>
 				<div class="pt-4">
 					${paging}

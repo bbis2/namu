@@ -103,8 +103,8 @@ public class RentServiceImpl implements RentService {
 			}
 			Rent dto = findById(num);
 			
-			mapper.deleteRentFile(dto);
-			mapper.deleteRentLike2(dto);
+			// mapper.deleteRentFile(dto);
+			// mapper.deleteRentLike2(dto);
 			mapper.deleteRent(dto);
 			
 		} catch (Exception e) {
