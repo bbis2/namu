@@ -48,7 +48,7 @@ public class HomeController {
     	// 빌려줘요
     	Map<String, Object> map2 = new HashMap<String, Object>();
     	map2.put("categoryNum", 0);
-    	map2.put("location", "쌍용강북"); // 로그인 전 - 전체, 로그인 - town1 로 불러오기 () 
+    	map2.put("location", "서울 마포구"); // 로그인 전 - 전체, 로그인 - town1 로 불러오기 () 
     	map2.put("offset", 0);
     	map2.put("size", 4);
     	List<Borrow> list2 = service2.listBorrow(map2);

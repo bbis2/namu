@@ -262,7 +262,6 @@
 						</a>
 					</div>
 					<div style="font-weight: 700; color: #65C2EC; margin-top: 10px">${dto.subject}</div>
-					<div>${dto.content}</div>
 				</div>
 				</div>
 				</c:forEach>
@@ -297,7 +296,6 @@
 						</a>
 					</div>
 					<div style="font-weight: 700; color: #65C2EC; margin-top: 10px">${borrow.subject}</div>
-					<div>${borrow.content}</div>
 				</div>
 				</div>
 				</c:forEach>
@@ -335,7 +333,6 @@
                         </a>
                     </div>
                     <div style="font-weight: 700; color: #65C2EC; margin-top: 10px">${talent.subject}</div>
-                    <div>${talent.content}</div>
                 </div>
                 </div>
                 </c:forEach>
