@@ -159,7 +159,7 @@ $(function() {
 									<a href="${articleUrl}&num=${dto.rentNum}" class="listTitle">
 										<img class="thumbnail img-fluid object-fit-cover h-100" alt="" src="${pageContext.request.contextPath}/uploads/album/${dto.imageFilename}">
 									</a>
-									<c:if test="${!dto.nickName == sessionScope.member.nickName}">
+									<c:if test="${!dto.nickName.equals(sessionScope.member.nickName)}">
 										<button type="button" class="btn_like btnSendLike ${dto.userLiked ? 'on' : ''}" title="찜하기">
 											like
 										</button>
